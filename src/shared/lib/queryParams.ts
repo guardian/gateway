@@ -1,9 +1,9 @@
-import {
-	QueryParams,
+import type {
 	PersistableQueryParams,
+	QueryParams,
 } from '@/shared/model/QueryParams';
-import { IdApiQueryParams } from '../model/IdapiQueryParams';
-import { AllRoutes } from '../model/Routes';
+import type { IdApiQueryParams } from '../model/IdapiQueryParams';
+import type { AllRoutes } from '../model/Routes';
 
 /**
  * function to remove undefined, null, and empty string values from an object

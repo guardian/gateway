@@ -1,6 +1,5 @@
 import { render } from '@faire/mjml-react/utils/render';
 import { send } from '@/email/lib/send';
-
 import { AccidentalEmail } from './AccidentalEmail';
 import { AccidentalEmailText } from './AccidentalEmailText';
 

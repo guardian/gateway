@@ -1,53 +1,52 @@
-import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import deepmerge from 'deepmerge';
+import type { Request } from 'express';
 import { setPasswordController } from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { logger } from '@/server/lib/serverSideLogger';
-import handleRecaptcha from '@/server/lib/recaptcha';
-import { renderer } from '@/server/lib/renderer';
-import { ApiError } from '@/server/models/Error';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
+	getConsentValueFromRequestBody,
+	getUserConsentsForPage,
+	update as patchConsents,
+	update as updateConsents,
+} from '@/server/lib/idapi/consents';
+import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
+import {
+	getUserNewsletterSubscriptions,
+	NewsletterMap,
+} from '@/server/lib/newsletters';
+import { register } from '@/server/lib/okta/register';
+import handleRecaptcha from '@/server/lib/recaptcha';
+import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
+import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import { updateRegistrationLocationViaOkta } from '@/server/lib/updateRegistrationLocation';
+import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
+import { ApiError } from '@/server/models/Error';
+import type {
 	RequestState,
 	ResponseWithRequestState,
 } from '@/server/models/Express';
-import {
-	addQueryParamsToPath,
-	addQueryParamsToUntypedPath,
-} from '@/shared/lib/queryParams';
-import deepmerge from 'deepmerge';
-import { Request } from 'express';
-import { register } from '@/server/lib/okta/register';
-import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
-import { GenericErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
 	OktaRegistration,
 	setEncryptedStateCookieForOktaRegistration,
 } from '@/server/routes/register';
-import { mergeRequestState } from '@/server/lib/requestState';
-import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
-import {
-	update as patchConsents,
-	getConsentValueFromRequestBody,
-	getUserConsentsForPage,
-	update as updateConsents,
-} from '@/server/lib/idapi/consents';
-import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
-import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
-import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
-
-import { updateRegistrationLocationViaOkta } from '@/server/lib/updateRegistrationLocation';
-import {
-	NewsletterMap,
-	getUserNewsletterSubscriptions,
-} from '@/server/lib/newsletters';
-import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
+import {
+	addQueryParamsToPath,
+	addQueryParamsToUntypedPath,
+} from '@/shared/lib/queryParams';
+import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
+import { GenericErrors } from '@/shared/model/Errors';
+import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 
 const { registrationPasscodesEnabled, signInPageUrl } = getConfiguration();

@@ -1,13 +1,13 @@
-import { Consent } from '@/shared/model/Consent';
-import { NewsLetter } from '@/shared/model/Newsletter';
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { EmailType } from '@/shared/model/EmailType';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { Participations } from '@guardian/ab-core';
-import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
-import { UserAttributesResponse } from '@/shared/lib/members-data-api';
-import { Stage } from '@/shared/model/Configuration';
-import { AppName } from '@/shared/lib/appNameUtils';
+import type { Participations } from '@guardian/ab-core';
+import type { AppName } from '@/shared/lib/appNameUtils';
+import type { UserAttributesResponse } from '@/shared/lib/members-data-api';
+import type { Stage } from '@/shared/model/Configuration';
+import type { Consent } from '@/shared/model/Consent';
+import type { EmailType } from '@/shared/model/EmailType';
+import type { GeoLocation } from '@/shared/model/Geolocation';
+import type { NewsLetter } from '@/shared/model/Newsletter';
+import type { QueryParams } from '@/shared/model/QueryParams';
+import type { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 
 export interface FieldError {
 	field: string;

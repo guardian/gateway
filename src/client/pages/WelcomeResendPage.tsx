@@ -1,7 +1,7 @@
 import React from 'react';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { MainBodyText } from '@/client/components/MainBodyText';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const WelcomeResendPage = () => {

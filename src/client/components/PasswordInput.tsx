@@ -1,21 +1,21 @@
+import { css } from '@emotion/react';
+import {
+	focusHalo,
+	height,
+	remSpace,
+	textSans,
+} from '@guardian/source/foundations';
 import {
 	InlineError,
 	SvgEye,
 	SvgEyeStrike,
 } from '@guardian/source/react-components';
 import React, { useState } from 'react';
-import { css } from '@emotion/react';
-import {
-	height,
-	focusHalo,
-	textSans,
-	remSpace,
-} from '@guardian/source/foundations';
+import ThemedTextInput from '@/client/components/ThemedTextInput';
 import {
 	disableAutofillBackground,
 	errorMessageStyles,
 } from '@/client/styles/Shared';
-import ThemedTextInput from '@/client/components/ThemedTextInput';
 
 export type PasswordAutoComplete = 'new-password' | 'current-password';
 

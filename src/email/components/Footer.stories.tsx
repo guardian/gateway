@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Footer } from './Footer';
 import { renderMJMLComponent } from '../testUtils';
+import { Footer } from './Footer';
 
 export default {
 	title: 'Email/Components/Footer',

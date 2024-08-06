@@ -1,13 +1,14 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import React, { useEffect, useState } from 'react';
+import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import { FieldError } from '@/shared/model/ClientState';
-import { logger } from '@/client/lib/clientSideLogger';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { PasscodeInput } from '@/client/components/PasscodeInput';
-import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
-import { EmailSentProps } from '@/client/pages/EmailSent';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { logger } from '@/client/lib/clientSideLogger';
+import type { EmailSentProps } from '@/client/pages/EmailSent';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import type { FieldError } from '@/shared/model/ClientState';
 
 type Props = {
 	passcodeAction: string;

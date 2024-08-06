@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Button } from './Button';
 import { renderMJMLComponent } from '../testUtils';
+import { Button } from './Button';
 
 export default {
 	title: 'Email/Components/Button',

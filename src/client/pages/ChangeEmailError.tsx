@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
-import { primaryButtonStyles } from '@/client/styles/Shared';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { primaryButtonStyles } from '@/client/styles/Shared';
 
 type ChangeEmailErrorProps = {
 	accountManagementUrl?: string;

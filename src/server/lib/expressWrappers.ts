@@ -1,5 +1,5 @@
-import { NextFunction, Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { NextFunction, Request } from 'express';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 type AsyncHandler = (
 	req: Request,

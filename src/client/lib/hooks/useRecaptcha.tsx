@@ -1,6 +1,6 @@
-import { SECTION_GAP } from '@/client/models/Style';
 import { loadScript } from '@guardian/libs';
 import React from 'react';
+import { SECTION_GAP } from '@/client/models/Style';
 
 export type RenderOptions = {
 	sitekey: string;

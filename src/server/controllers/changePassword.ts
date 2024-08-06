@@ -1,45 +1,44 @@
-import { Request } from 'express';
-
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { logger } from '@/server/lib/serverSideLogger';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { trackMetric } from '@/server/lib/trackMetric';
+import type { Request } from 'express';
+import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
+import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
+import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import {
 	readEncryptedStateCookie,
 	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
-import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
-import { PasswordPageTitle } from '@/shared/model/PageTitle';
-import {
-	getErrorMessage,
-	validatePasswordFieldForOkta,
-} from '@/server/lib/validatePasswordField';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import {
 	resetPassword as resetPasswordInOkta,
 	validateRecoveryToken as validateTokenInOkta,
 } from '@/server/lib/okta/api/authentication';
-import { OAuthError, OktaError } from '@/server/models/okta/Error';
-import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
-import {
-	performAuthorizationCodeFlow,
-	scopesForAuthentication,
-} from '@/server/lib/okta/oauth';
-import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
-import { setupJobsUserInOkta } from '@/server/lib/jobs';
-import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
-import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
-import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { changePasswordMetric } from '@/server/models/Metrics';
-import { getAppPrefix } from '@/shared/lib/appNameUtils';
+import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
 import {
 	introspect,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
-import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
+import {
+	performAuthorizationCodeFlow,
+	scopesForAuthentication,
+} from '@/server/lib/okta/oauth';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import {
+	getErrorMessage,
+	validatePasswordFieldForOkta,
+} from '@/server/lib/validatePasswordField';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { changePasswordMetric } from '@/server/models/Metrics';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
+import { getAppPrefix } from '@/shared/lib/appNameUtils';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
-import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
+import type { PasswordPageTitle } from '@/shared/model/PageTitle';
+import type { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 
 const { registrationPasscodesEnabled } = getConfiguration();
 

@@ -1,10 +1,7 @@
-import {
-	SendEmailCommand,
-	SendEmailCommandInput,
-	SESv2Client,
-} from '@aws-sdk/client-sesv2';
-import { awsConfig } from '@/server/lib/awsConfig';
+import type { SendEmailCommandInput } from '@aws-sdk/client-sesv2';
+import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2';
 import { NodeHttpHandler } from '@smithy/node-http-handler';
+import { awsConfig } from '@/server/lib/awsConfig';
 
 const ses = new SESv2Client({
 	...awsConfig,

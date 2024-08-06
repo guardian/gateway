@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
 import { randomUUID } from 'crypto';
+import type { NextFunction, Request, Response } from 'express';
 
 /**
  * Middleware to add a random request ID to the request.

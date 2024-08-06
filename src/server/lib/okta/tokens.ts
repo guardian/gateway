@@ -1,11 +1,11 @@
-import { Request, CookieOptions } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import OktaJwtVerifier from '@okta/jwt-verifier';
 import { joinUrl } from '@guardian/libs';
+import OktaJwtVerifier from '@okta/jwt-verifier';
+import type { CookieOptions, Request } from 'express';
+import ms from 'ms';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { GU_DOMAIN } from '@/server/models/Configuration';
-import ms from 'ms';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 /**
  * Configuration

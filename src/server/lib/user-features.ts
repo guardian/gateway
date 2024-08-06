@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import type { Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getUserAttributes } from '@/server/lib/members-data-api/user-attributes';
 

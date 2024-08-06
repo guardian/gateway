@@ -1,36 +1,20 @@
-import { Request } from 'express';
-import handleRecaptcha from '@/server/lib/recaptcha';
+import deepmerge from 'deepmerge';
+import type { Request } from 'express';
 import {
 	readEncryptedStateCookie,
 	setEncryptedStateCookie,
 	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { logger } from '@/server/lib/serverSideLogger';
-import { register as registerWithOkta } from '@/server/lib/okta/register';
-import { renderer } from '@/server/lib/renderer';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import {
-	addQueryParamsToPath,
-	getPersistableQueryParamsWithoutOktaParams,
-} from '@/shared/lib/queryParams';
-import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
-import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { OAuthError, OktaError } from '@/server/models/okta/Error';
-import { causesInclude } from '@/server/lib/okta/api/errors';
-import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
-import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
-import { mergeRequestState } from '@/server/lib/requestState';
-import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
+import { causesInclude } from '@/server/lib/okta/api/errors';
 import {
 	challengeAnswerPasscode,
 	challengeResend,
 } from '@/server/lib/okta/idx/challenge';
+import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import {
 	enroll,
 	enrollNewWithEmail,
@@ -41,17 +25,33 @@ import {
 	introspect,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
 import {
-	updateAuthorizationStateData,
 	setAuthorizationStateCookie,
+	updateAuthorizationStateData,
 } from '@/server/lib/okta/openid-connect';
-import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
-import { credentialEnroll } from '@/server/lib/okta/idx/credential';
+import { register as registerWithOkta } from '@/server/lib/okta/register';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import handleRecaptcha from '@/server/lib/recaptcha';
 import {
 	bodyFormFieldsToRegistrationConsents,
 	encryptRegistrationConsents,
 } from '@/server/lib/registrationConsents';
-import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
+import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
+import type { UserResponse } from '@/server/models/okta/User';
+import {
+	addQueryParamsToPath,
+	getPersistableQueryParamsWithoutOktaParams,
+} from '@/shared/lib/queryParams';
+import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
+import type { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 const { registrationPasscodesEnabled } = getConfiguration();
 

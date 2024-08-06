@@ -1,14 +1,14 @@
-import React, { useId, useState } from 'react';
-import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { css } from '@emotion/react';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
-	textSans,
-	focusHalo,
-	visuallyHidden,
 	descriptionId,
-	space,
+	focusHalo,
 	remSpace,
+	space,
+	textSans,
+	visuallyHidden,
 } from '@guardian/source/foundations';
+import React, { useId, useState } from 'react';
 
 const switchVariables = {
 	width: 44,

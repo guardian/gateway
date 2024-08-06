@@ -1,9 +1,7 @@
-import React from 'react';
-import {
-	LinkProps,
-	Link as SourceLink,
-} from '@guardian/source/react-components';
 import { css } from '@emotion/react';
+import type { LinkProps } from '@guardian/source/react-components';
+import { Link as SourceLink } from '@guardian/source/react-components';
+import React from 'react';
 
 const linkThemeStyles = css`
 	color: var(--color-link);

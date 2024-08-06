@@ -6,14 +6,14 @@
 import { jsx } from '@emotion/react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/jest-globals';
-import { MainForm, MainFormProps } from '../components/MainForm';
-
-import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
-import { DetailedRecaptchaError } from '../components/DetailedRecaptchaError';
 import {
-	setupRecaptchaScriptMutationObserver,
 	setupRecaptchaObject,
+	setupRecaptchaScriptMutationObserver,
 } from '@/client/lib/hooks/__tests__/utils/useRecaptchaTestUtils';
+import type { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
+import { DetailedRecaptchaError } from '../components/DetailedRecaptchaError';
+import type { MainFormProps } from '../components/MainForm';
+import { MainForm } from '../components/MainForm';
 
 const setup = (extraProps?: Partial<MainFormProps>) =>
 	render(<MainForm formAction="/" submitButtonText="Submit" {...extraProps} />);

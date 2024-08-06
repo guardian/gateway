@@ -1,15 +1,17 @@
-import {
+import { format } from 'util';
+import validatedRateLimiterConfiguration from '@/server/lib/rateLimiterConfiguration';
+import type {
 	Configuration,
+	Okta,
+	RedisConfiguration,
+} from '@/server/models/Configuration';
+import {
 	GU_API_DOMAIN,
 	GU_DOMAIN,
-	RedisConfiguration,
 	GU_MANAGE_URL,
-	Okta,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
-import validatedRateLimiterConfiguration from '@/server/lib/rateLimiterConfiguration';
-import { format } from 'util';
-import { Stage } from '@/shared/model/Configuration';
+import type { Stage } from '@/shared/model/Configuration';
 
 const getOrThrow = (
 	value: string | undefined,

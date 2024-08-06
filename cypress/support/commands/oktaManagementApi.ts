@@ -1,4 +1,4 @@
-import { AppResponse } from '../../../src/server/models/okta/App';
+import type { AppResponse } from '../../../src/server/models/okta/App';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace

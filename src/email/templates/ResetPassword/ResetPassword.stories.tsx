@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { ResetPassword } from './ResetPassword';
 import { renderMJML } from '../../testUtils';
+import { ResetPassword } from './ResetPassword';
 
 export default {
 	title: 'Email/Templates/ResetPassword',

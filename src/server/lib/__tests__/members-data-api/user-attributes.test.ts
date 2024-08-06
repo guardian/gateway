@@ -1,5 +1,5 @@
+import type { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import { getUserAttributes } from '../../members-data-api/user-attributes';
-import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 
 jest.mock('@/server/lib/getConfiguration', () => ({
 	getConfiguration: () => ({

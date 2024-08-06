@@ -1,4 +1,4 @@
-import { TrackingQueryParams } from '@/shared/model/QueryParams';
+import type { TrackingQueryParams } from '@/shared/model/QueryParams';
 
 // react hook for getting the `ref` and `refViewId` for tracking
 // `ref` is the current url of the page we want to track

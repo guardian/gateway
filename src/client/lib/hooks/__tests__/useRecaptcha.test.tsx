@@ -3,13 +3,12 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks';
-
+import {
+	setupRecaptchaObject,
+	setupRecaptchaScriptMutationObserver,
+} from '@/client/lib/hooks/__tests__/utils/useRecaptchaTestUtils';
 import type { RenderOptions } from '../useRecaptcha';
 import useRecaptcha from '../useRecaptcha';
-import {
-	setupRecaptchaScriptMutationObserver,
-	setupRecaptchaObject,
-} from '@/client/lib/hooks/__tests__/utils/useRecaptchaTestUtils';
 
 const validRecaptchaScriptUrl =
 	'https://www.google.com/recaptcha/api.js?render=explicit';

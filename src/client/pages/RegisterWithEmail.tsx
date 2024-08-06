@@ -1,19 +1,19 @@
-import React from 'react';
-import { MainForm } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { RegistrationProps } from '@/client/pages/Registration';
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { RegistrationConsents } from '@/client/components/RegistrationConsents';
-import { AppName } from '@/shared/lib/appNameUtils';
-import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { divider } from '@/client/styles/Shared';
+import React from 'react';
+import { EmailInput } from '@/client/components/EmailInput';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
+import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 import ThemedLink from '@/client/components/ThemedLink';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import type { RegistrationProps } from '@/client/pages/Registration';
+import { divider } from '@/client/styles/Shared';
+import type { AppName } from '@/shared/lib/appNameUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { GeoLocation } from '@/shared/model/Geolocation';
+import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;

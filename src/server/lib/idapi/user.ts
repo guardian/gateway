@@ -1,21 +1,21 @@
+import type { IDAPIError } from '@/server/lib/IDAPIFetch';
 import {
-	idapiFetch,
+	APIAddClientAccessToken,
 	APIGetOptions,
 	APIPostOptions,
-	APIAddClientAccessToken,
-	IDAPIError,
+	idapiFetch,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
+import { IdapiError } from '@/server/models/Error';
+import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
 import {
 	ConsentsErrors,
 	IdapiErrorMessages,
 	RegistrationErrors,
 	ResetPasswordErrors,
 } from '@/shared/model/Errors';
-import User from '@/shared/model/User';
-import { IdapiError } from '@/server/models/Error';
-import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
-import { ApiRoutePaths } from '@/shared/model/Routes';
+import type { ApiRoutePaths } from '@/shared/model/Routes';
+import type User from '@/shared/model/User';
 
 interface APIResponse {
 	user: User;

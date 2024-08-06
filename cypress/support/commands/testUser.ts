@@ -1,10 +1,10 @@
-import {
+import type { Group } from '@/server/models/okta/Group';
+import type {
+	SessionResponse,
 	TokenResponse,
 	UserResponse,
-	SessionResponse,
 } from '@/server/models/okta/User';
-import { Group } from '@/server/models/okta/Group';
-import { Consent } from '@/shared/model/Consent';
+import type { Consent } from '@/shared/model/Consent';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace

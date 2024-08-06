@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { InteractResponse } from './interact';
+import { OAuthError } from '@/server/models/okta/Error';
+import type { InteractResponse } from './interact';
 import {
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
 } from './shared';
-import { OAuthError } from '@/server/models/okta/Error';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
 export const redirectIdpSchema = baseRemediationValueSchema.merge(

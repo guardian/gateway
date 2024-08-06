@@ -44,13 +44,10 @@ module.exports = {
 		'prefer-const': 'error',
 
 		// disabled @guardian/eslint-config-typescript rules
-		'import/order': 0, // 1045
-		'@typescript-eslint/consistent-type-imports': 0, // 446
 		'@typescript-eslint/no-unsafe-assignment': 0, // 148
 		'eslint-comments/require-description': 0, // 112
 		'import/no-default-export': 0, // 104
 		'@typescript-eslint/no-unnecessary-condition': 0, // 89
-		'sort-imports': 0, // 85
 		'@typescript-eslint/naming-convention': 0, // 84
 		'@typescript-eslint/no-unsafe-member-access': 0, // 84
 		'@typescript-eslint/no-unsafe-argument': 0, // 54

@@ -1,4 +1,4 @@
-import { OktaSignIn, OktaUtil } from './lib/helper';
+import type { OktaSignIn, OktaUtil } from './lib/helper';
 
 export {};
 

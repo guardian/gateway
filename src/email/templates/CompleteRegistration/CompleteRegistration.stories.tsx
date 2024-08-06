@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { CompleteRegistration } from './CompleteRegistration';
 import { renderMJML } from '../../testUtils';
+import { CompleteRegistration } from './CompleteRegistration';
 
 export default {
 	title: 'Email/Templates/CompleteRegistration',

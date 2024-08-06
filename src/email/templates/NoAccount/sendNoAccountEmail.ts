@@ -1,6 +1,5 @@
 import { render } from '@faire/mjml-react/utils/render';
 import { send } from '@/email/lib/send';
-
 import { NoAccount } from './NoAccount';
 import { NoAccountText } from './NoAccountText';
 

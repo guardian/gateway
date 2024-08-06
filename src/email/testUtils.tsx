@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import mjml2html from 'mjml';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import mjml2html from 'mjml';
 
 /**
  * We have to use `any` here because when upgrading to typescript 5 we get the following error:

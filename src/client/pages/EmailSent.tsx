@@ -1,12 +1,8 @@
-import React, {
-	PropsWithChildren,
-	ReactNode,
-	useState,
-	useEffect,
-} from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
+import React, { useEffect, useState } from 'react';
+import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 
 export type EmailSentProps = {
 	email?: string;

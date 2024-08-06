@@ -1,5 +1,5 @@
-import React from 'react';
 import { remSpace } from '@guardian/source/foundations';
+import React from 'react';
 import { errorContextSpacing } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';

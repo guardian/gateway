@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { EmailSent } from '@/client/pages/EmailSent';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { EmailSent } from '@/client/pages/EmailSent';
 
 export default {
 	title: 'Pages/UnvalidatedEmailEmailSent',

@@ -1,6 +1,6 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 export const fourZeroFourRender = (res: ResponseWithRequestState) =>
 	renderer('/404', {

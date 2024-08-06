@@ -1,15 +1,15 @@
-import userStatuses from '../../support/okta/userStatuses';
-import userResponse from '../../fixtures/okta-responses/success/user.json';
-import userGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
-import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
+import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
 import userExistsError from '../../fixtures/okta-responses/error/user-exists.json';
-import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
-import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
+import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
+import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-response.json';
 import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
 import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
-import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-response.json';
-import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
-import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
+import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
+import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
+import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import userGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
+import userStatuses from '../../support/okta/userStatuses';
 
 beforeEach(() => {
 	cy.mockPurge();

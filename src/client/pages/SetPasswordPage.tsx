@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
+import { logger } from '@/client/lib/clientSideLogger';
 import useClientState from '@/client/lib/hooks/useClientState';
-
 import { ChangePassword } from '@/client/pages/ChangePassword';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { logger } from '@/client/lib/clientSideLogger';
 
 export const SetPasswordPage = () => {
 	const clientState = useClientState();

@@ -1,13 +1,13 @@
+import type { IDAPIError } from '@/server/lib/IDAPIFetch';
 import {
 	APIAddClientAccessToken,
 	APIPostOptions,
 	idapiFetch,
-	IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
+import type { SubscriptionAction } from '@/shared/lib/subscriptions';
 import { SubscribeErrors, UnsubscribeErrors } from '@/shared/model/Errors';
-import { SubscriptionAction } from '@/shared/lib/subscriptions';
 
 export type EmailType = 'newsletter' | 'marketing';
 

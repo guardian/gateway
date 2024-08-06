@@ -1,6 +1,6 @@
+import type { NextFunction, Request } from 'express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { NextFunction, Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import Mock = jest.Mock;
 
 describe('handleAsyncErrors', () => {

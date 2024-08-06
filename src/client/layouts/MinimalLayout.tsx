@@ -1,27 +1,27 @@
-import React from 'react';
 import { css } from '@emotion/react';
-import MinimalHeader from '@/client/components/MinimalHeader';
 import { from, headline, remSpace } from '@guardian/source/foundations';
-import useClientState from '@/client/lib/hooks/useClientState';
 import {
 	ErrorSummary,
 	SuccessSummary,
 } from '@guardian/source-development-kitchen/react-components';
-import locations from '@/shared/lib/locations';
-import { Theme } from '@/client/styles/Theme';
-import {
-	mainSectionStyles,
-	successMessageStyles,
-	errorMessageStyles,
-} from '@/client/styles/Shared';
-import { DecorativeImageId } from '@/client/assets/decorative';
+import React from 'react';
+import type { DecorativeImageId } from '@/client/assets/decorative';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import MinimalHeader from '@/client/components/MinimalHeader';
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
+import useClientState from '@/client/lib/hooks/useClientState';
 import {
 	CONTAINER_GAP,
 	LAYOUT_WIDTH_NARROW,
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
-import { MainBodyText } from '@/client/components/MainBodyText';
+import {
+	errorMessageStyles,
+	mainSectionStyles,
+	successMessageStyles,
+} from '@/client/styles/Shared';
+import { Theme } from '@/client/styles/Theme';
+import locations from '@/shared/lib/locations';
 
 export interface MinimalLayoutProps {
 	children?: React.ReactNode;

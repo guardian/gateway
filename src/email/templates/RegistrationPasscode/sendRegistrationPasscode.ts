@@ -1,6 +1,5 @@
 import { render } from '@faire/mjml-react/utils/render';
 import { send } from '@/email/lib/send';
-
 import { RegistrationPasscode } from './RegistrationPasscode';
 import { RegistrationPasscodeText } from './RegistrationPasscodeText';
 

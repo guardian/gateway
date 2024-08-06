@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LogLevel } from '@/shared/model/Logger';
+import type { InspectOptions } from 'util';
+import { formatWithOptions } from 'util';
 import { createLogger, transports } from 'winston';
-import { formatWithOptions, InspectOptions } from 'util';
-import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
+import type { ExtraLogFields } from '@/shared/lib/baseLogger';
+import { BaseLogger } from '@/shared/lib/baseLogger';
+import type { LogLevel } from '@/shared/model/Logger';
 
 const winstonLogger = createLogger({
 	transports: [new transports.Console()],

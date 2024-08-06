@@ -1,4 +1,4 @@
-import { Code, Link, Message } from 'cypress-mailosaur';
+import type { Code, Link, Message } from 'cypress-mailosaur';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace

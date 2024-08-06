@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 import { readEncryptedStateCookie } from './encryptedStateCookie';
 
 // this method reads from the two places in cookies where an email may be set

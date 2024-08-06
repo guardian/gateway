@@ -1,6 +1,6 @@
 import React from 'react';
-import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { primaryButtonStyles } from '@/client/styles/Shared';
 

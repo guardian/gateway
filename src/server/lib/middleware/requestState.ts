@@ -1,23 +1,24 @@
 // Middleware for assigning important parts of the request state to res.locals.
 // This should be the only place res.locals is mutated.
 // Requires: csurf middlware
-import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
-import { parseExpressQueryParams } from '@/server/lib/queryParams';
-import { NextFunction, Response } from 'express';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { tests } from '@/shared/model/experiments/abTests';
+import Bowser from 'bowser';
+import type { NextFunction, Response } from 'express';
+import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { getABTesting } from '@/server/lib/getABTesting';
-import {
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
+import { getApp } from '@/server/lib/okta/api/apps';
+import { parseExpressQueryParams } from '@/server/lib/queryParams';
+import { logger } from '@/server/lib/serverSideLogger';
+import type {
 	OAuthState,
 	RequestState,
 	RequestWithTypedQuery,
 } from '@/server/models/Express';
-import Bowser from 'bowser';
-import { logger } from '@/server/lib/serverSideLogger';
-import { getApp } from '@/server/lib/okta/api/apps';
-import { IsNativeApp } from '@/shared/model/ClientState';
-import { AppName, getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
-import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import type { AppName } from '@/shared/lib/appNameUtils';
+import { getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
+import type { IsNativeApp } from '@/shared/model/ClientState';
+import { tests } from '@/shared/model/experiments/abTests';
 
 const {
 	idapiBaseUrl,

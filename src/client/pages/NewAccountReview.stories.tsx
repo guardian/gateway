@@ -1,11 +1,8 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Consent } from '@/shared/model/Consent';
-import {
-	NewAccountReview,
-	NewAccountReviewProps,
-} from '@/client/pages/NewAccountReview';
+import type { NewAccountReviewProps } from '@/client/pages/NewAccountReview';
+import { NewAccountReview } from '@/client/pages/NewAccountReview';
+import type { Consent } from '@/shared/model/Consent';
 
 export default {
 	title: 'Pages/NewAccountReview',

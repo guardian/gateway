@@ -1,10 +1,10 @@
-import { RoutePaths } from '@/shared/model/Routes';
 import { sha256 } from '@/server/lib/crypto';
-import {
-	RateLimiterBucketsConfiguration,
-	BucketValues,
+import type { RoutePaths } from '@/shared/model/Routes';
+import type {
 	BucketKeys,
 	BucketType,
+	BucketValues,
+	RateLimiterBucketsConfiguration,
 } from './types';
 
 // Generates a unique key to store in Redis for a given route, bucket and value.

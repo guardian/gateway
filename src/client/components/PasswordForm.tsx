@@ -1,28 +1,22 @@
-import React, {
-	PropsWithChildren,
-	ReactNode,
-	useEffect,
-	useState,
-} from 'react';
-import { textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
-import {
-	PasswordAutoComplete,
-	PasswordInput,
-} from '@/client/components/PasswordInput';
-import { FieldError } from '@/shared/model/ClientState';
-import {
-	PasswordFieldErrors,
-	ShortPasswordFieldErrors,
-} from '@/shared/model/Errors';
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { MainForm } from '@/client/components/MainForm';
-import { logger } from '@/client/lib/clientSideLogger';
+import { textSans } from '@guardian/source/foundations';
 import {
 	SvgAlertRound,
 	SvgInfoRound,
 	SvgTickRound,
 } from '@guardian/source/react-components';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import type { PropsWithChildren, ReactNode } from 'react';
+import React, { useEffect, useState } from 'react';
+import { MainForm } from '@/client/components/MainForm';
+import type { PasswordAutoComplete } from '@/client/components/PasswordInput';
+import { PasswordInput } from '@/client/components/PasswordInput';
+import { logger } from '@/client/lib/clientSideLogger';
+import type { FieldError } from '@/shared/model/ClientState';
+import {
+	PasswordFieldErrors,
+	ShortPasswordFieldErrors,
+} from '@/shared/model/Errors';
 
 type Props = {
 	submitUrl: string;

@@ -1,12 +1,12 @@
-import userStatuses from '../../support/okta/userStatuses';
-import userNotFoundError from '../../fixtures/okta-responses/error/user-not-found.json';
 import oktaPermissionsError from '../../fixtures/okta-responses/error/no-permission.json';
-import userResponse from '../../fixtures/okta-responses/success/user.json';
+import userNotFoundError from '../../fixtures/okta-responses/error/user-not-found.json';
+import authResetPasswordResponse from '../../fixtures/okta-responses/success/auth-reset-password.json';
+import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
 import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
 import tokenResponse from '../../fixtures/okta-responses/success/token.json';
-import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
 import verifyRecoveryTokenReponse from '../../fixtures/okta-responses/success/verify-recovery-token.json';
-import authResetPasswordResponse from '../../fixtures/okta-responses/success/auth-reset-password.json';
+import userStatuses from '../../support/okta/userStatuses';
 
 beforeEach(() => {
 	cy.mockPurge();

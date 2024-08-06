@@ -1,8 +1,9 @@
-import { OktaError } from '@/server/models/okta/Error';
-import { SessionResponse, sessionSchema } from '@/server/models/okta/Session';
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { OktaError } from '@/server/models/okta/Error';
+import type { SessionResponse } from '@/server/models/okta/Session';
+import { sessionSchema } from '@/server/models/okta/Session';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import { handleErrorResponse } from './errors';
 import { defaultHeaders } from './headers';
 

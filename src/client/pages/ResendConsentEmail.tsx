@@ -1,9 +1,9 @@
 import React from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { QueryParams } from '@/shared/model/QueryParams';
 import { MainForm } from '@/client/components/MainForm';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 interface Props {
 	token: string;

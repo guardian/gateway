@@ -1,7 +1,7 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { WelcomeSocial } from '@/client/pages/WelcomeSocial';
-import { SocialProvider } from '@/shared/model/Social';
+import type { SocialProvider } from '@/shared/model/Social';
 
 type WelcomeSocialPageProps = {
 	socialProvider: SocialProvider;

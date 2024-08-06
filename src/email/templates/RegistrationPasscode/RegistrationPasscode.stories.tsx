@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { RegistrationPasscode } from './RegistrationPasscode';
 import { renderMJML } from '../../testUtils';
+import { RegistrationPasscode } from './RegistrationPasscode';
 
 export default {
 	title: 'Email/Templates/RegistrationPasscode',

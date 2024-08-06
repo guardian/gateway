@@ -1,11 +1,11 @@
-import { NextFunction, Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { NextFunction, Request } from 'express';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/serverSideLogger';
-import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { trackMetric } from '@/server/lib/trackMetric';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 
 const { defaultReturnUri } = getConfiguration();
 

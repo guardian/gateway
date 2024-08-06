@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { RadioGroup, Radio } from '@guardian/source/react-components';
-import { MainForm } from '@/client/components/MainForm';
-import { MainBodyText } from '@/client/components/MainBodyText';
-import { ExternalLink } from '@/client/components/ExternalLink';
-import locations from '@/shared/lib/locations';
-import { PasswordInput } from '@/client/components/PasswordInput';
-import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { FieldError } from '@/shared/model/ClientState';
-import { divider } from '@/client/styles/Shared';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
+import { textSans } from '@guardian/source/foundations';
+import { Radio, RadioGroup } from '@guardian/source/react-components';
+import { Divider } from '@guardian/source-development-kitchen/react-components';
+import React, { useState } from 'react';
+import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
+import { ExternalLink } from '@/client/components/ExternalLink';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
+import { PasswordInput } from '@/client/components/PasswordInput';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { divider } from '@/client/styles/Shared';
+import locations from '@/shared/lib/locations';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { FieldError } from '@/shared/model/ClientState';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 interface Props {
 	queryParams: QueryParams;

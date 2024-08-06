@@ -1,9 +1,12 @@
-import { Request } from 'express';
+import type { Jwt } from '@okta/jwt-verifier';
+import type { Request } from 'express';
 import { mocked } from 'jest-mock';
-import { updateRegistrationLocationViaOkta } from '../updateRegistrationLocation';
-import { UserResponse, UserUpdateRequest } from '@/server/models/okta/User';
-import { Jwt } from '@okta/jwt-verifier';
+import type {
+	UserResponse,
+	UserUpdateRequest,
+} from '@/server/models/okta/User';
 import { getUser, updateUser } from '../okta/api/users';
+import { updateRegistrationLocationViaOkta } from '../updateRegistrationLocation';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({

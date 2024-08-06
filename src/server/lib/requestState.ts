@@ -1,5 +1,5 @@
 import deepmerge from 'deepmerge';
-import { RequestState } from '@/server/models/Express';
+import type { RequestState } from '@/server/models/Express';
 
 /**
  * @name mergeRequestState

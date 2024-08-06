@@ -1,7 +1,7 @@
-import { Request } from 'express';
-import { CountryCode } from '@guardian/libs';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import type { CountryCode } from '@guardian/libs';
+import type { Request } from 'express';
 import { maybeGetCountryCodeFromCypressMockStateCookie } from '@/server/lib/cypress';
+import type { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 const headerValueIsCountryCode = (
 	header: string | string[] | undefined,

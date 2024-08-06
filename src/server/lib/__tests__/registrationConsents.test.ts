@@ -1,10 +1,10 @@
 import {
-	minifyRegistrationConsents,
-	expandRegistrationConsents,
 	bodyFormFieldsToRegistrationConsents,
+	expandRegistrationConsents,
+	minifyRegistrationConsents,
 } from '@/server/lib/registrationConsents';
 import { Newsletters } from '@/shared/model/Newsletter';
-import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import type { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
 	logger: {

@@ -1,13 +1,13 @@
+import type { IDAPIError } from '@/server/lib/IDAPIFetch';
 import {
 	APIAddClientAccessToken,
 	APIPostOptions,
-	IDAPIError,
 	idapiFetch,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
-import { IdapiCookies } from '@/shared/model/IDAPIAuth';
+import type { IdapiCookies } from '@/shared/model/IDAPIAuth';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
 	if (error.status === 'error' && error.errors?.length) {

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import useClientState from '@/client/lib/hooks/useClientState';
-import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { logger } from '@/client/lib/clientSideLogger';
+import useClientState from '@/client/lib/hooks/useClientState';
+import { ResetPassword } from '@/client/pages/ResetPassword';
 
 export const ResetPasswordSessionExpiredPage = () => {
 	const clientState = useClientState();

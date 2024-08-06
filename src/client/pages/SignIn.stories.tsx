@@ -1,7 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { SignIn, SignInProps } from '@/client/pages/SignIn';
+import type { SignInProps } from '@/client/pages/SignIn';
+import { SignIn } from '@/client/pages/SignIn';
 import { SignInErrors } from '@/shared/model/Errors';
 
 export default {

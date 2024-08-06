@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { FieldError } from '@/shared/model/ClientState';
-import { TextInputProps } from '@guardian/source/react-components';
 import { css } from '@emotion/react';
-import ThemedTextInput from '@/client/components/ThemedTextInput';
 import { remSpace } from '@guardian/source/foundations';
+import type { TextInputProps } from '@guardian/source/react-components';
+import React, { useState } from 'react';
+import ThemedTextInput from '@/client/components/ThemedTextInput';
+import type { FieldError } from '@/shared/model/ClientState';
 
 interface PasscodeInputProps extends Omit<TextInputProps, 'label'> {
 	passcode?: string;

@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 import { getRegistrationLocation } from '../getRegistrationLocation';
 
 const getFakeRequest = (country: string | undefined): Request =>

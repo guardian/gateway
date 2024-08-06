@@ -1,51 +1,52 @@
-import { Request } from 'express';
-import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
-import { logger } from '@/server/lib/serverSideLogger';
-import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { trackMetric } from '@/server/lib/trackMetric';
+import type { Request } from 'express';
+import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
+import { readEmailCookie } from '@/server/lib/emailCookie';
+import {
+	readEncryptedStateCookie,
+	setEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
+import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
+import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
+import { getUser, getUserGroups } from '@/server/lib/okta/api/users';
+import { interact } from '@/server/lib/okta/idx/interact';
+import {
+	introspect,
+	redirectIdpSchema,
+} from '@/server/lib/okta/idx/introspect';
+import {
+	performAuthorizationCodeFlow,
+	scopesForAuthentication,
+} from '@/server/lib/okta/oauth';
+import {
+	ProfileOpenIdClientRedirectUris,
+	setAuthorizationStateCookie,
+	updateAuthorizationStateData,
+} from '@/server/lib/okta/openid-connect';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import handleRecaptcha from '@/server/lib/recaptcha';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
+import { ApiError } from '@/server/models/Error';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
+import { clearOktaCookies } from '@/server/routes/signOut';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import {
 	FederationErrors,
 	GenericErrors,
 	RegistrationErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
-import { ApiError } from '@/server/models/Error';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { readEmailCookie } from '@/server/lib/emailCookie';
-import handleRecaptcha from '@/server/lib/recaptcha';
-import { OAuthError, OktaError } from '@/server/models/okta/Error';
-import {
-	performAuthorizationCodeFlow,
-	scopesForAuthentication,
-} from '@/server/lib/okta/oauth';
-import { getCurrentSession } from '@/server/lib/okta/api/sessions';
-import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
-import { getUser, getUserGroups } from '@/server/lib/okta/api/users';
-import { clearOktaCookies } from '@/server/routes/signOut';
-import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
-import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
-import { mergeRequestState } from '@/server/lib/requestState';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import {
-	readEncryptedStateCookie,
-	setEncryptedStateCookie,
-} from '@/server/lib/encryptedStateCookie';
-import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
-import {
-	ProfileOpenIdClientRedirectUris,
-	setAuthorizationStateCookie,
-	updateAuthorizationStateData,
-} from '@/server/lib/okta/openid-connect';
-import { SocialProvider, isValidSocialProvider } from '@/shared/model/Social';
-import { interact } from '@/server/lib/okta/idx/interact';
-import {
-	introspect,
-	redirectIdpSchema,
-} from '@/server/lib/okta/idx/introspect';
+import type { SocialProvider } from '@/shared/model/Social';
+import { isValidSocialProvider } from '@/shared/model/Social';
 
 const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
 

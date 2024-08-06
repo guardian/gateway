@@ -1,24 +1,22 @@
-import { Request } from 'express';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { Request } from 'express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import type { EmailType } from '@/server/lib/idapi/subscriptions';
 import {
 	isValidEmailType,
-	parseSubscriptionData,
 	makeSubscriptionRequest,
-	EmailType,
 	makeUnsubscribeAllRequest,
+	parseSubscriptionData,
 	parseUnsubscribeAllData,
 } from '@/server/lib/idapi/subscriptions';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
-import {
-	SubscriptionAction,
-	subscriptionActionName,
-} from '@/shared/lib/subscriptions';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import type { SubscriptionAction } from '@/shared/lib/subscriptions';
+import { subscriptionActionName } from '@/shared/lib/subscriptions';
 
 const { accountManagementUrl } = getConfiguration();
 

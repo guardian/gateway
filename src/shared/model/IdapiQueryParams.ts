@@ -1,4 +1,4 @@
-import { PersistableQueryParams } from './QueryParams';
+import type { PersistableQueryParams } from './QueryParams';
 
 /**
  * IdApiQueryParams are query parameters

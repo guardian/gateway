@@ -1,6 +1,6 @@
-import { logger } from '@/server/lib/serverSideLogger';
-import { Jwt } from '@okta/jwt-verifier';
+import type { Jwt } from '@okta/jwt-verifier';
 import { getUser, updateUser } from '@/server/lib/okta/api/users';
+import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from './okta/api/apps';
 
 /**

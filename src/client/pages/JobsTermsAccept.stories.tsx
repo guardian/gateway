@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import { JobsTermsAccept } from '@/client/pages/JobsTermsAccept';
 
 export default {

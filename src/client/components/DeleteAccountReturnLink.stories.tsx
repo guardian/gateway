@@ -1,8 +1,7 @@
-import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { css } from '@emotion/react';
+import type { Meta } from '@storybook/react';
+import React from 'react';
+import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { CONTAINER_GAP } from '@/client/models/Style';
 
 const flexStyles = css`

@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import { Participations } from '@guardian/ab-core';
+import type { Participations } from '@guardian/ab-core';
+import type { Request } from 'express';
 
 const TEST_PREFIX = 'ab-';
 

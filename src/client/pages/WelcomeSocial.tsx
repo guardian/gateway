@@ -1,15 +1,15 @@
 import React from 'react';
 import { MainForm } from '@/client/components/MainForm';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { RegistrationProps } from '@/client/pages/Registration';
-import { SocialProvider } from '@/shared/model/Social';
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { RegistrationConsents } from '@/client/components/RegistrationConsents';
-import { AppName } from '@/shared/lib/appNameUtils';
-import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import type { RegistrationProps } from '@/client/pages/Registration';
+import type { AppName } from '@/shared/lib/appNameUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { GeoLocation } from '@/shared/model/Geolocation';
+import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
+import type { SocialProvider } from '@/shared/model/Social';
 
 const headerMessage = (socialProvider: SocialProvider) => {
 	if (socialProvider === 'google') {

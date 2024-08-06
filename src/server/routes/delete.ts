@@ -1,31 +1,31 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { renderer } from '@/server/lib/renderer';
-import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { getUserAttributes } from '@/server/lib/members-data-api/user-attributes';
+import type { Request } from 'express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { ApiError } from '@/server/models/Error';
-import { logger } from '@/server/lib/serverSideLogger';
-import { mergeRequestState } from '@/server/lib/requestState';
-import { getUser } from '@/server/lib/okta/api/users';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { getUserAttributes } from '@/server/lib/members-data-api/user-attributes';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
+import { requestStateHasOAuthTokens } from '@/server/lib/middleware/requestState';
 import { authenticate } from '@/server/lib/okta/api/authentication';
-import { OktaError } from '@/server/models/okta/Error';
+import { getUser } from '@/server/lib/okta/api/users';
+import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import {
 	performAuthorizationCodeFlow,
 	scopesForSelfServiceDeletion,
 } from '@/server/lib/okta/oauth';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
+import { ApiError } from '@/server/models/Error';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { OktaError } from '@/server/models/okta/Error';
+import type { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import {
 	addQueryParamsToPath,
 	addQueryParamsToUntypedPath,
 } from '@/shared/lib/queryParams';
 import { GenericErrors } from '@/shared/model/Errors';
-import { UserAttributesResponse } from '@/shared/lib/members-data-api';
-import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { requestStateHasOAuthTokens } from '@/server/lib/middleware/requestState';
 
 const { signInPageUrl } = getConfiguration();
 

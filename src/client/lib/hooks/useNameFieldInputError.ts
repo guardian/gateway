@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react';
 import { NameFieldErrors } from '@/shared/model/Errors';
-import { useState, useEffect } from 'react';
 
 /**
  * Utility hook to show the global name input field error on submit only.

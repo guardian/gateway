@@ -1,23 +1,23 @@
-import { Request } from 'express';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { Request } from 'express';
+import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { logger } from '@/server/lib/serverSideLogger';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
 	clearIDAPICookies,
 	setSignOutCookie,
 } from '@/server/lib/idapi/IDAPICookies';
-import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
-import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { trackMetric } from '@/server/lib/trackMetric';
+import { logoutFromIDAPI } from '@/server/lib/idapi/unauth';
 import {
 	closeCurrentSession,
 	getCurrentSession,
 } from '@/server/lib/okta/api/sessions';
-import { checkAndDeleteOAuthTokenCookies } from '@/server/lib/okta/tokens';
 import { clearUserSessions } from '@/server/lib/okta/api/users';
-import { logoutFromIDAPI } from '@/server/lib/idapi/unauth';
+import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
+import { checkAndDeleteOAuthTokenCookies } from '@/server/lib/okta/tokens';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 

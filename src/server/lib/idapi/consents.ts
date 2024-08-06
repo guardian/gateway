@@ -1,19 +1,19 @@
 import {
-	idapiFetch,
-	APIPatchOptions,
-	APIGetOptions,
 	APIAddOAuthAuthorization,
+	APIGetOptions,
+	APIPatchOptions,
+	idapiFetch,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
-import { ConsentsErrors } from '@/shared/model/Errors';
-import { Consent } from '@/shared/model/Consent';
 import { IdapiError } from '@/server/models/Error';
+import type { Consent } from '@/shared/model/Consent';
+import { ConsentsErrors } from '@/shared/model/Errors';
+import type { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
+import type { UserConsent } from '@/shared/model/UserConsents';
 import {
 	invertOptInConsents,
 	invertOptOutConsents,
 } from './invertOptOutConsents';
-import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
-import { UserConsent } from '@/shared/model/UserConsents';
 
 const handleError = (): never => {
 	throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });

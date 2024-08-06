@@ -1,13 +1,12 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Page } from './Page';
-import { Header } from './Header';
-import { Text } from './Text';
-import { Footer } from './Footer';
-import { SubHeader } from './SubHeader';
 import { renderMJML } from '../testUtils';
 import { Button } from './Button';
+import { Footer } from './Footer';
+import { Header } from './Header';
+import { Page } from './Page';
+import { SubHeader } from './SubHeader';
+import { Text } from './Text';
 
 export default {
 	title: 'Email/Components/Page',

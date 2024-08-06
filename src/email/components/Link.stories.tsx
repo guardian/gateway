@@ -1,9 +1,8 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Text } from './Text';
-import { Link } from './Link';
 import { renderMJMLComponent } from '../testUtils';
+import { Link } from './Link';
+import { Text } from './Text';
 
 export default {
 	title: 'Email/Components/Link',

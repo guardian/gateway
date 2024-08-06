@@ -1,5 +1,6 @@
+import type { TextInputProps } from '@guardian/source/react-components';
+import { TextInput } from '@guardian/source/react-components';
 import React from 'react';
-import { TextInput, TextInputProps } from '@guardian/source/react-components';
 
 const textInputTheme = {
 	textLabel: 'var(--color-input-label)',

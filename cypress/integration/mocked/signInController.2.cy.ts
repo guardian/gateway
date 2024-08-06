@@ -1,6 +1,6 @@
 import authenticationFailedError from '../../fixtures/okta-responses/error/authentication-failed.json';
-import validUserResponse from '../../fixtures/okta-responses/success/valid-user.json';
 import validUserGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
+import validUserResponse from '../../fixtures/okta-responses/success/valid-user.json';
 
 beforeEach(() => {
 	cy.mockPurge();

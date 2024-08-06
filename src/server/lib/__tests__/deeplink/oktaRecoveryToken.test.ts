@@ -1,12 +1,12 @@
-import { AppResponse } from '@/server/models/okta/App';
 import { mocked } from 'jest-mock';
 import {
 	addAppPrefixToOktaRecoveryToken,
-	extractOktaRecoveryToken,
-	encryptOktaRecoveryToken,
 	decryptOktaRecoveryToken,
+	encryptOktaRecoveryToken,
+	extractOktaRecoveryToken,
 } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { getApp } from '@/server/lib/okta/api/apps';
+import type { AppResponse } from '@/server/models/okta/App';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({

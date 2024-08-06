@@ -1,12 +1,12 @@
-import React from 'react';
-import {
-	EMAIL_LIGHT,
-	EMAIL_DARK,
-	WELCOME_LIGHT,
-	WELCOME_DARK,
-	DecorativeImageId,
-} from '@/client/assets/decorative';
 import { css } from '@emotion/react';
+import React from 'react';
+import type { DecorativeImageId } from '@/client/assets/decorative';
+import {
+	EMAIL_DARK,
+	EMAIL_LIGHT,
+	WELCOME_DARK,
+	WELCOME_LIGHT,
+} from '@/client/assets/decorative';
 
 export interface Props {
 	id: DecorativeImageId;

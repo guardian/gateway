@@ -1,6 +1,6 @@
-import { csrfMiddleware } from '../../middleware/csrf';
-import type { ResponseWithRequestState } from '@/server/models/Express';
 import type { Request } from 'express';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { csrfMiddleware } from '../../middleware/csrf';
 
 const csrfSpy = jest.fn();
 jest.mock('csurf', () => {

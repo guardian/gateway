@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import { ResendConsentEmail } from '@/client/pages/ResendConsentEmail';
 
 export default {

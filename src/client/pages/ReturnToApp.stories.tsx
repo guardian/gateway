@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import { ReturnToApp } from '@/client/pages/ReturnToApp';
 
 export default {

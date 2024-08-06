@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { NoAccount } from './NoAccount';
 import { renderMJML } from '../../testUtils';
+import { NoAccount } from './NoAccount';
 
 export default {
 	title: 'Email/Templates/NoAccount',

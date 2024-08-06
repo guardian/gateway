@@ -1,4 +1,4 @@
-import { TrackingQueryParams } from '@/shared/model/QueryParams';
+import type { TrackingQueryParams } from '@/shared/model/QueryParams';
 
 type Props = {
 	base?: string;

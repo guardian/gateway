@@ -1,4 +1,4 @@
-import { ABTest } from '@guardian/ab-core';
+import type { ABTest } from '@guardian/ab-core';
 
 export const exampleTest: ABTest = {
 	id: 'ExampleTest', // This ID must match the Server Side AB Test

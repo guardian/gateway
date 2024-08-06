@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { IdApiQueryParams } from '../model/IdapiQueryParams';
-import { QueryParams } from '../model/QueryParams';
-import { AllRoutes } from '../model/Routes';
+import type { OktaQueryParams } from '@/shared/model/OktaQueryParams';
+import type { IdApiQueryParams } from '../model/IdapiQueryParams';
+import type { QueryParams } from '../model/QueryParams';
+import type { AllRoutes } from '../model/Routes';
 import {
 	addApiQueryParamsToPath,
 	addQueryParamsToUntypedPath,
 } from './queryParams';
-import { OktaQueryParams } from '@/shared/model/OktaQueryParams';
 
 /**
  * ExtractRouteParams type generates a object type definition given a path type string

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 const router = Router();
 

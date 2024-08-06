@@ -1,7 +1,6 @@
 import { z } from 'zod';
+import type { IdxBaseResponse, IdxStateHandleBody } from './shared';
 import {
-	IdxBaseResponse,
-	IdxStateHandleBody,
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,

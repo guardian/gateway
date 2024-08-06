@@ -1,15 +1,15 @@
-import React from 'react';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { MainBodyText } from '@/client/components/MainBodyText';
-import { divider } from '@/client/styles/Shared';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import React from 'react';
+import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { InformationBox } from '@/client/components/InformationBox';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import ThemedLink from '@/client/components/ThemedLink';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import { divider } from '@/client/styles/Shared';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 export type RegistrationProps = {
 	email?: string;

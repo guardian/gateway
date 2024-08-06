@@ -1,22 +1,21 @@
 import { Router } from 'express';
 import { noCache } from '@/server/lib/middleware/cache';
-
-import { default as core } from './core';
-import { default as signIn } from './signIn';
-import { default as signOut } from './signOut';
-import { default as register } from './register';
-import { default as resetPassword } from './resetPassword';
-import { default as verifyEmail } from './verifyEmail';
-import { default as welcome } from './welcome';
-import { default as setPassword } from './setPassword';
-import { default as maintenance } from './maintenance';
-import { default as oauth } from './oauth';
-import { default as emailTemplates } from './emailTemplates';
 import { default as agree } from './agree';
 import { default as changeEmail } from './changeEmail';
-import { default as subscriptions } from './subscriptions';
 import { default as consentToken } from './consentToken';
+import { default as core } from './core';
 import { default as deleteAccount } from './delete';
+import { default as emailTemplates } from './emailTemplates';
+import { default as maintenance } from './maintenance';
+import { default as oauth } from './oauth';
+import { default as register } from './register';
+import { default as resetPassword } from './resetPassword';
+import { default as setPassword } from './setPassword';
+import { default as signIn } from './signIn';
+import { default as signOut } from './signOut';
+import { default as subscriptions } from './subscriptions';
+import { default as verifyEmail } from './verifyEmail';
+import { default as welcome } from './welcome';
 
 const router = Router();
 const uncachedRoutes = Router();

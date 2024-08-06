@@ -1,12 +1,11 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
+import { InformationBox } from '@/client/components/InformationBox';
 import {
 	GuardianTerms,
 	JobsTerms,
 	RecaptchaTerms,
 } from '@/client/components/Terms';
-import { InformationBox } from '@/client/components/InformationBox';
 
 export default {
 	title: 'Components/Terms',

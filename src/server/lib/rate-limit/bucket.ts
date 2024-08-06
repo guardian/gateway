@@ -1,11 +1,11 @@
-import Redis, { ChainableCommander } from 'ioredis';
-
+import type { ChainableCommander } from 'ioredis';
+import type Redis from 'ioredis';
 import type {
-	ParsedRateLimitBucket,
-	RateLimitBucketContents,
 	BucketKeys,
-	RateLimiterBucketConfiguration,
+	ParsedRateLimitBucket,
 	PipelinedBucketData,
+	RateLimitBucketContents,
+	RateLimiterBucketConfiguration,
 } from './types';
 
 /**

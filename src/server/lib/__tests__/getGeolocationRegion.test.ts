@@ -1,5 +1,5 @@
+import type { Request } from 'express';
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
-import { Request } from 'express';
 
 const getFakeRequest = (region: string | undefined) => ({
 	headers: {

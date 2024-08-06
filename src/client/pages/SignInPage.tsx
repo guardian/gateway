@@ -1,7 +1,7 @@
 import React from 'react';
-import { SignIn } from '@/client/pages/SignIn';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
+import { SignIn } from '@/client/pages/SignIn';
 
 interface Props {
 	isReauthenticate?: boolean;

@@ -1,11 +1,11 @@
-import { CSSObject } from '@emotion/react';
+import type { CSSObject } from '@emotion/react';
+import type { FontFace } from '@/client/models/Font';
 import {
-	FontFace,
-	FontWeightName,
-	FontWeightNumber,
-	FontStyle,
 	FontFamily,
 	FontFamilyPath,
+	FontStyle,
+	FontWeightName,
+	FontWeightNumber,
 } from '@/client/models/Font';
 
 // font formats

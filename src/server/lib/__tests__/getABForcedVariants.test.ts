@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 import { getABForcedVariants } from '@/server/lib/getABForcedVariants';
 
 describe('getABForcedVariants', () => {

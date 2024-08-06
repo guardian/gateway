@@ -1,8 +1,8 @@
+import type { ComponentEventParams } from '../ophan';
 import {
+	generateOphanComponentEvent,
 	getComponentType,
 	parseComponentEventParams,
-	generateOphanComponentEvent,
-	ComponentEventParams,
 } from '../ophan';
 
 // mock the server side logger

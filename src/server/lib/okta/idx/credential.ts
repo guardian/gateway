@@ -1,16 +1,15 @@
 import { z } from 'zod';
-import {
-	IdxBaseResponse,
-	IdxStateHandleBody,
-	baseRemediationValueSchema,
-	idxBaseResponseSchema,
-	idxFetch,
-} from './shared';
+import { skipSchema } from './challenge';
 import {
 	enrollAuthenticatorSchema,
 	selectAuthenticationEnrollSchema,
 } from './enroll';
-import { skipSchema } from './challenge';
+import type { IdxBaseResponse, IdxStateHandleBody } from './shared';
+import {
+	baseRemediationValueSchema,
+	idxBaseResponseSchema,
+	idxFetch,
+} from './shared';
 
 // Schema for the credential/enroll response - very similar to the enroll response
 const credentialEnrollResponse = idxBaseResponseSchema.merge(

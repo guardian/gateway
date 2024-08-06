@@ -1,8 +1,8 @@
-import React, { PropsWithChildren } from 'react';
-import { Meta } from '@storybook/react';
-
-import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
+import type { Meta } from '@storybook/react';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
+import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
 
 export default {
 	title: 'Components/ToggleSwitchList',

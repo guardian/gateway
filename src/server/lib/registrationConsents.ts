@@ -1,17 +1,15 @@
-import { Request } from 'express';
-import { decrypt, encrypt } from './crypto';
-import { getConfiguration } from './getConfiguration';
-import { base64ToUrlSafeString, urlSafeStringToBase64 } from './base64';
-import { logger } from './serverSideLogger';
-import {
-	RegistrationConsents,
-	registrationConsentsSchema,
-} from '@/shared/model/RegistrationConsents';
+import type { Request } from 'express';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import {
-	RegistrationNewslettersFormFieldsMap,
 	newsletterBundleToIndividualNewsletters,
+	RegistrationNewslettersFormFieldsMap,
 } from '@/shared/model/Newsletter';
+import type { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { registrationConsentsSchema } from '@/shared/model/RegistrationConsents';
+import { base64ToUrlSafeString, urlSafeStringToBase64 } from './base64';
+import { decrypt, encrypt } from './crypto';
+import { getConfiguration } from './getConfiguration';
+import { logger } from './serverSideLogger';
 
 // consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value

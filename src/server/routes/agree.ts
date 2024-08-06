@@ -1,15 +1,15 @@
-import { Request } from 'express';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { logger } from '@/server/lib/serverSideLogger';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { trackMetric } from '@/server/lib/trackMetric';
 import deepmerge from 'deepmerge';
-import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
+import type { Request } from 'express';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { deleteOAuthTokenCookie } from '@/server/lib/okta/tokens';
+import { renderer } from '@/server/lib/renderer';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 
 const { defaultReturnUri, signInPageUrl } = getConfiguration();

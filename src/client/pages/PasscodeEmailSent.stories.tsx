@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
 
 export default {

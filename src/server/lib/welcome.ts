@@ -1,6 +1,6 @@
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { QueryParams } from '@/shared/model/QueryParams';
+import type { GeoLocation } from '@/shared/model/Geolocation';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 /**
  * Returns the next page in the welcome flow based on the user's geolocation

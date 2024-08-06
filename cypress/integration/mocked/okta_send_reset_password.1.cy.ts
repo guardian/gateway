@@ -1,4 +1,4 @@
-import { UserResponse } from '@/server/models/okta/User';
+import type { UserResponse } from '@/server/models/okta/User';
 
 describe('Send password reset email in Okta', () => {
 	const email = 'mrtest@theguardian.com';

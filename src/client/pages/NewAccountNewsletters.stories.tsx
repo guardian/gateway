@@ -1,10 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import {
-	NewAccountNewsletters,
-	NewAccountNewslettersProps,
-} from '@/client/pages/NewAccountNewsletters';
+import type { NewAccountNewslettersProps } from '@/client/pages/NewAccountNewsletters';
+import { NewAccountNewsletters } from '@/client/pages/NewAccountNewsletters';
 
 const AU_NEWSLETTERS = [
 	{

@@ -1,9 +1,9 @@
+import type { Request, RequestHandler } from 'express';
 import Redis from 'ioredis-mock';
 import request from 'supertest';
-import { Request, RequestHandler } from 'express';
-import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import { getServerInstance } from '../sharedConfig';
-import { ResponseWithRequestState } from '@/server/models/Express';
 
 // Override the default 5s max timeout for these tests because Supertest takes some time to run.
 jest.setTimeout(20000);

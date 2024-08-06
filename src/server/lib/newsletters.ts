@@ -1,8 +1,9 @@
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { NewsLetter, Newsletters } from '@/shared/model/Newsletter';
+import type { GeoLocation } from '@/shared/model/Geolocation';
+import type { NewsLetter } from '@/shared/model/Newsletter';
+import { Newsletters } from '@/shared/model/Newsletter';
 import {
-	readUserNewsletters,
 	read as getNewsletters,
+	readUserNewsletters,
 } from './idapi/newsletters';
 
 // map of newsletters to country codes

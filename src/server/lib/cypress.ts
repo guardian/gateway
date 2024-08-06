@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import { CountryCode } from '@guardian/libs';
+import type { CountryCode } from '@guardian/libs';
+import type { Request } from 'express';
 
 export const maybeGetCountryCodeFromCypressMockStateCookie = (
 	req: Request,

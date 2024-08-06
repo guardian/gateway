@@ -1,10 +1,9 @@
 import React from 'react';
-import useClientState from '@/client/lib/hooks/useClientState';
-import { Consents } from '@/shared/model/Consent';
-
-import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { useAdFreeCookie } from '@/client/lib/hooks/useAdFreeCookie';
+import useClientState from '@/client/lib/hooks/useClientState';
+import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { NewAccountReview } from '@/client/pages/NewAccountReview';
+import { Consents } from '@/shared/model/Consent';
 
 export const NewAccountReviewPage = () => {
 	const clientState = useClientState();

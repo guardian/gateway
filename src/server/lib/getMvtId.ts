@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 export const getMvtId = (request: Request): number => {

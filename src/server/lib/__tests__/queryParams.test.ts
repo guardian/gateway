@@ -1,8 +1,8 @@
-import {
-	parseExpressQueryParams,
-	addReturnUrlToPath,
-} from '@/server/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import {
+	addReturnUrlToPath,
+	parseExpressQueryParams,
+} from '@/server/lib/queryParams';
 
 // mock configuration to return a default uri
 jest.mock('@/server/lib/getConfiguration', () => ({

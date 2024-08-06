@@ -1,6 +1,8 @@
 import { sendOphanInteractionEvent } from '@/client/lib/ophan';
-import { Consent, Consents } from '@/shared/model/Consent';
-import { NewsLetter, Newsletters } from '@/shared/model/Newsletter';
+import type { Consent } from '@/shared/model/Consent';
+import { Consents } from '@/shared/model/Consent';
+import type { NewsLetter } from '@/shared/model/Newsletter';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 const trackInputElementInteraction = (
 	inputElem: HTMLInputElement,

@@ -1,8 +1,8 @@
-import { Request, Response, CookieOptions } from 'express';
+import type { CookieOptions, Request, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from './serverSideLogger';
+import type { EncryptedState } from '@/shared/model/EncryptedState';
 import { decrypt, encrypt } from './crypto';
-import { EncryptedState } from '@/shared/model/EncryptedState';
+import { logger } from './serverSideLogger';
 
 const { baseUri } = getConfiguration();
 
