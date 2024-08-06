@@ -62,7 +62,6 @@ module.exports = {
 		'import/no-named-as-default-member': 0, // 19
 		'@typescript-eslint/array-type': 0, // 18
 		'eslint-comments/no-unused-disable': 0, // 16
-		'@typescript-eslint/restrict-plus-operands': 0, // 14
 		'import/no-cycle': 0, // 7
 	},
 	overrides: [

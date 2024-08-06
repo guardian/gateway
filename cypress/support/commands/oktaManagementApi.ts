@@ -25,6 +25,7 @@ export const oktaGetApps = (label?: string) => {
 				return cy.wrap(user);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to lost okta apps: ' + error);
 	}
 };
