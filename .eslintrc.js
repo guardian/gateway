@@ -81,7 +81,6 @@ module.exports = {
 		'no-empty-pattern': 0, // 1
 		'@typescript-eslint/restrict-template-expressions': 0, // 1
 		'no-useless-catch': 0, // 1
-		'no-irregular-whitespace': 0, // 1
 	},
 	overrides: [
 		{

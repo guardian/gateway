@@ -61,7 +61,7 @@ export interface PageData {
 	secondName?: string;
 	userBelongsToGRS?: boolean;
 
-	// signed in as page specific
+	// signed in as page specific
 	continueLink?: string;
 	signOutLink?: string;
 
