@@ -1,5 +1,4 @@
 module.exports = {
-	parser: '@typescript-eslint/parser',
 	extends: [
 		'@guardian/eslint-config-typescript',
 		'plugin:prettier/recommended',
