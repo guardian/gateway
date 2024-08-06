@@ -1,4 +1,3 @@
-/* eslint-disable functional/immutable-data */
 import React from 'react';
 import { Meta } from '@storybook/react';
 

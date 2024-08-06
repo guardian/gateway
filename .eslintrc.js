@@ -61,7 +61,6 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-enum-comparison': 0, // 23
 		'import/no-named-as-default-member': 0, // 19
 		'@typescript-eslint/array-type': 0, // 18
-		'eslint-comments/no-unused-disable': 0, // 16
 		'import/no-cycle': 0, // 7
 	},
 	overrides: [
