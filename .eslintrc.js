@@ -73,7 +73,6 @@ module.exports = {
 		'eslint-comments/disable-enable-pair': 0, // 4
 		'@typescript-eslint/no-misused-promises': 0, // 4
 		'@typescript-eslint/no-unnecessary-boolean-literal-compare': 0, // 3,
-		'@typescript-eslint/no-unnecessary-type-assertion': 0, // 3
 	},
 	overrides: [
 		{
