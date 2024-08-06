@@ -75,7 +75,6 @@ module.exports = {
 		'@typescript-eslint/no-unnecessary-boolean-literal-compare': 0, // 3,
 		'@typescript-eslint/no-unnecessary-type-assertion': 0, // 3
 		'import/export': 0, // 2
-		'no-fallthrough': 0, // 2
 	},
 	overrides: [
 		{
