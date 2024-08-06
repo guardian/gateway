@@ -65,7 +65,6 @@ module.exports = {
 		'@typescript-eslint/restrict-plus-operands': 0, // 14
 		'@typescript-eslint/prefer-optional-chain': 0, // 8
 		'import/no-cycle': 0, // 7
-		'import/no-duplicates': 0, // 6
 	},
 	overrides: [
 		{

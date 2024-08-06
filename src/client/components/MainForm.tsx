@@ -33,9 +33,9 @@ import {
 	mainSectionStyles,
 	primaryButtonStyles,
 	secondaryButtonStyles,
+	errorMessageStyles,
 } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
-import { errorMessageStyles } from '@/client/styles/Shared';
 
 export interface MainFormProps {
 	wideLayout?: boolean;
