@@ -1,16 +1,16 @@
-import React from 'react';
 import { css } from '@emotion/react';
 import { until } from '@guardian/source/foundations';
 import { LinkButton } from '@guardian/source/react-components';
-import { PasswordForm } from '@/client/components/PasswordForm';
-import { FieldError } from '@/shared/model/ClientState';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import NameInputField from '@/client/components/NameInputField';
-import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
-import { QueryParams } from '@/shared/model/QueryParams';
+import React from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import NameInputField from '@/client/components/NameInputField';
+import { PasswordForm } from '@/client/components/PasswordForm';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 import { primaryButtonStyles } from '@/client/styles/Shared';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { FieldError } from '@/shared/model/ClientState';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 type Props = {
 	submitUrl: string;

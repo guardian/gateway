@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
+import { logger } from '@/client/lib/clientSideLogger';
 import useClientState from '@/client/lib/hooks/useClientState';
-
 import { Welcome } from '@/client/pages/Welcome';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { logger } from '@/client/lib/clientSideLogger';
 
 export const WelcomePage = () => {
 	const clientState = useClientState();

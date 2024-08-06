@@ -1,22 +1,25 @@
-import React from 'react';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { NewsLetter, NewslettersWithImages } from '@/shared/model/Newsletter';
-import { palette, textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
-import { MainBodyText } from '@/client/components/MainBodyText';
+import { palette, textSans } from '@guardian/source/foundations';
+import React from 'react';
 import { CheckboxInput } from '@/client/components/CheckboxInput';
-import { MainForm } from '@/client/components/MainForm';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { QueryParams } from '@/shared/model/QueryParams';
 import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
 import ThemedLink from '@/client/components/ThemedLink';
-import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
+import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { newslettersFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
+import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type {
+	NewsLetter,
+	NewslettersWithImages,
+} from '@/shared/model/Newsletter';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 const labelStyles = css`
 	justify-content: space-between;

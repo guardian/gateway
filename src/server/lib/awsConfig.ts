@@ -1,6 +1,6 @@
+import type { CloudWatchClientConfig } from '@aws-sdk/client-cloudwatch';
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
 import { NodeHttpHandler } from '@smithy/node-http-handler';
-import { CloudWatchClientConfig } from '@aws-sdk/client-cloudwatch';
 
 const AWS_REGION = 'eu-west-1';
 

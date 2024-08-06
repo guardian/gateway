@@ -1,5 +1,5 @@
-import { EmailType } from '@/shared/model/EmailType';
-import { PersistableQueryParams } from './QueryParams';
+import type { EmailType } from '@/shared/model/EmailType';
+import type { PersistableQueryParams } from './QueryParams';
 
 export interface EncryptedState {
 	email?: string;

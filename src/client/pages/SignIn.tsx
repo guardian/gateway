@@ -1,23 +1,23 @@
-import React from 'react';
-import { RegistrationErrors, SignInErrors } from '@/shared/model/Errors';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { MainForm } from '@/client/components/MainForm';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { EmailInput } from '@/client/components/EmailInput';
-import { PasswordInput } from '@/client/components/PasswordInput';
 import { css } from '@emotion/react';
-import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { remSpace, textSans } from '@guardian/source/foundations';
+import { Divider } from '@guardian/source-development-kitchen/react-components';
+import React from 'react';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { divider } from '@/client/styles/Shared';
-import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
-import { MainBodyText } from '@/client/components/MainBodyText';
+import { EmailInput } from '@/client/components/EmailInput';
 import { InformationBox } from '@/client/components/InformationBox';
-import locations from '@/shared/lib/locations';
-import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
+import { PasswordInput } from '@/client/components/PasswordInput';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import ThemedLink from '@/client/components/ThemedLink';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import { divider } from '@/client/styles/Shared';
+import locations from '@/shared/lib/locations';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import { RegistrationErrors, SignInErrors } from '@/shared/model/Errors';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 export type SignInProps = {
 	queryParams: QueryParams;

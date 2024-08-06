@@ -1,5 +1,5 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
+import { validateRefUrl, validateReturnUrl } from '@/server/lib/validateUrl';
 
 // mock configuration to return a default uri
 jest.mock('@/server/lib/getConfiguration', () => ({

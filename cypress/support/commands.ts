@@ -1,41 +1,41 @@
 import '@testing-library/cypress/add-commands';
 
-import { mockNext } from './commands/mockNext';
-import { mockAll } from './commands/mockAll';
-import { mockPurge } from './commands/mockPurge';
-import { setMvtId } from './commands/setMvtId';
-import { setAdFreeCookie } from './commands/setAdFreeCookie';
-import { setEncryptedStateCookie } from './commands/setEncryptedStateCookie';
-import { network } from './commands/network';
-import { mockPattern } from './commands/mockPattern';
+import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
 import { lastPayloadIs } from './commands/lastPayloadIs';
 import { lastPayloadsAre } from './commands/lastPayloadsAre';
-import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
 import {
-	disableCMP,
-	enableCMP,
 	acceptCMP,
 	declineCMP,
+	disableCMP,
+	enableCMP,
 } from './commands/manageCmp';
-import {
-	getTestOktaUser,
-	activateTestOktaUser,
-	createTestUser,
-	resetOktaUserPassword,
-	expireOktaUserPassword,
-	suspendOktaUser,
-	addOktaUserToGroup,
-	findEmailValidatedOktaGroupId,
-	getOktaUserGroups,
-	getTestUserDetails,
-	updateTestUser,
-	updateOktaTestUserProfile,
-	getCurrentOktaSession,
-	closeCurrentOktaSession,
-	sendConsentEmail,
-} from './commands/testUser';
-import { interceptRecaptcha } from './commands/recaptcha';
+import { mockAll } from './commands/mockAll';
+import { mockNext } from './commands/mockNext';
+import { mockPattern } from './commands/mockPattern';
+import { mockPurge } from './commands/mockPurge';
+import { network } from './commands/network';
 import { oktaGetApps } from './commands/oktaManagementApi';
+import { interceptRecaptcha } from './commands/recaptcha';
+import { setAdFreeCookie } from './commands/setAdFreeCookie';
+import { setEncryptedStateCookie } from './commands/setEncryptedStateCookie';
+import { setMvtId } from './commands/setMvtId';
+import {
+	activateTestOktaUser,
+	addOktaUserToGroup,
+	closeCurrentOktaSession,
+	createTestUser,
+	expireOktaUserPassword,
+	findEmailValidatedOktaGroupId,
+	getCurrentOktaSession,
+	getOktaUserGroups,
+	getTestOktaUser,
+	getTestUserDetails,
+	resetOktaUserPassword,
+	sendConsentEmail,
+	suspendOktaUser,
+	updateOktaTestUserProfile,
+	updateTestUser,
+} from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
 Cypress.Commands.add('mockPattern', mockPattern); // unused, candidate for removal

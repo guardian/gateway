@@ -1,8 +1,8 @@
 import React from 'react';
-import { PasswordForm } from '@/client/components/PasswordForm';
-import { FieldError } from '@/shared/model/ClientState';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { PasswordForm } from '@/client/components/PasswordForm';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import type { FieldError } from '@/shared/model/ClientState';
 
 type Props = {
 	headerText: string;

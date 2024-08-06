@@ -1,6 +1,7 @@
-import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import { remSpace, textSans } from '@guardian/source/foundations';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 
 const informationBoxStyles = css`
 	background-color: var(--color-info-box-background);

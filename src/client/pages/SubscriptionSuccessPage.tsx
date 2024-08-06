@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { SubscriptionSuccess } from '@/client/pages/SubscriptionSuccess';
-import { SubscriptionAction } from '@/shared/lib/subscriptions';
 import { sendOphanComponentEvent } from '@/client/lib/ophan';
+import { SubscriptionSuccess } from '@/client/pages/SubscriptionSuccess';
+import type { SubscriptionAction } from '@/shared/lib/subscriptions';
 
 interface Props {
 	action: SubscriptionAction;

@@ -1,12 +1,12 @@
 import type Redis from 'ioredis';
 import { logger } from '@/server/lib/serverSideLogger';
-import { rateLimitBucket, getBucketsFromRedis } from './bucket';
+import { getBucketsFromRedis, rateLimitBucket } from './bucket';
 import { getBucketKeys } from './keys';
 import type {
-	RateLimitParameters,
-	RateLimiterBucketsConfiguration,
-	ParsedRateLimitBuckets,
 	BucketType,
+	ParsedRateLimitBuckets,
+	RateLimiterBucketsConfiguration,
+	RateLimitParameters,
 } from './types';
 
 /**

@@ -1,4 +1,5 @@
-import { AB, ABTest, Participations } from '@guardian/ab-core';
+import type { ABTest, Participations } from '@guardian/ab-core';
+import { AB } from '@guardian/ab-core';
 import { abSwitches } from './abSwitches';
 
 interface ABTestConfiguration {

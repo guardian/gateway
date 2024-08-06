@@ -1,6 +1,6 @@
-import { ValidRoutePathsArray } from '@/shared/model/Routes';
 import Redis from 'ioredis-mock';
 import request from 'supertest';
+import { ValidRoutePathsArray } from '@/shared/model/Routes';
 import {
 	defaultRateLimiterConfiguration,
 	getServerInstance,

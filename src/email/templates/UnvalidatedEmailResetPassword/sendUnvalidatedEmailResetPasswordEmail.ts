@@ -1,7 +1,7 @@
-import { send } from '@/email/lib/send';
 import { generateUrl } from '@/email/lib/generateUrl';
+import { send } from '@/email/lib/send';
+import type { TrackingQueryParams } from '@/shared/model/QueryParams';
 import { renderedUnvalidatedEmailResetPassword } from '../renderedTemplates';
-import { TrackingQueryParams } from '@/shared/model/QueryParams';
 
 type Props = {
 	to: string;

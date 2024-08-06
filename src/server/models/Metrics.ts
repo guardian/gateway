@@ -1,8 +1,8 @@
 // This file defines the metrics that we would like to track in cloudwatch
 
-import { BucketType } from '@/server/lib/rate-limit';
-import { PasswordRoutePath } from '@/shared/model/Routes';
-import { IDXPath } from '@/server/lib/okta/idx/shared';
+import type { IDXPath } from '@/server/lib/okta/idx/shared';
+import type { BucketType } from '@/server/lib/rate-limit';
+import type { PasswordRoutePath } from '@/shared/model/Routes';
 
 // Specific emails to track
 type EmailMetrics =

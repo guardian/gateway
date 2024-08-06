@@ -1,12 +1,11 @@
 import React from 'react';
-
-import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
+import { Footer } from '@/email/components/Footer';
 import { Header } from '@/email/components/Header';
+import { Link } from '@/email/components/Link';
+import { Page } from '@/email/components/Page';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
-import { Link } from '@/email/components/Link';
-import { Footer } from '@/email/components/Footer';
 
 export const AccountExists = () => {
 	return (

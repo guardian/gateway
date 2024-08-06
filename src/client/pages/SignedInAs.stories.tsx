@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import { SignedInAs } from '@/client/pages/SignedInAs';
 import { SignInErrors } from '@/shared/model/Errors';
 

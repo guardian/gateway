@@ -1,6 +1,5 @@
-import { Meta } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import React from 'react';
-
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
 
 export default {

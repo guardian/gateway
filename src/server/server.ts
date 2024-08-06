@@ -1,4 +1,5 @@
-import { default as express, Express } from 'express';
+import type { Express } from 'express';
+import { default as express } from 'express';
 import { applyMiddleware } from '@/server/lib/middleware';
 
 const createServer = (): Express => {

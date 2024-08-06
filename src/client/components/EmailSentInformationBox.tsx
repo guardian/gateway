@@ -1,17 +1,17 @@
+import { css } from '@emotion/react';
 import React from 'react';
-import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { ExternalLink } from '@/client/components/ExternalLink';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import locations from '@/shared/lib/locations';
-import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
-import { css } from '@emotion/react';
+import { MainForm } from '@/client/components/MainForm';
 import ThemedLink from '@/client/components/ThemedLink';
-import { EmailSentProps } from '@/client/pages/EmailSent';
+import type { EmailSentProps } from '@/client/pages/EmailSent';
+import locations from '@/shared/lib/locations';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 type EmailSentInformationBoxProps = Pick<
 	EmailSentProps,

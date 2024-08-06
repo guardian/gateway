@@ -1,7 +1,7 @@
-import { getMvtId } from '@/server/lib/getMvtId';
-import { Configuration } from '@/server/models/Configuration';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { mocked } from 'jest-mock';
+import { getMvtId } from '@/server/lib/getMvtId';
+import type { Configuration } from '@/server/models/Configuration';
 import { getConfiguration } from '../getConfiguration';
 
 jest.mock('@/server/lib/getConfiguration', () => ({

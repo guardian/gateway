@@ -1,9 +1,9 @@
-import { ABTesting } from '@/server/models/Express';
-import { getMvtId } from './getMvtId';
-import { Request } from 'express';
-import { getABForcedVariants } from './getABForcedVariants';
+import type { ABTest, ABTestAPI, Runnable } from '@guardian/ab-core';
+import type { Request } from 'express';
+import type { ABTesting } from '@/server/models/Express';
 import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
-import { ABTest, ABTestAPI, Runnable } from '@guardian/ab-core';
+import { getABForcedVariants } from './getABForcedVariants';
+import { getMvtId } from './getMvtId';
 
 export const getABTesting = (
 	req: Request,

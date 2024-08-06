@@ -1,10 +1,10 @@
+import { joinUrl } from '@guardian/libs';
 import { z } from 'zod';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import { OAuthError } from '@/server/models/okta/Error';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { joinUrl } from '@guardian/libs';
-import { ResponseWithRequestState } from '@/server/models/Express';
 
 const { okta } = getConfiguration();
 

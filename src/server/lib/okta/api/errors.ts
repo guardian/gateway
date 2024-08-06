@@ -1,9 +1,5 @@
-import {
-	errorResponseSchema,
-	ErrorResponse,
-	OktaError,
-	ErrorCause,
-} from '@/server/models/okta/Error';
+import type { ErrorCause, ErrorResponse } from '@/server/models/okta/Error';
+import { errorResponseSchema, OktaError } from '@/server/models/okta/Error';
 
 const extractErrorResponse = async (
 	response: Response,

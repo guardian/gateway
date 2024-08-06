@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import NameInputField from '@/client/components/NameInputField';
 
 export default {

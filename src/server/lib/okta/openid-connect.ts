@@ -1,14 +1,15 @@
-import { Issuer, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
-import { Request, CookieOptions } from 'express';
 import { joinUrl } from '@guardian/libs';
-import { PersistableQueryParams } from '@/shared/model/QueryParams';
+import type { CookieOptions, Request } from 'express';
+import { Issuer } from 'openid-client';
+import type { Client, IssuerMetadata } from 'openid-client';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
-import { RoutePaths } from '@/shared/model/Routes';
-import { SocialProvider } from '@/shared/model/Social';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import type { PersistableQueryParams } from '@/shared/model/QueryParams';
+import type { RoutePaths } from '@/shared/model/Routes';
+import type { SocialProvider } from '@/shared/model/Social';
 
 /**
  * @interface AuthorizationState

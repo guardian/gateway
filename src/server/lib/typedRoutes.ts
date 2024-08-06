@@ -1,5 +1,5 @@
-import { RoutePaths } from '@/shared/model/Routes';
 import { Router } from 'express';
+import type { RoutePaths } from '@/shared/model/Routes';
 import { rateLimiterMiddleware } from './middleware/rateLimit';
 
 const router = Router();

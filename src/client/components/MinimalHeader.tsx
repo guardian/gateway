@@ -1,7 +1,7 @@
-import React from 'react';
-import { from, palette, remSpace } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
+import { from, palette, remSpace } from '@guardian/source/foundations';
 import { SvgGuardianLogo } from '@guardian/source/react-components';
+import React from 'react';
 
 const headerStyles = css`
 	border-bottom: 1px solid ${palette.neutral[46]};

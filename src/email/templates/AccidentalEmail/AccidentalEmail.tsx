@@ -1,16 +1,15 @@
-import React from 'react';
-
 import {
 	Mjml,
 	MjmlBody,
 	MjmlHead,
-	MjmlTitle,
 	MjmlStyle,
+	MjmlTitle,
 } from '@faire/mjml-react';
+import React from 'react';
+import { Footer } from '@/email/components/Footer';
 import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
-import { Footer } from '@/email/components/Footer';
 
 export const AccidentalEmail = () => {
 	return (

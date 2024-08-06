@@ -1,5 +1,5 @@
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import { UserConsent } from '@/shared/model/UserConsents';
+import type { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import type { UserConsent } from '@/shared/model/UserConsents';
 
 export default interface User {
 	consents: UserConsent[];

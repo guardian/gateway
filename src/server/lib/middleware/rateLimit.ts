@@ -1,20 +1,22 @@
-import {
-	RequestWithTypedQuery,
-	ResponseWithRequestState,
-} from '@/server/models/Express';
-import { RoutePaths, ValidRoutePathsArray } from '@/shared/model/Routes';
-import { NextFunction } from 'express';
-import rateLimit, {
+import type { NextFunction } from 'express';
+import { readEmailCookie } from '@/server/lib/emailCookie';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import type {
 	BucketValues,
 	RateLimiterConfiguration,
 } from '@/server/lib/rate-limit';
-import { getConfiguration } from '@/server/lib/getConfiguration';
+import rateLimit from '@/server/lib/rate-limit';
 import redisClient from '@/server/lib/redis/redisClient';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import type {
+	RequestWithTypedQuery,
+	ResponseWithRequestState,
+} from '@/server/models/Express';
 import { rateLimitHitMetric } from '@/server/models/Metrics';
 import { RateLimitErrors } from '@/shared/model/Errors';
-import { readEmailCookie } from '@/server/lib/emailCookie';
+import { ValidRoutePathsArray } from '@/shared/model/Routes';
+import type { RoutePaths } from '@/shared/model/Routes';
 
 const getBucketConfigForRoute = (
 	route: RoutePaths,

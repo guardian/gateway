@@ -1,11 +1,12 @@
-import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
-import { LogLevel } from '@/shared/model/Logger';
+import type { SeverityLevel } from '@sentry/browser';
 import {
 	captureException,
 	captureMessage,
 	startTransaction,
-	SeverityLevel,
 } from '@sentry/browser';
+import type { ExtraLogFields } from '@/shared/lib/baseLogger';
+import { BaseLogger } from '@/shared/lib/baseLogger';
+import { LogLevel } from '@/shared/model/Logger';
 
 const getSentryLevel = (level: LogLevel): SeverityLevel => {
 	switch (level) {

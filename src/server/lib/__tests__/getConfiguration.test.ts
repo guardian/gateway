@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* Linting rule disable as unit test needs to mutate env */
 import type { Configuration } from '@/server/models/Configuration';
-import { GU_DOMAIN, GU_API_DOMAIN } from '@/server/models/Configuration';
+import { GU_API_DOMAIN, GU_DOMAIN } from '@/server/models/Configuration';
 
 describe('getConfiguration', () => {
 	const ORIGINAL_ENVIRONMENT_VARIABLES = process.env;

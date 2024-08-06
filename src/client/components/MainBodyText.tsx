@@ -1,6 +1,8 @@
-import React, { PropsWithChildren } from 'react';
-import { css, SerializedStyles } from '@emotion/react';
+import type { SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { textSans } from '@guardian/source/foundations';
+import React from 'react';
+import type { PropsWithChildren } from 'react';
 
 interface Props {
 	cssOverrides?: SerializedStyles;

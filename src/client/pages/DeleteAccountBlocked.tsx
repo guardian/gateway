@@ -1,11 +1,11 @@
 import React from 'react';
-import { MainBodyText } from '@/client/components/MainBodyText';
-import { ExternalLink } from '@/client/components/ExternalLink';
-import locations from '@/shared/lib/locations';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
-import { UserAttributesResponse } from '@/shared/lib/members-data-api';
-import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import { ExternalLink } from '@/client/components/ExternalLink';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import locations from '@/shared/lib/locations';
+import type { UserAttributesResponse } from '@/shared/lib/members-data-api';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 interface Props {
 	contentAccess?: Partial<UserAttributesResponse['contentAccess']>;

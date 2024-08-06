@@ -1,4 +1,4 @@
-import { Response, CookieOptions } from 'express';
+import type { CookieOptions, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 interface IdapiCookie {

@@ -1,11 +1,11 @@
-import { TextInputProps } from '@guardian/source/react-components';
+import type { TextInputProps } from '@guardian/source/react-components';
 import React from 'react';
-import { disableAutofillBackground } from '@/client/styles/Shared';
+import ThemedTextInput from '@/client/components/ThemedTextInput';
 import {
 	InputFieldState,
 	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
-import ThemedTextInput from '@/client/components/ThemedTextInput';
+import { disableAutofillBackground } from '@/client/styles/Shared';
 
 interface EmailInputProps extends Omit<TextInputProps, 'label'> {
 	label?: string;

@@ -1,5 +1,6 @@
-import { default as express, Router, Response } from 'express';
 import path from 'path';
+import type { Response } from 'express';
+import { default as express, Router } from 'express';
 import ms from 'ms';
 
 const router = Router();

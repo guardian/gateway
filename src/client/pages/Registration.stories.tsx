@@ -1,7 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Registration, RegistrationProps } from '@/client/pages/Registration';
+import type { RegistrationProps } from '@/client/pages/Registration';
+import { Registration } from '@/client/pages/Registration';
 
 export default {
 	title: 'Pages/Registration',

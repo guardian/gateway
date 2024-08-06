@@ -1,7 +1,7 @@
-import { RoutePaths } from '@/shared/model/Routes';
 import type Redis from 'ioredis';
-import { z } from 'zod';
-import {
+import type { z } from 'zod';
+import type { RoutePaths } from '@/shared/model/Routes';
+import type {
 	bucketSchema,
 	rateLimiterConfigurationSchema,
 	routeBucketsConfigurationSchema,

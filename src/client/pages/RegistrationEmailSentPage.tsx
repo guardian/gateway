@@ -2,9 +2,9 @@ import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
+import { PasscodeUsed } from '@/client/pages/PasscodeUsed';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { PasscodeUsed } from '@/client/pages/PasscodeUsed';
 
 export const RegistrationEmailSentPage = () => {
 	const clientState = useClientState();

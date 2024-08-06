@@ -1,12 +1,11 @@
-import React from 'react';
-
 import {
-	MjmlSection,
 	MjmlColumn,
-	MjmlText,
 	MjmlDivider,
+	MjmlSection,
+	MjmlText,
 } from '@faire/mjml-react';
 import { background, text } from '@guardian/source/foundations';
+import React from 'react';
 
 type Props = { children: React.ReactNode };
 

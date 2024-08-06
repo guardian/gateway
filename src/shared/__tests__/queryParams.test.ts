@@ -3,9 +3,9 @@ import {
 	getPersistableQueryParams,
 	removeEmptyKeysFromObjectAndConvertValuesToString,
 } from '@/shared/lib/queryParams';
-import {
-	QueryParams,
+import type {
 	PersistableQueryParams,
+	QueryParams,
 } from '@/shared/model/QueryParams';
 
 describe('getPersistableQueryParams', () => {

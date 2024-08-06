@@ -1,15 +1,18 @@
 import {
 	activateUser,
+	clearUserSessions,
 	createUser,
+	dangerouslyResetPassword,
 	forgotPassword,
 	getUser,
-	reactivateUser,
-	dangerouslyResetPassword,
 	getUserGroups,
-	clearUserSessions,
+	reactivateUser,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
-import { UserCreationRequest, UserResponse } from '@/server/models/okta/User';
+import type {
+	UserCreationRequest,
+	UserResponse,
+} from '@/server/models/okta/User';
 
 const userId = '12345';
 const email = 'test@test.com';

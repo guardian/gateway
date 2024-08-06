@@ -1,10 +1,11 @@
+import { causesInclude } from '@/server/lib/okta/api/errors';
+import { ApiError } from '@/server/models/Error';
+import type { ErrorCause } from '@/server/models/okta/Error';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
 import {
 	ChangePasswordErrors,
 	PasswordFieldErrors,
 } from '@/shared/model/Errors';
-import { ApiError } from '@/server/models/Error';
-import { ErrorCause, OAuthError, OktaError } from '@/server/models/okta/Error';
-import { causesInclude } from '@/server/lib/okta/api/errors';
 
 export const validatePasswordField = (password: string): void => {
 	if (!password || password.length < 8) {

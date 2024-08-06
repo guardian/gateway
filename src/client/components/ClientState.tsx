@@ -1,10 +1,6 @@
-import React, {
-	createContext,
-	FunctionComponent,
-	PropsWithChildren,
-} from 'react';
-
-import { ClientState } from '@/shared/model/ClientState';
+import type { FunctionComponent, PropsWithChildren } from 'react';
+import React, { createContext } from 'react';
+import type { ClientState } from '@/shared/model/ClientState';
 
 export const defaultClientState = {
 	clientHosts: { idapiBaseUrl: '', oauthBaseUrl: '' },

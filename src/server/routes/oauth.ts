@@ -1,46 +1,48 @@
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { Request } from 'express';
+import type { IdTokenClaims, TokenSet } from 'openid-client';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
+import { update as updateConsents } from '@/server/lib/idapi/consents';
+import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import {
-	AuthorizationState,
+	touchBraze,
+	update as updateNewsletters,
+} from '@/server/lib/idapi/newsletters';
+import { updateUser } from '@/server/lib/okta/api/users';
+import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
+import {
 	deleteAuthorizationStateCookie,
 	getAuthorizationStateCookie,
 	getOpenIdClient,
 	ProfileOpenIdClientRedirectUris,
+} from '@/server/lib/okta/openid-connect';
+import type {
+	AuthorizationState,
 	OpenIdClient,
 } from '@/server/lib/okta/openid-connect';
+import {
+	checkAndDeleteOAuthTokenCookies,
+	setOAuthTokenCookie,
+} from '@/server/lib/okta/tokens';
+import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
-import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import { setUserFeatureCookies } from '@/server/lib/user-features';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import {
 	FederationErrors,
 	GenericErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { IdTokenClaims, TokenSet } from 'openid-client';
-import { updateUser } from '@/server/lib/okta/api/users';
-import { setUserFeatureCookies } from '@/server/lib/user-features';
 import {
-	checkAndDeleteOAuthTokenCookies,
-	setOAuthTokenCookie,
-} from '@/server/lib/okta/tokens';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import {
-	OpenIdErrors,
 	OpenIdErrorDescriptions,
+	OpenIdErrors,
 } from '@/shared/model/OpenIdErrors';
-import { update as updateConsents } from '@/server/lib/idapi/consents';
-import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
-import { SocialProvider } from '@/shared/model/Social';
-import {
-	touchBraze,
-	update as updateNewsletters,
-} from '@/server/lib/idapi/newsletters';
-import { RoutePaths } from '@/shared/model/Routes';
-import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
+import type { RoutePaths } from '@/shared/model/Routes';
+import type { SocialProvider } from '@/shared/model/Social';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 

@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { UnvalidatedEmailResetPassword } from './UnvalidatedEmailResetPassword';
 import { renderMJML } from '../../testUtils';
+import { UnvalidatedEmailResetPassword } from './UnvalidatedEmailResetPassword';
 
 export default {
 	title: 'Email/Templates/UnvalidatedEmailResetPassword',

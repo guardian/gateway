@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { from } from '@guardian/source/foundations';
-import React, { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 import { SECTION_GAP } from '@/client/models/Style';
 
 const containerStyles = (columns: 1 | 2) => css`

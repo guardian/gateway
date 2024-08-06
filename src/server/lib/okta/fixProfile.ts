@@ -1,7 +1,7 @@
-import { logger } from '@/server/lib/serverSideLogger';
+import { sha256Hex } from '@/server/lib/crypto';
 import { getUserByEmailAddress } from '@/server/lib/idapi/user';
 import { getUser, updateUser } from '@/server/lib/okta/api/users';
-import { sha256Hex } from '@/server/lib/crypto';
+import { logger } from '@/server/lib/serverSideLogger';
 
 export const fixOktaProfile = async ({
 	oktaId,

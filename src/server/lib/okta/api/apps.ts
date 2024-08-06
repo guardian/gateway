@@ -1,10 +1,11 @@
+import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { AppResponse, appResponseSchema } from '@/server/models/okta/App';
+import { handleErrorResponse } from '@/server/lib/okta/api/errors';
+import type { AppResponse } from '@/server/models/okta/App';
+import { appResponseSchema } from '@/server/models/okta/App';
 import { OktaError } from '@/server/models/okta/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { joinUrl } from '@guardian/libs';
 import { authorizationHeader, defaultHeaders } from './headers';
-import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 
 const { okta } = getConfiguration();
 

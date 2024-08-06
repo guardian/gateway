@@ -1,7 +1,7 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { SubscriptionError } from '@/client/pages/SubscriptionError';
-import { SubscriptionAction } from '@/shared/lib/subscriptions';
+import type { SubscriptionAction } from '@/shared/lib/subscriptions';
 
 interface Props {
 	action: SubscriptionAction;

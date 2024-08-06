@@ -1,35 +1,33 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { Request } from 'express';
+import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
+import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
+import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { isOktaError } from '@/server/lib/okta/api/errors';
 import {
-	OphanConfig,
-	sendOphanInteractionEventServer,
-} from '@/server/lib/ophan';
+	activateUser,
+	dangerouslyResetPassword,
+	forgotPassword,
+	getUser,
+	reactivateUser,
+} from '@/server/lib/okta/api/users';
+import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
+import type { OphanConfig } from '@/server/lib/ophan';
+import { sendOphanInteractionEventServer } from '@/server/lib/ophan';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import { emailSendMetric } from '@/server/models/Metrics';
+import { OktaError } from '@/server/models/okta/Error';
+import { Status } from '@/server/models/okta/User';
 import {
 	addQueryParamsToPath,
 	getPersistableQueryParamsWithoutOktaParams,
 } from '@/shared/lib/queryParams';
-import { logger } from '@/server/lib/serverSideLogger';
 import { GenericErrors } from '@/shared/model/Errors';
-import { renderer } from '@/server/lib/renderer';
-import { isOktaError } from '@/server/lib/okta/api/errors';
-import {
-	getUser,
-	dangerouslyResetPassword,
-	activateUser,
-	reactivateUser,
-	forgotPassword,
-} from '@/server/lib/okta/api/users';
-import { Status } from '@/server/models/okta/User';
-import { OktaError } from '@/server/models/okta/Error';
-import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
-import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
-import { PasswordRoutePath } from '@/shared/model/Routes';
-import { mergeRequestState } from '@/server/lib/requestState';
-import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
-import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import type { PasswordRoutePath } from '@/shared/model/Routes';
 
 const getPath = (req: Request): PasswordRoutePath => {
 	const path = req.path;

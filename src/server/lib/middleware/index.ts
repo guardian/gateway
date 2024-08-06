@@ -1,15 +1,16 @@
-import { Express, RequestHandler, urlencoded } from 'express';
-import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import type { Express, RequestHandler } from 'express';
+import { urlencoded } from 'express';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { fourZeroFourMiddleware } from '@/server/lib/middleware/404';
+import { csrfMiddleware } from '@/server/lib/middleware/csrf';
+import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
 import { helmetMiddleware } from '@/server/lib/middleware/helmet';
 import { loggerMiddleware } from '@/server/lib/middleware/logger';
 import { oktaDevMiddleware } from '@/server/lib/middleware/oktaDev';
-import { csrfMiddleware } from '@/server/lib/middleware/csrf';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { requestStateMiddleware } from '@/server/lib/middleware/requestState';
 import { default as routes } from '@/server/routes';
-import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
-import { fourZeroFourMiddleware } from '@/server/lib/middleware/404';
 import { requestIdMiddleware } from './requestId';
 
 const { appSecret, stage } = getConfiguration();

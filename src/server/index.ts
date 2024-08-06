@@ -1,8 +1,8 @@
-import createServer from '@/server/server';
-import { logger } from '@/server/lib/serverSideLogger';
-import redisClient from '@/server/lib/redis/redisClient';
-import { startGlobalBucketCapacityLogger } from '@/server/lib/rate-limit';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { startGlobalBucketCapacityLogger } from '@/server/lib/rate-limit';
+import redisClient from '@/server/lib/redis/redisClient';
+import { logger } from '@/server/lib/serverSideLogger';
+import createServer from '@/server/server';
 
 const { port, rateLimiter } = getConfiguration();
 

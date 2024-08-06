@@ -1,8 +1,8 @@
 import React from 'react';
-import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import locations from '@/shared/lib/locations';
 
 export const NotFoundPage = () => (
 	<MinimalLayout

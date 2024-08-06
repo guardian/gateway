@@ -1,26 +1,29 @@
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { buildApiUrlWithQueryParams, buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
+import { z } from 'zod';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import {
 	authorizationHeader,
 	defaultHeaders,
 } from '@/server/lib/okta/api/headers';
+import { handleVoidResponse } from '@/server/lib/okta/api/responses';
+import { OktaError } from '@/server/models/okta/Error';
+import type { Group } from '@/server/models/okta/Group';
+import { groupSchema } from '@/server/models/okta/Group';
 import {
+	activationTokenResponseSchema,
+	resetPasswordUrlResponseSchema,
+	userResponseSchema,
+} from '@/server/models/okta/User';
+import type {
+	ActivationTokenResponse,
+	ResetPasswordUrlResponse,
+	TokenResponse,
 	UserCreationRequest,
 	UserResponse,
 	UserUpdateRequest,
-	TokenResponse,
-	userResponseSchema,
-	activationTokenResponseSchema,
-	resetPasswordUrlResponseSchema,
-	ActivationTokenResponse,
-	ResetPasswordUrlResponse,
 } from '@/server/models/okta/User';
-import { handleVoidResponse } from '@/server/lib/okta/api/responses';
-import { OktaError } from '@/server/models/okta/Error';
-import { handleErrorResponse } from '@/server/lib/okta/api/errors';
-import { Group, groupSchema } from '@/server/models/okta/Group';
-import { z } from 'zod';
+import { buildApiUrlWithQueryParams, buildUrl } from '@/shared/lib/routeUtils';
 
 const { okta } = getConfiguration();
 

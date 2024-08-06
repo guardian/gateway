@@ -1,9 +1,9 @@
-import { Request } from 'express';
-import { logger } from '@/server/lib/serverSideLogger';
+import type { Jwt } from '@okta/jwt-verifier';
+import type { Request } from 'express';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
-import { Jwt } from '@okta/jwt-verifier';
 import { getUser, updateUser } from '@/server/lib/okta/api/users';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { logger } from '@/server/lib/serverSideLogger';
+import type { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 export const updateRegistrationLocationViaOkta = async (
 	req: Request,

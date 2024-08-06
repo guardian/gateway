@@ -1,6 +1,9 @@
-import { QueryParams, TrackingQueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
+import { validateRefUrl, validateReturnUrl } from '@/server/lib/validateUrl';
+import type {
+	QueryParams,
+	TrackingQueryParams,
+} from '@/shared/model/QueryParams';
 import { isStringBoolean } from './isStringBoolean';
 
 const validateGetOnlyError = (

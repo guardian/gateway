@@ -1,21 +1,21 @@
-import React from 'react';
-import { record } from '@/client/lib/ophan';
-import { hydrate } from 'react-dom';
-import { RoutingConfig } from '@/client/routes';
-import { App } from '@/client/app';
-import { tests } from '@/shared/model/experiments/abTests';
-import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import {
-	BrowserClient,
 	Breadcrumbs,
+	BrowserClient,
 	Dedupe,
 	defaultStackParser,
 	getCurrentHub,
 	GlobalHandlers,
-	makeFetchTransport,
 	HttpContext,
+	makeFetchTransport,
 } from '@sentry/browser';
+import React from 'react';
+import { hydrate } from 'react-dom';
+import { App } from '@/client/app';
 import { ABProvider } from '@/client/components/ABReact';
+import { record } from '@/client/lib/ophan';
+import type { RoutingConfig } from '@/client/routes';
+import { abSwitches } from '@/shared/model/experiments/abSwitches';
+import { tests } from '@/shared/model/experiments/abTests';
 
 type Props = {
 	routingConfig: RoutingConfig;

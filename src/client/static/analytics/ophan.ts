@@ -1,5 +1,5 @@
-import { record } from '@/client/lib/ophan';
 import { storage } from '@guardian/libs';
+import { record } from '@/client/lib/ophan';
 
 const addRefToOphanFollow = () => {
 	if (storage.local.isAvailable()) {

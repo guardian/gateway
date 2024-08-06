@@ -1,14 +1,14 @@
-import { NextFunction, Request } from 'express';
-import { getCurrentSession } from '@/server/lib/okta/api/sessions';
-import { clearOktaCookies } from '@/server/routes/signOut';
-import { logger } from '@/server/lib/serverSideLogger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import type { NextFunction, Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { clearIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import { getErrorMessageFromQueryParams } from '@/server/routes/signIn';
+import { clearOktaCookies } from '@/server/routes/signOut';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const { baseUri } = getConfiguration();
 

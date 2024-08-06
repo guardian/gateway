@@ -1,8 +1,8 @@
-import {
-	LinkButton,
+import type {
 	LinkButtonProps,
 	LinkProps,
 } from '@guardian/source/react-components';
+import { LinkButton } from '@guardian/source/react-components';
 import React from 'react';
 import ThemedLink from '@/client/components/ThemedLink';
 

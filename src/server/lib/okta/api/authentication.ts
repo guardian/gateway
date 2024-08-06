@@ -1,21 +1,21 @@
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
+import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
+import { extractOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import {
 	authorizationHeader,
 	defaultHeaders,
 } from '@/server/lib/okta/api/headers';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { handleErrorResponse } from '@/server/lib/okta/api/errors';
-import { OktaError } from '@/server/models/okta/Error';
-import {
+import { ApiError } from '@/server/models/Error';
+import type {
 	AuthenticationRequestParameters,
 	AuthenticationTransaction,
-	authenticationTransactionSchema,
 } from '@/server/models/okta/Authentication';
-import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
-import { ApiError } from '@/server/models/Error';
+import { authenticationTransactionSchema } from '@/server/models/okta/Authentication';
+import { OktaError } from '@/server/models/okta/Error';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
-import { extractOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta } = getConfiguration();
 

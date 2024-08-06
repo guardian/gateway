@@ -1,10 +1,10 @@
 import { sendUnvalidatedEmailResetPasswordEmail } from '@/email/templates/UnvalidatedEmailResetPassword/sendUnvalidatedEmailResetPasswordEmail';
-import { OktaError } from '@/server/models/okta/Error';
-import { forgotPassword } from '@/server/lib/okta/api/users';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { TrackingQueryParams } from '@/shared/model/QueryParams';
-import { trackMetric } from './trackMetric';
+import { forgotPassword } from '@/server/lib/okta/api/users';
 import { emailSendMetric } from '@/server/models/Metrics';
+import { OktaError } from '@/server/models/okta/Error';
+import type { TrackingQueryParams } from '@/shared/model/QueryParams';
+import { trackMetric } from './trackMetric';
 
 type Props = {
 	id: string;

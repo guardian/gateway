@@ -1,8 +1,8 @@
+import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
 	randomPassword,
 } from '../../support/commands/testUser';
-import { Status } from '../../../src/server/models/okta/User';
 
 describe('Registration flow - Split 2/2', () => {
 	context(

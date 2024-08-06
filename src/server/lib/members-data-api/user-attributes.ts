@@ -1,11 +1,9 @@
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
-import {
-	UserAttributesResponse,
-	userAttributesResponseSchema,
-} from '@/shared/lib/members-data-api';
+import type { UserAttributesResponse } from '@/shared/lib/members-data-api';
+import { userAttributesResponseSchema } from '@/shared/lib/members-data-api';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 /**
  * Members Data API

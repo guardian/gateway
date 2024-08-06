@@ -1,4 +1,4 @@
-import { ValidClientId } from '../lib/clientId';
+import type { ValidClientId } from '../lib/clientId';
 
 type Stringifiable = string | boolean | number | null | undefined;
 

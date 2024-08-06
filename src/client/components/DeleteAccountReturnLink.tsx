@@ -1,9 +1,9 @@
-import React from 'react';
-import { MainBodyText } from '@/client/components/MainBodyText';
-import { ExternalLink } from '@/client/components/ExternalLink';
-import locations from '@/shared/lib/locations';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
+import React from 'react';
+import { ExternalLink } from '@/client/components/ExternalLink';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { divider } from '@/client/styles/Shared';
+import locations from '@/shared/lib/locations';
 
 export const DeleteAccountReturnLink = () => (
 	<>

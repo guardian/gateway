@@ -1,6 +1,5 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
 import { EmailInput } from '@/client/components/EmailInput';
 import { InputFieldState } from '@/client/lib/hooks/useInputValidityState';
 

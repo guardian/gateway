@@ -1,8 +1,8 @@
 import React from 'react';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import NameInputField from '@/client/components/NameInputField';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
 export default {
 	title: 'Layout/Minimal',

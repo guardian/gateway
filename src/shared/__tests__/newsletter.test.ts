@@ -1,5 +1,5 @@
-import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
+import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 
 describe('newsletter', () => {
 	describe('newslettersSubscriptionsFromFormBody', () => {

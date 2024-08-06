@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import type Redis from 'ioredis';
 import { logger } from '@/server/lib/serverSideLogger';
 import { LogLevel } from '@/shared/model/Logger';
 

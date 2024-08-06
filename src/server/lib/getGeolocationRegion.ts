@@ -1,8 +1,8 @@
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { Request } from 'express';
-import { Europe } from '@/server/lib/getRegistrationLocation';
-import { CountryCode } from '@guardian/libs';
+import type { CountryCode } from '@guardian/libs';
+import type { Request } from 'express';
 import { maybeGetCountryCodeFromCypressMockStateCookie } from '@/server/lib/cypress';
+import { Europe } from '@/server/lib/getRegistrationLocation';
+import type { GeoLocation } from '@/shared/model/Geolocation';
 
 export const getGeolocationRegion = (req: Request): GeoLocation => {
 	/**

@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { Header } from './Header';
 import { renderMJMLComponent } from '../testUtils';
+import { Header } from './Header';
 
 export default {
 	title: 'Email/Components/Header',

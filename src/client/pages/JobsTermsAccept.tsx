@@ -1,6 +1,3 @@
-import React from 'react';
-
-import { MainBodyText } from '@/client/components/MainBodyText';
 import { css } from '@emotion/react';
 import {
 	neutral,
@@ -8,11 +5,13 @@ import {
 	textSans,
 	until,
 } from '@guardian/source/foundations';
-import ThemedLink from '@/client/components/ThemedLink';
+import React from 'react';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import NameInputField from '@/client/components/NameInputField';
-import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
+import ThemedLink from '@/client/components/ThemedLink';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 
 const listBullets = css`
 	list-style: none;

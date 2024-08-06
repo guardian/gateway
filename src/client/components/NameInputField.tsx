@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { remSpace } from '@guardian/source/foundations';
-
-import React, { FieldsetHTMLAttributes, useState, useEffect } from 'react';
+import type { FieldsetHTMLAttributes } from 'react';
+import React, { useEffect, useState } from 'react';
+import ThemedTextInput from '@/client/components/ThemedTextInput';
 import {
 	InputFieldState,
 	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
-import ThemedTextInput from '@/client/components/ThemedTextInput';
 
 const fieldSpacing = css`
 	margin-bottom: ${remSpace[2]};

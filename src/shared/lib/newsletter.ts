@@ -1,5 +1,5 @@
 import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
-import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
+import type { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 // get a list of newsletters that have been updated in the body and compare
 // to list of all newsletter ids

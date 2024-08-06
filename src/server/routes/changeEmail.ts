@@ -1,13 +1,13 @@
-import { Request } from 'express';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { renderer } from '@/server/lib/renderer';
-import { mergeRequestState } from '@/server/lib/requestState';
+import type { Request } from 'express';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { changeEmail } from '@/server/lib/idapi/user';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 const { accountManagementUrl } = getConfiguration();
 

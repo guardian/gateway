@@ -1,4 +1,3 @@
-import { Newsletters, NewslettersWithImages } from '@/shared/model/Newsletter';
 import {
 	AFTERNOON_UPDATE_AU_SQUARE_IMAGE,
 	HEADLINES_US_SQUARE_IMAGE,
@@ -9,6 +8,8 @@ import {
 	TRUMP_ON_TRIAL_US_SQUARE_IMAGE,
 	WELL_ACTUALLY_SQUARE_IMAGE,
 } from '@/client/assets/newsletters';
+import type { NewslettersWithImages } from '@/shared/model/Newsletter';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 export const NEWSLETTER_IMAGES: Record<NewslettersWithImages, string> = {
 	[Newsletters.MORNING_MAIL_AU]: MORNING_MAIL_AU_SQUARE_IMAGE,

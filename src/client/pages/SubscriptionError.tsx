@@ -1,11 +1,9 @@
 import React from 'react';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import {
-	SubscriptionAction,
-	subscriptionActionName,
-} from '@/shared/lib/subscriptions';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import type { SubscriptionAction } from '@/shared/lib/subscriptions';
+import { subscriptionActionName } from '@/shared/lib/subscriptions';
 
 type SubscriptionErrorProps = {
 	accountManagementUrl?: string;

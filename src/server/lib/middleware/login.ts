@@ -1,17 +1,13 @@
-import { NextFunction, Request } from 'express';
 import { joinUrl } from '@guardian/libs';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
-
-import { trackMetric } from '@/server/lib/trackMetric';
+import type { NextFunction, Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { getProfileUrl } from '@/server/lib/getProfileUrl';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
+import type { Scopes } from '@/server/lib/okta/oauth';
 import {
 	performAuthorizationCodeFlow,
-	Scopes,
 	scopesForApplication,
 } from '@/server/lib/okta/oauth';
-import { RoutePaths } from '@/shared/model/Routes';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import {
 	checkAndDeleteOAuthTokenCookies,
@@ -19,7 +15,10 @@ import {
 	verifyAccessToken,
 	verifyIdToken,
 } from '@/server/lib/okta/tokens';
-import { getCurrentSession } from '@/server/lib/okta/api/sessions';
+import { trackMetric } from '@/server/lib/trackMetric';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
+import type { RoutePaths } from '@/shared/model/Routes';
 
 const profileUrl = getProfileUrl();
 

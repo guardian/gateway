@@ -1,32 +1,33 @@
-import { register } from '@/server/lib/okta/register';
 import { mocked } from 'jest-mock';
-import {
-	createUser,
-	getUser,
-	activateUser,
-	reactivateUser,
-	dangerouslyResetPassword,
-	getUserGroups,
-} from '@/server/lib/okta/api/users';
-import {
-	UserResponse,
-	Status,
-	UserCreationRequest,
-	TokenResponse,
-} from '@/server/models/okta/User';
-import {
-	validateRecoveryToken,
-	resetPassword,
-} from '@/server/lib/okta/api/authentication';
 import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAccountExistsEmail';
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
-import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
-import { ErrorCause, OktaError } from '@/server/models/okta/Error';
-import { Group } from '@/server/models/okta/Group';
+import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
+import {
+	resetPassword,
+	validateRecoveryToken,
+} from '@/server/lib/okta/api/authentication';
+import {
+	activateUser,
+	createUser,
+	dangerouslyResetPassword,
+	getUser,
+	getUserGroups,
+	reactivateUser,
+} from '@/server/lib/okta/api/users';
+import { register } from '@/server/lib/okta/register';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
-import { AuthenticationTransaction } from '@/server/models/okta/Authentication';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import type { AuthenticationTransaction } from '@/server/models/okta/Authentication';
+import { OktaError } from '@/server/models/okta/Error';
+import type { ErrorCause } from '@/server/models/okta/Error';
+import type { Group } from '@/server/models/okta/Group';
+import { Status } from '@/server/models/okta/User';
+import type {
+	TokenResponse,
+	UserCreationRequest,
+	UserResponse,
+} from '@/server/models/okta/User';
+import type { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({

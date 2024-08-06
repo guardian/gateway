@@ -1,6 +1,6 @@
 // for some reason, we can't use @/shared/model/RegisterLocation here, as this breaks cypress, so use relative path instead ¯\_(ツ)_/¯
-import { RegistrationLocationSchema } from '../../../shared/model/RegistrationLocation';
 import { z } from 'zod';
+import { RegistrationLocationSchema } from '../../../shared/model/RegistrationLocation';
 
 // social registration identity provider type
 // we've removed facebook as an authentication option, but we still need to support existing users

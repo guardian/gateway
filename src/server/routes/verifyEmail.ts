@@ -1,7 +1,8 @@
+import type { Request } from 'express';
+import { Router } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { Request, Router } from 'express';
 import { mergeRequestState } from '@/server/lib/requestState';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import { readEmailCookie } from '../lib/emailCookie';
 import { trackMetric } from '../lib/trackMetric';
 

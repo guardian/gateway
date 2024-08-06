@@ -1,15 +1,15 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { renderer } from '@/server/lib/renderer';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { Request } from 'express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import {
-	validateConsentToken,
 	resendConsentEmail,
+	validateConsentToken,
 } from '@/server/lib/idapi/consentToken';
+import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 // When a user attempts to sign up for newsletters, rather than immediately signing them up,

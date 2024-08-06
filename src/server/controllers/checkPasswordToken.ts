@@ -1,34 +1,35 @@
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { Request } from 'express';
-import {
-	RequestState,
-	ResponseWithRequestState,
-} from '@/server/models/Express';
 import deepmerge from 'deepmerge';
-import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
+import type { Request } from 'express';
+import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import {
 	readEncryptedStateCookie,
 	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
-import { renderer } from '@/server/lib/renderer';
-import { logger } from '@/server/lib/serverSideLogger';
-import { PasswordRoutePath } from '@/shared/model/Routes';
-import { PasswordPageTitle } from '@/shared/model/PageTitle';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { validateRecoveryToken as validateTokenInOkta } from '@/server/lib/okta/api/authentication';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { FieldError, IsNativeApp } from '@/shared/model/ClientState';
-import { PersistableQueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl } from '@/server/lib/validateUrl';
-import { mergeRequestState } from '@/server/lib/requestState';
-import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { AppName, getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
 import {
 	introspect,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '@/server/lib/requestState';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { validateReturnUrl } from '@/server/lib/validateUrl';
+import type {
+	RequestState,
+	ResponseWithRequestState,
+} from '@/server/models/Express';
+import type { AppName } from '@/shared/lib/appNameUtils';
+import { getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
+import type { FieldError, IsNativeApp } from '@/shared/model/ClientState';
+import type { ChangePasswordErrors } from '@/shared/model/Errors';
+import type { PasswordPageTitle } from '@/shared/model/PageTitle';
+import type { PersistableQueryParams } from '@/shared/model/QueryParams';
+import type { PasswordRoutePath } from '@/shared/model/Routes';
 
 const { defaultReturnUri, registrationPasscodesEnabled } = getConfiguration();
 

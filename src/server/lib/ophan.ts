@@ -1,15 +1,15 @@
-import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
-import { logger } from '@/server/lib/serverSideLogger';
-import { z } from 'zod';
-import {
+import type {
 	OphanAction,
 	OphanComponent,
 	OphanComponentEvent,
 	OphanComponentType,
 } from '@guardian/libs';
 import serialize from 'serialize-javascript';
-import { timeoutSignal } from './timeoutSignal';
+import { z } from 'zod';
+import { logger } from '@/server/lib/serverSideLogger';
 import { removeEmptyKeysFromObjectAndConvertValuesToString } from '@/shared/lib/queryParams';
+import type { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
+import { timeoutSignal } from './timeoutSignal';
 
 const ophanUrl = 'https://ophan.theguardian.com/img/2';
 

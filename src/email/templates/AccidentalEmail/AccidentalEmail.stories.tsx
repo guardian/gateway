@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { AccidentalEmail } from './AccidentalEmail';
 import { renderMJML } from '../../testUtils';
+import { AccidentalEmail } from './AccidentalEmail';
 
 export default {
 	title: 'Email/Templates/AccidentalEmail',

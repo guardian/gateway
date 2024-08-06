@@ -1,9 +1,7 @@
 import React from 'react';
-import {
-	DeleteAccountEmailPasswordValidation,
-	DeleteAccountEmailPasswordVerificationProps,
-} from '@/client/pages/DeleteAccountEmailPasswordValidation';
 import useClientState from '@/client/lib/hooks/useClientState';
+import type { DeleteAccountEmailPasswordVerificationProps } from '@/client/pages/DeleteAccountEmailPasswordValidation';
+import { DeleteAccountEmailPasswordValidation } from '@/client/pages/DeleteAccountEmailPasswordValidation';
 
 export const DeleteAccountEmailPasswordValidationPage = ({
 	validationType,

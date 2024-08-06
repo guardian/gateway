@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { AccountExists } from './AccountExists';
 import { renderMJML } from '../../testUtils';
+import { AccountExists } from './AccountExists';
 
 export default {
 	title: 'Email/Templates/AccountExists',

@@ -1,23 +1,23 @@
+import { css } from '@emotion/react';
+import { remSpace, textSans } from '@guardian/source/foundations';
 import React from 'react';
-import { MainBodyText } from '@/client/components/MainBodyText';
-import { Consent } from '@/shared/model/Consent';
-import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
+import { ExternalLink } from '@/client/components/ExternalLink';
 import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
-import { ExternalLink } from '@/client/components/ExternalLink';
-import locations from '@/shared/lib/locations';
-import { remSpace, textSans } from '@guardian/source/foundations';
-import { css } from '@emotion/react';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { consentsFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
+import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { consentsFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { trackFormSubmit } from '@/client/lib/ophan';
-import { MainForm } from '@/client/components/MainForm';
+import locations from '@/shared/lib/locations';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { Consent } from '@/shared/model/Consent';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 const subheadingStyles = css`
 	${textSans.medium({ fontWeight: 'bold' })};

@@ -1,6 +1,6 @@
 import React from 'react';
-import { DeleteAccount } from '@/client/pages/DeleteAccount';
 import useClientState from '@/client/lib/hooks/useClientState';
+import { DeleteAccount } from '@/client/pages/DeleteAccount';
 
 export const DeleteAccountPage = () => {
 	const clientState = useClientState();

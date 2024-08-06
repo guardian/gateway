@@ -1,5 +1,5 @@
 import { encrypt } from '../../../src/server/lib/crypto';
-import { EncryptedState } from '../../../src/shared/model/EncryptedState';
+import type { EncryptedState } from '../../../src/shared/model/EncryptedState';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace

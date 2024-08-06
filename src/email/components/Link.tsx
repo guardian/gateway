@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { brand } from '@guardian/source/foundations';
+import React from 'react';
 
 type Props = { children: React.ReactNode; href: string };
 

@@ -1,10 +1,10 @@
 import React from 'react';
+import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
-import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { QueryParams } from '@/shared/model/QueryParams';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 export type DeleteAccountEmailPasswordVerificationProps = {
 	validationType: 'email' | 'password';

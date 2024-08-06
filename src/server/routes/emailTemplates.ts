@@ -1,11 +1,10 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-
+import type { Request } from 'express';
 import {
 	renderedAccidentalEmail,
 	renderedRegistrationPasscode,
 } from '@/email/templates/renderedTemplates';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 const emailTemplateTypes = [
 	'accidental-email',

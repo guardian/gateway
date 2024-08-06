@@ -1,16 +1,16 @@
-import { Request, Response } from 'express';
-import { QueryParams } from '@/shared/model/QueryParams';
-import {
+import type { ABTestAPI, Participations } from '@guardian/ab-core';
+import type { Jwt } from '@okta/jwt-verifier';
+import type Bowser from 'bowser';
+import type { Request, Response } from 'express';
+import type { OphanConfig } from '@/server/lib/ophan';
+import type {
 	ClientHosts,
 	CsrfState,
 	PageData,
 	RecaptchaConfig,
 	SentryConfig,
 } from '@/shared/model/ClientState';
-import { Participations, ABTestAPI } from '@guardian/ab-core';
-import { OphanConfig } from '@/server/lib/ophan';
-import Bowser from 'bowser';
-import { Jwt } from '@okta/jwt-verifier';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 export interface ABTesting {
 	mvtId: number;

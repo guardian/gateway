@@ -1,5 +1,5 @@
-import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
-import { OphanComponentEvent } from '@guardian/libs';
+import type { OphanComponentEvent } from '@guardian/libs';
+import type { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
 
 export const record = (event: OphanEvent) => {
 	if (window.guardian?.ophan?.record) {

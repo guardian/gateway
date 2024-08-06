@@ -1,8 +1,7 @@
-import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { ErrorSummary } from '@guardian/source-development-kitchen/react-components';
+import type { Meta } from '@storybook/react';
+import React from 'react';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { errorMessageStyles } from '@/client/styles/Shared';
 
 export default {

@@ -1,13 +1,13 @@
+import type { IdapiCookies } from '@/server/lib/idapi/IDAPICookies';
+import type { IDAPIError } from '@/server/lib/IDAPIFetch';
 import {
 	APIAddClientAccessToken,
 	APIPostOptions,
 	idapiFetch,
-	IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
 import { GenericErrors } from '@/shared/model/Errors';
-import { IdapiCookies } from '@/server/lib/idapi/IDAPICookies';
 
 const handleError = ({ status = 500 }: IDAPIError) => {
 	throw new IdapiError({ message: GenericErrors.DEFAULT, status });

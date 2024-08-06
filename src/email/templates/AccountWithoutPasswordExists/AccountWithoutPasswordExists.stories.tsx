@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { AccountWithoutPasswordExists } from './AccountWithoutPasswordExists';
 import { renderMJML } from '../../testUtils';
+import { AccountWithoutPasswordExists } from './AccountWithoutPasswordExists';
 
 export default {
 	title: 'Email/Templates/AccountWithoutPasswordExists',

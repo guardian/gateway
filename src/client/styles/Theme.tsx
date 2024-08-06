@@ -1,6 +1,6 @@
-import React from 'react';
-import { Global, css } from '@emotion/react';
+import { css, Global } from '@emotion/react';
 import { palette } from '@guardian/source/foundations';
+import React from 'react';
 
 const lightTheme = css`
 	--color-background: ${palette.neutral[100]};

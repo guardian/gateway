@@ -1,5 +1,5 @@
-import path from 'path';
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
 import validateRateLimiterConfiguration from './rate-limit/configurationValidator';
 
 const tryReadRateLimitConfigFile = () => {

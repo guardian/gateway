@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
+import { MainForm } from '@/client/components/MainForm';
 import { PasswordInput } from '@/client/components/PasswordInput';
 
 export default {

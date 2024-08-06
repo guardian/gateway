@@ -1,21 +1,21 @@
-import React, { PropsWithChildren, ReactNode, useState } from 'react';
-
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { MainForm } from '@/client/components/MainForm';
+import { Divider } from '@guardian/source-development-kitchen/react-components';
+import type { PropsWithChildren, ReactNode } from 'react';
+import React, { useState } from 'react';
 import { EmailInput } from '@/client/components/EmailInput';
-import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
-import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { divider } from '@/client/styles/Shared';
-import { Divider } from '@guardian/source-development-kitchen/react-components';
+import locations from '@/shared/lib/locations';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 interface ResetPasswordProps {
 	email?: string;

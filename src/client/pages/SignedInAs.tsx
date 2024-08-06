@@ -1,8 +1,10 @@
-import React, { ReactNode, useEffect } from 'react';
-import { MainBodyText } from '@/client/components/MainBodyText';
+import { remSpace } from '@guardian/source/foundations';
 import { LinkButton } from '@guardian/source/react-components';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
+import type { ReactNode } from 'react';
+import React, { useEffect } from 'react';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import ThemedLink from '@/client/components/ThemedLink';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import {
 	errorContextSpacing,
 	primaryButtonStyles,
@@ -10,9 +12,8 @@ import {
 } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
-import ThemedLink from '@/client/components/ThemedLink';
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { remSpace } from '@guardian/source/foundations';
+import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 interface Props {
 	email: string;

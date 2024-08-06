@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import type { Request } from 'express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 
 const fakeRequest = (method: string, csrfSubmitted = true) => ({

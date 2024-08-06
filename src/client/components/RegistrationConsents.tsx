@@ -1,13 +1,11 @@
 import React from 'react';
-import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
-import {
-	RegistrationNewsletterFormFields,
-	RegistrationNewslettersFormFieldsMap,
-} from '@/shared/model/Newsletter';
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { AppName } from '@/shared/lib/appNameUtils';
-import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
+import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
+import type { AppName } from '@/shared/lib/appNameUtils';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
+import type { GeoLocation } from '@/shared/model/Geolocation';
+import type { RegistrationNewsletterFormFields } from '@/shared/model/Newsletter';
+import { RegistrationNewslettersFormFieldsMap } from '@/shared/model/Newsletter';
 
 interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;

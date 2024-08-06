@@ -1,31 +1,32 @@
-import { Status, UserResponse } from '@/server/models/okta/User';
-import {
-	createUser,
-	getUser,
-	activateUser,
-	reactivateUser,
-	dangerouslyResetPassword,
-	getUserGroups,
-	forgotPassword,
-} from '@/server/lib/okta/api/users';
-import { OktaError } from '@/server/models/okta/Error';
-import { causesInclude } from '@/server/lib/okta/api/errors';
 import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAccountExistsEmail';
-import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { logger } from '@/server/lib/serverSideLogger';
-import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
+import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { causesInclude } from '@/server/lib/okta/api/errors';
+import {
+	activateUser,
+	createUser,
+	dangerouslyResetPassword,
+	forgotPassword,
+	getUser,
+	getUserGroups,
+	reactivateUser,
+} from '@/server/lib/okta/api/users';
 import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
-import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import { TrackingQueryParams } from '@/shared/model/QueryParams';
-import { emailSendMetric } from '@/server/models/Metrics';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
+import { emailSendMetric } from '@/server/models/Metrics';
+import { OktaError } from '@/server/models/okta/Error';
+import { Status } from '@/server/models/okta/User';
+import type { UserResponse } from '@/server/models/okta/User';
+import type { TrackingQueryParams } from '@/shared/model/QueryParams';
+import type { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import type { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 
 const { okta } = getConfiguration();
 

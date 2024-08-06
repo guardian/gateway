@@ -1,6 +1,6 @@
 /// <reference types="@emotion/react/types/css-prop" />
 
-import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
+import type { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
 
 declare global {
 	/*

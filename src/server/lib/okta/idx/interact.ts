@@ -1,24 +1,23 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { logger } from '@/server/lib/serverSideLogger';
-import { AuthorizationParameters, generators } from 'openid-client';
+import { joinUrl } from '@guardian/libs';
+import type { Request } from 'express';
+import { generators } from 'openid-client';
+import type { AuthorizationParameters } from 'openid-client';
+import { z } from 'zod';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { closeCurrentSession } from '@/server/lib/okta/api/sessions';
+import { scopesForAuthentication } from '@/server/lib/okta/oauth';
+import type { PerformAuthorizationCodeFlowOptions } from '@/server/lib/okta/oauth';
 import {
-	AuthorizationState,
-	ProfileOpenIdClientRedirectUris,
 	generateAuthorizationState,
+	ProfileOpenIdClientRedirectUris,
 	setAuthorizationStateCookie,
 } from '@/server/lib/okta/openid-connect';
-import {
-	PerformAuthorizationCodeFlowOptions,
-	scopesForAuthentication,
-} from '@/server/lib/okta/oauth';
-import { joinUrl } from '@guardian/libs';
-import { z } from 'zod';
-import { closeCurrentSession } from '@/server/lib/okta/api/sessions';
-import { getPersistableQueryParams } from '@/shared/lib/queryParams';
-import { OAuthError, isOAuthError } from '@/server/models/okta/Error';
+import type { AuthorizationState } from '@/server/lib/okta/openid-connect';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { isOAuthError, OAuthError } from '@/server/models/okta/Error';
+import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 
 const { okta } = getConfiguration();
 

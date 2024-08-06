@@ -1,11 +1,10 @@
-import React from 'react';
-
-import { MjmlSection, MjmlButton, MjmlColumn } from '@faire/mjml-react';
+import { MjmlButton, MjmlColumn, MjmlSection } from '@faire/mjml-react';
 import {
 	background,
 	brandBackground,
 	brandText,
 } from '@guardian/source/foundations';
+import React from 'react';
 
 type Props = { children: React.ReactNode; href: string };
 

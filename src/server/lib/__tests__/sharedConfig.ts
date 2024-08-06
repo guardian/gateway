@@ -1,4 +1,4 @@
-import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 
 export const defaultRateLimiterConfiguration = {
 	enabled: false,

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { getCookie } from '@guardian/libs';
+import { useEffect, useState } from 'react';
 
 // User Attributes API cookies are dropped on subscription on support.theguardian.com for use by frontend.
 // They are also dropped when a user logs in.

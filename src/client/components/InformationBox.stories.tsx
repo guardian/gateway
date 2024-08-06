@@ -1,14 +1,13 @@
-import React from 'react';
-import { Meta } from '@storybook/react';
-
-import {
-	InformationBoxText,
-	InformationBox,
-} from '@/client/components/InformationBox';
-import { ButtonLink } from '@guardian/source/react-components';
-import { ExternalLink } from '@/client/components/ExternalLink';
-import ThemedLink from '@/client/components/ThemedLink';
 import { css } from '@emotion/react';
+import { ButtonLink } from '@guardian/source/react-components';
+import type { Meta } from '@storybook/react';
+import React from 'react';
+import { ExternalLink } from '@/client/components/ExternalLink';
+import {
+	InformationBox,
+	InformationBoxText,
+} from '@/client/components/InformationBox';
+import ThemedLink from '@/client/components/ThemedLink';
 
 export default {
 	title: 'Components/InformationBox',

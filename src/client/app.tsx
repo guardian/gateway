@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
 import { css, Global } from '@emotion/react';
 import { neutral } from '@guardian/source/foundations';
-import { fontFaces } from '@/client/lib/fonts';
-import { ClientStateProvider } from '@/client/components/ClientState';
-import { ClientState } from '@/shared/model/ClientState';
-import { GatewayRoutes } from '@/client/routes';
-import { tests } from '@/shared/model/experiments/abTests';
+import React, { useEffect } from 'react';
 import { useAB } from '@/client/components/ABReact';
+import { ClientStateProvider } from '@/client/components/ClientState';
+import { fontFaces } from '@/client/lib/fonts';
+import { GatewayRoutes } from '@/client/routes';
+import type { ClientState } from '@/shared/model/ClientState';
+import { tests } from '@/shared/model/experiments/abTests';
 
 interface Props extends ClientState {
 	location: string;

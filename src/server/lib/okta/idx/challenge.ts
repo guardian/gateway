@@ -1,21 +1,20 @@
+import type { Request } from 'express';
 import { z } from 'zod';
+import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { setupJobsUserInOkta } from '@/server/lib/jobs';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { selectAuthenticationEnrollSchema } from './enroll';
 import {
-	IdxBaseResponse,
-	IdxStateHandleBody,
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
 	idxFetchCompletion,
 } from './shared';
-import { selectAuthenticationEnrollSchema } from './enroll';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
-import { logger } from '@/server/lib/serverSideLogger';
-import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { Request } from 'express';
-import { setupJobsUserInOkta } from '@/server/lib/jobs';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import type { IdxBaseResponse, IdxStateHandleBody } from './shared';
 
 // Schema for the 'skip' object inside the challenge response remediation object
 export const skipSchema = baseRemediationValueSchema.merge(

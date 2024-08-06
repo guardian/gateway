@@ -1,8 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import { SubHeader } from './SubHeader';
 import { renderMJMLComponent } from '../testUtils';
+import { SubHeader } from './SubHeader';
 
 export default {
 	title: 'Email/Components/SubHeader',

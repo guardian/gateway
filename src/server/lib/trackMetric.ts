@@ -2,10 +2,10 @@ import {
 	CloudWatchClient,
 	PutMetricDataCommand,
 } from '@aws-sdk/client-cloudwatch';
-import { Metrics } from '@/server/models/Metrics';
-import { logger } from '@/server/lib/serverSideLogger';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { awsConfig } from '@/server/lib/awsConfig';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { logger } from '@/server/lib/serverSideLogger';
+import type { Metrics } from '@/server/models/Metrics';
 
 const { stage: Stage } = getConfiguration();
 

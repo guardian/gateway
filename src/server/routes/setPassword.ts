@@ -1,14 +1,14 @@
-import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import type { Request } from 'express';
 import { setPasswordController } from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import { sendEmailInOkta as sendResetPasswordEmailInOktaController } from '@/server/controllers/sendChangePasswordEmail';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { Request } from 'express';
-import { sendEmailInOkta as sendResetPasswordEmailInOktaController } from '@/server/controllers/sendChangePasswordEmail';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import type { ResponseWithRequestState } from '@/server/models/Express';
 
 // set password complete page
 router.get(

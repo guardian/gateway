@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LogLevel, Logger } from '@/shared/model/Logger';
+import type { Logger } from '@/shared/model/Logger';
+import { LogLevel } from '@/shared/model/Logger';
 
 export interface ExtraLogFields {
 	request_id?: string;

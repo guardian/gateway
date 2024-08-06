@@ -1,18 +1,18 @@
-import React from 'react';
 import { css } from '@emotion/react';
 import {
 	LinkButton,
-	SvgGoogleBrand,
 	SvgAppleBrand,
 	SvgEnvelope,
+	SvgGoogleBrand,
 } from '@guardian/source/react-components';
-import { QueryParams } from '@/shared/model/QueryParams';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { IsNativeApp } from '@/shared/model/ClientState';
+import React from 'react';
 import {
 	mainSectionStyles,
 	secondaryButtonStyles,
 } from '@/client/styles/Shared';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import type { IsNativeApp } from '@/shared/model/ClientState';
+import type { QueryParams } from '@/shared/model/QueryParams';
 
 type AuthButtonProvider = 'social' | 'email';
 

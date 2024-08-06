@@ -1,7 +1,7 @@
 import { updateUser } from '@/server/lib/okta/api/users';
-import { UserResponse } from '@/server/models/okta/User';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import type { UserResponse } from '@/server/models/okta/User';
 
 /**
  * @method validateEmailAndPasswordSetSecurely

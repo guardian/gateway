@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { joinUrl } from '@guardian/libs';
-import { buildUrl, ExtractRouteParams } from '@/shared/lib/routeUtils';
-import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
-import { ApiRoutePaths } from '@/shared/model/Routes';
+import type { ExtractRouteParams } from '@/shared/lib/routeUtils';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import type { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
+import type { ApiRoutePaths } from '@/shared/model/Routes';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
 	getConfiguration();

@@ -1,41 +1,33 @@
-import React, {
-	createRef,
-	PropsWithChildren,
-	ReactNode,
-	useCallback,
-	useEffect,
-	useState,
-} from 'react';
 import { css } from '@emotion/react';
+import { textSans } from '@guardian/source/foundations';
 import { Button, ButtonLink } from '@guardian/source/react-components';
+import { ErrorSummary } from '@guardian/source-development-kitchen/react-components';
+import type { PropsWithChildren, ReactNode } from 'react';
+import React, { createRef, useCallback, useEffect, useState } from 'react';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
+import {
+	InformationBox,
+	InformationBoxText,
+} from '@/client/components/InformationBox';
+import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import {
 	GuardianTerms,
 	JobsTerms,
 	RecaptchaTerms,
 } from '@/client/components/Terms';
-import { textSans } from '@guardian/source/foundations';
-import {
-	RecaptchaWrapper,
-	UseRecaptchaReturnValue,
-} from '@/client/lib/hooks/useRecaptcha';
-import { CaptchaErrors } from '@/shared/model/Errors';
-import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
-import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
-import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
-import { ErrorSummary } from '@guardian/source-development-kitchen/react-components';
+import type { UseRecaptchaReturnValue } from '@/client/lib/hooks/useRecaptcha';
+import { RecaptchaWrapper } from '@/client/lib/hooks/useRecaptcha';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import {
-	InformationBox,
-	InformationBoxText,
-} from '@/client/components/InformationBox';
-import {
+	errorMessageStyles,
 	mainSectionStyles,
 	primaryButtonStyles,
 	secondaryButtonStyles,
-	errorMessageStyles,
 } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
+import { CaptchaErrors } from '@/shared/model/Errors';
 
 export interface MainFormProps {
 	wideLayout?: boolean;

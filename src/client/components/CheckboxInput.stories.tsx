@@ -1,7 +1,6 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
-
 import { CheckboxInput } from '@/client/components/CheckboxInput';
 
 export default {

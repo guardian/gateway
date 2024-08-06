@@ -1,10 +1,7 @@
+import type { Meta } from '@storybook/react';
 import React from 'react';
-import { Meta } from '@storybook/react';
-
-import {
-	ToggleSwitchInput,
-	ToggleSwitchInputProps,
-} from '@/client/components/ToggleSwitchInput';
+import type { ToggleSwitchInputProps } from '@/client/components/ToggleSwitchInput';
+import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 
 export default {
 	title: 'Components/ToggleSwitchInput',

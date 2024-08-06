@@ -1,13 +1,13 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { getPersistableQueryParams } from '@/shared/lib/queryParams';
-import { RoutePaths } from '@/shared/model/Routes';
+import type { Request } from 'express';
+import type { AuthorizationState } from '@/server/lib/okta/openid-connect';
 import {
 	generateAuthorizationState,
-	setAuthorizationStateCookie,
 	getOpenIdClient,
-	AuthorizationState,
+	setAuthorizationStateCookie,
 } from '@/server/lib/okta/openid-connect';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import { getPersistableQueryParams } from '@/shared/lib/queryParams';
+import type { RoutePaths } from '@/shared/model/Routes';
 import { closeCurrentSession } from './api/sessions';
 
 /**

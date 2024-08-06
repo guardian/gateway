@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 // middleware that adds headers to disable caching on certain particular routes,
 // anything that has user information should use this

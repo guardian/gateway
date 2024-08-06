@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
-import { Stage } from '@/shared/model/Configuration';
+import type { Stage } from '@/shared/model/Configuration';
 
 export interface Configuration {
 	port: number;
