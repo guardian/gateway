@@ -3,9 +3,9 @@ import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 // get a list of newsletters that have been updated in the body and compare
 // to list of all newsletter ids
-export const newslettersSubscriptionsFromFormBody = (body: {
-	[key: string]: unknown;
-}): NewsletterPatch[] =>
+export const newslettersSubscriptionsFromFormBody = (
+	body: Record<string, unknown>,
+): NewsletterPatch[] =>
 	ALL_NEWSLETTER_IDS.flatMap((id) => {
 		// if the id of a newsletter is included in the body
 		// then mark this newsletter as to potentially update (subscribe / unsubscribe)
