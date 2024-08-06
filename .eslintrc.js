@@ -68,7 +68,6 @@ module.exports = {
 		'import/no-duplicates': 0, // 6
 		'no-unsafe-finally': 0, // 6
 		'@typescript-eslint/consistent-indexed-object-style': 0, // 5
-		'no-extra-boolean-cast': 0, // 5
 	},
 	overrides: [
 		{

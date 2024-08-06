@@ -59,8 +59,7 @@ export function parse(str: string, loose?: boolean) {
 			const optional = tmp.indexOf('?', 1);
 			const ext = tmp.indexOf('.', 1);
 			pattern += !!~optional && !~ext ? '(?:/([^/]+?))?' : '/([^/]+?)';
-			if (!!~ext)
-				pattern += (!!~optional ? '?' : '') + '\\' + tmp.substring(ext);
+			if (~ext) pattern += (~optional ? '?' : '') + '\\' + tmp.substring(ext);
 		} else {
 			pattern += '/' + tmp;
 		}
