@@ -8,10 +8,12 @@ const router = Router();
 export const rateLimitedTypedRouter = {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	get: (path: RoutePaths, ...handlers: Array<any>) => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises -- express has its own way of handling async middleware
 		return router.get(path, rateLimiterMiddleware, ...handlers);
 	},
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	post: (path: RoutePaths, ...handlers: Array<any>) => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises -- express has its own way of handling async middleware
 		return router.post(path, rateLimiterMiddleware, ...handlers);
 	},
 	router,

@@ -14,6 +14,7 @@ export const startGlobalBucketCapacityLogger = (
 	redisClient: Redis,
 	interval: number,
 ): NodeJS.Timer =>
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- fire and forget, we handle errors internally to the promise
 	setInterval(async () => {
 		try {
 			const keys = await redisClient.pipeline().keys('*-global').exec();
