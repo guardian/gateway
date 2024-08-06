@@ -72,7 +72,6 @@ module.exports = {
 		'import/newline-after-import': 0, // 4
 		'eslint-comments/disable-enable-pair': 0, // 4
 		'@typescript-eslint/no-misused-promises': 0, // 4
-		'@typescript-eslint/no-unnecessary-boolean-literal-compare': 0, // 3,
 	},
 	overrides: [
 		{
