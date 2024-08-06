@@ -76,7 +76,6 @@ module.exports = {
 		'@typescript-eslint/no-unnecessary-type-assertion': 0, // 3
 		'import/export': 0, // 2
 		'no-fallthrough': 0, // 2
-		'@typescript-eslint/unbound-method': 0, // 1
 	},
 	overrides: [
 		{
