@@ -68,6 +68,7 @@ const setEncryptedCookieOkta = (
 export const sendEmailInOkta = async (
 	req: Request,
 	res: ResponseWithRequestState,
+	loopDetectionFlag: boolean = false,
 ): Promise<void | ResponseWithRequestState> => {
 	const state = res.locals;
 	const { email = '' } = req.body;
@@ -121,6 +122,11 @@ export const sendEmailInOkta = async (
 						error.status === 403 &&
 						(error.code === 'E0000006' || error.code === 'E0000017')
 					) {
+						// if a loop is detected, then throw early to prevent infinite loop
+						if (loopDetectionFlag) {
+							throw error;
+						}
+
 						// a user *should* only hit this error if no password set
 						// but we do a few checks to make sure that it's the case
 
@@ -130,7 +136,7 @@ export const sendEmailInOkta = async (
 							await dangerouslySetPlaceholderPassword(user.id);
 							// now that the placeholder password has been set, the user behaves like a
 							// normal user (provider = OKTA) and we can send the email by calling this method again
-							return sendEmailInOkta(req, res);
+							return sendEmailInOkta(req, res, true);
 						}
 					}
 
@@ -142,7 +148,7 @@ export const sendEmailInOkta = async (
 			case Status.STAGED:
 			case Status.DEPROVISIONED:
 				{
-					// if the user is STAGED, we need to activate them before we can send them an email
+					// if the user is STAGED or DEPROVISIONED, we need to activate them before we can send them an email
 					// this will put them into the PROVISIONED state
 					// we will send them a create password email
 					try {
@@ -175,6 +181,11 @@ export const sendEmailInOkta = async (
 						// to remediate these users we have to deactivate them
 						// and then reactivate them in order to send them a create password email
 						if (error instanceof OktaError && error.code === 'E0000038') {
+							// if a loop is detected, then throw early to prevent infinite loop
+							if (loopDetectionFlag) {
+								throw error;
+							}
+
 							trackMetric(
 								'PasscodePasswordNotCompleteRemediation-ResetPassword-STAGED-Start',
 							);
@@ -200,7 +211,7 @@ export const sendEmailInOkta = async (
 							);
 
 							// rerun the sendEmailInOkta function to catch the user in the DEPROVISIONED state
-							return sendEmailInOkta(req, res);
+							return sendEmailInOkta(req, res, true);
 						}
 
 						logger.error(
@@ -253,6 +264,11 @@ export const sendEmailInOkta = async (
 						// to remediate these users we have to deactivate them
 						// and then reactivate them in order to send them a create password email
 						if (error instanceof OktaError && error.code === 'E0000038') {
+							// if a loop is detected, then throw early to prevent infinite loop
+							if (loopDetectionFlag) {
+								throw error;
+							}
+
 							trackMetric(
 								'PasscodePasswordNotCompleteRemediation-ResetPassword-PROVISIONED-Start',
 							);
@@ -278,7 +294,7 @@ export const sendEmailInOkta = async (
 							);
 
 							// rerun the sendEmailInOkta function to catch the user in the DEPROVISIONED state
-							return sendEmailInOkta(req, res);
+							return sendEmailInOkta(req, res, true);
 						}
 
 						logger.error(

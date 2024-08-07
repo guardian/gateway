@@ -53,10 +53,12 @@ const sendRegistrationEmailByUserState = async ({
 	request_id,
 	ref,
 	refViewId,
+	loopDetectionFlag = false,
 }: {
 	email: string;
 	appClientId?: string;
 	request_id?: string;
+	loopDetectionFlag?: boolean;
 } & TrackingQueryParams): Promise<UserResponse> => {
 	const user = await getUser(email);
 	const { id, status } = user;
@@ -103,6 +105,11 @@ const sendRegistrationEmailByUserState = async ({
 				// to remediate these users we have to deactivate them
 				// and then reactivate them in order to send them a create password email
 				if (error instanceof OktaError && error.code === 'E0000038') {
+					// if a loop is detected, then throw early to prevent infinite loop
+					if (loopDetectionFlag) {
+						throw error;
+					}
+
 					trackMetric(
 						'PasscodePasswordNotCompleteRemediation-Register-STAGED-Start',
 					);
@@ -134,6 +141,7 @@ const sendRegistrationEmailByUserState = async ({
 						request_id,
 						ref,
 						refViewId,
+						loopDetectionFlag: true,
 					});
 				}
 
@@ -194,6 +202,11 @@ const sendRegistrationEmailByUserState = async ({
 				// to remediate these users we have to deactivate them
 				// and then reactivate them in order to send them a create password email
 				if (error instanceof OktaError && error.code === 'E0000038') {
+					// if a loop is detected, then throw early to prevent infinite loop
+					if (loopDetectionFlag) {
+						throw error;
+					}
+
 					trackMetric(
 						'PasscodePasswordNotCompleteRemediation-Register-PROVISIONED-Start',
 					);
@@ -225,6 +238,7 @@ const sendRegistrationEmailByUserState = async ({
 						request_id,
 						ref,
 						refViewId,
+						loopDetectionFlag: true,
 					});
 				}
 
