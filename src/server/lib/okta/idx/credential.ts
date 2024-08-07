@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import {
+	AuthenticatorBody,
 	IdxBaseResponse,
-	IdxStateHandleBody,
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
@@ -28,28 +28,20 @@ const credentialEnrollResponse = idxBaseResponseSchema.merge(
 );
 type CredentialEnrollResponse = z.infer<typeof credentialEnrollResponse>;
 
-// Body type for the credential/enroll request
-type CredentialEnrollBody = IdxStateHandleBody<{
-	authenticator: {
-		id: string;
-		methodType: 'password';
-	};
-}>;
-
 /**
  * @name credentialEnroll
- * @description Okta IDX API/Interaction Code flow - Enroll a new credential (currently `password`) for the user.
+ * @description Okta IDX API/Interaction Code flow - Enroll a new credential (currently `email` or `password`) for the user.
  * @param stateHandle - The state handle from the `enroll` step
- * @param body - The credential object, containing the authenticator id and method type
+ * @param body - The authenticator object, containing the authenticator id and method type
  * @param request_id - The request id
  * @returns	Promise<CredentialEnrollResponse> - The credential enroll response
  */
 export const credentialEnroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
-	body: CredentialEnrollBody['authenticator'],
+	body: AuthenticatorBody['authenticator'],
 	request_id?: string,
 ): Promise<CredentialEnrollResponse> => {
-	return idxFetch<CredentialEnrollResponse, CredentialEnrollBody>({
+	return idxFetch<CredentialEnrollResponse, AuthenticatorBody>({
 		path: 'credential/enroll',
 		body: {
 			stateHandle,

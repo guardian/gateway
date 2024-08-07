@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
 	IdxBaseResponse,
 	IdxStateHandleBody,
+	authenticatorAnswerSchema,
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
@@ -64,19 +65,7 @@ type EnrollNewWithEmailBody = IdxStateHandleBody<{
 export const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('enroll-authenticator'),
-		value: z.array(
-			z.union([
-				z.object({
-					name: z.literal('credentials'),
-					form: z.object({
-						value: z.array(z.object({ name: z.literal('passcode') })),
-					}),
-				}),
-				z.object({
-					name: z.literal('stateHandle'),
-				}),
-			]),
-		),
+		value: authenticatorAnswerSchema,
 	}),
 );
 

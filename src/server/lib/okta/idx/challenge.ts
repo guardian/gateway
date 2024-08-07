@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import {
+	AuthenticatorBody,
 	IdxBaseResponse,
 	IdxStateHandleBody,
+	authenticatorAnswerSchema,
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
@@ -16,6 +18,39 @@ import { Request } from 'express';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+
+// schema for the challenge-authenticator object inside the challenge response remediation object
+const challengeResponseSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('challenge-authenticator'),
+		value: authenticatorAnswerSchema,
+	}),
+);
+type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
+
+/**
+ * @name challenge
+ * @description Okta IDX API/Interaction Code flow - Authenticate with a given authenticator (currently `email` or `password`) for the user.
+ * @param stateHandle - The state handle from the `identify`/`introspect` step
+ * @param body - The authenticator object, containing the authenticator id and method type
+ * @param request_id - The request id
+ * @returns	Promise<ChallengeResponse> - The given authenticator challenge response
+ */
+export const challenge = (
+	stateHandle: IdxBaseResponse['stateHandle'],
+	body: AuthenticatorBody['authenticator'],
+	request_id?: string,
+): Promise<ChallengeResponse> => {
+	return idxFetch<ChallengeResponse, AuthenticatorBody>({
+		path: 'challenge',
+		body: {
+			stateHandle,
+			authenticator: body,
+		},
+		schema: challengeResponseSchema,
+		request_id,
+	});
+};
 
 // Schema for the 'skip' object inside the challenge response remediation object
 export const skipSchema = baseRemediationValueSchema.merge(
