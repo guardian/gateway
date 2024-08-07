@@ -18,6 +18,7 @@ const idxPaths = [
 	'enroll/new',
 	'identify',
 	'introspect',
+	'recover',
 ] as const;
 export type IDXPath = (typeof idxPaths)[number];
 
