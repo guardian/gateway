@@ -5,11 +5,9 @@ import {
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
-} from './shared';
-import {
-	enrollAuthenticatorSchema,
 	selectAuthenticationEnrollSchema,
-} from './enroll';
+} from './shared';
+import { enrollAuthenticatorSchema } from './enroll';
 import { skipSchema } from './challenge';
 
 // Schema for the credential/enroll response - very similar to the enroll response

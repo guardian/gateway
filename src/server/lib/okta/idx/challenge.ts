@@ -6,8 +6,8 @@ import {
 	idxBaseResponseSchema,
 	idxFetch,
 	idxFetchCompletion,
+	selectAuthenticationEnrollSchema,
 } from './shared';
-import { selectAuthenticationEnrollSchema } from './enroll';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { logger } from '@/server/lib/serverSideLogger';

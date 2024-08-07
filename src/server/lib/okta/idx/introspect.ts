@@ -24,6 +24,13 @@ export const selectEnrollProfileSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Schema for the 'identify' object inside the introspect response remediation object
+export const identifySchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('identify'),
+	}),
+);
+
 // Schema for the introspect response
 const introspectResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
@@ -34,6 +41,7 @@ const introspectResponseSchema = idxBaseResponseSchema.merge(
 				z.union([
 					redirectIdpSchema,
 					selectEnrollProfileSchema,
+					identifySchema,
 					baseRemediationValueSchema,
 				]),
 			),

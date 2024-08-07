@@ -5,6 +5,7 @@ import {
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
+	selectAuthenticationEnrollSchema,
 } from './shared';
 
 // schema for the enroll-profile object inside the enroll response remediation object
@@ -78,43 +79,6 @@ export const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
 		),
 	}),
 );
-
-// schema for the select-authenticator-enroll value object inside selectAuthenticationEnrollSchema
-const selectAuthenticationEnrollValueSchema = z.array(
-	z.union([
-		z.object({
-			name: z.literal('authenticator'),
-			type: z.string(),
-			options: z.array(
-				z.object({
-					label: z.string(),
-					value: z.object({
-						form: z.object({
-							value: z.array(
-								z.object({
-									name: z.enum(['id', 'methodType']),
-									value: z.string(),
-								}),
-							),
-						}),
-					}),
-				}),
-			),
-		}),
-		z.object({
-			name: z.literal('stateHandle'),
-		}),
-	]),
-);
-
-// schema for the select-authenticator-enroll object inside the enroll new response remediation object
-export const selectAuthenticationEnrollSchema =
-	baseRemediationValueSchema.merge(
-		z.object({
-			name: z.literal('select-authenticator-enroll'),
-			value: selectAuthenticationEnrollValueSchema,
-		}),
-	);
 
 // schema for the enroll/new response
 const enrollNewResponseSchema = idxBaseResponseSchema.merge(
