@@ -2,6 +2,7 @@ import { QueryParams, TrackingQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { isStringBoolean } from './isStringBoolean';
+import { validateFromUri } from './validateFromUri';
 
 const validateGetOnlyError = (
 	method: string,
@@ -69,7 +70,7 @@ export const parseExpressQueryParams = (
 		encryptedEmail,
 		error,
 		error_description,
-		fromURI,
+		fromURI: validateFromUri(fromURI),
 		appClientId,
 		maxAge: stringToNumber(maxAge),
 		useOktaClassic: isStringBoolean(useOktaClassic),

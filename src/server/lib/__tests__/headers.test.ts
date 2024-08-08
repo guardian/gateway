@@ -41,6 +41,7 @@ jest.mock('@/server/lib/getAssets', () => ({
 jest.mock('@/server/lib/serverSideLogger', () => ({
 	logger: {
 		info: jest.fn(),
+		warn: jest.fn(),
 		error: jest.fn(),
 	},
 }));

@@ -36,6 +36,7 @@ describe('rate limiter middleware', () => {
 		jest.mock('@/server/lib/serverSideLogger', () => ({
 			logger: {
 				info: loggerInfoMock,
+				warn: jest.fn(),
 			},
 		}));
 		jest.mock('@/server/controllers/sendChangePasswordEmail', () => ({
