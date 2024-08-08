@@ -215,7 +215,7 @@ describe('Password reset flow in Okta', () => {
 			// despite the fact that they PersistableQueryParams, as these are set by the Okta SDK sign in method
 			// and subsequent interception, and not by gateway
 			const appClientId1 = 'appClientId1';
-			const fromURI1 = 'fromURI1';
+			const fromURI1 = '/oauth2/v1/authorize';
 
 			breachCheck();
 			cy
@@ -241,7 +241,7 @@ describe('Password reset flow in Okta', () => {
 					).then(({ token }) => {
 						// should contain these params instead
 						const appClientId2 = 'appClientId2';
-						const fromURI2 = 'fromURI2';
+						const fromURI2 = '/oauth2/v2/authorize';
 						cy.visit(
 							`/reset-password/${token}&appClientId=${appClientId2}&fromURI=${fromURI2}`,
 						);
@@ -255,9 +255,9 @@ describe('Password reset flow in Okta', () => {
 						cy.get('form')
 							.should('have.attr', 'action')
 							.and('match', new RegExp(appClientId2))
-							.and('match', new RegExp(fromURI2))
+							.and('match', new RegExp(encodeURIComponent(fromURI2)))
 							.and('not.match', new RegExp(appClientId1))
-							.and('not.match', new RegExp(fromURI1));
+							.and('not.match', new RegExp(encodeURIComponent(fromURI1)));
 					});
 				});
 		});

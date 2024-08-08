@@ -91,7 +91,7 @@ describe('Sign in flow', () => {
 			cy.disableCMP();
 
 			cy.visit(
-				'/signin?appClientId=123&fromURI=/fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
+				'/signin?appClientId=123&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
 
 			cy.contains('Sign in to the Guardian app');
@@ -99,15 +99,12 @@ describe('Sign in flow', () => {
 			cy.contains('user@example.com');
 			cy.contains('Continue')
 				.should('have.attr', 'href')
-				.and(
-					'include',
-					'/fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
-				);
+				.and('include', '/oauth2/v1/authorize/redirect?okta_key=oktaKey');
 			cy.contains('a', 'Sign in')
 				.should('have.attr', 'href')
 				.and(
 					'include',
-					'/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin%253FappClientId%253D123%2526fromURI%253D%25252FfromURI%25253D%25252Foauth2%25252Fv1%25252Fauthorize%25252Fredirect%25253Fokta_key%25253DoktaKey%2526returnUrl%253Dhttps%25253A%25252F%25252Fm.code.dev-theguardian.com',
+					'/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin%253FappClientId%253D123%2526fromURI%253D%25252Foauth2%25252Fv1%25252Fauthorize%25252Fredirect%25253Fokta_key%25253DoktaKey%2526returnUrl%253Dhttps%25253A%25252F%25252Fm.code.dev-theguardian.com',
 				);
 			cy.contains('Sign in with a different email');
 		});
@@ -154,7 +151,7 @@ describe('Sign in flow', () => {
 			cy.disableCMP();
 
 			cy.visit(
-				'/signin?appClientId=456&fromURI=/fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
+				'/signin?appClientId=456&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
 
 			cy.contains('Sign in to the Feast app');
@@ -162,15 +159,12 @@ describe('Sign in flow', () => {
 			cy.contains('user@example.com');
 			cy.contains('Continue')
 				.should('have.attr', 'href')
-				.and(
-					'include',
-					'/fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
-				);
+				.and('include', '/oauth2/v1/authorize/redirect?okta_key=oktaKey');
 			cy.contains('a', 'Sign in')
 				.should('have.attr', 'href')
 				.and(
 					'include',
-					'/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin%253FappClientId%253D456%2526fromURI%253D%25252FfromURI%25253D%25252Foauth2%25252Fv1%25252Fauthorize%25252Fredirect%25253Fokta_key%25253DoktaKey%2526returnUrl%253Dhttps%25253A%25252F%25252Fm.code.dev-theguardian.com',
+					'/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin%253FappClientId%253D456%2526fromURI%253D%25252Foauth2%25252Fv1%25252Fauthorize%25252Fredirect%25253Fokta_key%25253DoktaKey%2526returnUrl%253Dhttps%25253A%25252F%25252Fm.code.dev-theguardian.com',
 				);
 			cy.contains('Sign in with a different email');
 		});
@@ -217,7 +211,7 @@ describe('Sign in flow', () => {
 			cy.disableCMP();
 
 			cy.visit(
-				'/signin?appClientId=456&fromURI=/fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
+				'/signin?appClientId=456&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
 
 			cy.contains('Sign in to the Feast app');
@@ -225,15 +219,12 @@ describe('Sign in flow', () => {
 			cy.contains('user@example.com');
 			cy.contains('Continue')
 				.should('have.attr', 'href')
-				.and(
-					'include',
-					'/fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
-				);
+				.and('include', '/oauth2/v1/authorize/redirect?okta_key=oktaKey');
 			cy.contains('a', 'Sign in')
 				.should('have.attr', 'href')
 				.and(
 					'include',
-					'/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin%253FappClientId%253D456%2526fromURI%253D%25252FfromURI%25253D%25252Foauth2%25252Fv1%25252Fauthorize%25252Fredirect%25253Fokta_key%25253DoktaKey%2526returnUrl%253Dhttps%25253A%25252F%25252Fm.code.dev-theguardian.com',
+					'/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin%253FappClientId%253D456%2526fromURI%253D%25252Foauth2%25252Fv1%25252Fauthorize%25252Fredirect%25253Fokta_key%25253DoktaKey%2526returnUrl%253Dhttps%25253A%25252F%25252Fm.code.dev-theguardian.com',
 				);
 			cy.contains('Sign in with a different email');
 		});

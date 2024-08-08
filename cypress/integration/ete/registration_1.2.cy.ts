@@ -82,7 +82,7 @@ describe('Registration flow - Split 1/2', () => {
 
 		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI', () => {
 			const appClientId = 'appClientId1';
-			const fromURI = '%2FfromURI1';
+			const fromURI = '/oauth2/v1/authorize';
 
 			// Intercept the external redirect page.
 			// We just want to check that the redirect happens, not that the page loads.
@@ -131,7 +131,7 @@ describe('Registration flow - Split 1/2', () => {
 						.and('match', new RegExp(refViewId))
 						.and('match', new RegExp(encodedRef))
 						.and('match', new RegExp(appClientId))
-						.and('match', new RegExp(fromURI));
+						.and('match', new RegExp(encodeURIComponent(fromURI)));
 
 					cy.contains('Submit verification code').click();
 
@@ -143,7 +143,7 @@ describe('Registration flow - Split 1/2', () => {
 						.and('match', new RegExp(refViewId))
 						.and('match', new RegExp(encodedRef))
 						.and('match', new RegExp(appClientId))
-						.and('match', new RegExp(fromURI));
+						.and('match', new RegExp(encodeURIComponent(fromURI)));
 
 					cy.get('input[name="password"]').type(randomPassword());
 					cy.get('button[type="submit"]').click();

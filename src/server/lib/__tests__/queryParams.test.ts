@@ -12,6 +12,7 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 jest.mock('@/server/lib/serverSideLogger', () => ({
 	logger: {
 		error: jest.fn(),
+		warn: jest.fn(),
 	},
 }));
 
@@ -129,6 +130,24 @@ describe('parseExpressQueryParams', () => {
 			const input = {};
 			const output = parseExpressQueryParams('POST', input);
 			expect(output.recaptchaError).toEqual(undefined);
+		});
+	});
+
+	describe('fromURI', () => {
+		test('it should return inputted fromURI in queryParams if it starts with /oauth2/', () => {
+			const input = {
+				fromURI: '/oauth2/authorize',
+			};
+			const output = parseExpressQueryParams('GET', input);
+			expect(output.fromURI).toEqual(input.fromURI);
+		});
+
+		test('it should return undefined fromURI in queryParams if invalid', () => {
+			const input = {
+				fromURI: 'javascript:doABadThing()',
+			};
+			const output = parseExpressQueryParams('GET', input);
+			expect(output.fromURI).toEqual(undefined);
 		});
 	});
 });
