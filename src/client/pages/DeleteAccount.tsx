@@ -64,8 +64,12 @@ export const DeleteAccount = ({
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
-				Deleting your account removes your personal information from our
-				database.
+				Deleting your account will remove your account. If you wish to delete
+				your personal data, please contact{' '}
+				<ExternalLink href="dataprotection@guardian.co.uk">
+					dataprotection@guardian.co.uk
+				</ExternalLink>
+				.
 			</MainBodyText>
 
 			{/* Comments */}
