@@ -4,11 +4,13 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 
 import {
 	renderedAccidentalEmail,
+	renderedEmailChallengePasscode,
 	renderedRegistrationPasscode,
 } from '@/email/templates/renderedTemplates';
 
 const emailTemplateTypes = [
 	'accidental-email',
+	'email-challenge-passcode',
 	'registration-passcode',
 ] as const;
 type EmailTemplateType = (typeof emailTemplateTypes)[number];
@@ -24,6 +26,8 @@ const renderEmailTemplate = (
 	switch (template) {
 		case 'accidental-email':
 			return renderedAccidentalEmail;
+		case 'email-challenge-passcode':
+			return renderedEmailChallengePasscode;
 		case 'registration-passcode':
 			return renderedRegistrationPasscode;
 		default:

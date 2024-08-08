@@ -18,6 +18,8 @@ import { CompleteRegistrationText } from './CompleteRegistration/CompleteRegistr
 import { render } from '@faire/mjml-react/utils/render';
 import { RegistrationPasscode } from './RegistrationPasscode/RegistrationPasscode';
 import { RegistrationPasscodeText } from './RegistrationPasscode/RegistrationPasscodeText';
+import { EmailChallengePasscodeText } from './EmailChallengePasscode/EmailChallengePasscodeText';
+import { EmailChallengePasscode } from './EmailChallengePasscode/EmailChallengePasscode';
 
 type EmailRenderResult = {
 	plain: string;
@@ -68,3 +70,8 @@ export const renderedRegistrationPasscode = {
 	plain: RegistrationPasscodeText(),
 	html: render(RegistrationPasscode({})).html,
 } as EmailRenderResult;
+
+export const renderedEmailChallengePasscode = {
+	plain: EmailChallengePasscodeText(),
+	html: render(EmailChallengePasscode({})).html,
+};

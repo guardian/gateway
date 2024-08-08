@@ -14,7 +14,7 @@ const { html } = render(RegistrationPasscode({}));
 
 export const sendRegistrationPasscodeEmail = ({
 	to,
-	subject = 'Your Guardian account and discount code',
+	subject = 'One-time verification code',
 }: Props) => {
 	return send({
 		html,
