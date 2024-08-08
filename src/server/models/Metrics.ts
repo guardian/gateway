@@ -33,6 +33,7 @@ type ConditionalMetrics =
 	| 'OAuthAuthenticationCallback'
 	| 'OAuthDeleteCallback'
 	| 'OktaAccountVerification'
+	| 'OktaDeactivateUser'
 	| 'OktaIDXInteract'
 	| 'OktaIDXRegister'
 	| `OktaIDX::${IDXPath}`
@@ -72,7 +73,8 @@ type UnconditionalMetrics =
 	| `${RateLimitMetrics}GatewayRateLimitHit`
 	| `User-${'EmailValidated' | 'EmailNotValidated'}-${
 			| 'WeakPassword'
-			| 'StrongPassword'}`;
+			| 'StrongPassword'}`
+	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`;
 
 // Combine all the metrics above together into a type
 export type Metrics =

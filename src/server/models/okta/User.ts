@@ -119,6 +119,7 @@ export enum Status {
 	PASSWORD_EXPIRED = 'PASSWORD_EXPIRED',
 	PASSWORD_RESET = 'PASSWORD_RESET',
 	SUSPENDED = 'SUSPENDED',
+	DEPROVISIONED = 'DEPROVISIONED',
 }
 
 // https://developer.okta.com/docs/reference/api/sessions/#session-object
