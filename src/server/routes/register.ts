@@ -31,11 +31,7 @@ import {
 	challengeAnswerPasscode,
 	challengeResend,
 } from '@/server/lib/okta/idx/challenge';
-import {
-	enroll,
-	enrollNewWithEmail,
-	selectAuthenticationEnrollSchema,
-} from '@/server/lib/okta/idx/enroll';
+import { enroll, enrollNewWithEmail } from '@/server/lib/okta/idx/enroll';
 import { interact } from '@/server/lib/okta/idx/interact';
 import {
 	introspect,
@@ -51,7 +47,10 @@ import {
 	bodyFormFieldsToRegistrationConsents,
 	encryptRegistrationConsents,
 } from '@/server/lib/registrationConsents';
-import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
+import {
+	convertExpiresAtToExpiryTimeInMs,
+	selectAuthenticationEnrollSchema,
+} from '@/server/lib/okta/idx/shared';
 
 const { registrationPasscodesEnabled } = getConfiguration();
 

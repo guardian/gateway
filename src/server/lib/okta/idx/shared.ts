@@ -10,12 +10,15 @@ const { okta } = getConfiguration();
 
 // Okta IDX API paths
 const idxPaths = [
+	'challenge',
 	'challenge/answer',
 	'challenge/resend',
 	'credential/enroll',
 	'enroll',
 	'enroll/new',
+	'identify',
 	'introspect',
+	'recover',
 ] as const;
 export type IDXPath = (typeof idxPaths)[number];
 
@@ -54,6 +57,66 @@ export const baseRemediationValueSchema = z.object({
 export type IdxStateHandleBody<T = object> = T & {
 	stateHandle: IdxBaseResponse['stateHandle'];
 };
+
+// schema for the select-authenticator-{enroll|authenticate}
+export const selectAuthenticatorValueSchema = z.array(
+	z.union([
+		z.object({
+			name: z.literal('authenticator'),
+			type: z.string(),
+			options: z.array(
+				z.object({
+					label: z.string(),
+					value: z.object({
+						form: z.object({
+							value: z.array(
+								z.object({
+									name: z.enum(['id', 'methodType']),
+									value: z.string(),
+								}),
+							),
+						}),
+					}),
+				}),
+			),
+		}),
+		z.object({
+			name: z.literal('stateHandle'),
+		}),
+	]),
+);
+
+// schema for the select-authenticator-enroll object
+export const selectAuthenticationEnrollSchema =
+	baseRemediationValueSchema.merge(
+		z.object({
+			name: z.literal('select-authenticator-enroll'),
+			value: selectAuthenticatorValueSchema,
+		}),
+	);
+
+// schema for the (challenge|enroll)-authenticator remediation value object
+export const authenticatorAnswerSchema = z.array(
+	z.union([
+		z.object({
+			name: z.literal('credentials'),
+			form: z.object({
+				value: z.array(z.object({ name: z.literal('passcode') })),
+			}),
+		}),
+		z.object({
+			name: z.literal('stateHandle'),
+		}),
+	]),
+);
+
+// Body type for the credential/enroll and challenge requests to select a given authenticator
+export type AuthenticatorBody = IdxStateHandleBody<{
+	authenticator: {
+		id: string;
+		methodType: 'email' | 'password';
+	};
+}>;
 
 // Schema for when the authentication process is completed, and we return a base user object
 export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
