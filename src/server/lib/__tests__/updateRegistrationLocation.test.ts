@@ -64,10 +64,9 @@ describe('updateRegistrationLocationViaOkta', () => {
 
 	test(`updates location if user response does not have location set `, async () => {
 		mockedGetUser.mockResolvedValueOnce(oktaUser(''));
-		await updateRegistrationLocationViaOkta(
-			getFakeRequest('FR') as Request,
-			{ claims: { sub: '123' } } as Jwt,
-		);
+		await updateRegistrationLocationViaOkta(getFakeRequest('FR'), {
+			claims: { sub: '123' },
+		} as Jwt);
 		expect(mockedGetUser).toBeCalled();
 		expect(mockedUpdateUser).toBeCalled();
 	});

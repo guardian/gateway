@@ -92,7 +92,7 @@ const showAuthProviderButtons = (
 	queryParams: QueryParams,
 	isJobs: boolean,
 ) => {
-	if (socialSigninBlocked === false) {
+	if (!socialSigninBlocked) {
 		return (
 			<>
 				<InformationBox>

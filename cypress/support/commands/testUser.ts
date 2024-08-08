@@ -53,11 +53,11 @@ interface IDAPIUserProfile {
 		firstName?: string;
 		secondName?: string;
 	};
-	userGroups: {
+	userGroups: Array<{
 		path: string;
 		packageCode: string;
 		joinedDate: string;
-	}[];
+	}>;
 	consents: Consent[];
 }
 
@@ -182,6 +182,7 @@ export const createTestUser = ({
 				});
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to create IDAPI test user: ' + error);
 	}
 };
@@ -215,6 +216,7 @@ export const sendConsentEmail = ({
 			retryOnStatusCodeFailure: true,
 		});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to send consents email: ' + error);
 	}
 };
@@ -235,6 +237,7 @@ export const getTestOktaUser = (id: string) => {
 				return cy.wrap(user);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to create Okta test user: ' + error);
 	}
 };
@@ -261,6 +264,7 @@ export const updateOktaTestUserProfile = (
 				return cy.wrap(token);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to update Okta test user: ' + error);
 	}
 };
@@ -286,6 +290,7 @@ export const activateTestOktaUser = (id: string) => {
 				return cy.wrap(token);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to activate Okta test user: ' + error);
 	}
 };
@@ -310,6 +315,7 @@ export const resetOktaUserPassword = (id: string) => {
 				return cy.wrap({ token } as TokenResponse);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to reset password for Okta test user: ' + error);
 	}
 };
@@ -331,6 +337,7 @@ export const expireOktaUserPassword = (id: string) => {
 				return cy.wrap(user);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to expire password for Okta test user: ' + error);
 	}
 };
@@ -351,6 +358,7 @@ export const suspendOktaUser = (id: string) => {
 				return cy.wrap(true);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to suspend Okta test user: ' + error);
 	}
 };
@@ -371,6 +379,7 @@ export const getOktaUserGroups = (id: string) => {
 				return cy.wrap(user);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to get user groups: ' + error);
 	}
 };
@@ -392,6 +401,7 @@ export const addOktaUserToGroup = (id: string, groupId: string) => {
 				return cy.wrap(true);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to add Okta test user to group: ' + error);
 	}
 };
@@ -418,6 +428,7 @@ export const findEmailValidatedOktaGroupId = () => {
 			});
 	} catch (error) {
 		throw new Error(
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 			'Failed to get ID of GuardianUser-EmailValidated group: ' + error,
 		);
 	}
@@ -440,6 +451,7 @@ export const getCurrentOktaSession = ({ idx }: { idx?: string }) => {
 				return cy.wrap(session);
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to get current Okta session: ' + error);
 	}
 };
@@ -463,6 +475,7 @@ export const closeCurrentOktaSession = ({ idx }: { idx?: string }) => {
 				return false;
 			});
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- try to append, worst case our error will contain a `[object Object]` string.
 		throw new Error('Failed to close current Okta session: ' + error);
 	}
 };

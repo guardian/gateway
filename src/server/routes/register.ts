@@ -31,11 +31,7 @@ import {
 	challengeAnswerPasscode,
 	challengeResend,
 } from '@/server/lib/okta/idx/challenge';
-import {
-	enroll,
-	enrollNewWithEmail,
-	selectAuthenticationEnrollSchema,
-} from '@/server/lib/okta/idx/enroll';
+import { enroll, enrollNewWithEmail } from '@/server/lib/okta/idx/enroll';
 import { interact } from '@/server/lib/okta/idx/interact';
 import {
 	introspect,
@@ -51,7 +47,10 @@ import {
 	bodyFormFieldsToRegistrationConsents,
 	encryptRegistrationConsents,
 } from '@/server/lib/registrationConsents';
-import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
+import {
+	convertExpiresAtToExpiryTimeInMs,
+	selectAuthenticationEnrollSchema,
+} from '@/server/lib/okta/idx/shared';
 
 const { registrationPasscodesEnabled } = getConfiguration();
 
@@ -118,7 +117,7 @@ router.get('/register/code', (req: Request, res: ResponseWithRequestState) => {
 
 	const encryptedState = readEncryptedStateCookie(req);
 
-	if (encryptedState && encryptedState.email && encryptedState.stateHandle) {
+	if (encryptedState?.email && encryptedState.stateHandle) {
 		const html = renderer('/register/email-sent', {
 			requestState: mergeRequestState(state, {
 				pageData: {
@@ -149,7 +148,7 @@ router.post(
 		const encryptedState = readEncryptedStateCookie(req);
 
 		// make sure we have the encrypted state cookie and the code otherwise redirect to the email registration page
-		if (encryptedState && encryptedState.stateHandle && code) {
+		if (encryptedState?.stateHandle && code) {
 			const { stateHandle } = encryptedState;
 
 			try {
@@ -321,7 +320,7 @@ router.post(
 		const encryptedState = readEncryptedStateCookie(req);
 
 		// make sure we have the state handle
-		if (encryptedState && encryptedState.stateHandle) {
+		if (encryptedState?.stateHandle) {
 			const { stateHandle } = encryptedState;
 
 			try {

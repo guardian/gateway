@@ -22,7 +22,7 @@ const useRecaptchaScript = (src: string) => {
 	// Only allow the reCAPTCHA script to be added to the page and initialised once.
 	React.useEffect(() => {
 		const scriptExists =
-			typeof document !== undefined &&
+			typeof document !== 'undefined' &&
 			document.getElementById('g-captcha-script') !== null;
 
 		// If the script has been loaded and the reCAPTCHA window object exists, we have no need to continue.

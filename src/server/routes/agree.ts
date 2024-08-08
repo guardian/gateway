@@ -129,9 +129,11 @@ router.post(
 			// complete the oauth flow if coming from the okta sign in page
 			// through the oauth flow initiated by the jobs site
 			if (fromURI) {
+				// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 				return res.redirect(303, fromURI);
 			}
 			// otherwise try going to the return url
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(303, returnUrl);
 		}
 	},

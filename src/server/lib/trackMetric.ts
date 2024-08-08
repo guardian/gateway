@@ -10,9 +10,7 @@ import { awsConfig } from '@/server/lib/awsConfig';
 const { stage: Stage } = getConfiguration();
 
 // metric dimensions is a k-v pair
-interface MetricDimensions {
-	[name: string]: string;
-}
+type MetricDimensions = Record<string, string>;
 
 const cloudwatch = new CloudWatchClient(awsConfig);
 

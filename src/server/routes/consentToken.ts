@@ -79,6 +79,7 @@ router.post(
 
 			trackMetric('ConsentTokenResend::Failure');
 		} finally {
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(303, '/consent-token/email-sent');
 		}
 	}),

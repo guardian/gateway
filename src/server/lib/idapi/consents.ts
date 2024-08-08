@@ -155,7 +155,7 @@ export const getUserConsentsForPage = async ({
 
 export const getConsentValueFromRequestBody = (
 	key: string,
-	body: { [key: string]: string },
+	body: Record<string, string>,
 ): boolean => {
 	if (body[key] === undefined || typeof body[key] !== 'string') {
 		return false;

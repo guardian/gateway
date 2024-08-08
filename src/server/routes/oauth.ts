@@ -800,6 +800,7 @@ router.get(
 			case 'callback':
 			// this is only used when we get back a standard auth `code` from the interaction code flow
 			// where we want to do the standard authentication callback
+			// falls through
 			case 'interaction-code-callback':
 				return authenticationHandler(
 					req,

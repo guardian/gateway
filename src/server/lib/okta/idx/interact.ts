@@ -132,7 +132,7 @@ export const interact = async (
 		if (!response.ok) {
 			// Check if the body is likely json using the content-type header
 			const contentType = response.headers.get('content-type');
-			if (contentType && contentType.includes('application/json')) {
+			if (contentType?.includes('application/json')) {
 				// if so, parse the body as json, and handle the error
 				const error = await response.json().catch((e) => {
 					throw new OAuthError(

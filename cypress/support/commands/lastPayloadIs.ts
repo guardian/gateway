@@ -16,7 +16,7 @@ declare global {
  * @param expectedPayload Expect the last payload to be equal to this value.
  * @returns A chainable cypress command.
  */
-export const lastPayloadIs = (expectedPayload: Array<object>) => {
+export const lastPayloadIs = (expectedPayload: object[]) => {
 	return cy
 		.request(Cypress.env('mockingEndpoint') + '/payload')
 		.then((response) => {

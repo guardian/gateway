@@ -7,6 +7,7 @@ import tokenResponse from '../../fixtures/okta-responses/success/token.json';
 import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
 import verifyRecoveryTokenReponse from '../../fixtures/okta-responses/success/verify-recovery-token.json';
 import authResetPasswordResponse from '../../fixtures/okta-responses/success/auth-reset-password.json';
+
 beforeEach(() => {
 	cy.mockPurge();
 });

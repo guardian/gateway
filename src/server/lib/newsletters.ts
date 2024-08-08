@@ -1,7 +1,9 @@
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsLetter, Newsletters } from '@/shared/model/Newsletter';
-import { readUserNewsletters } from './idapi/newsletters';
-import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
+import {
+	readUserNewsletters,
+	read as getNewsletters,
+} from './idapi/newsletters';
 
 // map of newsletters to country codes
 // undefined also included as key, in case of fallback
