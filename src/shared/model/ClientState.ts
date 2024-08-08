@@ -32,7 +32,7 @@ export interface PageData {
 	email?: string;
 	signInPageUrl?: string;
 	geolocation?: GeoLocation;
-	fieldErrors?: Array<FieldError>;
+	fieldErrors?: FieldError[];
 	formError?: string;
 	browserName?: string;
 	isNativeApp?: IsNativeApp;
@@ -61,7 +61,7 @@ export interface PageData {
 	secondName?: string;
 	userBelongsToGRS?: boolean;
 
-	// signed in as page specific
+	// signed in as page specific
 	continueLink?: string;
 	signOutLink?: string;
 

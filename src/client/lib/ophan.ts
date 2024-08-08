@@ -22,7 +22,7 @@ export const trackFormSubmit = (formTrackingName: string): void => {
 
 export const trackFormFocusBlur = (
 	formTrackingName: string,
-	event: React.FocusEvent<HTMLFormElement, Element>,
+	event: React.FocusEvent<HTMLFormElement>,
 	type: 'focus' | 'blur',
 ): void => {
 	// we only want to track focus on input elements

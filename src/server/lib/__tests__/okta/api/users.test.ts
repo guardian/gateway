@@ -30,7 +30,7 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 
 const mockedFetch = jest.spyOn(global, 'fetch');
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- jest mock
 const json = jest.fn() as jest.MockedFunction<any>;
 
 // mocked logger

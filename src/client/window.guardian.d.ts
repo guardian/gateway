@@ -10,7 +10,7 @@ declare global {
 	interface Window {
 		guardian: {
 			ophan: {
-				record: ({}) => void;
+				record: (_: object) => void;
 				viewId: string;
 				pageViewId: string;
 			};

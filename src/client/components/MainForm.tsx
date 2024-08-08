@@ -33,9 +33,9 @@ import {
 	mainSectionStyles,
 	primaryButtonStyles,
 	secondaryButtonStyles,
+	errorMessageStyles,
 } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
-import { errorMessageStyles } from '@/client/styles/Shared';
 
 export interface MainFormProps {
 	wideLayout?: boolean;
@@ -144,7 +144,7 @@ export const MainForm = ({
 				trackFormSubmit(formTrackingName);
 			}
 
-			const errorInSubmitHandler = onSubmit && onSubmit(event)?.errorOccurred;
+			const errorInSubmitHandler = onSubmit?.(event)?.errorOccurred;
 
 			if (disableOnSubmit) {
 				if (errorInSubmitHandler === undefined) {

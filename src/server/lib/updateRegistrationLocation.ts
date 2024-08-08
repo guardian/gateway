@@ -24,7 +24,7 @@ export const updateRegistrationLocationViaOkta = async (
 		const user = await getUser(accessToken.claims.sub);
 
 		// don't update users who already have a location set
-		if (!!user.profile.registrationLocation) {
+		if (user.profile.registrationLocation) {
 			return;
 		}
 

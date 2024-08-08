@@ -51,7 +51,7 @@ export const validatePasswordFieldForOkta = (password: string): void => {
 };
 
 export const getErrorMessage = (error: unknown) => {
-	const fieldErrorMessage = (causes: Array<ErrorCause>) => {
+	const fieldErrorMessage = (causes: ErrorCause[]) => {
 		if (causesInclude(causes, 'Password requirements: at least')) {
 			return PasswordFieldErrors.AT_LEAST_8;
 		} else if (causesInclude(causes, 'Password requirements: maximum')) {

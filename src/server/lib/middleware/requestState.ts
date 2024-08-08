@@ -32,9 +32,7 @@ export const requestStateHasOAuthTokens = (
 	requestState: RequestState,
 ): requestState is RequestState & { oauthState: OAuthState } =>
 	Boolean(
-		requestState.oauthState &&
-			requestState.oauthState.accessToken &&
-			requestState.oauthState.idToken,
+		requestState.oauthState?.accessToken && requestState.oauthState.idToken,
 	);
 
 const getRequestState = async (
@@ -70,7 +68,7 @@ const getRequestState = async (
 	let appName: AppName | undefined;
 
 	try {
-		if (!!queryParams.appClientId) {
+		if (queryParams.appClientId) {
 			const app = await getApp(queryParams.appClientId);
 			const label = app.label.toLowerCase();
 

@@ -54,7 +54,7 @@ export const buildUrl: BuildUrl = <P extends AllRoutes>(
 	params: PathParams<P> = <PathParams<P>>{},
 ): string => {
 	// //Upcast `params` to be used in string replacement.
-	const paramObj: { [i: string]: string } = params;
+	const paramObj: Record<string, string> = params;
 
 	return Object.keys(paramObj).reduce((fullPath, key) => {
 		return fullPath.replace(`:${key}`, paramObj[key]);

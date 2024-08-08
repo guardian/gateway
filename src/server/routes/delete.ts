@@ -149,6 +149,7 @@ router.get(
 							case 'feast':
 								// eslint-disable-next-line functional/immutable-data
 								cypressContentAccess.feast = true;
+								break;
 							default:
 								break;
 						}

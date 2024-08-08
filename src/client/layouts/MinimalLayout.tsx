@@ -12,6 +12,7 @@ import { Theme } from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
+	errorMessageStyles,
 } from '@/client/styles/Shared';
 import { DecorativeImageId } from '@/client/assets/decorative';
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
@@ -21,7 +22,6 @@ import {
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { errorMessageStyles } from '@/client/styles/Shared';
 
 export interface MinimalLayoutProps {
 	children?: React.ReactNode;

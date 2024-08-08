@@ -101,7 +101,6 @@ export const addQueryParamsToUntypedPath = (
 		}),
 	);
 
-	// eslint-disable-next-line functional/immutable-data
 	searchParams.sort();
 
 	return `${path}${divider}${searchParams.toString()}`;
@@ -129,7 +128,6 @@ export const addApiQueryParamsToPath = (
 			...overrides,
 		}),
 	);
-	// eslint-disable-next-line functional/immutable-data
 	searchParams.sort();
 
 	return `${path}${divider}${searchParams.toString()}`;
@@ -155,7 +153,6 @@ export const buildQueryParamsString = (
 		}),
 	);
 
-	// eslint-disable-next-line functional/immutable-data
 	searchParams.sort();
 
 	return `?${searchParams.toString()}`;

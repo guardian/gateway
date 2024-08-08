@@ -49,7 +49,7 @@ export const updateRegistrationPlatform = async (
 		const user = await getUser(accessToken.claims.sub);
 
 		// don't update users who already have a platform set
-		if (!!user.profile.registrationPlatform) {
+		if (user.profile.registrationPlatform) {
 			return;
 		}
 

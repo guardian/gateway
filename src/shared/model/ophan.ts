@@ -8,7 +8,7 @@ export interface OphanInteraction {
 
 interface OphanBase {
 	experiences?: string;
-	abTestRegister?: { [testId: string]: OphanABEvent };
+	abTestRegister?: Record<string, OphanABEvent>;
 }
 
 export type OphanEvent =

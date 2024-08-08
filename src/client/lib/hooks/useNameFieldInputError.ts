@@ -18,7 +18,7 @@ export const useNameInputFieldError = () => {
 	// We show a global name field error above the fold on submit if the form is submitted without one — or both — of the name fields
 	// When the user corrects the global error, this effect resets the flag so it does not show again until the next submit attempt.
 	useEffect(() => {
-		if (groupError === false) {
+		if (!groupError) {
 			setFormSubmitAttempted(false);
 		}
 	}, [groupError, setFormSubmitAttempted]);

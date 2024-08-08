@@ -20,8 +20,8 @@ export const applyMiddleware = (server: Express): void => {
 	// apply helmet before anything else
 	server.use(helmetMiddleware as RequestHandler);
 	server.use(urlencoded({ extended: true }) as RequestHandler);
-	server.use(cookieParser(appSecret) as RequestHandler);
-	server.use(compression() as RequestHandler);
+	server.use(cookieParser(appSecret));
+	server.use(compression());
 
 	// add the DEV okta middleware if state === DEV
 	if (stage === 'DEV') {
@@ -30,6 +30,7 @@ export const applyMiddleware = (server: Express): void => {
 
 	server.use(loggerMiddleware);
 	server.use(csrfMiddleware as RequestHandler);
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- express has its own way of handling async middleware
 	server.use(requestStateMiddleware);
 	server.use(routes);
 	server.use(fourZeroFourMiddleware);

@@ -100,7 +100,7 @@ export const defaultUserConsent = allConsents.map(({ id }) => ({
 	consented: false,
 }));
 
-export const getUserConsents = (consented: Array<string>) => {
+export const getUserConsents = (consented: string[]) => {
 	if (!consented.length) {
 		return defaultUserConsent;
 	}

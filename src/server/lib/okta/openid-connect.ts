@@ -1,4 +1,3 @@
-/* eslint-disable functional/immutable-data */
 import { Issuer, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request, CookieOptions } from 'express';

@@ -3,6 +3,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import redisClient from '@/server/lib/redis/redisClient';
 import { startGlobalBucketCapacityLogger } from '@/server/lib/rate-limit';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+
 const { port, rateLimiter } = getConfiguration();
 
 const server = createServer();

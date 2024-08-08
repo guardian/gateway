@@ -43,7 +43,7 @@ const handleResponseFailure = async (
 const handleResponseSuccess = async (response: Response) => {
 	try {
 		return await response.json();
-	} catch (e) {
+	} catch (e: any) {
 		throw new Error(`Error decoding JSON response: ${e}`);
 	}
 };
