@@ -1,7 +1,6 @@
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
-import { EmailType } from '@/shared/model/EmailType';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
@@ -43,7 +42,6 @@ export interface PageData {
 	token?: string;
 
 	// email sent pages specific
-	emailType?: EmailType;
 	resendEmailAction?: RoutePaths;
 	changeEmailPage?: RoutePaths;
 

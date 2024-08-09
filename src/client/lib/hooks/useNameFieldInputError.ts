@@ -30,7 +30,7 @@ export const useNameInputFieldError = () => {
 		: undefined;
 
 	const nameFieldErrorContext = showNameFieldError
-		? 'Please enter your First name and Last name'
+		? NameFieldErrors.INFORMATION_MISSING_CONTEXT
 		: undefined;
 
 	return {

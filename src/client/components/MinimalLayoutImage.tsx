@@ -8,7 +8,7 @@ import {
 } from '@/client/assets/decorative';
 import { css } from '@emotion/react';
 
-export interface Props {
+interface Props {
 	id: DecorativeImageId;
 }
 
