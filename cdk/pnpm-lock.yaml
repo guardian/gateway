@@ -15,8 +15,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(eslint@8.57.0)(tslib@2.6.3)(typescript@5.1.6)
       '@guardian/prettier':
-        specifier: 5.0.0
-        version: 5.0.0(prettier@3.3.3)(tslib@2.6.3)
+        specifier: 8.0.1
+        version: 8.0.1(prettier@3.3.3)(tslib@2.6.3)
       '@guardian/tsconfig':
         specifier: ^1.0.0
         version: 1.0.0
@@ -266,11 +266,11 @@ packages:
       eslint: ^8.47.0
       tslib: ^2.5.3
 
-  '@guardian/prettier@5.0.0':
-    resolution: {integrity: sha512-gJSQuuP7JVDOWQj4EUrwyJTnMt+frLkw0D2sLg70nHn76L3LmH2xTQtYMPUsqyqn37qocDPzgdvBdmATi50zRQ==}
+  '@guardian/prettier@8.0.1':
+    resolution: {integrity: sha512-mELIji0FezEj5YTyHkylB6VNeCN1+/jsHW/iZ0RItDMn/GjU6gbaPP5D2m+BZwrTYNrxYhCoFqCE/ObkEghtdg==}
     peerDependencies:
-      prettier: ^3.0.0
-      tslib: ^2.5.3
+      prettier: ^3.2.2
+      tslib: ^2.6.2
 
   '@guardian/tsconfig@1.0.0':
     resolution: {integrity: sha512-xgajw/jq4lEtQoN72vnmiXeRnejUcd3DgNFmH6TfAbWV6NRK4KC4hAjzKf0H69zBSJMxEfFVfGKP9wBzGII7qg==}
@@ -2576,7 +2576,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  '@guardian/prettier@5.0.0(prettier@3.3.3)(tslib@2.6.3)':
+  '@guardian/prettier@8.0.1(prettier@3.3.3)(tslib@2.6.3)':
     dependencies:
       prettier: 3.3.3
       tslib: 2.6.3
