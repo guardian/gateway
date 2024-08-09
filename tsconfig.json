@@ -18,5 +18,5 @@
 		"lib": ["ES2022", "DOM"],
 		"importHelpers": true
 	},
-	"include": ["src", "scripts/generate-rate-limit-schema.ts"]
+	"include": ["src", "scripts/generate-rate-limit-schema.ts", "knip.ts"]
 }
