@@ -19,7 +19,7 @@ export const getGeolocationRegion = (req: Request): GeoLocation => {
 	return countryCodeToRegion(header);
 };
 
-export const countryCodeToRegion = (
+const countryCodeToRegion = (
 	countryCode: string | string[] | undefined,
 ): GeoLocation => {
 	if (Europe.includes(countryCode as CountryCode)) return 'EU';

@@ -29,12 +29,6 @@ export enum Newsletters {
 	US_BUNDLE = 'usBundle',
 }
 
-export const REGISTRATION_NEWSLETTERS: string[] = [
-	Newsletters.SATURDAY_EDITION,
-	Newsletters.FEAST,
-	Newsletters.WEEKEND_MAIL_AU,
-	Newsletters.WEEKEND_US,
-];
 export type NewslettersWithImages =
 	| Newsletters.MORNING_MAIL_AU
 	| Newsletters.AFTERNOON_UPDATE_AU

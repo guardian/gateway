@@ -18,14 +18,14 @@ export const redirectIdpSchema = baseRemediationValueSchema.merge(
 );
 
 // Base schema for the 'select-enroll-profile' object inside the introspect response remediation object
-export const selectEnrollProfileSchema = baseRemediationValueSchema.merge(
+const selectEnrollProfileSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('select-enroll-profile'),
 	}),
 );
 
 // Schema for the 'identify' object inside the introspect response remediation object
-export const identifySchema = baseRemediationValueSchema.merge(
+const identifySchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('identify'),
 	}),
@@ -48,7 +48,7 @@ const introspectResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
+type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
 
 // Introspect body type - can use either interactionHandle or stateHandle
 type IntrospectBody =
