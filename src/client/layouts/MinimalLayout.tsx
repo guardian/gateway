@@ -23,7 +23,7 @@ import {
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
 
-export interface MinimalLayoutProps {
+interface MinimalLayoutProps {
 	children?: React.ReactNode;
 	wide?: boolean;
 	pageHeader: string;

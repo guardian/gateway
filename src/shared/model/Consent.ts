@@ -10,7 +10,6 @@ export enum Consents {
 	// OPT OUT API CONSENTS (modeled as opt ins in Gateway)
 	PROFILING = 'profiling_optin',
 	// PRODUCT CONSENTS
-	EVENTS = 'events',
 	SIMILAR_GUARDIAN_PRODUCTS = 'similar_guardian_products',
 	JOBS = 'jobs',
 }

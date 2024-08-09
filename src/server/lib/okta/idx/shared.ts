@@ -119,7 +119,7 @@ export type AuthenticatorBody = IdxStateHandleBody<{
 }>;
 
 // Schema for when the authentication process is completed, and we return a base user object
-export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
+const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		user: z.object({
 			type: z.literal('object'),

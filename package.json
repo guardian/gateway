@@ -45,7 +45,6 @@
 		"@emotion/babel-preset-css-prop": "^11.12.0",
 		"@guardian/eslint-config-typescript": "^11.0.0",
 		"@guardian/prettier": "^8.0.1",
-		"@storybook/addon-actions": "^8.2.8",
 		"@storybook/addon-essentials": "^8.2.8",
 		"@storybook/addon-links": "^8.2.8",
 		"@storybook/addon-styling-webpack": "^1.0.0",
@@ -74,7 +73,6 @@
 		"@types/react-dom": "^18.3.0",
 		"@types/serialize-javascript": "^5.0.4",
 		"@types/supertest": "^6.0.2",
-		"@types/uuid": "^10.0.0",
 		"@typescript-eslint/eslint-plugin": "^7.18.0",
 		"@typescript-eslint/parser": "^7.18.0",
 		"assets-webpack-plugin": "^7.1.1",
@@ -107,7 +105,6 @@
 		"nodemon": "^3.1.4",
 		"prettier": "^3.3.3",
 		"react-docgen-typescript-plugin": "^1.0.8",
-		"require-from-string": "^2.0.2",
 		"sharp": "^0.33.4",
 		"storybook": "^8.2.8",
 		"swc-loader": "^0.2.6",
@@ -160,7 +157,6 @@
 		"supertest": "^7.0.0",
 		"tslib": "^2.6.3",
 		"winston": "^3.14.1",
-		"winston-transport": "^4.7.1",
 		"zod": "^3.23.8"
 	}
 }
