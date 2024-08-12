@@ -31,6 +31,9 @@ import { PasswordRoutePath } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
 import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+
+const { passcodesEnabled } = getConfiguration();
 
 const getPath = (req: Request): PasswordRoutePath => {
 	const path = req.path;
@@ -74,13 +77,21 @@ export const sendEmailInOkta = async (
 	const { email = '' } = req.body;
 	const path = getPath(req);
 	const {
-		queryParams: { appClientId, ref, refViewId },
+		queryParams: { appClientId, ref, refViewId, usePasscodesResetPassword },
 		requestId: request_id,
 	} = state;
 
 	try {
 		// get the user object to check user status
 		const user = await getUser(email);
+
+		if (passcodesEnabled && usePasscodesResetPassword) {
+			// TODO: implement passcode reset password flow
+			// this is a placeholder for now
+			logger.warn('Passcode reset password flow is not implemented yet', {
+				request_id,
+			});
+		}
 
 		switch (user.status) {
 			case Status.ACTIVE:

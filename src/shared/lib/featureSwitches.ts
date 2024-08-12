@@ -8,7 +8,7 @@
  */
 interface FeatureSwitches {
 	demoSwitch: boolean;
-	registrationPasscodesEnabled: {
+	passcodesEnabled: {
 		DEV: boolean;
 		CODE: boolean;
 		PROD: boolean;
@@ -17,7 +17,7 @@ interface FeatureSwitches {
 
 export const featureSwitches: FeatureSwitches = {
 	demoSwitch: false,
-	registrationPasscodesEnabled: {
+	passcodesEnabled: {
 		DEV: true,
 		CODE: true,
 		PROD: true,

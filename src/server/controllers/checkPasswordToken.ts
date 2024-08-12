@@ -30,7 +30,7 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
 
-const { defaultReturnUri, registrationPasscodesEnabled } = getConfiguration();
+const { defaultReturnUri, passcodesEnabled } = getConfiguration();
 
 const handleBackButtonEventOnWelcomePage = (
 	path: PasswordRoutePath,
@@ -106,7 +106,7 @@ export const checkTokenInOkta = async (
 	// in the correct state to be able to change their password.
 	// If there are specific failures, we fall back to the legacy Okta change password flow.
 	if (
-		registrationPasscodesEnabled &&
+		passcodesEnabled &&
 		!res.locals.queryParams.useOktaClassic &&
 		path === '/welcome' // only check the state handle for registration passcode flow on the welcome page
 	) {

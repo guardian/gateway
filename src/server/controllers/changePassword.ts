@@ -41,7 +41,7 @@ import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 
-const { registrationPasscodesEnabled } = getConfiguration();
+const { passcodesEnabled } = getConfiguration();
 
 export const setPasswordController = (
 	path: PasswordRoutePath,
@@ -56,7 +56,7 @@ export const setPasswordController = (
 		// OKTA IDX API FLOW
 		// If the user is using the passcode registration flow, we need to handle the password change/creation.
 		// If there are specific failures, we fall back to the legacy Okta change password flow.
-		if (registrationPasscodesEnabled && !useOktaClassic) {
+		if (passcodesEnabled && !useOktaClassic) {
 			try {
 				// Read the encrypted state cookie to get the state handle and email
 				const encryptedState = readEncryptedStateCookie(req);

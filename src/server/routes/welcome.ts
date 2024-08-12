@@ -50,7 +50,8 @@ import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 
-const { registrationPasscodesEnabled, signInPageUrl } = getConfiguration();
+const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
+	getConfiguration();
 
 // temp return to app page for app users who get stuck in browser
 router.get(
@@ -487,7 +488,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
 	// if registration passcodes are enabled, we need to handle this differently
 	// by using the passcode registration flow
-	if (registrationPasscodesEnabled && !state.queryParams.useOktaClassic) {
+	if (passcodesEnabled && !state.queryParams.useOktaClassic) {
 		return OktaRegistration(req, res);
 	}
 

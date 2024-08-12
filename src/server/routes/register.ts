@@ -52,7 +52,7 @@ import {
 	selectAuthenticationEnrollSchema,
 } from '@/server/lib/okta/idx/shared';
 
-const { registrationPasscodesEnabled } = getConfiguration();
+const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
 router.get(
 	'/register',
@@ -409,7 +409,7 @@ export const OktaRegistration = async (
 	// Attempt to register the user with Okta using the IDX API
 	// and specifically using passcodes.
 	// If there are specific failures, we fall back to the legacy Okta registration flow
-	if (registrationPasscodesEnabled && !useOktaClassic) {
+	if (passcodesEnabled && !useOktaClassic) {
 		try {
 			// start the interaction code flow, and get the interaction handle + authState
 			const [{ interaction_handle }, authState] = await interact(req, res, {
