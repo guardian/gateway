@@ -57,9 +57,13 @@ const handleError = (
 	subscriptionAction: SubscriptionAction,
 	{ status = 500 }: IDAPIError,
 ) => {
-	const errors =
-		subscriptionAction === 'unsubscribe' ? UnsubscribeErrors : SubscribeErrors;
-	throw new IdapiError({ message: errors.GENERIC, status });
+	throw new IdapiError({
+		message:
+			subscriptionAction === 'unsubscribe'
+				? UnsubscribeErrors.GENERIC
+				: SubscribeErrors.GENERIC,
+		status,
+	});
 };
 
 export const makeSubscriptionRequest = async (

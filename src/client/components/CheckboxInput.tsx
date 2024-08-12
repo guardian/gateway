@@ -92,7 +92,7 @@ const inputWrapperStyles = css`
 	}
 `;
 
-export interface CheckboxInputProps {
+interface CheckboxInputProps {
 	defaultChecked?: boolean;
 	id?: string;
 	label?: string;
