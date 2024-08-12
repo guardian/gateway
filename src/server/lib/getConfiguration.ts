@@ -47,7 +47,7 @@ const getStage = (value: string | undefined): Stage => {
 interface StageVariables {
 	guardianDotcomDomain: string;
 	apiDomain: string;
-	registrationPasscodesEnabled: boolean;
+	passcodesEnabled: boolean;
 	accountManagementUrl: string;
 }
 
@@ -57,24 +57,21 @@ const getStageVariables = (stage: Stage): StageVariables => {
 			return {
 				guardianDotcomDomain: GU_DOMAIN.PROD,
 				apiDomain: GU_API_DOMAIN.PROD,
-				registrationPasscodesEnabled:
-					featureSwitches.registrationPasscodesEnabled.PROD,
+				passcodesEnabled: featureSwitches.passcodesEnabled.PROD,
 				accountManagementUrl: GU_MANAGE_URL.PROD,
 			};
 		case 'CODE':
 			return {
 				guardianDotcomDomain: GU_DOMAIN.CODE,
 				apiDomain: GU_API_DOMAIN.CODE,
-				registrationPasscodesEnabled:
-					featureSwitches.registrationPasscodesEnabled.CODE,
+				passcodesEnabled: featureSwitches.passcodesEnabled.CODE,
 				accountManagementUrl: GU_MANAGE_URL.CODE,
 			};
 		default:
 			return {
 				guardianDotcomDomain: GU_DOMAIN.DEV,
 				apiDomain: GU_API_DOMAIN.DEV,
-				registrationPasscodesEnabled:
-					featureSwitches.registrationPasscodesEnabled.DEV,
+				passcodesEnabled: featureSwitches.passcodesEnabled.DEV,
 				accountManagementUrl: GU_MANAGE_URL.DEV,
 			};
 	}
@@ -129,7 +126,7 @@ export const getConfiguration = (): Configuration => {
 		guardianDotcomDomain,
 		apiDomain,
 		accountManagementUrl,
-		registrationPasscodesEnabled,
+		passcodesEnabled,
 	} = getStageVariables(stage);
 
 	const isHttps: boolean = JSON.parse(
@@ -243,7 +240,7 @@ export const getConfiguration = (): Configuration => {
 		accountManagementUrl,
 		rateLimiter,
 		membersDataApiUrl,
-		registrationPasscodesEnabled,
+		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
 	};
 };
