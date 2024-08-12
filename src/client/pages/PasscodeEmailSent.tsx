@@ -1,7 +1,6 @@
 import React, { ReactNode, useState, useEffect } from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { FieldError } from '@/shared/model/ClientState';
 import { logger } from '@/client/lib/clientSideLogger';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
@@ -11,6 +10,7 @@ import { EmailSentProps } from '@/client/pages/EmailSent';
 
 type Props = {
 	passcodeAction: string;
+	expiredPage: string;
 	fieldErrors?: FieldError[];
 	passcode?: string;
 	recaptchaSiteKey?: string;
@@ -18,6 +18,40 @@ type Props = {
 };
 
 type PasscodeEmailSentProps = EmailSentProps & Props;
+
+type Text = {
+	title: string;
+	successOverride: string;
+	sentTextWithEmail: string;
+	sentTextWithoutEmail: string;
+	securityText: string;
+	submitButtonText: string;
+};
+
+const getText = (isRegistration = false): Text => {
+	if (isRegistration) {
+		return {
+			title: 'Enter your code',
+			successOverride: 'Email with verification code sent',
+			sentTextWithEmail: 'We’ve sent a temporary verification code to',
+			sentTextWithoutEmail:
+				'We’ve sent you a temporary verification code. Please check your inbox.',
+			securityText:
+				'For your security, the verification code will expire in 30 minutes.',
+			submitButtonText: 'Submit verification code',
+		};
+	}
+
+	return {
+		title: 'Enter your one-time code',
+		successOverride: 'Email with one time code sent',
+		sentTextWithEmail: 'We’ve sent a 6-digit code to',
+		sentTextWithoutEmail:
+			'We’ve sent you a 6-digit code. Please check your inbox.',
+		securityText: 'For your security, the code will expire in 30 minutes.',
+		submitButtonText: 'Submit one-time code',
+	};
+};
 
 export const PasscodeEmailSent = ({
 	changeEmailPage,
@@ -32,10 +66,13 @@ export const PasscodeEmailSent = ({
 	recaptchaSiteKey,
 	showSuccess,
 	timeUntilTokenExpiry,
+	expiredPage,
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
+
+	const text = getText(passcodeAction.includes('/register'));
 
 	useEffect(() => {
 		// we only want this to run in the browser as window is not
@@ -44,19 +81,19 @@ export const PasscodeEmailSent = ({
 		// we redirect to the session expired page
 		// if the token expires while the user is on the current page
 		if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
-			logger.info(`Welcome page: loaded successfully`, undefined, {
+			logger.info(`Passcode email sent page: loaded successfully`, undefined, {
 				timeUntilTokenExpiry,
 			});
 			setTimeout(() => {
 				logger.info(
-					`Welcome page: redirecting to token expired page`,
+					`Passcode email page: redirecting to token expired page`,
 					undefined,
 					{ timeUntilTokenExpiry },
 				);
-				window.location.replace(buildUrl('/welcome/expired'));
+				window.location.replace(expiredPage);
 			}, timeUntilTokenExpiry);
 		}
-	}, [timeUntilTokenExpiry]);
+	}, [timeUntilTokenExpiry, expiredPage]);
 
 	// autofocus the code input field when the page loads
 	useEffect(() => {
@@ -72,10 +109,8 @@ export const PasscodeEmailSent = ({
 
 	return (
 		<MinimalLayout
-			pageHeader="Enter your code"
-			successOverride={
-				showSuccess ? 'Email with verification code sent' : undefined
-			}
+			pageHeader={text.title}
+			successOverride={showSuccess ? text.successOverride : undefined}
 			errorOverride={
 				recaptchaErrorMessage ? recaptchaErrorMessage : errorMessage
 			}
@@ -84,20 +119,16 @@ export const PasscodeEmailSent = ({
 		>
 			{email ? (
 				<MainBodyText>
-					We’ve sent a temporary verification code to <strong>{email}</strong>.
-					Please check your inbox.
+					{text.sentTextWithEmail} <strong>{email}</strong>. Please check your
+					inbox.
 				</MainBodyText>
 			) : (
-				<MainBodyText>
-					We’ve sent you a temporary verification code. Please check your inbox.
-				</MainBodyText>
+				<MainBodyText>{text.sentTextWithoutEmail}</MainBodyText>
 			)}
-			<MainBodyText>
-				For your security, the verification code will expire in 30 minutes.
-			</MainBodyText>
+			<MainBodyText>{text.securityText}</MainBodyText>
 			<MainForm
 				formAction={`${passcodeAction}${queryString}`}
-				submitButtonText="Submit verification code"
+				submitButtonText={text.submitButtonText}
 				disableOnSubmit
 			>
 				<PasscodeInput passcode={passcode} fieldErrors={fieldErrors} />
