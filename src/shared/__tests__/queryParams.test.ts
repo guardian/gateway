@@ -36,6 +36,7 @@ describe('getPersistableQueryParams', () => {
 			fromURI: 'fromURI',
 			appClientId: 'appClientId',
 			useOktaClassic: undefined,
+			usePasscodesResetPassword: undefined,
 		};
 
 		expect(output).toStrictEqual(expected);
