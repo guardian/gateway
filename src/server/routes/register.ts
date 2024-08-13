@@ -32,25 +32,18 @@ import {
 	challengeResend,
 } from '@/server/lib/okta/idx/challenge';
 import { enroll, enrollNewWithEmail } from '@/server/lib/okta/idx/enroll';
-import { interact } from '@/server/lib/okta/idx/interact';
 import {
 	introspect,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
-import {
-	updateAuthorizationStateData,
-	setAuthorizationStateCookie,
-} from '@/server/lib/okta/openid-connect';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
-import {
-	bodyFormFieldsToRegistrationConsents,
-	encryptRegistrationConsents,
-} from '@/server/lib/registrationConsents';
+import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
 import {
 	convertExpiresAtToExpiryTimeInMs,
 	selectAuthenticationEnrollSchema,
 } from '@/server/lib/okta/idx/shared';
+import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -411,30 +404,15 @@ export const OktaRegistration = async (
 	// If there are specific failures, we fall back to the legacy Okta registration flow
 	if (passcodesEnabled && !useOktaClassic) {
 		try {
-			// start the interaction code flow, and get the interaction handle + authState
-			const [{ interaction_handle }, authState] = await interact(req, res, {
-				confirmationPagePath: '/welcome/review',
-				closeExistingSession: true,
-			});
-
-			// introspect the interaction handle to get state handle
-			const introspectResponse = await introspect(
-				{
-					interactionHandle: interaction_handle,
+			const introspectResponse = await startIdxFlow({
+				req,
+				res,
+				authorizationCodeFlowOptions: {
+					confirmationPagePath: '/welcome/review',
 				},
+				consents,
 				request_id,
-			);
-
-			// Encrypt any consents we need to preserve during the registration flow
-			const encryptedRegistrationConsents =
-				consents && encryptRegistrationConsents(consents);
-
-			// update the authState with the stateToken and encrypted consents
-			const updatedAuthState = updateAuthorizationStateData(authState, {
-				stateToken: introspectResponse.stateHandle.split('~')[0],
-				encryptedRegistrationConsents,
 			});
-			setAuthorizationStateCookie(updatedAuthState, res);
 
 			// check if we have the `select-enroll-profile` remediation property which means registration is allowed
 			const introspectEnrollProfileCheck =
