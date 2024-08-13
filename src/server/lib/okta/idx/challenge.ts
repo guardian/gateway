@@ -20,10 +20,39 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 
 // schema for the challenge-authenticator object inside the challenge response remediation object
-const challengeResponseSchema = baseRemediationValueSchema.merge(
+const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('challenge-authenticator'),
 		value: authenticatorAnswerSchema,
+	}),
+);
+
+// Schema for the challenge response
+const challengeResponseSchema = idxBaseResponseSchema.merge(
+	z.object({
+		remediation: z.object({
+			type: z.string(),
+			value: z.array(
+				z.union([challengeAuthenticatorSchema, baseRemediationValueSchema]),
+			),
+		}),
+		currentAuthenticatorEnrollment: z.object({
+			type: z.literal('object'),
+			value: z.union([
+				z.object({
+					type: z.literal('email'),
+					resend: z.object({
+						name: z.literal('resend'),
+					}),
+				}),
+				z.object({
+					type: z.literal('password'),
+					recover: z.object({
+						name: z.literal('recover'),
+					}),
+				}),
+			]),
+		}),
 	}),
 );
 type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
