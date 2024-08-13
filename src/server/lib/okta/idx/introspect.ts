@@ -48,7 +48,7 @@ const introspectResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
+export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
 
 // Introspect body type - can use either interactionHandle or stateHandle
 type IntrospectBody =

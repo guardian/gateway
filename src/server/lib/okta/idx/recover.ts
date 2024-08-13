@@ -1,17 +1,52 @@
 import { z } from 'zod';
 import {
+	baseRemediationValueSchema,
 	IdxBaseResponse,
 	idxBaseResponseSchema,
 	idxFetch,
 	IdxStateHandleBody,
-	selectAuthenticatorValueSchema,
 } from './shared';
+
+// schema for the authenticator-verification-data object inside the recover response remediation object
+export const authenticatorVerificationDataRemediationSchema =
+	baseRemediationValueSchema.merge(
+		z.object({
+			name: z.literal('authenticator-verification-data'),
+			value: z.array(
+				z.union([
+					z.object({
+						name: z.literal('authenticator'),
+						label: z.string(),
+						form: z.object({
+							value: z.array(
+								z.object({
+									name: z.enum(['id', 'methodType']),
+									value: z.string().optional(),
+								}),
+							),
+						}),
+					}),
+					z.object({
+						name: z.literal('stateHandle'),
+						value: z.string(),
+					}),
+				]),
+			),
+		}),
+	);
 
 // schema for the recover response
 const recoverResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
-		name: z.literal('authenticator-verification-data'),
-		value: selectAuthenticatorValueSchema,
+		remediation: z.object({
+			type: z.string(),
+			value: z.array(
+				z.union([
+					authenticatorVerificationDataRemediationSchema,
+					baseRemediationValueSchema,
+				]),
+			),
+		}),
 	}),
 );
 type RecoverResponse = z.infer<typeof recoverResponseSchema>;
