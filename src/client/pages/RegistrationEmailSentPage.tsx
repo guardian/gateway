@@ -45,6 +45,11 @@ export const RegistrationEmailSentPage = () => {
 				formTrackingName="register-resend"
 				fieldErrors={fieldErrors}
 				passcode={token}
+				expiredPage={buildUrlWithQueryParams(
+					'/welcome/expired',
+					{},
+					queryParams,
+				)}
 			/>
 		);
 	}
