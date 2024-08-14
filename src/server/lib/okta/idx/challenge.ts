@@ -141,7 +141,9 @@ const challengeAnswerResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type ChallengeAnswerResponse = z.infer<typeof challengeAnswerResponseSchema>;
+export type ChallengeAnswerResponse = z.infer<
+	typeof challengeAnswerResponseSchema
+>;
 
 // Body type for the challenge/answer request - passcode can refer to a OTP code or a password
 type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
@@ -288,6 +290,11 @@ export const setPasswordAndRedirect = async ({
 	return expressRes.redirect(303, redirectUrl);
 };
 
+// Type to extract all the remediation names from the challenge/answer response
+export type ChallengeAnswerRemediationNames = ExtractLiteralRemediationNames<
+	ChallengeAnswerResponse['remediation']['value'][number]
+>;
+
 /**
  * @name validateChallengeAnswerRemediation
  * @description Validates that the challenge/answer response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the challenge/answer response, and the state is correct.
@@ -298,9 +305,7 @@ export const setPasswordAndRedirect = async ({
  */
 export const validateChallengeAnswerRemediation = (
 	challengeAnswerResponse: ChallengeAnswerResponse,
-	remediationName: ExtractLiteralRemediationNames<
-		ChallengeAnswerResponse['remediation']['value'][number]
-	>,
+	remediationName: ChallengeAnswerRemediationNames,
 ) => {
 	const hasRemediation = challengeAnswerResponse.remediation.value.some(
 		({ name }) => name === remediationName,

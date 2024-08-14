@@ -27,10 +27,7 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import {
-	challengeAnswerPasscode,
-	challengeResend,
-} from '@/server/lib/okta/idx/challenge';
+import { challengeResend } from '@/server/lib/okta/idx/challenge';
 import { enroll, enrollNewWithEmail } from '@/server/lib/okta/idx/enroll';
 import {
 	introspect,
@@ -42,6 +39,7 @@ import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationC
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { selectAuthenticationEnrollSchema } from '@/server/lib/okta/idx/shared/schemas';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
+import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -143,39 +141,14 @@ router.post(
 			const { stateHandle } = encryptedState;
 
 			try {
-				// validate the code contains only numbers and is 6 characters long
-				// The okta api will validate the input fully, but validating here will prevent unnecessary requests
-				if (!/^\d{6}$/.test(code)) {
-					throw new OAuthError(
-						{
-							error: 'api.authn.error.PASSCODE_INVALID',
-							error_description: 'Passcode invalid', // this is ignored, and a error based on the `error` key is shown
-						},
-						400,
-					);
-				}
-
-				// check the state handle is valid and we can proceed with the registration
-				const introspectResponse = await introspect(
-					{
-						stateHandle,
-					},
-					requestId,
-				);
-
-				// check if the remediation array contains a "enroll-authenticator"	object
-				// if it does, then we know the stateHandle is valid and we're in the correct state
-				validateIntrospectRemediation(
-					introspectResponse,
-					'enroll-authenticator',
-				);
-
 				// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
-				const challengeAnswerResponse = await challengeAnswerPasscode(
+				const challengeAnswerResponse = await submitPasscode({
+					passcode: code,
 					stateHandle,
-					{ passcode: code },
+					introspectRemediation: 'enroll-authenticator',
+					challengeAnswerRemediation: 'select-authenticator-enroll',
 					requestId,
-				);
+				});
 
 				// if passcode challenge is successful, we can proceed to the next step
 				// which is to enroll a password authenticator, as we still need users to set a password for the time being

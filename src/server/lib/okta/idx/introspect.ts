@@ -102,7 +102,7 @@ export const introspect = (
 };
 
 // Type to extract all the remediation names from the introspect response
-type IntrospectRemediationNames = ExtractLiteralRemediationNames<
+export type IntrospectRemediationNames = ExtractLiteralRemediationNames<
 	IntrospectResponse['remediation']['value'][number]
 >;
 
