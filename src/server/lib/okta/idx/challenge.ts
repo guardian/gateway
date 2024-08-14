@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import {
 	AuthenticatorBody,
+	ExtractLiteralRemediationNames,
 	IdxBaseResponse,
 	IdxStateHandleBody,
 	authenticatorAnswerSchema,
@@ -18,6 +19,7 @@ import { Request } from 'express';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import { OAuthError } from '@/server/models/okta/Error';
 
 // schema for the challenge-authenticator object inside the challenge response remediation object
 const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
@@ -282,4 +284,33 @@ export const setPasswordAndRedirect = async ({
 
 	// redirect the user to set a global session and then back to completing the authorization flow
 	return expressRes.redirect(303, redirectUrl);
+};
+
+/**
+ * @name validateChallengeAnswerRemediation
+ * @description Validates that the challenge/answer response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the challenge/answer response, and the state is correct.
+ * @param challengeAnswerResponse - The challenge/answer response
+ * @param remediationName - The name of the remediation to validate
+ * @throws OAuthError - If the remediation is not found in the challenge/answer response
+ * @returns void
+ */
+export const validateChallengeAnswerRemediation = (
+	challengeAnswerResponse: ChallengeAnswerResponse,
+	remediationName: ExtractLiteralRemediationNames<
+		ChallengeAnswerResponse['remediation']['value'][number]
+	>,
+) => {
+	const hasRemediation = challengeAnswerResponse.remediation.value.some(
+		({ name }) => name === remediationName,
+	);
+
+	if (!hasRemediation) {
+		throw new OAuthError(
+			{
+				error: 'invalid_request',
+				error_description: `Remediation ${remediationName} not found in introspect response`,
+			},
+			400,
+		);
+	}
 };
