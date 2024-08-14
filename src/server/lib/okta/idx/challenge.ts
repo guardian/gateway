@@ -27,14 +27,18 @@ const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// list of all possible remediations for the challenge response
+export const challengeRemediations = z.union([
+	challengeAuthenticatorSchema,
+	baseRemediationValueSchema,
+]);
+
 // Schema for the challenge response
 const challengeResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([challengeAuthenticatorSchema, baseRemediationValueSchema]),
-			),
+			value: z.array(challengeRemediations),
 		}),
 		currentAuthenticatorEnrollment: z.object({
 			type: z.literal('object'),
@@ -89,18 +93,19 @@ export const skipSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// list of all possible remediations for the challenge/answer response
+export const challengeAnswerRemediations = z.union([
+	selectAuthenticationEnrollSchema,
+	skipSchema,
+	baseRemediationValueSchema,
+]);
+
 // Schema for the challenge/answer response
 const challengeAnswerResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([
-					selectAuthenticationEnrollSchema,
-					skipSchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(challengeAnswerRemediations),
 		}),
 	}),
 );

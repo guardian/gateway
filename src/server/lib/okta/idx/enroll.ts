@@ -16,14 +16,18 @@ const enrollProfileSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// list of all possible remediations for the enroll response
+export const enrollRemediations = z.union([
+	enrollProfileSchema,
+	baseRemediationValueSchema,
+]);
+
 // schema for the enroll response
 const enrollResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([enrollProfileSchema, baseRemediationValueSchema]),
-			),
+			value: z.array(enrollRemediations),
 		}),
 	}),
 );

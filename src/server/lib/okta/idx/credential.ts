@@ -10,19 +10,20 @@ import {
 import { enrollAuthenticatorSchema } from './enroll';
 import { skipSchema } from './challenge';
 
+// list of all possible remediations for the credential/enroll response
+export const credentialEnrollRemediations = z.union([
+	enrollAuthenticatorSchema,
+	selectAuthenticationEnrollSchema,
+	skipSchema,
+	baseRemediationValueSchema,
+]);
+
 // Schema for the credential/enroll response - very similar to the enroll response
 const credentialEnrollResponse = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([
-					enrollAuthenticatorSchema,
-					selectAuthenticationEnrollSchema,
-					skipSchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(credentialEnrollRemediations),
 		}),
 	}),
 );

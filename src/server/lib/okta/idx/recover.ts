@@ -35,17 +35,18 @@ export const authenticatorVerificationDataRemediationSchema =
 		}),
 	);
 
+// list of all possible remediations for the recover response
+export const recoverRemediations = z.union([
+	authenticatorVerificationDataRemediationSchema,
+	baseRemediationValueSchema,
+]);
+
 // schema for the recover response
 const recoverResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([
-					authenticatorVerificationDataRemediationSchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(recoverRemediations),
 		}),
 	}),
 );

@@ -7,6 +7,14 @@ import {
 	idxFetch,
 } from './shared';
 import { OAuthError } from '@/server/models/okta/Error';
+import {
+	challengeAnswerRemediations,
+	challengeRemediations,
+} from './challenge';
+import { credentialEnrollRemediations } from './credential';
+import { enrollRemediations } from './enroll';
+import { identifyRemediations } from './identify';
+import { recoverRemediations } from './recover';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
 export const redirectIdpSchema = baseRemediationValueSchema.merge(
@@ -32,20 +40,28 @@ const identifySchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Since the introspect response can contain any remediation objects from the other schemas,
+// we combine them all into one schema
+const remediationValueSchema = z
+	.union([
+		redirectIdpSchema,
+		selectEnrollProfileSchema,
+		identifySchema,
+		baseRemediationValueSchema,
+	])
+	.and(challengeRemediations)
+	.and(challengeAnswerRemediations)
+	.and(credentialEnrollRemediations)
+	.and(enrollRemediations)
+	.and(identifyRemediations)
+	.and(recoverRemediations);
+
 // Schema for the introspect response
 const introspectResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				// social idp object
-				z.union([
-					redirectIdpSchema,
-					selectEnrollProfileSchema,
-					identifySchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(remediationValueSchema),
 		}),
 	}),
 );

@@ -8,24 +8,26 @@ import {
 } from './shared';
 
 // schema for the select-authenticator-authenticate object inside the identify response remediation object
-const selectAuthenticationAuthenticateSchema = baseRemediationValueSchema.merge(
-	z.object({
-		name: z.literal('select-authenticator-authenticate'),
-		value: selectAuthenticatorValueSchema,
-	}),
-);
+export const selectAuthenticationAuthenticateSchema =
+	baseRemediationValueSchema.merge(
+		z.object({
+			name: z.literal('select-authenticator-authenticate'),
+			value: selectAuthenticatorValueSchema,
+		}),
+	);
+
+// list of all possible remediations for the identify response
+export const identifyRemediations = z.union([
+	selectAuthenticationAuthenticateSchema,
+	baseRemediationValueSchema,
+]);
 
 // schema for the identify response
 const identifyResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([
-					selectAuthenticationAuthenticateSchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(identifyRemediations),
 		}),
 	}),
 );
