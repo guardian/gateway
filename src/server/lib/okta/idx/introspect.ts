@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { InteractResponse } from './interact';
 import {
 	baseRemediationValueSchema,
+	ExtractLiteralRemediationNames,
 	idxBaseResponseSchema,
 	idxFetch,
 } from './shared';
@@ -84,6 +85,11 @@ export const introspect = (
 	});
 };
 
+// Type to extract all the remediation names from the introspect response
+type IntrospectRemediationNames = ExtractLiteralRemediationNames<
+	IntrospectResponse['remediation']['value'][number]
+>;
+
 /**
  * @name validateIntrospectRemediation
  * @description Validates that the introspect response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the introspect response, and the state is correct.
@@ -94,7 +100,7 @@ export const introspect = (
  */
 export const validateIntrospectRemediation = (
 	introspectResponse: IntrospectResponse,
-	remediationName: string,
+	remediationName: IntrospectRemediationNames,
 ) => {
 	const hasRemediation = introspectResponse.remediation.value.some(
 		({ name }) => name === remediationName,

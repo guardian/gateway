@@ -52,6 +52,15 @@ export const baseRemediationValueSchema = z.object({
 	value: z.unknown().optional(),
 });
 
+// Type to extract all the `name` properties from the remediation value array
+export type ExtractLiteralRemediationNames<T> = T extends { name: infer N }
+	? N extends string
+		? string extends N
+			? never
+			: N
+		: never
+	: never;
+
 // Base type for the body of a request to the IDX API
 // Which should include the stateHandle, and any other data needed using the generic type
 export type IdxStateHandleBody<T = object> = T & {
