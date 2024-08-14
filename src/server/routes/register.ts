@@ -37,9 +37,9 @@ import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
-import { selectAuthenticationEnrollSchema } from '@/server/lib/okta/idx/shared/schemas';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
+import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -153,41 +153,13 @@ router.post(
 				// if passcode challenge is successful, we can proceed to the next step
 				// which is to enroll a password authenticator, as we still need users to set a password for the time being
 				// we first look for the password authenticator id deep in the response
-				const passwordAuthenticatorId =
-					challengeAnswerResponse.remediation.value
-						.flatMap((remediation) => {
-							if (remediation.name === 'select-authenticator-enroll') {
-								const parsedRemediation =
-									selectAuthenticationEnrollSchema.safeParse(remediation);
+				const passwordAuthenticatorId = findAuthenticatorId({
+					response: challengeAnswerResponse,
+					remediationName: 'select-authenticator-enroll',
+					authenticator: 'password',
+				});
 
-								if (parsedRemediation.success) {
-									return parsedRemediation.data.value.flatMap((value) => {
-										if (value.name === 'authenticator') {
-											return value.options.flatMap((option) => {
-												if (option.label === 'Password') {
-													if (
-														option.value.form.value.some(
-															(v) => v.value === 'password',
-														)
-													) {
-														return [
-															option.value.form.value.find(
-																(v) => v.name === 'id',
-															)?.value,
-														];
-													}
-												}
-											});
-										}
-									});
-								}
-							}
-						})
-						.filter(
-							(id): id is string => typeof id === 'string' && id.length > 0,
-						);
-
-				if (!passwordAuthenticatorId.length) {
+				if (!passwordAuthenticatorId) {
 					throw new OAuthError(
 						{
 							error: 'idx_error',
@@ -200,7 +172,7 @@ router.post(
 				// start the credential enroll flow
 				await credentialEnroll(
 					stateHandle,
-					{ id: passwordAuthenticatorId[0], methodType: 'password' },
+					{ id: passwordAuthenticatorId, methodType: 'password' },
 					requestId,
 				);
 

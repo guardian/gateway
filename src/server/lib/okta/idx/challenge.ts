@@ -98,7 +98,7 @@ export const skipSchema = baseRemediationValueSchema.merge(
 );
 
 // Schema for the 'reset-authenticator' object inside the challenge response remediation object
-export const resetAuthenticatorSchema = baseRemediationValueSchema.merge(
+const resetAuthenticatorSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('reset-authenticator'),
 		href: z.string().url(),
