@@ -93,10 +93,38 @@ export const skipSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Schema for the 'reset-authenticator' object inside the challenge response remediation object
+export const resetAuthenticatorSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('reset-authenticator'),
+		href: z.string().url(),
+		value: z.array(
+			z.union([
+				z.object({
+					name: z.literal('credentials'),
+					type: z.literal('object'),
+					form: z.object({
+						value: z.array(
+							z.object({
+								name: z.string(),
+							}),
+						),
+					}),
+				}),
+				z.object({
+					name: z.literal('stateHandle'),
+					value: z.string(),
+				}),
+			]),
+		),
+	}),
+);
+
 // list of all possible remediations for the challenge/answer response
 export const challengeAnswerRemediations = z.union([
 	selectAuthenticationEnrollSchema,
 	skipSchema,
+	resetAuthenticatorSchema,
 	baseRemediationValueSchema,
 ]);
 
