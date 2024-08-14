@@ -2,7 +2,7 @@
 
 import { BucketType } from '@/server/lib/rate-limit';
 import { PasswordRoutePath } from '@/shared/model/Routes';
-import { IDXPath } from '@/server/lib/okta/idx/shared';
+import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
 
 // Specific emails to track
 type EmailMetrics =

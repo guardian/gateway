@@ -1,11 +1,11 @@
 import { z } from 'zod';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
-	IdxBaseResponse,
 	idxBaseResponseSchema,
-	idxFetch,
+	IdxBaseResponse,
 	IdxStateHandleBody,
-} from './shared';
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the authenticator-verification-data object inside the recover response remediation object
 export const authenticatorVerificationDataRemediationSchema =

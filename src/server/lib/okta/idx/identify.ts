@@ -1,11 +1,11 @@
 import { z } from 'zod';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
-	IdxBaseResponse,
-	idxBaseResponseSchema,
-	idxFetch,
 	selectAuthenticatorValueSchema,
-} from './shared';
+	idxBaseResponseSchema,
+	IdxBaseResponse,
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the select-authenticator-authenticate object inside the identify response remediation object
 export const selectAuthenticationAuthenticateSchema =

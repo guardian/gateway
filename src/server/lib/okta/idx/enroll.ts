@@ -1,13 +1,13 @@
 import { z } from 'zod';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
+	baseRemediationValueSchema,
+	idxBaseResponseSchema,
 	IdxBaseResponse,
 	IdxStateHandleBody,
 	authenticatorAnswerSchema,
-	baseRemediationValueSchema,
-	idxBaseResponseSchema,
-	idxFetch,
 	selectAuthenticationEnrollSchema,
-} from './shared';
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the enroll-profile object inside the enroll response remediation object
 const enrollProfileSchema = baseRemediationValueSchema.merge(

@@ -1,16 +1,4 @@
 import { z } from 'zod';
-import {
-	AuthenticatorBody,
-	ExtractLiteralRemediationNames,
-	IdxBaseResponse,
-	IdxStateHandleBody,
-	authenticatorAnswerSchema,
-	baseRemediationValueSchema,
-	idxBaseResponseSchema,
-	idxFetch,
-	idxFetchCompletion,
-	selectAuthenticationEnrollSchema,
-} from './shared';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -20,6 +8,20 @@ import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { OAuthError } from '@/server/models/okta/Error';
+import {
+	idxFetch,
+	idxFetchCompletion,
+} from '@/server/lib/okta/idx/shared/idxFetch';
+import {
+	baseRemediationValueSchema,
+	authenticatorAnswerSchema,
+	idxBaseResponseSchema,
+	IdxBaseResponse,
+	AuthenticatorBody,
+	selectAuthenticationEnrollSchema,
+	IdxStateHandleBody,
+	ExtractLiteralRemediationNames,
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the challenge-authenticator object inside the challenge response remediation object
 const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(

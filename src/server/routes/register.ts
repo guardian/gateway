@@ -39,11 +39,9 @@ import {
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
-import {
-	convertExpiresAtToExpiryTimeInMs,
-	selectAuthenticationEnrollSchema,
-} from '@/server/lib/okta/idx/shared';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
+import { selectAuthenticationEnrollSchema } from '@/server/lib/okta/idx/shared/schemas';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 

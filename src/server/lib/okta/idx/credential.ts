@@ -1,14 +1,14 @@
 import { z } from 'zod';
+import { enrollAuthenticatorSchema } from '@/server/lib/okta/idx/enroll';
+import { skipSchema } from '@/server/lib/okta/idx/challenge';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
-	AuthenticatorBody,
-	IdxBaseResponse,
+	selectAuthenticationEnrollSchema,
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
-	idxFetch,
-	selectAuthenticationEnrollSchema,
-} from './shared';
-import { enrollAuthenticatorSchema } from './enroll';
-import { skipSchema } from './challenge';
+	IdxBaseResponse,
+	AuthenticatorBody,
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // list of all possible remediations for the credential/enroll response
 export const credentialEnrollRemediations = z.union([

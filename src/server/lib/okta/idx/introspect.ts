@@ -1,20 +1,20 @@
 import { z } from 'zod';
-import { InteractResponse } from './interact';
-import {
-	baseRemediationValueSchema,
-	ExtractLiteralRemediationNames,
-	idxBaseResponseSchema,
-	idxFetch,
-} from './shared';
 import { OAuthError } from '@/server/models/okta/Error';
+import { InteractResponse } from '@/server/lib/okta/idx/interact';
 import {
 	challengeAnswerRemediations,
 	challengeRemediations,
-} from './challenge';
-import { credentialEnrollRemediations } from './credential';
-import { enrollRemediations } from './enroll';
-import { identifyRemediations } from './identify';
-import { recoverRemediations } from './recover';
+} from '@/server/lib/okta/idx/challenge';
+import { credentialEnrollRemediations } from '@/server/lib/okta/idx/credential';
+import { enrollRemediations } from '@/server/lib/okta/idx/enroll';
+import { identifyRemediations } from '@/server/lib/okta/idx/identify';
+import { recoverRemediations } from '@/server/lib/okta/idx/recover';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
+import {
+	baseRemediationValueSchema,
+	idxBaseResponseSchema,
+	ExtractLiteralRemediationNames,
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
 export const redirectIdpSchema = baseRemediationValueSchema.merge(
