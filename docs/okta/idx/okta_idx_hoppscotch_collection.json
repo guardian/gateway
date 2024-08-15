@@ -15,7 +15,7 @@
 				"authActive": true
 			},
 			"preRequestScript": "",
-			"testScript": "",
+			"testScript": "// since tests run after request, use it to set the `interactionHandle` variable\npw.env.set(\"interactionHandle\", pw.response.body.interaction_handle);\n",
 			"body": {
 				"contentType": "application/x-www-form-urlencoded",
 				"body": "scope: openid\nredirect_uri: <<sampleAppRedirectUri>>\ncode_challenge: test\ncode_challenge_method: S256\nstate: state\nclient_id: <<sampleAppClientId>>"
@@ -34,7 +34,7 @@
 				"authActive": true
 			},
 			"preRequestScript": "",
-			"testScript": "",
+			"testScript": "// since tests run after request, use it to set the `stateHandle` variable\npw.env.set(\"stateHandle\", pw.response.body.stateHandle);\n",
 			"body": {
 				"contentType": "application/json",
 				"body": "{\n  \"interactionHandle\": \"<<interactionHandle>>\"\n}"
