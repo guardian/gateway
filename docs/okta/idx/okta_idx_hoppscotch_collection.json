@@ -1,0 +1,297 @@
+{
+	"v": 2,
+	"name": "Okta IDX",
+	"folders": [],
+	"requests": [
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/oauth2/<<authorizationServerId>>/v1/interact",
+			"name": "IDX /interact",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/x-www-form-urlencoded",
+				"body": "scope: openid\nredirect_uri: <<sampleAppRedirectUri>>\ncode_challenge: test\ncode_challenge_method: S256\nstate: state\nclient_id: <<sampleAppClientId>>"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/introspect",
+			"name": "IDX /introspect (with `interactionCode`)",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"interactionHandle\": \"<<interactionHandle>>\"\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/introspect",
+			"name": "IDX /introspect (with `stateHandle`)",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\"\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/identify",
+			"name": "IDX /identify",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"identifier\": \"<<email>>\",\n  \"rememberMe\": true\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/enroll",
+			"name": "IDX /enroll - no authenticator",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\"\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/enroll/new",
+			"name": "IDX /enroll/new",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"userProfile\": {\n    \"email\": \"<<email>>\",\n    \"isGuardianUser\": true\n  }\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/challenge",
+			"name": "IDX /challenge - authenticator - email",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"authenticator\": {\n  \t\"methodType\": \"email\",\n    \"id\": \"<<authenticator_email_id>>\"\n  }\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/challenge",
+			"name": "IDX /challenge - authenticator - password",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"authenticator\": {\n  \t\"methodType\": \"password\",\n    \"id\": \"<<authenticator_password_id>>\"\n  }\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/challenge/answer",
+			"name": "IDX /challenge/answer - passcode",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"credentials\": {\n    \"passcode\": \"<<passcode>>\" \n  }\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/challenge/answer",
+			"name": "IDX /challenge/answer - password",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"credentials\": {\n    \"passcode\": \"<<password>>\" \n  }\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/credential/enroll",
+			"name": "IDX /credential/enroll - authenticator - password",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\",\n  \"authenticator\": {\n  \t\"methodType\": \"password\",\n    \"id\": \"<<authenticator_password_id>>\"\n  }\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/recover",
+			"name": "IDX /recover",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\"\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/challenge/resend",
+			"name": "IDX /challenge/resend",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\"\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/identify/select",
+			"name": "IDX /identify/select",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\"\n}"
+			},
+			"requestVariables": []
+		},
+		{
+			"v": "6",
+			"endpoint": "https://<<baseUrl>>/idp/idx/skip",
+			"name": "IDX /skip",
+			"params": [],
+			"headers": [],
+			"method": "POST",
+			"auth": {
+				"authType": "inherit",
+				"authActive": true
+			},
+			"preRequestScript": "",
+			"testScript": "",
+			"body": {
+				"contentType": "application/json",
+				"body": "{\n  \"stateHandle\": \"<<stateHandle>>\"\n}"
+			},
+			"requestVariables": []
+		}
+	],
+	"auth": {
+		"authType": "none",
+		"authActive": true
+	},
+	"headers": []
+}
