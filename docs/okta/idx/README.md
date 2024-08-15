@@ -47,10 +47,10 @@ To interface with the Okta IDX API, you always have to make 2 calls in order to 
 1. First call the "IDX /interact" endpoint.
    - All the variables/parameters should be set up for this, so just click send!
    - This returns an `interaction_handle` in the body.
-   - Copy this value, and add it to the `interactionHandle` secret under the environment
+   - This will automatically be updated in the variables as `interactionHandle`
 2. Next call the "IDX /introspect (with `interactionCode`)" endpoint.
    - This uses the `interactionHandle` from the previous step.
-   - This returns a bunch of things, but you want to extract the `stateHandle` and add it to the `stateHandle` secret under the environment
+   - This returns a bunch of things, but it's automatically be updated in the variables as `stateHandle`
    - The response includes a `remediation` property which contains an array of possible next steps, this is the same for every IDX API endpoint
    - More information about the IDX API will be added soon.
 3. Ready to make further calls!
