@@ -40,6 +40,7 @@ import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
+import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -186,55 +187,25 @@ router.post(
 					addQueryParamsToPath('/welcome/password', res.locals.queryParams),
 				);
 			} catch (error) {
-				if (error instanceof OAuthError) {
-					if (error.name === 'api.authn.error.PASSCODE_INVALID') {
-						// case for invalid passcode
-						const html = renderer('/register/email-sent', {
-							requestState: mergeRequestState(res.locals, {
-								queryParams: {
-									returnUrl: res.locals.queryParams.returnUrl,
-									emailSentSuccess: false,
-								},
-								pageData: {
-									email: readEncryptedStateCookie(req)?.email,
-									timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
-										encryptedState.stateHandleExpiresAt,
-									),
-									fieldErrors: [
-										{
-											field: 'code',
-											message: RegistrationErrors.PASSCODE_INVALID,
-										},
-									],
-									token: code,
-								},
-							}),
-							pageTitle: 'Check Your Inbox',
-						});
-						return res.type('html').send(html);
-					}
-
-					// case for too many passcode attempts
-					if (error.name === 'oie.tooManyRequests') {
-						return res.redirect(
-							303,
-							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
-						);
-					}
-
-					// case for session expired
-					if (error.name === 'idx.session.expired') {
-						return res.redirect(
-							303,
-							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
-						);
-					}
-				}
-
-				// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
-				logger.error('IDX API - register/code error:', error, {
+				// track and log the failure
+				logger.error(`IDX API - ${req.path} error:`, error, {
 					request_id: requestId,
 				});
+
+				handlePasscodeError({
+					error,
+					req,
+					res,
+					emailSentPage: '/register/email-sent',
+					expiredPage: '/welcome/expired',
+				});
+
+				// if we redirected away during the handlePasscodeError function, we can't redirect again
+				if (res.headersSent) {
+					return;
+				}
+
+				// at this point fall back to the legacy Okta registration flow
 			}
 		}
 
