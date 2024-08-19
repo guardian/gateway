@@ -8,7 +8,7 @@ import {
 } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { remSpace, textSans } from '@guardian/source/foundations';
+import { remSpace, textSansBold17 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
@@ -20,7 +20,7 @@ import { trackFormSubmit } from '@/client/lib/ophan';
 import { MainForm } from '@/client/components/MainForm';
 
 const subheadingStyles = css`
-	${textSans.medium({ fontWeight: 'bold' })};
+	${textSansBold17};
 `;
 
 const listStyles = css`

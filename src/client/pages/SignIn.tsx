@@ -8,7 +8,7 @@ import { EmailInput } from '@/client/components/EmailInput';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { css } from '@emotion/react';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { remSpace, textSans } from '@guardian/source/foundations';
+import { remSpace, textSans15 } from '@guardian/source/foundations';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { divider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
@@ -31,7 +31,7 @@ export type SignInProps = {
 };
 
 const resetPassword = css`
-	${textSans.small()}
+	${textSans15}
 `;
 
 const socialButtonDivider = css`

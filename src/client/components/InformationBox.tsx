@@ -1,6 +1,10 @@
 import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
-import { remSpace, textSans } from '@guardian/source/foundations';
+import {
+	remSpace,
+	textSans14,
+	textSansBold14,
+} from '@guardian/source/foundations';
 
 const informationBoxStyles = css`
 	background-color: var(--color-info-box-background);
@@ -10,7 +14,7 @@ const informationBoxStyles = css`
 `;
 
 const informationBoxTextStyle = css`
-	${textSans.xsmall()};
+	${textSans14};
 	margin: 0 0 ${remSpace[2]} 0;
 	&:last-of-type {
 		margin: 0;
@@ -18,7 +22,7 @@ const informationBoxTextStyle = css`
 
 	a,
 	button {
-		${textSans.xsmall({ fontWeight: 'bold' })};
+		${textSansBold14};
 	}
 `;
 export const InformationBoxText = ({

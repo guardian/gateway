@@ -5,7 +5,8 @@ import { css } from '@emotion/react';
 import {
 	neutral,
 	remSpace,
-	textSans,
+	textSans15,
+	textSansBold15,
 	until,
 } from '@guardian/source/foundations';
 import ThemedLink from '@/client/components/ThemedLink';
@@ -39,12 +40,12 @@ const listBullets = css`
 
 const text = css`
 	margin: 0;
-	${textSans.small()}
+	${textSans15}
 	color: var(--color-text);
 `;
 
 const leadText = css`
-	${textSans.small({ fontWeight: 'bold' })}
+	${textSansBold15}
 `;
 
 const textSpacing = css`

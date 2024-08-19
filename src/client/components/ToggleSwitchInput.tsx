@@ -2,7 +2,8 @@ import React, { useId, useState } from 'react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { css } from '@emotion/react';
 import {
-	textSans,
+	textSans15,
+	textSansBold15,
 	focusHalo,
 	visuallyHidden,
 	descriptionId,
@@ -29,7 +30,7 @@ const inputStyles = css`
 const labelStyles = (hasFocus: boolean) => css`
 	user-select: none;
 	position: relative;
-	${textSans.small()};
+	${textSans15};
 	cursor: pointer;
 	border: 0;
 	margin: 0;
@@ -147,7 +148,7 @@ const switchStyles = css`
 const titleStyles = css`
 	min-height: ${switchVariables.height}px;
 	color: var(--color-input-label);
-	${textSans.small({ fontWeight: 'bold' })};
+	${textSansBold15};
 	display: flex;
 	align-items: center;
 `;
