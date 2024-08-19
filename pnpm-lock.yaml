@@ -30,11 +30,11 @@ importers:
         specifier: ^18.0.1
         version: 18.0.1(tslib@2.6.3)(typescript@5.5.4)
       '@guardian/source':
-        specifier: ^6.1.0
-        version: 6.1.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)
+        specifier: ^7.0.1
+        version: 7.0.1(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)
       '@guardian/source-development-kitchen':
         specifier: ^6.0.0
-        version: 6.0.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@guardian/libs@18.0.1(tslib@2.6.3)(typescript@5.5.4))(@guardian/source@6.1.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)
+        version: 6.0.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@guardian/libs@18.0.1(tslib@2.6.3)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)
       '@okta/jwt-verifier':
         specifier: ^3.2.2
         version: 3.2.2
@@ -1536,8 +1536,8 @@ packages:
       typescript:
         optional: true
 
-  '@guardian/source@6.1.0':
-    resolution: {integrity: sha512-Vez2zPyOa6SLNUSQ6XOIwFPGOcgRrg9MgRQTvG9ERUsYamuDFC3WiGi5U3tMll23WEekKSshd8jDZsAyWz5u5w==}
+  '@guardian/source@7.0.1':
+    resolution: {integrity: sha512-3IIYlRdZO0UsM226LxxkVQ5srYbjE8Mw03BYP/L43+HwYq/uhIeJK75u0On0tJtDHqDlgtGgaUwXQ5Hx1Pc3Vg==}
     peerDependencies:
       '@emotion/react': ^11.11.3
       '@types/react': ^18.2.11
@@ -9263,10 +9263,10 @@ snapshots:
       prettier: 3.3.3
       tslib: 2.6.3
 
-  '@guardian/source-development-kitchen@6.0.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@guardian/libs@18.0.1(tslib@2.6.3)(typescript@5.5.4))(@guardian/source@6.1.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)':
+  '@guardian/source-development-kitchen@6.0.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@guardian/libs@18.0.1(tslib@2.6.3)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)':
     dependencies:
       '@guardian/libs': 18.0.1(tslib@2.6.3)(typescript@5.5.4)
-      '@guardian/source': 6.1.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)
+      '@guardian/source': 7.0.1(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)
       tslib: 2.6.3
     optionalDependencies:
       '@emotion/react': 11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)
@@ -9274,7 +9274,7 @@ snapshots:
       react: '@preact/compat@17.1.2(preact@10.23.2)'
       typescript: 5.5.4
 
-  '@guardian/source@6.1.0(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)':
+  '@guardian/source@7.0.1(@emotion/react@11.13.0(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.3)(tslib@2.6.3)(typescript@5.5.4)':
     dependencies:
       mini-svg-data-uri: 1.4.4
       tslib: 2.6.3
