@@ -128,7 +128,7 @@
 		"@guardian/ab-core": "8.0.0",
 		"@guardian/libs": "^18.0.1",
 		"@guardian/source": "^6.1.0",
-		"@guardian/source-development-kitchen": "^6.0.0",
+		"@guardian/source-development-kitchen": "^7.0.1",
 		"@okta/jwt-verifier": "^3.2.2",
 		"@sentry/browser": "^7.119.0",
 		"@smithy/node-http-handler": "^3.1.4",
