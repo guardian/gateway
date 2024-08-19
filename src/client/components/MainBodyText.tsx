@@ -1,23 +1,23 @@
 import React, { PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { textSans } from '@guardian/source/foundations';
+import { textSans15, textSansBold15 } from '@guardian/source/foundations';
 
 interface Props {
 	cssOverrides?: SerializedStyles;
 }
 
 const mainBodyTextStyles = css`
-	${textSans.small({ lineHeight: 'regular' })};
+	${textSans15};
 	color: var(--color-text);
 	margin: 0;
 
 	strong {
-		${textSans.small({ lineHeight: 'regular', fontWeight: 'bold' })};
+		${textSansBold15};
 		color: var(--color-strong-text);
 	}
 
 	a {
-		${textSans.small({ lineHeight: 'regular', fontWeight: 'bold' })};
+		${textSansBold15};
 		color: var(--color-link);
 
 		strong {

@@ -1,7 +1,11 @@
 import React from 'react';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { NewsLetter, NewslettersWithImages } from '@/shared/model/Newsletter';
-import { palette, textSans } from '@guardian/source/foundations';
+import {
+	palette,
+	textSans14,
+	textSansBold14,
+} from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { CheckboxInput } from '@/client/components/CheckboxInput';
@@ -22,12 +26,12 @@ const labelStyles = css`
 	justify-content: space-between;
 	& > span:first-of-type {
 		color: ${palette.neutral[20]};
-		${textSans.xsmall({ fontWeight: 'bold' })}
+		${textSansBold14}
 	}
 	& > span:last-of-type {
 		align-self: flex-start;
 		color: ${palette.neutral[46]};
-		${textSans.xsmall()}
+		${textSans14}
 	}
 `;
 

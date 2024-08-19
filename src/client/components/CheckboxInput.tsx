@@ -3,17 +3,18 @@ import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { Checkbox } from '@guardian/source/react-components';
 import { SerializedStyles, css } from '@emotion/react';
 import {
-	textSans,
 	focusHalo,
 	descriptionId,
 	textSans12,
+	textSans15,
+	textSansBold17,
 	remSpace,
 } from '@guardian/source/foundations';
 
 const labelStyles = css`
 	user-select: none;
 	position: relative;
-	${textSans.small()};
+	${textSans15};
 	display: flex;
 	grid-template-columns: 80px 1fr 2rem;
 	cursor: pointer;
@@ -46,7 +47,7 @@ const contentWrapperStyles = css`
 
 const mainLabelStyles = css`
 	display: block;
-	${textSans.medium({ fontWeight: 'bold' })};
+	${textSansBold17};
 	color: var(--color-text);
 `;
 
@@ -79,13 +80,14 @@ const inputWrapperStyles = css`
 	display: flex;
 	align-items: flex-start;
 
-	// Override the default padding for the Source checkbox
+	/* Override the default padding for the Source checkbox */
 	& > div {
+		padding: 0;
 		min-height: auto;
 		& > input {
 			margin-right: 0;
 		}
-		// Fix checkmark alignment
+		/* Fix checkmark alignment */
 		& > span {
 			top: 5px;
 		}

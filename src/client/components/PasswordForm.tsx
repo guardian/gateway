@@ -4,7 +4,7 @@ import React, {
 	useEffect,
 	useState,
 } from 'react';
-import { textSans } from '@guardian/source/foundations';
+import { textSans15 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import {
 	PasswordAutoComplete,
@@ -41,7 +41,7 @@ type Props = {
 };
 
 const baseMessageStyles = css`
-	${textSans.small()};
+	${textSans15};
 	display: flex;
 	align-items: center;
 `;

@@ -14,7 +14,7 @@ import {
 	JobsTerms,
 	RecaptchaTerms,
 } from '@/client/components/Terms';
-import { textSans } from '@guardian/source/foundations';
+import { textSansBold15 } from '@guardian/source/foundations';
 import {
 	RecaptchaWrapper,
 	UseRecaptchaReturnValue,
@@ -75,13 +75,13 @@ export interface MainFormProps {
 const formStyles = (displayInline: boolean) => css`
 	${mainSectionStyles};
 	a {
-		${textSans.small({ fontWeight: 'bold' })};
+		${textSansBold15};
 	}
 	${displayInline && 'display: inline-block;'}
 `;
 
 const buttonLinkStyles = css`
-	${textSans.small({ fontWeight: 'bold' })};
+	${textSansBold15};
 	color: var(--color-link);
 	:hover {
 		color: var(--color-link);

@@ -12,7 +12,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { FieldError } from '@/shared/model/ClientState';
 import { divider } from '@/client/styles/Shared';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { textSans } from '@guardian/source/foundations';
+import { textSans15, textSansBold15 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 
 interface Props {
@@ -24,11 +24,11 @@ interface Props {
 
 const radioGroupStyles = css`
 	label div {
-		${textSans.small()}
+		${textSans15}
 		color: var(--color-text);
 	}
 	legend div {
-		${textSans.small({ fontWeight: 'bold' })}
+		${textSansBold15}
 		color: var(--color-text);
 	}
 `;

@@ -8,7 +8,8 @@ import { css } from '@emotion/react';
 import {
 	height,
 	focusHalo,
-	textSans,
+	textSans14,
+	textSansBold17,
 	remSpace,
 } from '@guardian/source/foundations';
 import {
@@ -148,12 +149,12 @@ const wrapperStyles = (hasFocus?: boolean) => css`
 `;
 
 const labelStyles = css`
-	${textSans.medium({ fontWeight: 'bold' })}
+	${textSansBold17}
 	color: var(--color-input-label);
 `;
 
 const supportingTextStyles = css`
-	${textSans.xsmall()}
+	${textSans14}
 	margin-top: 4px;
 	color: var(--color-alert-info);
 	margin: 2px 0 0;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import MinimalHeader from '@/client/components/MinimalHeader';
-import { from, headline, remSpace } from '@guardian/source/foundations';
+import { from, headlineBold28, remSpace } from '@guardian/source/foundations';
 import useClientState from '@/client/lib/hooks/useClientState';
 import {
 	ErrorSummary,
@@ -50,7 +50,7 @@ const mainStyles = (wide: boolean) => css`
 
 const pageHeaderStyles = css`
 	color: var(--color-heading);
-	${headline.small({ fontWeight: 'bold' })};
+	${headlineBold28};
 	margin: 0;
 `;
 
