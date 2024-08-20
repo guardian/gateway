@@ -28,7 +28,7 @@ import {
 	introspect,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
-import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 
 const { defaultReturnUri, passcodesEnabled } = getConfiguration();
 

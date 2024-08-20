@@ -1,11 +1,20 @@
 import { z } from 'zod';
-import { InteractResponse } from './interact';
+import { OAuthError } from '@/server/models/okta/Error';
+import { InteractResponse } from '@/server/lib/okta/idx/interact';
+import {
+	challengeAnswerRemediations,
+	challengeRemediations,
+} from '@/server/lib/okta/idx/challenge';
+import { credentialEnrollRemediations } from '@/server/lib/okta/idx/credential';
+import { enrollRemediations } from '@/server/lib/okta/idx/enroll';
+import { identifyRemediations } from '@/server/lib/okta/idx/identify';
+import { recoverRemediations } from '@/server/lib/okta/idx/recover';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
-	idxFetch,
-} from './shared';
-import { OAuthError } from '@/server/models/okta/Error';
+	ExtractLiteralRemediationNames,
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
 export const redirectIdpSchema = baseRemediationValueSchema.merge(
@@ -31,20 +40,28 @@ const identifySchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Since the introspect response can contain any remediation objects from the other schemas,
+// we combine them all into one schema
+const remediationValueSchema = z
+	.union([
+		redirectIdpSchema,
+		selectEnrollProfileSchema,
+		identifySchema,
+		baseRemediationValueSchema,
+	])
+	.and(challengeRemediations)
+	.and(challengeAnswerRemediations)
+	.and(credentialEnrollRemediations)
+	.and(enrollRemediations)
+	.and(identifyRemediations)
+	.and(recoverRemediations);
+
 // Schema for the introspect response
 const introspectResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				// social idp object
-				z.union([
-					redirectIdpSchema,
-					selectEnrollProfileSchema,
-					identifySchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(remediationValueSchema),
 		}),
 	}),
 );
@@ -84,6 +101,11 @@ export const introspect = (
 	});
 };
 
+// Type to extract all the remediation names from the introspect response
+export type IntrospectRemediationNames = ExtractLiteralRemediationNames<
+	IntrospectResponse['remediation']['value'][number]
+>;
+
 /**
  * @name validateIntrospectRemediation
  * @description Validates that the introspect response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the introspect response, and the state is correct.
@@ -94,7 +116,7 @@ export const introspect = (
  */
 export const validateIntrospectRemediation = (
 	introspectResponse: IntrospectResponse,
-	remediationName: string,
+	remediationName: IntrospectRemediationNames,
 ) => {
 	const hasRemediation = introspectResponse.remediation.value.some(
 		({ name }) => name === remediationName,

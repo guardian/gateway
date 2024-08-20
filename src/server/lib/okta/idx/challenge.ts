@@ -1,15 +1,4 @@
 import { z } from 'zod';
-import {
-	AuthenticatorBody,
-	IdxBaseResponse,
-	IdxStateHandleBody,
-	authenticatorAnswerSchema,
-	baseRemediationValueSchema,
-	idxBaseResponseSchema,
-	idxFetch,
-	idxFetchCompletion,
-	selectAuthenticationEnrollSchema,
-} from './shared';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -18,6 +7,21 @@ import { Request } from 'express';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import { OAuthError } from '@/server/models/okta/Error';
+import {
+	idxFetch,
+	idxFetchCompletion,
+} from '@/server/lib/okta/idx/shared/idxFetch';
+import {
+	baseRemediationValueSchema,
+	authenticatorAnswerSchema,
+	idxBaseResponseSchema,
+	IdxBaseResponse,
+	AuthenticatorBody,
+	selectAuthenticationEnrollSchema,
+	IdxStateHandleBody,
+	ExtractLiteralRemediationNames,
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the challenge-authenticator object inside the challenge response remediation object
 const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
@@ -27,14 +31,18 @@ const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// list of all possible remediations for the challenge response
+export const challengeRemediations = z.union([
+	challengeAuthenticatorSchema,
+	baseRemediationValueSchema,
+]);
+
 // Schema for the challenge response
 const challengeResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([challengeAuthenticatorSchema, baseRemediationValueSchema]),
-			),
+			value: z.array(challengeRemediations),
 		}),
 		currentAuthenticatorEnrollment: z.object({
 			type: z.literal('object'),
@@ -89,22 +97,53 @@ export const skipSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Schema for the 'reset-authenticator' object inside the challenge response remediation object
+const resetAuthenticatorSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('reset-authenticator'),
+		href: z.string().url(),
+		value: z.array(
+			z.union([
+				z.object({
+					name: z.literal('credentials'),
+					type: z.literal('object'),
+					form: z.object({
+						value: z.array(
+							z.object({
+								name: z.string(),
+							}),
+						),
+					}),
+				}),
+				z.object({
+					name: z.literal('stateHandle'),
+					value: z.string(),
+				}),
+			]),
+		),
+	}),
+);
+
+// list of all possible remediations for the challenge/answer response
+export const challengeAnswerRemediations = z.union([
+	selectAuthenticationEnrollSchema,
+	skipSchema,
+	resetAuthenticatorSchema,
+	baseRemediationValueSchema,
+]);
+
 // Schema for the challenge/answer response
 const challengeAnswerResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([
-					selectAuthenticationEnrollSchema,
-					skipSchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(challengeAnswerRemediations),
 		}),
 	}),
 );
-type ChallengeAnswerResponse = z.infer<typeof challengeAnswerResponseSchema>;
+export type ChallengeAnswerResponse = z.infer<
+	typeof challengeAnswerResponseSchema
+>;
 
 // Body type for the challenge/answer request - passcode can refer to a OTP code or a password
 type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
@@ -249,4 +288,36 @@ export const setPasswordAndRedirect = async ({
 
 	// redirect the user to set a global session and then back to completing the authorization flow
 	return expressRes.redirect(303, redirectUrl);
+};
+
+// Type to extract all the remediation names from the challenge/answer response
+export type ChallengeAnswerRemediationNames = ExtractLiteralRemediationNames<
+	ChallengeAnswerResponse['remediation']['value'][number]
+>;
+
+/**
+ * @name validateChallengeAnswerRemediation
+ * @description Validates that the challenge/answer response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the challenge/answer response, and the state is correct.
+ * @param challengeAnswerResponse - The challenge/answer response
+ * @param remediationName - The name of the remediation to validate
+ * @throws OAuthError - If the remediation is not found in the challenge/answer response
+ * @returns void
+ */
+export const validateChallengeAnswerRemediation = (
+	challengeAnswerResponse: ChallengeAnswerResponse,
+	remediationName: ChallengeAnswerRemediationNames,
+) => {
+	const hasRemediation = challengeAnswerResponse.remediation.value.some(
+		({ name }) => name === remediationName,
+	);
+
+	if (!hasRemediation) {
+		throw new OAuthError(
+			{
+				error: 'invalid_request',
+				error_description: `Remediation ${remediationName} not found in introspect response`,
+			},
+			400,
+		);
+	}
 };

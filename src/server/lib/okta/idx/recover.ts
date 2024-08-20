@@ -1,11 +1,11 @@
 import { z } from 'zod';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
-	IdxBaseResponse,
 	idxBaseResponseSchema,
-	idxFetch,
+	IdxBaseResponse,
 	IdxStateHandleBody,
-} from './shared';
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the authenticator-verification-data object inside the recover response remediation object
 export const authenticatorVerificationDataRemediationSchema =
@@ -35,17 +35,18 @@ export const authenticatorVerificationDataRemediationSchema =
 		}),
 	);
 
+// list of all possible remediations for the recover response
+export const recoverRemediations = z.union([
+	authenticatorVerificationDataRemediationSchema,
+	baseRemediationValueSchema,
+]);
+
 // schema for the recover response
 const recoverResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([
-					authenticatorVerificationDataRemediationSchema,
-					baseRemediationValueSchema,
-				]),
-			),
+			value: z.array(recoverRemediations),
 		}),
 	}),
 );

@@ -27,10 +27,7 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import {
-	challengeAnswerPasscode,
-	challengeResend,
-} from '@/server/lib/okta/idx/challenge';
+import { challengeResend } from '@/server/lib/okta/idx/challenge';
 import { enroll, enrollNewWithEmail } from '@/server/lib/okta/idx/enroll';
 import {
 	introspect,
@@ -39,11 +36,11 @@ import {
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
-import {
-	convertExpiresAtToExpiryTimeInMs,
-	selectAuthenticationEnrollSchema,
-} from '@/server/lib/okta/idx/shared';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
+import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
+import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
+import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -145,78 +142,25 @@ router.post(
 			const { stateHandle } = encryptedState;
 
 			try {
-				// validate the code contains only numbers and is 6 characters long
-				// The okta api will validate the input fully, but validating here will prevent unnecessary requests
-				if (!/^\d{6}$/.test(code)) {
-					throw new OAuthError(
-						{
-							error: 'api.authn.error.PASSCODE_INVALID',
-							error_description: 'Passcode invalid', // this is ignored, and a error based on the `error` key is shown
-						},
-						400,
-					);
-				}
-
-				// check the state handle is valid and we can proceed with the registration
-				const introspectResponse = await introspect(
-					{
-						stateHandle,
-					},
-					requestId,
-				);
-
-				// check if the remediation array contains a "enroll-authenticator"	object
-				// if it does, then we know the stateHandle is valid and we're in the correct state
-				validateIntrospectRemediation(
-					introspectResponse,
-					'enroll-authenticator',
-				);
-
 				// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
-				const challengeAnswerResponse = await challengeAnswerPasscode(
+				const challengeAnswerResponse = await submitPasscode({
+					passcode: code,
 					stateHandle,
-					{ passcode: code },
+					introspectRemediation: 'enroll-authenticator',
+					challengeAnswerRemediation: 'select-authenticator-enroll',
 					requestId,
-				);
+				});
 
 				// if passcode challenge is successful, we can proceed to the next step
 				// which is to enroll a password authenticator, as we still need users to set a password for the time being
 				// we first look for the password authenticator id deep in the response
-				const passwordAuthenticatorId =
-					challengeAnswerResponse.remediation.value
-						.flatMap((remediation) => {
-							if (remediation.name === 'select-authenticator-enroll') {
-								const parsedRemediation =
-									selectAuthenticationEnrollSchema.safeParse(remediation);
+				const passwordAuthenticatorId = findAuthenticatorId({
+					response: challengeAnswerResponse,
+					remediationName: 'select-authenticator-enroll',
+					authenticator: 'password',
+				});
 
-								if (parsedRemediation.success) {
-									return parsedRemediation.data.value.flatMap((value) => {
-										if (value.name === 'authenticator') {
-											return value.options.flatMap((option) => {
-												if (option.label === 'Password') {
-													if (
-														option.value.form.value.some(
-															(v) => v.value === 'password',
-														)
-													) {
-														return [
-															option.value.form.value.find(
-																(v) => v.name === 'id',
-															)?.value,
-														];
-													}
-												}
-											});
-										}
-									});
-								}
-							}
-						})
-						.filter(
-							(id): id is string => typeof id === 'string' && id.length > 0,
-						);
-
-				if (!passwordAuthenticatorId.length) {
+				if (!passwordAuthenticatorId) {
 					throw new OAuthError(
 						{
 							error: 'idx_error',
@@ -229,7 +173,7 @@ router.post(
 				// start the credential enroll flow
 				await credentialEnroll(
 					stateHandle,
-					{ id: passwordAuthenticatorId[0], methodType: 'password' },
+					{ id: passwordAuthenticatorId, methodType: 'password' },
 					requestId,
 				);
 
@@ -243,55 +187,25 @@ router.post(
 					addQueryParamsToPath('/welcome/password', res.locals.queryParams),
 				);
 			} catch (error) {
-				if (error instanceof OAuthError) {
-					if (error.name === 'api.authn.error.PASSCODE_INVALID') {
-						// case for invalid passcode
-						const html = renderer('/register/email-sent', {
-							requestState: mergeRequestState(res.locals, {
-								queryParams: {
-									returnUrl: res.locals.queryParams.returnUrl,
-									emailSentSuccess: false,
-								},
-								pageData: {
-									email: readEncryptedStateCookie(req)?.email,
-									timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
-										encryptedState.stateHandleExpiresAt,
-									),
-									fieldErrors: [
-										{
-											field: 'code',
-											message: RegistrationErrors.PASSCODE_INVALID,
-										},
-									],
-									token: code,
-								},
-							}),
-							pageTitle: 'Check Your Inbox',
-						});
-						return res.type('html').send(html);
-					}
-
-					// case for too many passcode attempts
-					if (error.name === 'oie.tooManyRequests') {
-						return res.redirect(
-							303,
-							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
-						);
-					}
-
-					// case for session expired
-					if (error.name === 'idx.session.expired') {
-						return res.redirect(
-							303,
-							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
-						);
-					}
-				}
-
-				// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
-				logger.error('IDX API - register/code error:', error, {
+				// track and log the failure
+				logger.error(`IDX API - ${req.path} error:`, error, {
 					request_id: requestId,
 				});
+
+				handlePasscodeError({
+					error,
+					req,
+					res,
+					emailSentPage: '/register/email-sent',
+					expiredPage: '/welcome/expired',
+				});
+
+				// if we redirected away during the handlePasscodeError function, we can't redirect again
+				if (res.headersSent) {
+					return;
+				}
+
+				// at this point fall back to the legacy Okta registration flow
 			}
 		}
 

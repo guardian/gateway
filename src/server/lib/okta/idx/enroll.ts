@@ -1,13 +1,13 @@
 import { z } from 'zod';
+import { idxFetch } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
+	baseRemediationValueSchema,
+	idxBaseResponseSchema,
 	IdxBaseResponse,
 	IdxStateHandleBody,
 	authenticatorAnswerSchema,
-	baseRemediationValueSchema,
-	idxBaseResponseSchema,
-	idxFetch,
 	selectAuthenticationEnrollSchema,
-} from './shared';
+} from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the enroll-profile object inside the enroll response remediation object
 const enrollProfileSchema = baseRemediationValueSchema.merge(
@@ -16,14 +16,18 @@ const enrollProfileSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// list of all possible remediations for the enroll response
+export const enrollRemediations = z.union([
+	enrollProfileSchema,
+	baseRemediationValueSchema,
+]);
+
 // schema for the enroll response
 const enrollResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.string(),
-			value: z.array(
-				z.union([enrollProfileSchema, baseRemediationValueSchema]),
-			),
+			value: z.array(enrollRemediations),
 		}),
 	}),
 );
