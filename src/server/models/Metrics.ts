@@ -3,6 +3,7 @@
 import { BucketType } from '@/server/lib/rate-limit';
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
+import { Status } from './okta/User';
 
 // Specific emails to track
 type EmailMetrics =
@@ -36,6 +37,8 @@ type ConditionalMetrics =
 	| 'OktaDeactivateUser'
 	| 'OktaIDXInteract'
 	| 'OktaIDXRegister'
+	| 'OktaIDXResetPasswordSend'
+	| `OktaIDXResetPasswordSend::${Status}`
 	| `OktaIDX::${IDXPath}`
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'
