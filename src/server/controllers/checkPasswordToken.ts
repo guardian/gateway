@@ -90,6 +90,101 @@ const getReturnUrl = (
 	return defaultReturnUri;
 };
 
+/**
+ * Okta IDX API Flow
+ *
+ * @name oktaIdxApiCheckHandler
+ * @description This function is used to check if the user is in the correct state to be able to change their password in the Okta IDX API flow.
+ *
+ * Note: Use res.headersSent to check if headers have been sent after calling this function
+ * to avoid errors if we respond within this function.
+ *
+ * @param {PasswordRoutePath} path - The path of the page.
+ * @param {PasswordPageTitle} pageTitle - The page title.
+ * @param {Request} req - The request object.
+ * @param {ResponseWithRequestState} res - The response object.
+ * @param {ChangePasswordErrors} error - ChangePasswordErrors enum
+ * @param {FieldError[]} fieldErrors - FieldError array
+ * @returns void - The function does not return anything, or it responds with a page
+ */
+const oktaIdxApiCheckHandler = async ({
+	path,
+	pageTitle,
+	req,
+	res,
+	error,
+	fieldErrors,
+}: {
+	path: PasswordRoutePath;
+	pageTitle: PasswordPageTitle;
+	req: Request;
+	res: ResponseWithRequestState;
+	error?: ChangePasswordErrors;
+	fieldErrors?: FieldError[];
+}) => {
+	const state = res.locals;
+	const { token } = req.params;
+
+	try {
+		// Read the encrypted state cookie to get the state handle and email
+		const encryptedState = readEncryptedStateCookie(req);
+		if (encryptedState?.email && encryptedState.stateHandle) {
+			// introspect the stateHandle to make sure it's valid
+			const introspectResponse = await introspect(
+				{
+					stateHandle: encryptedState.stateHandle,
+				},
+				state.requestId,
+			);
+
+			if (path === '/welcome') {
+				// check if the remediation array contains a "enroll-authenticator"	object
+				// if it does, then we know the stateHandle is valid and we're in the correct state
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
+				);
+			}
+
+			// show the set password page
+			const html = renderer(
+				`${path}/:token`,
+				{
+					pageTitle,
+					requestState: mergeRequestState(state, {
+						pageData: {
+							browserName: getBrowserNameFromUserAgent(
+								req.header('User-Agent'),
+							),
+							email: encryptedState.email,
+							fieldErrors,
+							formError: error,
+							token,
+							isNativeApp: state.pageData.isNativeApp,
+							appName: state.pageData.appName,
+							timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+								introspectResponse.expiresAt,
+							),
+						},
+					}),
+				},
+				{ token },
+			);
+
+			return res.type('html').send(html);
+		}
+	} catch (error) {
+		// if there's an error, log it and fall back to the legacy change password flow
+		logger.error(
+			'IDX API - check state handle token - checkPasswordToken',
+			error,
+			{
+				request_id: state.requestId,
+			},
+		);
+	}
+};
+
 export const checkTokenInOkta = async (
 	path: PasswordRoutePath,
 	pageTitle: PasswordPageTitle,
@@ -110,61 +205,20 @@ export const checkTokenInOkta = async (
 		!res.locals.queryParams.useOktaClassic &&
 		path === '/welcome' // only check the state handle for registration passcode flow on the welcome page
 	) {
-		try {
-			// Read the encrypted state cookie to get the state handle and email
-			const encryptedState = readEncryptedStateCookie(req);
-			if (encryptedState?.email && encryptedState.stateHandle) {
-				// introspect the stateHandle to make sure it's valid
-				const introspectResponse = await introspect(
-					{
-						stateHandle: encryptedState.stateHandle,
-					},
-					res.locals.requestId,
-				);
-
-				// check if the remediation array contains a "enroll-authenticator"	object
-				// if it does, then we know the stateHandle is valid and we're in the correct state
-				validateIntrospectRemediation(
-					introspectResponse,
-					'enroll-authenticator',
-				);
-
-				// show the set password page
-				const html = renderer(
-					`${path}/:token`,
-					{
-						pageTitle,
-						requestState: mergeRequestState(res.locals, {
-							pageData: {
-								browserName: getBrowserNameFromUserAgent(
-									req.header('User-Agent'),
-								),
-								email: encryptedState.email,
-								fieldErrors,
-								formError: error,
-								token,
-								isNativeApp: state.pageData.isNativeApp,
-								appName: state.pageData.appName,
-								timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
-									introspectResponse.expiresAt,
-								),
-							},
-						}),
-					},
-					{ token },
-				);
-
-				return res.type('html').send(html);
-			}
-		} catch (error) {
-			// if there's an error, log it and fall back to the legacy change password flow
-			logger.error(
-				'IDX API - check state handle token - checkPasswordToken',
-				error,
-				{
-					request_id: res.locals.requestId,
-				},
-			);
+		await oktaIdxApiCheckHandler({
+			path,
+			pageTitle,
+			req,
+			res,
+			error,
+			fieldErrors,
+		});
+		// don't continue with the legacy flow if we've already responded with the IDX flow
+		// res.headersSent is true if we've responded with a page or redirect
+		// res.headersSent is false if we haven't responded yet, which is the case where an error occurs
+		// and we want to attempt the legacy flow
+		if (res.headersSent) {
+			return;
 		}
 	}
 
