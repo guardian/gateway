@@ -43,6 +43,117 @@ import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 
 const { passcodesEnabled } = getConfiguration();
 
+/**
+ * Okta IDX API Flow
+ *
+ * @name oktaIdxApiPasswordHandler
+ * @description	Handles the password (re)set for the Okta IDX API flow.
+ *
+ * Note: Use res.headersSent to check if headers have been sent after calling this function
+ * to avoid errors if we respond within this function.
+ *
+ * @param {Request} req - The request object.
+ * @param {ResponseWithRequestState} res - The response object.
+ * @param {PasswordPageTitle} pageTitle - The page title.
+ * @param {string} password - The password to set.
+ * @param {PasswordRoutePath} path - The path of the page.
+ *
+ * @returns {Promise<void>} - The function does not return anything, or it redirects the user.
+ */
+const oktaIdxApiPasswordHandler = async ({
+	req,
+	res,
+	pageTitle,
+	password,
+	path,
+}: {
+	req: Request;
+	res: ResponseWithRequestState;
+	pageTitle: PasswordPageTitle;
+	password: string;
+	path: PasswordRoutePath;
+}) => {
+	const state = res.locals;
+
+	try {
+		// Read the encrypted state cookie to get the state handle and email
+		const encryptedState = readEncryptedStateCookie(req);
+		if (encryptedState?.email && encryptedState.stateHandle) {
+			// introspect the stateHandle to make sure it's valid
+			const introspectResponse = await introspect(
+				{
+					stateHandle: encryptedState.stateHandle,
+				},
+				state.requestId,
+			);
+
+			// validate the introspect response to make sure we're in the correct state
+			// if we're creating a new user (/welcome) we should be in the enroll-authenticator remediation
+			if (path === '/welcome') {
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
+				);
+			}
+
+			// validate the password field
+			validatePasswordFieldForOkta(password);
+
+			// check if the password is breached
+			const isBreached = await isBreachedPassword(password);
+			if (isBreached) {
+				throw new OAuthError({
+					error: 'password.common',
+					error_description: PasswordFieldErrors.COMMON_PASSWORD,
+				});
+			}
+
+			// Set the password in Okta, redirect the user to set a global session, and then complete
+			// the interaction code flow, eventually redirecting the user back to where they need to go.
+			return await setPasswordAndRedirect({
+				stateHandle: encryptedState.stateHandle,
+
+				body: {
+					passcode: password,
+				},
+				expressReq: req,
+				expressRes: res,
+				path,
+				request_id: state.requestId,
+			});
+		}
+	} catch (error) {
+		logger.error('Okta IDX setPassword failure', error, {
+			request_id: state.requestId,
+		});
+
+		if (error instanceof OAuthError) {
+			// case for session expired
+			if (error.name === 'idx.session.expired') {
+				return res.redirect(
+					303,
+					addQueryParamsToPath(`${path}/expired`, state.queryParams),
+				);
+			}
+		}
+
+		const { globalError, fieldErrors } = getErrorMessage(error);
+
+		// If the recovery token is valid, this call will redirect the client back
+		// to the same page, but with an error message. If the token is invalid, the
+		// client will be redirected to the /reset-password/expired page and asked
+		// to request a new reset password link.
+		return await checkTokenInOkta(
+			path,
+			pageTitle,
+			req,
+			res,
+			globalError,
+			fieldErrors,
+		);
+	}
+};
+
 export const setPasswordController = (
 	path: PasswordRoutePath,
 	pageTitle: PasswordPageTitle,
@@ -56,81 +167,21 @@ export const setPasswordController = (
 		// OKTA IDX API FLOW
 		// If the user is using the passcode registration flow, we need to handle the password change/creation.
 		// If there are specific failures, we fall back to the legacy Okta change password flow.
-		if (passcodesEnabled && !useOktaClassic) {
-			try {
-				// Read the encrypted state cookie to get the state handle and email
-				const encryptedState = readEncryptedStateCookie(req);
-				if (encryptedState?.email && encryptedState.stateHandle) {
-					// introspect the stateHandle to make sure it's valid
-					const introspectResponse = await introspect(
-						{
-							stateHandle: encryptedState.stateHandle,
-						},
-						res.locals.requestId,
-					);
+		if (passcodesEnabled && !useOktaClassic && path === '/welcome') {
+			await oktaIdxApiPasswordHandler({
+				req,
+				res,
+				pageTitle,
+				password,
+				path,
+			});
 
-					// check if the remediation array contains a "enroll-authenticator"	object
-					// if it does, then we know the stateHandle is valid and we're in the correct state
-					validateIntrospectRemediation(
-						introspectResponse,
-						'enroll-authenticator',
-					);
-
-					// validate the password field
-					validatePasswordFieldForOkta(password);
-
-					// check if the password is breached
-					const isBreached = await isBreachedPassword(password);
-					if (isBreached) {
-						throw new OAuthError({
-							error: 'password.common',
-							error_description: PasswordFieldErrors.COMMON_PASSWORD,
-						});
-					}
-
-					// Set the password in Okta, redirect the user to set a global session, and then complete
-					// the interaction code flow, eventually redirecting the user back to where they need to go.
-					return await setPasswordAndRedirect({
-						stateHandle: encryptedState.stateHandle,
-
-						body: {
-							passcode: password,
-						},
-						expressReq: req,
-						expressRes: res,
-						path,
-						request_id: res.locals.requestId,
-					});
-				}
-			} catch (error) {
-				logger.error('Okta IDX setPassword failure', error, {
-					request_id: res.locals.requestId,
-				});
-
-				if (error instanceof OAuthError) {
-					// case for session expired
-					if (error.name === 'idx.session.expired') {
-						return res.redirect(
-							303,
-							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
-						);
-					}
-				}
-
-				const { globalError, fieldErrors } = getErrorMessage(error);
-
-				// If the recovery token is valid, this call will redirect the client back
-				// to the same page, but with an error message. If the token is invalid, the
-				// client will be redirected to the /reset-password/expired page and asked
-				// to request a new reset password link.
-				return await checkTokenInOkta(
-					path,
-					pageTitle,
-					req,
-					res,
-					globalError,
-					fieldErrors,
-				);
+			// don't continue with the legacy flow if we've already responded with the IDX flow
+			// res.headersSent is true if we've responded with a page or redirect
+			// res.headersSent is false if we haven't responded yet, which is the case where an error occurs
+			// and we want to attempt the legacy flow
+			if (res.headersSent) {
+				return;
 			}
 		}
 
