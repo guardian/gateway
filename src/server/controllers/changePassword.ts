@@ -95,6 +95,12 @@ const oktaIdxApiPasswordHandler = async ({
 					introspectResponse,
 					'enroll-authenticator',
 				);
+			} else {
+				// if we're setting a password, we should be in the reset-authenticator remediation
+				validateIntrospectRemediation(
+					introspectResponse,
+					'reset-authenticator',
+				);
 			}
 
 			// validate the password field
@@ -166,9 +172,14 @@ export const setPasswordController = (
 		const { clientId, useOktaClassic } = res.locals.queryParams;
 
 		// OKTA IDX API FLOW
-		// If the user is using the passcode registration flow, we need to handle the password change/creation.
+		// If the user is using the passcode flow for registration/reset password,
+		// we need to handle the password change/creation.
 		// If there are specific failures, we fall back to the legacy Okta change password flow.
-		if (passcodesEnabled && !useOktaClassic && path === '/welcome') {
+		if (
+			passcodesEnabled &&
+			!useOktaClassic &&
+			(path === '/welcome' || res.locals.queryParams.usePasscodesResetPassword)
+		) {
 			await oktaIdxApiPasswordHandler({
 				req,
 				res,

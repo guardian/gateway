@@ -138,12 +138,18 @@ const oktaIdxApiCheckHandler = async ({
 				req.ip,
 			);
 
+			// validate the introspect response to make sure we're in the correct state
+			// if we're creating a new user (/welcome) we should be in the enroll-authenticator remediation
 			if (path === '/welcome') {
-				// check if the remediation array contains a "enroll-authenticator"	object
-				// if it does, then we know the stateHandle is valid and we're in the correct state
 				validateIntrospectRemediation(
 					introspectResponse,
 					'enroll-authenticator',
+				);
+			} else {
+				// if we're setting a password, we should be in the reset-authenticator remediation
+				validateIntrospectRemediation(
+					introspectResponse,
+					'reset-authenticator',
 				);
 			}
 
@@ -198,13 +204,13 @@ export const checkTokenInOkta = async (
 	const { token } = req.params;
 
 	// OKTA IDX API FLOW
-	// If the user is using the passcode registration flow, we need to check if the user is
-	// in the correct state to be able to change their password.
+	// If the user is using the passcode flow for registration/reset password,
+	// we need to handle the password change/creation.
 	// If there are specific failures, we fall back to the legacy Okta change password flow.
 	if (
 		passcodesEnabled &&
 		!res.locals.queryParams.useOktaClassic &&
-		path === '/welcome' // only check the state handle for registration passcode flow on the welcome page
+		(path === '/welcome' || state.queryParams.usePasscodesResetPassword)
 	) {
 		await oktaIdxApiCheckHandler({
 			path,
