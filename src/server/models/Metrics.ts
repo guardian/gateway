@@ -42,13 +42,16 @@ type ConditionalMetrics =
 	| `OktaIDX::${IDXPath}`
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'
+	| 'OktaIdxResetPassword'
 	| 'OktaResetPassword'
+	| 'OktaIdxSetPassword'
 	| 'OktaSetPassword'
 	| 'OktaSignIn'
 	| 'OktaSignOut'
 	| 'OktaSignOutGlobal'
 	| 'OktaUpdatePassword'
 	| 'OktaValidatePasswordToken'
+	| 'OktaIdxWelcome'
 	| 'OktaWelcome'
 	| 'OktaWelcomeResendEmail'
 	| 'RecaptchaMiddleware'
@@ -96,13 +99,18 @@ export const rateLimitHitMetric = (bucketType: RateLimitMetrics): Metrics =>
 export const changePasswordMetric = (
 	path: PasswordRoutePath,
 	type: 'Success' | 'Failure',
+	isPasscode = false,
 ): Metrics => {
 	switch (path) {
 		case '/set-password':
-			return `OktaSetPassword::${type}`;
+			return isPasscode
+				? `OktaIdxSetPassword::${type}`
+				: `OktaSetPassword::${type}`;
 		case '/reset-password':
-			return `OktaResetPassword::${type}`;
+			return isPasscode
+				? `OktaIdxResetPassword::${type}`
+				: `OktaResetPassword::${type}`;
 		case '/welcome':
-			return `OktaWelcome::${type}`;
+			return isPasscode ? `OktaIdxWelcome::${type}` : `OktaWelcome::${type}`;
 	}
 };

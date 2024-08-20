@@ -115,6 +115,9 @@ const oktaIdxApiPasswordHandler = async ({
 				});
 			}
 
+			// track the password change metric
+			trackMetric(changePasswordMetric(path, 'Success', true));
+
 			// Set the password in Okta, redirect the user to set a global session, and then complete
 			// the interaction code flow, eventually redirecting the user back to where they need to go.
 			return await setPasswordAndRedirect({
@@ -133,6 +136,8 @@ const oktaIdxApiPasswordHandler = async ({
 		logger.error('Okta IDX setPassword failure', error, {
 			request_id: state.requestId,
 		});
+
+		trackMetric(changePasswordMetric(path, 'Failure', true));
 
 		if (error instanceof OAuthError) {
 			// case for session expired
@@ -276,7 +281,7 @@ export const setPasswordController = (
 					);
 				}
 
-				changePasswordMetric(path, 'Success');
+				trackMetric(changePasswordMetric(path, 'Success'));
 
 				return await performAuthorizationCodeFlow(req, res, {
 					sessionToken,
@@ -300,7 +305,7 @@ export const setPasswordController = (
 				request_id: res.locals.requestId,
 			});
 
-			changePasswordMetric(path, 'Failure');
+			trackMetric(changePasswordMetric(path, 'Failure'));
 
 			// see the comment above around the success metrics
 			if (clientId === 'jobs' && path === '/welcome') {
