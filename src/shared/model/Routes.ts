@@ -38,6 +38,7 @@ export const ValidRoutePathsArray = [
 	'/reset-password',
 	'/reset-password/:token',
 	'/reset-password/code',
+	'/reset-password/code/resend',
 	'/reset-password/complete',
 	'/reset-password/email-sent',
 	'/reset-password/expired',

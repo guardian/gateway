@@ -14,7 +14,6 @@ import {
 	readEncryptedStateCookie,
 	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
-import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
 import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
@@ -198,6 +197,16 @@ router.post(
 			303,
 			addQueryParamsToPath('/reset-password', res.locals.queryParams),
 		);
+	}),
+);
+
+// Route to resend the email for passcode reset password
+// Essentially the same as POST /reset-password, just start the process again
+router.post(
+	'/reset-password/code/resend',
+	handleRecaptcha,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		await sendEmailInOkta(req, res);
 	}),
 );
 
