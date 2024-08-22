@@ -8,7 +8,23 @@ export default {
 	component: PasscodeUsed,
 } as Meta;
 
-export const Defaults = () => <PasscodeUsed queryParams={{ returnUrl: '#' }} />;
-Defaults.story = {
-	name: 'with defaults',
+export const CreateAccountPasscodeUsed = () => (
+	<PasscodeUsed path="/welcome" queryParams={{ returnUrl: '#' }} />
+);
+CreateAccountPasscodeUsed.story = {
+	name: 'with path /welcome',
+};
+
+export const ResetPasswordPasscodeUsed = () => (
+	<PasscodeUsed path="/reset-password" queryParams={{ returnUrl: '#' }} />
+);
+ResetPasswordPasscodeUsed.story = {
+	name: 'with path /reset-password',
+};
+
+export const SetPasswordPasscodeUsed = () => (
+	<PasscodeUsed path="/set-password" queryParams={{ returnUrl: '#' }} />
+);
+SetPasswordPasscodeUsed.story = {
+	name: 'with path /set-password',
 };

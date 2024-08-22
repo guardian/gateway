@@ -26,7 +26,7 @@ export const RegistrationEmailSentPage = () => {
 	// show passcode email sent page if we have a state handle
 	if (hasStateHandle) {
 		if (passcodeUsed) {
-			return <PasscodeUsed queryParams={queryParams} />;
+			return <PasscodeUsed path="/welcome" queryParams={queryParams} />;
 		}
 
 		return (
