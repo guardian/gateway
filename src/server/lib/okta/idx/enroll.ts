@@ -7,7 +7,9 @@ import {
 	IdxStateHandleBody,
 	authenticatorAnswerSchema,
 	selectAuthenticationEnrollSchema,
+	ExtractLiteralRemediationNames,
 } from '@/server/lib/okta/idx/shared/schemas';
+import { OAuthError } from '@/server/models/okta/Error';
 
 // schema for the enroll-profile object inside the enroll response remediation object
 const enrollProfileSchema = baseRemediationValueSchema.merge(
@@ -86,15 +88,17 @@ const enrollNewResponseSchema = idxBaseResponseSchema.merge(
 				]),
 			),
 		}),
-		currentAuthenticator: z.object({
-			type: z.literal('object'),
-			value: z.object({
-				type: z.literal('email'),
-				resend: z.object({
-					name: z.literal('resend'),
+		currentAuthenticator: z
+			.object({
+				type: z.literal('object'),
+				value: z.object({
+					type: z.literal('email'),
+					resend: z.object({
+						name: z.literal('resend'),
+					}),
 				}),
-			}),
-		}),
+			})
+			.optional(),
 	}),
 );
 type EnrollNewResponse = z.infer<typeof enrollNewResponseSchema>;
@@ -122,4 +126,40 @@ export const enrollNewWithEmail = (
 		schema: enrollNewResponseSchema,
 		request_id,
 	});
+};
+
+// Type to extract all the remediation names from the enroll/new response
+export type EnrollNewRemediationNames = ExtractLiteralRemediationNames<
+	EnrollNewResponse['remediation']['value'][number]
+>;
+
+/**
+ * @name validateEnrollNewRemediation
+ * @description Validates that the enroll/new response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the enroll/new response, and the state is correct.
+ * @param enrollNewResponse - The enroll/new response
+ * @param remediationName - The name of the remediation to validate
+ * @param useThrow - Whether to throw an error if the remediation is not found
+ * @throws OAuthError - If the remediation is not found in the enroll/new response
+ * @returns void
+ */
+export const validateEnrollNewRemediation = (
+	enrollNewResponse: EnrollNewResponse,
+	remediationName: EnrollNewRemediationNames,
+	useThrow = true,
+) => {
+	const hasRemediation = enrollNewResponse.remediation.value.some(
+		({ name }) => name === remediationName,
+	);
+
+	if (!hasRemediation && useThrow) {
+		throw new OAuthError(
+			{
+				error: 'invalid_request',
+				error_description: `Remediation ${remediationName} not found in enroll/new response`,
+			},
+			400,
+		);
+	}
+
+	return hasRemediation;
 };

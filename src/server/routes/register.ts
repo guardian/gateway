@@ -28,7 +28,11 @@ import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { challengeResend } from '@/server/lib/okta/idx/challenge';
-import { enroll, enrollNewWithEmail } from '@/server/lib/okta/idx/enroll';
+import {
+	enroll,
+	enrollNewWithEmail,
+	validateEnrollNewRemediation,
+} from '@/server/lib/okta/idx/enroll';
 import {
 	introspect,
 	validateIntrospectRemediation,
@@ -379,6 +383,42 @@ export const OktaRegistration = async (
 				},
 				request_id,
 			);
+
+			// we need to check if the email has been sent to the user, or if
+			// we need to select an authenticator to enroll
+			const hasSelectAuthenticator = validateEnrollNewRemediation(
+				enrollNewWithEmailResponse,
+				'select-authenticator-enroll',
+				false,
+			);
+
+			// if we have the `select-authenticator-enroll` remediation property
+			// we need to handle this by selecting the authenticator email
+			// to send the passcode to the user
+			if (hasSelectAuthenticator) {
+				const emailAuthenticatorId = findAuthenticatorId({
+					response: enrollNewWithEmailResponse,
+					remediationName: 'select-authenticator-enroll',
+					authenticator: 'email',
+				});
+
+				if (!emailAuthenticatorId) {
+					throw new OAuthError(
+						{
+							error: 'idx_error',
+							error_description: 'Email authenticator id not found',
+						},
+						400,
+					);
+				}
+
+				// start the credential enroll flow
+				await credentialEnroll(
+					enrollNewWithEmailResponse.stateHandle,
+					{ id: emailAuthenticatorId, methodType: 'email' },
+					request_id,
+				);
+			}
 
 			// at this point the user will have been sent an email with a passcode
 

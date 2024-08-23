@@ -9,6 +9,7 @@ import idxInteractResponse from '../../fixtures/okta-responses/success/idx-inter
 import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
 import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-response.json';
 import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
+import idxEnrollNewSelectAuthenticatorResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
 import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
 
 beforeEach(() => {
@@ -182,6 +183,10 @@ userStatuses.forEach((status) => {
 					specify("Then I should be shown the 'Check your inbox' page", () => {
 						baseIdxPasscodeRegistrationMocks();
 						cy.mockNext(
+							idxEnrollNewSelectAuthenticatorResponse.code,
+							idxEnrollNewSelectAuthenticatorResponse.response,
+						);
+						cy.mockNext(
 							idxEnrollNewResponse.code,
 							idxEnrollNewResponse.response,
 						);
@@ -299,6 +304,10 @@ userStatuses.forEach((status) => {
 					specify("Then I should be shown the 'Check your inbox' page", () => {
 						baseIdxPasscodeRegistrationMocks();
 						cy.mockNext(
+							idxEnrollNewSelectAuthenticatorResponse.code,
+							idxEnrollNewSelectAuthenticatorResponse.response,
+						);
+						cy.mockNext(
 							idxEnrollNewResponse.code,
 							idxEnrollNewResponse.response,
 						);
@@ -413,6 +422,10 @@ userStatuses.forEach((status) => {
 				case false:
 					specify("Then I should be shown the 'Check your inbox' page", () => {
 						baseIdxPasscodeRegistrationMocks();
+						cy.mockNext(
+							idxEnrollNewSelectAuthenticatorResponse.code,
+							idxEnrollNewSelectAuthenticatorResponse.response,
+						);
 						cy.mockNext(
 							idxEnrollNewResponse.code,
 							idxEnrollNewResponse.response,

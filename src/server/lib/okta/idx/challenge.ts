@@ -315,7 +315,7 @@ export const validateChallengeAnswerRemediation = (
 		throw new OAuthError(
 			{
 				error: 'invalid_request',
-				error_description: `Remediation ${remediationName} not found in introspect response`,
+				error_description: `Remediation ${remediationName} not found in challenge/answer response`,
 			},
 			400,
 		);
