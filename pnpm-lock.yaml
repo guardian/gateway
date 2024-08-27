@@ -36,8 +36,8 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.4))(@guardian/libs@18.0.1(tslib@2.7.0)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.4)(tslib@2.7.0)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.4)(tslib@2.7.0)(typescript@5.5.4)
       '@okta/jwt-verifier':
-        specifier: ^3.2.2
-        version: 3.2.2
+        specifier: ^4.0.0
+        version: 4.0.0
       '@sentry/browser':
         specifier: ^7.119.0
         version: 7.119.0
@@ -1820,8 +1820,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@okta/jwt-verifier@3.2.2':
-    resolution: {integrity: sha512-MVKqdwKXt2L0/LmgtL1xC+2yzRNDcuopEjAzV+uTuhjJKNQL3Yt1Bp5n8Qs90/pXe7Cen2seGKYQk/k5XOk5YQ==}
+  '@okta/jwt-verifier@4.0.0':
+    resolution: {integrity: sha512-Mu9E8GxITx4AvoCbN9M8S4RWT2qgKnu6J4PqPGgyOU0P0u3NHtsO939Ruml93JLHVrf/leEqt9xXtPZYL/znCw==}
     engines: {node: '>=14'}
 
   '@one-ini/wasm@0.1.1':
@@ -9662,7 +9662,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@okta/jwt-verifier@3.2.2':
+  '@okta/jwt-verifier@4.0.0':
     dependencies:
       jwks-rsa: 3.1.0
       njwt: 2.0.1

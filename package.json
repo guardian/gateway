@@ -129,7 +129,7 @@
 		"@guardian/libs": "^18.0.1",
 		"@guardian/source": "^7.0.1",
 		"@guardian/source-development-kitchen": "^7.1.0",
-		"@okta/jwt-verifier": "^3.2.2",
+		"@okta/jwt-verifier": "^4.0.0",
 		"@sentry/browser": "^7.119.0",
 		"@smithy/node-http-handler": "^3.1.4",
 		"awesome-debounce-promise": "^2.1.0",
