@@ -3,7 +3,7 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
-import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import { PasscodeUsed } from '@/client/pages/PasscodeUsed';
 
 export const RegistrationEmailSentPage = () => {
@@ -33,11 +33,7 @@ export const RegistrationEmailSentPage = () => {
 			<PasscodeEmailSent
 				email={email}
 				queryString={queryString}
-				changeEmailPage={buildUrlWithQueryParams(
-					'/register/email',
-					{},
-					queryParams,
-				)}
+				changeEmailPage={buildUrl('/register/email')}
 				passcodeAction={buildUrl('/register/code')}
 				showSuccess={emailSentSuccess}
 				errorMessage={error}
@@ -45,11 +41,7 @@ export const RegistrationEmailSentPage = () => {
 				formTrackingName="register-resend"
 				fieldErrors={fieldErrors}
 				passcode={token}
-				expiredPage={buildUrlWithQueryParams(
-					'/welcome/expired',
-					{},
-					queryParams,
-				)}
+				expiredPage={buildUrl('/welcome/expired')}
 			/>
 		);
 	}
@@ -59,11 +51,7 @@ export const RegistrationEmailSentPage = () => {
 		<EmailSent
 			email={email}
 			queryString={queryString}
-			changeEmailPage={buildUrlWithQueryParams(
-				'/register/email',
-				{},
-				queryParams,
-			)}
+			changeEmailPage={buildUrl('/register/email')}
 			resendEmailAction={buildUrl('/register/email-sent/resend')}
 			instructionContext="verify and complete creating your account"
 			showSuccess={emailSentSuccess}
