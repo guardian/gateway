@@ -90,10 +90,10 @@ export const PasscodeEmailSent = ({
 					undefined,
 					{ timeUntilTokenExpiry },
 				);
-				window.location.replace(expiredPage);
+				window.location.replace(`${expiredPage}${queryString}`);
 			}, timeUntilTokenExpiry);
 		}
-	}, [timeUntilTokenExpiry, expiredPage]);
+	}, [timeUntilTokenExpiry, expiredPage, queryString]);
 
 	// autofocus the code input field when the page loads
 	useEffect(() => {
