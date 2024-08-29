@@ -67,6 +67,7 @@ export const PasscodeEmailSent = ({
 	showSuccess,
 	timeUntilTokenExpiry,
 	expiredPage,
+	shortRequestId,
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -109,6 +110,7 @@ export const PasscodeEmailSent = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={text.title}
 			successOverride={showSuccess ? text.successOverride : undefined}
 			errorOverride={
@@ -130,6 +132,7 @@ export const PasscodeEmailSent = ({
 				formAction={`${passcodeAction}${queryString}`}
 				submitButtonText={text.submitButtonText}
 				disableOnSubmit
+				shortRequestId={shortRequestId}
 			>
 				<PasscodeInput passcode={passcode} fieldErrors={fieldErrors} />
 			</MainForm>
@@ -143,6 +146,7 @@ export const PasscodeEmailSent = ({
 				formTrackingName={formTrackingName}
 				formError={formError}
 				queryString={queryString}
+				shortRequestId={shortRequestId}
 			/>
 		</MinimalLayout>
 	);

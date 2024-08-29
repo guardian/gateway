@@ -9,11 +9,12 @@ export const DeleteAccountEmailPasswordValidationPage = ({
 	validationType,
 }: Omit<DeleteAccountEmailPasswordVerificationProps, 'queryParams'>) => {
 	const clientState = useClientState();
-	const { queryParams } = clientState;
+	const { queryParams, shortRequestId } = clientState;
 	return (
 		<DeleteAccountEmailPasswordValidation
 			validationType={validationType}
 			queryParams={queryParams}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

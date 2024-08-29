@@ -16,6 +16,7 @@ export const WelcomePage = () => {
 			browserName,
 		} = {},
 		queryParams,
+		shortRequestId,
 	} = clientState;
 	const { clientId } = queryParams;
 	const isJobs = clientId === 'jobs';
@@ -53,6 +54,7 @@ export const WelcomePage = () => {
 			isJobs={isJobs}
 			browserName={browserName}
 			queryParams={queryParams}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

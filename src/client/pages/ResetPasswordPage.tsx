@@ -9,6 +9,7 @@ export const ResetPasswordPage = () => {
 		pageData: { email = '', formError } = {},
 		queryParams,
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -22,6 +23,7 @@ export const ResetPasswordPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="forgot-password"
 			showHelpCentreMessage
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>
 				Enter your email address and we’ll send you instructions to reset your

@@ -8,7 +8,11 @@ import { NewAccountReview } from '@/client/pages/NewAccountReview';
 
 export const NewAccountReviewPage = () => {
 	const clientState = useClientState();
-	const { pageData: { consents = [] } = {}, queryParams } = clientState;
+	const {
+		pageData: { consents = [] } = {},
+		queryParams,
+		shortRequestId,
+	} = clientState;
 
 	// Note: profiling_optout is modelled as profiling_optin for Gateway
 	const profiling = consents.find(
@@ -24,6 +28,7 @@ export const NewAccountReviewPage = () => {
 
 	return (
 		<NewAccountReview
+			shortRequestId={shortRequestId}
 			profiling={profiling}
 			advertising={
 				shouldPersonalisedAdvertisingPermissionRender ? advertising : undefined

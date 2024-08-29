@@ -9,6 +9,7 @@ import { PasswordRoutePath } from '@/shared/model/Routes';
 type Props = {
 	path: PasswordRoutePath;
 	queryParams: QueryParams;
+	shortRequestId?: string;
 };
 
 type Text = {
@@ -36,10 +37,15 @@ const getText = (path: PasswordRoutePath): Text => {
 	}
 };
 
-export const PasscodeUsed = ({ path, queryParams }: Props) => {
+export const PasscodeUsed = ({ path, queryParams, shortRequestId }: Props) => {
 	const { title, leadText, buttonText } = getText(path);
 	return (
-		<MinimalLayout pageHeader={title} imageId="email" leadText={leadText}>
+		<MinimalLayout
+			pageHeader={title}
+			imageId="email"
+			leadText={leadText}
+			shortRequestId={shortRequestId}
+		>
 			<LinkButton
 				cssOverrides={primaryButtonStyles()}
 				href={buildUrlWithQueryParams(`${path}/password`, {}, queryParams)}

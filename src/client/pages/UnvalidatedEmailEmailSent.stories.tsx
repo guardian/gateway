@@ -49,6 +49,7 @@ WithEmailResend.story = {
 
 export const WithRecaptchaError = () => (
 	<EmailSent
+		shortRequestId="123e4567"
 		changeEmailPage="/signin"
 		email="example@theguardian.com"
 		resendEmailAction="#"

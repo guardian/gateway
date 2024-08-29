@@ -8,11 +8,17 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 interface Props {
 	token: string;
 	queryParams: QueryParams;
+	shortRequestId?: string;
 }
 
-export const ResendConsentEmail = ({ token, queryParams }: Props) => {
+export const ResendConsentEmail = ({
+	token,
+	queryParams,
+	shortRequestId,
+}: Props) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Link expired"
 			leadText={
 				<>
@@ -30,6 +36,7 @@ export const ResendConsentEmail = ({ token, queryParams }: Props) => {
 					queryParams,
 				)}
 				submitButtonText="Resend link"
+				shortRequestId={shortRequestId}
 			>
 				<input type="hidden" name="token" value={token} />
 			</MainForm>

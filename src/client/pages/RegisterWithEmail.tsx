@@ -18,6 +18,7 @@ import ThemedLink from '@/client/components/ThemedLink';
 type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
 	appName?: AppName;
+	shortRequestId?: string;
 };
 
 export const RegisterWithEmail = ({
@@ -27,6 +28,7 @@ export const RegisterWithEmail = ({
 	formError,
 	geolocation,
 	appName,
+	shortRequestId,
 }: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
 
@@ -35,7 +37,10 @@ export const RegisterWithEmail = ({
 	const isJobs = queryParams.clientId === 'jobs';
 
 	return (
-		<MinimalLayout pageHeader="Create your account">
+		<MinimalLayout
+			pageHeader="Create your account"
+			shortRequestId={shortRequestId}
+		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
 				submitButtonText="Next"
@@ -48,6 +53,7 @@ export const RegisterWithEmail = ({
 					return undefined;
 				}}
 				additionalTerms={newsletterAdditionalTerms}
+				shortRequestId={shortRequestId}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<RegistrationConsents

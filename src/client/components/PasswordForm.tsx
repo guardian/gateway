@@ -12,6 +12,7 @@ import {
 } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import {
+	GatewayError,
 	PasswordFieldErrors,
 	ShortPasswordFieldErrors,
 } from '@/shared/model/Errors';
@@ -35,9 +36,10 @@ type Props = {
 	autoComplete?: PasswordAutoComplete;
 	formTrackingName?: string;
 	onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
-	formError?: string;
+	formError?: GatewayError;
 	browserName?: string;
 	largeFormMarginTop?: boolean;
+	shortRequestId?: string;
 };
 
 const baseMessageStyles = css`
@@ -243,6 +245,7 @@ export const PasswordForm = ({
 	formTrackingName,
 	formError,
 	browserName,
+	shortRequestId,
 }: PropsWithChildren<Props>) => {
 	const [password, setPassword] = useState<string>('');
 	const [error, setError] = useState<string | undefined>(
@@ -323,6 +326,7 @@ export const PasswordForm = ({
 			formTrackingName={formTrackingName}
 			disableOnSubmit={true}
 			formErrorMessageFromParent={formError}
+			shortRequestId={shortRequestId}
 		>
 			{children}
 			<PasswordInput

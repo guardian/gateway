@@ -17,6 +17,8 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { divider } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 
+import { GatewayError } from '@/shared/model/Errors';
+
 interface ResetPasswordProps {
 	email?: string;
 	headerText: string;
@@ -28,7 +30,8 @@ interface ResetPasswordProps {
 	showHelpCentreMessage?: boolean;
 	recaptchaSiteKey?: string;
 	formPageTrackingName?: string;
-	formError?: string;
+	formError?: GatewayError;
+	shortRequestId?: string;
 }
 
 export const ResetPassword = ({
@@ -44,6 +47,7 @@ export const ResetPassword = ({
 	recaptchaSiteKey,
 	formPageTrackingName,
 	formError,
+	shortRequestId,
 }: PropsWithChildren<ResetPasswordProps>) => {
 	// track page/form load
 	usePageLoadOphanInteraction(formPageTrackingName);
@@ -54,6 +58,7 @@ export const ResetPassword = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={headerText}
 			errorContext={recaptchaErrorContext}
 			errorOverride={recaptchaErrorMessage}
@@ -72,6 +77,7 @@ export const ResetPassword = ({
 				formTrackingName={formPageTrackingName}
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
+				shortRequestId={shortRequestId}
 			>
 				<EmailInput label={emailInputLabel} defaultValue={email} />
 				{showRecentEmailInformationBox && (

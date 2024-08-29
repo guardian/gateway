@@ -50,6 +50,7 @@ export const WithErrorMessage = () => (
 		{...withLeadTextArgs}
 		errorOverride="An error occurred"
 		errorContext="Some additional context."
+		shortRequestId="123e4567"
 	>
 		<Paragraphs />
 	</MinimalLayout>
@@ -76,6 +77,7 @@ export const WithImageAndErrorMessage = () => (
 		imageId="welcome"
 		errorOverride="An error occurred"
 		errorContext="Some additional context."
+		shortRequestId="123e4567"
 	>
 		<Paragraphs />
 	</MinimalLayout>
@@ -108,6 +110,7 @@ export const WithFormImageAndErrorMessage = () => (
 		imageId="welcome"
 		errorOverride="An error occurred"
 		errorContext="Some additional context."
+		shortRequestId="123e4567"
 	>
 		<Paragraphs />
 		<MainForm formAction="/" submitButtonText="Submit">

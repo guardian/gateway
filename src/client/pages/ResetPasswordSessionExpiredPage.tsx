@@ -10,6 +10,7 @@ export const ResetPasswordSessionExpiredPage = () => {
 		pageData: { email = '', formError } = {},
 		queryParams,
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -31,6 +32,7 @@ export const ResetPasswordSessionExpiredPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="reset-password-session-expired"
 			formError={formError}
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>
 				The link we sent you was valid for 60 minutes and it has now expired.

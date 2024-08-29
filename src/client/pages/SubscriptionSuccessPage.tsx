@@ -10,7 +10,7 @@ interface Props {
 
 export const SubscriptionSuccessPage = ({ action }: Props) => {
 	const clientState = useClientState();
-	const { pageData = {} } = clientState;
+	const { pageData = {}, shortRequestId } = clientState;
 	const { returnUrl, accountManagementUrl, newsletterId } = pageData;
 
 	useEffect(() => {
@@ -30,6 +30,7 @@ export const SubscriptionSuccessPage = ({ action }: Props) => {
 			returnUrl={returnUrl}
 			accountManagementUrl={accountManagementUrl}
 			action={action}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

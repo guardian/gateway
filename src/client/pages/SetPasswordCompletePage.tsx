@@ -4,7 +4,7 @@ import { ChangePasswordComplete } from '@/client/pages/ChangePasswordComplete';
 
 export const SetPasswordCompletePage = () => {
 	const clientState = useClientState();
-	const { pageData = {} } = clientState;
+	const { pageData = {}, shortRequestId } = clientState;
 	const { returnUrl, email } = pageData;
 	return (
 		<ChangePasswordComplete
@@ -12,6 +12,7 @@ export const SetPasswordCompletePage = () => {
 			email={email}
 			returnUrl={returnUrl}
 			action="created"
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

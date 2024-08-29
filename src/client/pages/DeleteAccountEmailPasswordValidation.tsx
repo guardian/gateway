@@ -9,19 +9,23 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 export type DeleteAccountEmailPasswordVerificationProps = {
 	validationType: 'email' | 'password';
 	queryParams: QueryParams;
+	shortRequestId?: string;
 };
 
 export const DeleteAccountEmailPasswordValidation = ({
 	validationType,
 	queryParams,
+	shortRequestId,
 }: DeleteAccountEmailPasswordVerificationProps) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Delete your Guardian account"
 			errorOverride={queryParams.error_description}
 		>
 			{validationType === 'email' && (
 				<MainForm
+					shortRequestId={shortRequestId}
 					formAction={buildUrlWithQueryParams(
 						'/delete-email-validation',
 						{},
@@ -39,6 +43,7 @@ export const DeleteAccountEmailPasswordValidation = ({
 			)}
 			{validationType === 'password' && (
 				<MainForm
+					shortRequestId={shortRequestId}
 					formAction={buildUrlWithQueryParams(
 						'/delete-email-validation',
 						{},

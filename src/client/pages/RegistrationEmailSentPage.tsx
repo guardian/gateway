@@ -13,6 +13,7 @@ export const RegistrationEmailSentPage = () => {
 		queryParams,
 		globalMessage = {},
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 	const { email, hasStateHandle, fieldErrors, token, passcodeUsed } = pageData;
 	const { emailSentSuccess } = queryParams;
@@ -26,7 +27,13 @@ export const RegistrationEmailSentPage = () => {
 	// show passcode email sent page if we have a state handle
 	if (hasStateHandle) {
 		if (passcodeUsed) {
-			return <PasscodeUsed path="/welcome" queryParams={queryParams} />;
+			return (
+				<PasscodeUsed
+					path="/welcome"
+					queryParams={queryParams}
+					shortRequestId={shortRequestId}
+				/>
+			);
 		}
 
 		return (
@@ -41,6 +48,7 @@ export const RegistrationEmailSentPage = () => {
 				formTrackingName="register-resend"
 				fieldErrors={fieldErrors}
 				passcode={token}
+				shortRequestId={shortRequestId}
 				expiredPage={buildUrl('/welcome/expired')}
 			/>
 		);
@@ -58,6 +66,7 @@ export const RegistrationEmailSentPage = () => {
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName="register-resend"
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

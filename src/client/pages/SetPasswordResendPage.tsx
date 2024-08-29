@@ -10,6 +10,7 @@ export const SetPasswordResendPage = () => {
 		pageData: { email = '', formError } = {},
 		queryParams,
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -26,6 +27,7 @@ export const SetPasswordResendPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="set-password-link-expired"
 			formError={formError}
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>
 				To receive a new link, please enter your email address below.

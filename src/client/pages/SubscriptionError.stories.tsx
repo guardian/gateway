@@ -9,14 +9,22 @@ export default {
 } as Meta;
 
 export const Unsubscribe = () => (
-	<SubscriptionError accountManagementUrl="#" action={'unsubscribe'} />
+	<SubscriptionError
+		accountManagementUrl="#"
+		action={'unsubscribe'}
+		shortRequestId="123e4567"
+	/>
 );
 Unsubscribe.story = {
 	name: 'unsubscribe error',
 };
 
 export const Subscribe = () => (
-	<SubscriptionError accountManagementUrl="#" action={'subscribe'} />
+	<SubscriptionError
+		accountManagementUrl="#"
+		action={'subscribe'}
+		shortRequestId="123e4567"
+	/>
 );
 Subscribe.story = {
 	name: 'subscribe error',

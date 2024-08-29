@@ -20,6 +20,13 @@ export const divider = css`
 	background-color: var(--color-divider);
 `;
 
+export const errorContextLastTypeSpacing = css`
+	margin-bottom: 0;
+	&:last-child {
+		margin-bottom: ${remSpace[3]};
+	}
+`;
+
 export const errorContextSpacing = css`
 	margin: 0;
 	margin-top: ${space[2]}px;

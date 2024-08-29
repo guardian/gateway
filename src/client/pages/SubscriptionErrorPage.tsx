@@ -9,12 +9,13 @@ interface Props {
 
 export const SubscriptionErrorPage = ({ action }: Props) => {
 	const clientState = useClientState();
-	const { pageData = {} } = clientState;
+	const { pageData = {}, shortRequestId } = clientState;
 	const { accountManagementUrl } = pageData;
 	return (
 		<SubscriptionError
 			accountManagementUrl={accountManagementUrl}
 			action={action}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

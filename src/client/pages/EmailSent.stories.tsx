@@ -57,6 +57,7 @@ WithEmailResendNoAccount.story = {
 
 export const WithRecaptchaError = () => (
 	<EmailSent
+		shortRequestId="123e4567"
 		changeEmailPage="/reset-password"
 		email="example@theguardian.com"
 		resendEmailAction="#"
@@ -109,4 +110,6 @@ WithSuccessMessage.story = {
 	name: 'with success message',
 };
 
-export const WithErrorMessage = () => <EmailSent errorMessage="•⩊• UwU" />;
+export const WithErrorMessage = () => (
+	<EmailSent shortRequestId="123e4567" errorMessage="•⩊• UwU" />
+);

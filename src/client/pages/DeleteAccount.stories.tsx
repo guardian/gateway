@@ -21,6 +21,7 @@ Default.story = {
 
 export const WithFormError = () => (
 	<DeleteAccount
+		shortRequestId="123e4567"
 		queryParams={{
 			returnUrl: '#',
 		}}
@@ -33,6 +34,7 @@ WithFormError.story = {
 
 export const WithFieldErrors = () => (
 	<DeleteAccount
+		shortRequestId="123e4567"
 		queryParams={{
 			returnUrl: '#',
 		}}

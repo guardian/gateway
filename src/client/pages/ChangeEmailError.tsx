@@ -5,13 +5,16 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
 type ChangeEmailErrorProps = {
 	accountManagementUrl?: string;
+	shortRequestId?: string;
 };
 
 export const ChangeEmailError = ({
 	accountManagementUrl = 'https://manage.theguardian.com',
+	shortRequestId,
 }: ChangeEmailErrorProps) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Email change failed"
 			leadText="
 				The email change link you followed has expired or was invalid. Please

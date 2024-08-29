@@ -4,8 +4,14 @@ import { ReturnToApp } from '@/client/pages/ReturnToApp';
 
 export const ReturnToAppPage = () => {
 	const clientState = useClientState();
-	const { pageData = {} } = clientState;
+	const { pageData = {}, shortRequestId } = clientState;
 	const { email, appName } = pageData;
 
-	return <ReturnToApp email={email} appName={appName} />;
+	return (
+		<ReturnToApp
+			email={email}
+			appName={appName}
+			shortRequestId={shortRequestId}
+		/>
+	);
 };

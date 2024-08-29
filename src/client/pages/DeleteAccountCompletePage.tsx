@@ -4,8 +4,13 @@ import useClientState from '@/client/lib/hooks/useClientState';
 
 export const DeleteAccountCompletePage = () => {
 	const clientState = useClientState();
-	const { queryParams } = clientState;
+	const { queryParams, shortRequestId } = clientState;
 	const { returnUrl } = queryParams;
 
-	return <DeleteAccountComplete returnUrl={returnUrl} />;
+	return (
+		<DeleteAccountComplete
+			returnUrl={returnUrl}
+			shortRequestId={shortRequestId}
+		/>
+	);
 };

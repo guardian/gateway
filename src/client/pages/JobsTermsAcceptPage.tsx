@@ -5,7 +5,7 @@ import { JobsTermsAccept } from '@/client/pages/JobsTermsAccept';
 
 export const JobsTermsPage = () => {
 	const clientState = useClientState();
-	const { pageData = {}, queryParams } = clientState;
+	const { pageData = {}, queryParams, shortRequestId } = clientState;
 	const { firstName, secondName, email, formError, userBelongsToGRS } =
 		pageData;
 
@@ -17,6 +17,7 @@ export const JobsTermsPage = () => {
 			secondName={secondName}
 			userBelongsToGRS={userBelongsToGRS}
 			email={email}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

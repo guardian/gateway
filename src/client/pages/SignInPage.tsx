@@ -29,6 +29,7 @@ export const SignInPage = ({ isReauthenticate = false }: Props) => {
 			queryParams={queryParams}
 			recaptchaSiteKey={recaptchaSiteKey}
 			isReauthenticate={isReauthenticate}
+			shortRequestId={clientState.shortRequestId}
 		/>
 	);
 };

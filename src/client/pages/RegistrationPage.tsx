@@ -4,7 +4,12 @@ import { Registration } from '@/client/pages/Registration';
 
 export const RegistrationPage = () => {
 	const clientState = useClientState();
-	const { pageData = {}, recaptchaConfig, queryParams } = clientState;
+	const {
+		pageData = {},
+		recaptchaConfig,
+		queryParams,
+		shortRequestId,
+	} = clientState;
 	const { email, formError } = pageData;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -14,6 +19,7 @@ export const RegistrationPage = () => {
 			email={email}
 			recaptchaSiteKey={recaptchaSiteKey}
 			queryParams={queryParams}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

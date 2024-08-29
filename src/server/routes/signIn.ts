@@ -9,6 +9,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import {
 	FederationErrors,
+	GatewayError,
 	GenericErrors,
 	RegistrationErrors,
 	SignInErrors,
@@ -254,20 +255,32 @@ router.post(
 		});
 	}),
 );
-
+interface SignInError {
+	status: number;
+	gatewayError: GatewayError;
+}
 // handles errors in the catch block to return a error to display to the user
-const oktaSignInControllerErrorHandler = (error: unknown) => {
+const oktaSignInControllerErrorHandler = (error: unknown): SignInError => {
 	if (
 		error instanceof OktaError &&
 		error.name === 'AuthenticationFailedError'
 	) {
 		return {
 			status: error.status,
-			message: SignInErrors.AUTHENTICATION_FAILED,
+			gatewayError: {
+				message: SignInErrors.AUTHENTICATION_FAILED,
+				severity: 'BAU',
+			},
 		};
 	}
 
-	return new OktaError({ message: SignInErrors.GENERIC });
+	return {
+		status: 500,
+		gatewayError: {
+			severity: 'UNEXPECTED',
+			message: SignInErrors.GENERIC,
+		},
+	};
 };
 
 const oktaSignInController = async ({
@@ -404,13 +417,13 @@ const oktaSignInController = async ({
 
 		logger.error('Okta authentication error:', error);
 
-		const { message, status } = oktaSignInControllerErrorHandler(error);
+		const { status, gatewayError } = oktaSignInControllerErrorHandler(error);
 
 		const html = renderer('/signin', {
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					email,
-					formError: message,
+					formError: gatewayError,
 				},
 			}),
 			pageTitle: 'Sign in',

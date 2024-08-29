@@ -8,6 +8,7 @@ export const DeleteAccountPage = () => {
 		queryParams,
 		pageData: { formError, fieldErrors } = {},
 		globalMessage: { error } = {},
+		shortRequestId,
 	} = clientState;
 
 	return (
@@ -16,6 +17,7 @@ export const DeleteAccountPage = () => {
 			formError={formError}
 			fieldErrors={fieldErrors}
 			error={error}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

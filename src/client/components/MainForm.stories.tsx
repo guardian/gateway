@@ -99,6 +99,7 @@ export const FormWithError = () => (
 		submitButtonText="Send me a link"
 		formErrorMessageFromParent="This is an error"
 		formErrorContextFromParent={<>This is additional error context</>}
+		shortRequestId="123e4567"
 	>
 		<EmailInput />
 	</MainForm>

@@ -10,14 +10,17 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 type SubscriptionErrorProps = {
 	accountManagementUrl?: string;
 	action: SubscriptionAction;
+	shortRequestId?: string;
 };
 
 export const SubscriptionError = ({
 	accountManagementUrl = 'https://manage.theguardian.com',
 	action,
+	shortRequestId,
 }: SubscriptionErrorProps) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={`${subscriptionActionName(action)} Error`}
 			leadText={
 				<MainBodyText>Unable to {action}. Please try again.</MainBodyText>

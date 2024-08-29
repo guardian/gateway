@@ -88,3 +88,31 @@ export enum UnsubscribeErrors {
 export enum SubscribeErrors {
 	GENERIC = 'There was a problem subscribing, please try again.',
 }
+
+export interface StructuredGatewayError {
+	message: string;
+	severity: 'BAU' | 'UNEXPECTED';
+}
+
+export type GatewayError = StructuredGatewayError | string;
+
+// ensures we have a structured error, if the original was a string it applies default values for the rest of the fields
+export function asStructuredError(
+	error?: GatewayError,
+): StructuredGatewayError | undefined {
+	if (typeof error === 'string') {
+		return {
+			message: error,
+			severity: 'UNEXPECTED',
+		};
+	}
+	return error;
+}
+
+// ensures we get a string error message, if the original was a structured error it throws away the rest of the fields
+export function extractMessage(error?: GatewayError): string | undefined {
+	if (typeof error === 'string') {
+		return error;
+	}
+	return error?.message;
+}
