@@ -10,7 +10,7 @@ import {
 import { mergeRequestState } from '@/server/lib/requestState';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { buildUrl } from '@/shared/lib/routeUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 // When a user attempts to sign up for newsletters, rather than immediately signing them up,
 // we may instead call the IDAPI endpoint /consent-email to send them an email with a link
@@ -26,7 +26,18 @@ router.get(
 
 			trackMetric('ConsentToken::Success');
 
-			return res.redirect(303, buildUrl('/subscribe/success'));
+			return res.redirect(
+				303,
+				buildUrlWithQueryParams(
+					'/subscribe/success',
+					{},
+					{
+						ref: req.query.ref?.toString(),
+						refViewId: req.query.refViewId?.toString(),
+						returnUrl: '',
+					},
+				),
+			);
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl} Error`, error, {
 				request_id: res.locals.requestId,
