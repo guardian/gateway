@@ -5,6 +5,7 @@ import {
 	selectAuthenticatorValueSchema,
 	idxBaseResponseSchema,
 	IdxBaseResponse,
+	challengeAuthenticatorSchema,
 } from '@/server/lib/okta/idx/shared/schemas';
 
 // schema for the select-authenticator-authenticate object inside the identify response remediation object
@@ -19,6 +20,7 @@ export const selectAuthenticationAuthenticateSchema =
 // list of all possible remediations for the identify response
 export const identifyRemediations = z.union([
 	selectAuthenticationAuthenticateSchema,
+	challengeAuthenticatorSchema,
 	baseRemediationValueSchema,
 ]);
 

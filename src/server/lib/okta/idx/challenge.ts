@@ -14,22 +14,14 @@ import {
 } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
-	authenticatorAnswerSchema,
 	idxBaseResponseSchema,
 	IdxBaseResponse,
 	AuthenticatorBody,
 	selectAuthenticationEnrollSchema,
 	IdxStateHandleBody,
 	ExtractLiteralRemediationNames,
+	challengeAuthenticatorSchema,
 } from '@/server/lib/okta/idx/shared/schemas';
-
-// schema for the challenge-authenticator object inside the challenge response remediation object
-const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
-	z.object({
-		name: z.literal('challenge-authenticator'),
-		value: authenticatorAnswerSchema,
-	}),
-);
 
 // list of all possible remediations for the challenge response
 export const challengeRemediations = z.union([

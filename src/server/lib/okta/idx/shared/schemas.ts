@@ -90,6 +90,14 @@ export const authenticatorAnswerSchema = z.array(
 	]),
 );
 
+// schema for the challenge-authenticator object inside the challenge/identify response remediation object
+export const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('challenge-authenticator'),
+		value: authenticatorAnswerSchema,
+	}),
+);
+
 // Body type for the credential/enroll and challenge requests to select a given authenticator
 export type AuthenticatorBody = IdxStateHandleBody<{
 	authenticator: {
