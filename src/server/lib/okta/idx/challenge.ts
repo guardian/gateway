@@ -7,7 +7,6 @@ import { Request } from 'express';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
-import { OAuthError } from '@/server/models/okta/Error';
 import {
 	idxFetch,
 	idxFetchCompletion,
@@ -21,6 +20,7 @@ import {
 	IdxStateHandleBody,
 	ExtractLiteralRemediationNames,
 	challengeAuthenticatorSchema,
+	validateRemediation,
 } from '@/server/lib/okta/idx/shared/schemas';
 
 // list of all possible remediations for the challenge response
@@ -292,24 +292,11 @@ export type ChallengeAnswerRemediationNames = ExtractLiteralRemediationNames<
  * @description Validates that the challenge/answer response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the challenge/answer response, and the state is correct.
  * @param challengeAnswerResponse - The challenge/answer response
  * @param remediationName - The name of the remediation to validate
+ * @param useThrow - Whether to throw an error if the remediation is not found (default: true)
  * @throws OAuthError - If the remediation is not found in the challenge/answer response
- * @returns void
+ * @returns boolean | void - Whether the remediation was found in the response
  */
-export const validateChallengeAnswerRemediation = (
-	challengeAnswerResponse: ChallengeAnswerResponse,
-	remediationName: ChallengeAnswerRemediationNames,
-) => {
-	const hasRemediation = challengeAnswerResponse.remediation.value.some(
-		({ name }) => name === remediationName,
-	);
-
-	if (!hasRemediation) {
-		throw new OAuthError(
-			{
-				error: 'invalid_request',
-				error_description: `Remediation ${remediationName} not found in challenge/answer response`,
-			},
-			400,
-		);
-	}
-};
+export const validateChallengeAnswerRemediation = validateRemediation<
+	ChallengeAnswerResponse,
+	ChallengeAnswerRemediationNames
+>;

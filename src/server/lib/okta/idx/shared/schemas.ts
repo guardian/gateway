@@ -114,3 +114,40 @@ export type ExtractLiteralRemediationNames<T> = T extends { name: infer N }
 			: N
 		: never
 	: never;
+
+/**
+ * @name validateRemediation
+ * @description Validate that the IDX response contains the expected remediation based on the response type and the remediation name.
+ *
+ * Either throws an error or returns a boolean based on the `useThrow` parameter.
+ *
+ * This should not be used directly, but rather through the specific remediation validation functions which are exported from the Okta IDX API function files.
+ *
+ * @param response - The IDX response object (ResponseType)
+ * @param remediationName - The name of the remediation to validate (RemediationNamesType), extracted from the response object and ExtractLiteralRemediationNames
+ * @param useThrow - Whether to throw an error if the remediation is not found (default: true)
+ * @returns boolean | void - Whether the remediation was found in the response
+ */
+export const validateRemediation = <
+	ResponseType extends { remediation: { value: Array<{ name: string }> } },
+	RemediationNamesType extends ExtractLiteralRemediationNames<
+		ResponseType['remediation']['value'][number]
+	>,
+>(
+	response: ResponseType,
+	remediationName: RemediationNamesType,
+	useThrow = true,
+) => {
+	const hasRemediation = response.remediation.value.some(
+		({ name }) => name === remediationName,
+	);
+
+	if (!hasRemediation && useThrow) {
+		throw new Error(
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+			`IDX response does not contain the expected remediation: ${remediationName}`,
+		);
+	}
+
+	return hasRemediation;
+};
