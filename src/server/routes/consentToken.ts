@@ -31,11 +31,7 @@ router.get(
 				buildUrlWithQueryParams(
 					'/subscribe/success',
 					{},
-					{
-						ref: req.query.ref?.toString(),
-						refViewId: req.query.refViewId?.toString(),
-						returnUrl: '',
-					},
+					res.locals.queryParams,
 				),
 			);
 		} catch (error) {
