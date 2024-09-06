@@ -46,6 +46,7 @@ export const redirectIfLoggedIn = async (
 		// (this throws if the session is invalid)
 		const session = await getCurrentSession({
 			idx: oktaIdentityEngineSessionCookieId,
+			ip: req.ip,
 		});
 
 		// pull the user email from the session, which we need to display

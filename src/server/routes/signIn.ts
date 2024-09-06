@@ -145,9 +145,9 @@ router.post(
 				});
 			}
 
-			const user = await getUser(email);
+			const user = await getUser(email, req.ip);
 			const { id } = user;
-			const groups = await getUserGroups(id);
+			const groups = await getUserGroups(id, req.ip);
 			// check if the user has their email validated based on group membership
 			const emailValidated = groups.some(
 				(group) => group.profile.name === 'GuardianUser-EmailValidated',
@@ -164,6 +164,7 @@ router.post(
 				email: user.profile.email,
 				appClientId,
 				request_id,
+				ip: req.ip,
 			});
 			setEncryptedStateCookie(res, {
 				email: user.profile.email,
@@ -304,6 +305,7 @@ const oktaSignInController = async ({
 				// if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
 				await getCurrentSession({
 					idx: oktaIdentityEngineSessionCookieId,
+					ip: req.ip,
 				});
 				return res.redirect(accountManagementUrl);
 			}
@@ -322,10 +324,13 @@ const oktaSignInController = async ({
 		// if authentication fails, it will fall through to the catch
 		// the response contains a one time use sessionToken that we can exchange
 		// for a session cookie
-		const response = await authenticateWithOkta({
-			username: email,
-			password,
-		});
+		const response = await authenticateWithOkta(
+			{
+				username: email,
+				password,
+			},
+			req.ip,
+		);
 
 		// we only support the SUCCESS status for Okta authentication in gateway
 		// Other statuses could be supported in the future https://developer.okta.com/docs/reference/api/authn/#transaction-state
@@ -353,7 +358,7 @@ const oktaSignInController = async ({
 
 		if (response._embedded?.user.id) {
 			// retrieve the user groups
-			const groups = await getUserGroups(response._embedded.user.id);
+			const groups = await getUserGroups(response._embedded.user.id, req.ip);
 
 			// check if the user has their email validated based on group membership
 			const emailValidated = groups.some(
@@ -384,6 +389,7 @@ const oktaSignInController = async ({
 					email: response._embedded.user.profile.login,
 					appClientId,
 					request_id,
+					ip: req.ip,
 				});
 				setEncryptedStateCookie(res, {
 					email: response._embedded.user.profile.login,
@@ -454,6 +460,7 @@ router.get(
 				// the idx cookie value to Okta.
 				await getCurrentSession({
 					idx: oktaIdentityEngineSessionCookieId,
+					ip: req.ip,
 				});
 				return performAuthorizationCodeFlow(req, res, {
 					doNotSetLastAccessCookie: true,
@@ -511,6 +518,7 @@ router.get(
 					interactionHandle: interaction_handle,
 				},
 				res.locals.requestId,
+				req.ip,
 			);
 
 			const updatedAuthState = updateAuthorizationStateData(authState, {

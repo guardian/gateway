@@ -34,11 +34,17 @@ export const getRegistrationPlatform = async (
 	}
 };
 
-export const updateRegistrationPlatform = async (
-	accessToken: Jwt,
-	appClientId?: string,
-	request_id?: string,
-): Promise<void> => {
+export const updateRegistrationPlatform = async ({
+	accessToken,
+	appClientId,
+	request_id,
+	ip,
+}: {
+	accessToken: Jwt;
+	appClientId?: string;
+	request_id?: string;
+	ip?: string;
+}): Promise<void> => {
 	if (!accessToken) {
 		throw new Error('No access token provided');
 	}
@@ -46,18 +52,22 @@ export const updateRegistrationPlatform = async (
 	try {
 		const registrationPlatform = await getRegistrationPlatform(appClientId);
 
-		const user = await getUser(accessToken.claims.sub);
+		const user = await getUser(accessToken.claims.sub, ip);
 
 		// don't update users who already have a platform set
 		if (user.profile.registrationPlatform) {
 			return;
 		}
 
-		await updateUser(accessToken.claims.sub, {
-			profile: {
-				registrationPlatform,
+		await updateUser(
+			accessToken.claims.sub,
+			{
+				profile: {
+					registrationPlatform,
+				},
 			},
-		});
+			ip,
+		);
 	} catch (error) {
 		logger.error(`Error updating registrationLocation via Okta`, error, {
 			request_id,

@@ -41,11 +41,13 @@ type EnrollResponse = z.infer<typeof enrollResponseSchema>;
  *
  * @param stateHandle - The state handle from the `introspect` step
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<EnrollResponse> - The enroll response
  */
 export const enroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	request_id?: string,
+	ip?: string,
 ): Promise<EnrollResponse> => {
 	return idxFetch<EnrollResponse, IdxStateHandleBody>({
 		path: 'enroll',
@@ -54,6 +56,7 @@ export const enroll = (
 		},
 		schema: enrollResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -110,12 +113,14 @@ type EnrollNewResponse = z.infer<typeof enrollNewResponseSchema>;
  * @param stateHandle - The state handle from the `enroll`/`introspect` step
  * @param body - The user profile object, containing the email address
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<EnrollNewResponse> - The enroll new response
  */
 export const enrollNewWithEmail = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: EnrollNewWithEmailBody['userProfile'],
 	request_id?: string,
+	ip?: string,
 ): Promise<EnrollNewResponse> => {
 	return idxFetch<EnrollNewResponse, EnrollNewWithEmailBody>({
 		path: 'enroll/new',
@@ -125,6 +130,7 @@ export const enrollNewWithEmail = (
 		},
 		schema: enrollNewResponseSchema,
 		request_id,
+		ip,
 	});
 };
 

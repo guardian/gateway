@@ -21,18 +21,22 @@ export const updateRegistrationLocationViaOkta = async (
 	}
 
 	try {
-		const user = await getUser(accessToken.claims.sub);
+		const user = await getUser(accessToken.claims.sub, req.ip);
 
 		// don't update users who already have a location set
 		if (user.profile.registrationLocation) {
 			return;
 		}
 
-		await updateUser(accessToken.claims.sub, {
-			profile: {
-				registrationLocation,
+		await updateUser(
+			accessToken.claims.sub,
+			{
+				profile: {
+					registrationLocation,
+				},
 			},
-		});
+			req.ip,
+		);
 	} catch (error) {
 		logger.error(
 			`${req.method} ${req.originalUrl} Error updating registrationLocation via Okta`,

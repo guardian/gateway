@@ -64,15 +64,27 @@ const mockedCreateOktaUser =
 const mockedFetchOktaUser =
 	mocked<(id: string) => Promise<UserResponse>>(getUser);
 const mockedActivateOktaUser =
-	mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
-		activateUser,
-	);
+	mocked<
+		({
+			id,
+			sendEmail,
+		}: {
+			id: string;
+			sendEmail: boolean;
+		}) => Promise<TokenResponse | void>
+	>(activateUser);
 const mockedReactivateOktaUser =
-	mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
-		reactivateUser,
-	);
+	mocked<
+		({
+			id,
+			sendEmail,
+		}: {
+			id: string;
+			sendEmail: boolean;
+		}) => Promise<TokenResponse | void>
+	>(reactivateUser);
 const mockedDangerouslyResetPassword = mocked<
-	(id: string, sendEmail: boolean) => Promise<string | void>
+	(id: string) => Promise<string | void>
 >(dangerouslyResetPassword);
 const mockedGetUserGroups =
 	mocked<(id: string) => Promise<Group[]>>(getUserGroups);

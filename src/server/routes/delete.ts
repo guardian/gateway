@@ -54,7 +54,7 @@ router.get(
 			 */
 
 			// get the current user profile
-			const user = await getUser(state.oauthState.idToken.claims.sub);
+			const user = await getUser(state.oauthState.idToken.claims.sub, req.ip);
 
 			// check if the user has validated their email address
 			if (
@@ -243,10 +243,13 @@ router.post(
 
 			// attempt to authenticate with okta
 			// if authentication fails, it will fall through to the catch
-			const response = await authenticate({
-				username: email as string,
-				password,
-			});
+			const response = await authenticate(
+				{
+					username: email as string,
+					password,
+				},
+				req.ip,
+			);
 
 			// we only support the SUCCESS status for Okta authentication in gateway
 			// Other statuses could be supported in the future https://developer.okta.com/docs/reference/api/authn/#transaction-state
@@ -325,11 +328,11 @@ router.post(
 			}
 
 			// get the user's profile from okta
-			const user = await getUser(sub);
+			const user = await getUser(sub, req.ip);
 
 			// if the user doesn't have a password set, set a placeholder password
 			if (!user.credentials.password) {
-				await dangerouslySetPlaceholderPassword(user.id);
+				await dangerouslySetPlaceholderPassword(user.id, req.ip);
 			}
 
 			// attempt to send the email
@@ -337,6 +340,7 @@ router.post(
 				id: sub,
 				email: user.profile.email,
 				request_id: state.requestId,
+				ip: req.ip,
 			});
 
 			// redirect to the email sent page

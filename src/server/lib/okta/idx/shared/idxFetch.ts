@@ -48,6 +48,7 @@ type IDXFetchParams<ResponseType, BodyType> = {
 	schema: z.Schema<ResponseType>;
 	expressRes: ResponseWithRequestState;
 	request_id?: string;
+	ip?: string;
 };
 // type for the idx cookie which is string, but named for clarity
 type IdxCookie = string;
@@ -58,20 +59,24 @@ type IdxCookie = string;
  *
  * @param path - The path to the IDX API endpoint
  * @param body - The body of the request
+ * @param ip - The IP address of the user
  * @returns Promise<[Response, IdxCookie | undefined]> - The response from the IDX API, and the IDX cookie if it exists
  */
 const idxFetchBase = async ({
 	path,
 	body,
-}: Pick<IDXFetchParams<unknown, unknown>, 'path' | 'body'>): Promise<
+	ip,
+}: Pick<IDXFetchParams<unknown, unknown>, 'path' | 'body' | 'ip'>): Promise<
 	[Response, IdxCookie | undefined]
 > => {
+	const headers = {
+		Accept: 'application/ion+json; okta-version=1.0.0',
+		'Content-Type': 'application/ion+json; okta-version=1.0.0',
+	};
+
 	const response = await fetch(joinUrl(okta.orgUrl, `/idp/idx/${path}`), {
 		method: 'POST',
-		headers: {
-			Accept: 'application/ion+json; okta-version=1.0.0',
-			'Content-Type': 'application/ion+json; okta-version=1.0.0',
-		},
+		headers: ip ? { ...headers, 'X-Forwarded-For': ip } : headers,
 		body: JSON.stringify(body),
 	});
 
@@ -90,6 +95,7 @@ const idxFetchBase = async ({
  * @param body - The body of the request
  * @param schema - The zod schema to validate the response
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<ResponseType> - The response from the IDX API
  */
 export const idxFetch = async <ResponseType, BodyType>({
@@ -97,12 +103,13 @@ export const idxFetch = async <ResponseType, BodyType>({
 	body,
 	schema,
 	request_id,
+	ip,
 }: Omit<
 	IDXFetchParams<ResponseType, BodyType>,
 	'expressRes'
 >): Promise<ResponseType> => {
 	try {
-		const [response] = await idxFetchBase({ path, body });
+		const [response] = await idxFetchBase({ path, body, ip });
 
 		if (!response.ok) {
 			await handleError(response);
@@ -130,6 +137,7 @@ export const idxFetch = async <ResponseType, BodyType>({
  * @param body - The body of the request
  * @param expressRes - The express response object
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<[CompleteLoginResponse, Redirect String]>
  */
 export const idxFetchCompletion = async <BodyType>({
@@ -137,11 +145,12 @@ export const idxFetchCompletion = async <BodyType>({
 	body,
 	expressRes,
 	request_id,
+	ip,
 }: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<
 	[CompleteLoginResponse, string]
 > => {
 	try {
-		const [response, idxCookie] = await idxFetchBase({ path, body });
+		const [response, idxCookie] = await idxFetchBase({ path, body, ip });
 
 		if (!response.ok) {
 			await handleError(response);

@@ -13,14 +13,19 @@ import { dangerouslyResetPassword } from './api/users';
  * 2. Uses the OTT to set a cryptographically secure placeholder password for the user.
  * After these operations, we can send the user a password reset email.
  * @param id The Okta user ID
+ * @param id The IP address of the user
  */
-const dangerouslySetPlaceholderPassword = async (id: string): Promise<void> => {
+const dangerouslySetPlaceholderPassword = async (
+	id: string,
+	ip?: string,
+): Promise<void> => {
 	try {
 		// Generate an recoveryToken OTT and put user into RECOVERY state
-		const recoveryToken = await dangerouslyResetPassword(id);
+		const recoveryToken = await dangerouslyResetPassword(id, ip);
 		// Validate the token
 		const { stateToken } = await validateRecoveryToken({
 			recoveryToken,
+			ip,
 		});
 		// Check if state token is defined
 		if (!stateToken) {
@@ -30,10 +35,13 @@ const dangerouslySetPlaceholderPassword = async (id: string): Promise<void> => {
 			});
 		}
 		// Set the placeholder password as a cryptographically secure UUID
-		await resetPassword({
-			stateToken,
-			newPassword: crypto.randomUUID(),
-		});
+		await resetPassword(
+			{
+				stateToken,
+				newPassword: crypto.randomUUID(),
+			},
+			ip,
+		);
 	} catch (error) {
 		logger.error(
 			`dangerouslySetPlaceholderPassword failed: Error setting placeholder password for user ${id}`,
