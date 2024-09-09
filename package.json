@@ -120,13 +120,13 @@
 		"zod-to-json-schema": "^3.23.2"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.637.0",
-		"@aws-sdk/client-sesv2": "^3.637.0",
-		"@aws-sdk/credential-providers": "^3.637.0",
+		"@aws-sdk/client-cloudwatch": "^3.645.0",
+		"@aws-sdk/client-sesv2": "^3.645.0",
+		"@aws-sdk/credential-providers": "^3.645.0",
 		"@emotion/react": "^11.13.3",
 		"@faire/mjml-react": "^3.3.0",
 		"@guardian/ab-core": "8.0.0",
-		"@guardian/libs": "^18.0.1",
+		"@guardian/libs": "^18.0.2",
 		"@guardian/source": "^7.0.1",
 		"@guardian/source-development-kitchen": "^7.1.0",
 		"@okta/jwt-verifier": "^4.0.1",
