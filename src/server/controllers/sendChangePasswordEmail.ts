@@ -82,18 +82,17 @@ const setEncryptedCookieOkta = (
  *
  * NB: This is a WIP and is not fully implemented yet, it should be used behind the `usePasscodesResetPassword` query param flag
  * Current status:
- *   - [x] ACTIVE users with a password
+ *   - [x] ACTIVE users
  * 	   - [x] With email + password authenticator
  *     - [ ] With only password authenticator
- *   - [ ] ACTIVE users - SOCIAL only
- *     - [ ] With only email authenticator
- *   - [ ] ACTIVE users without a password
+ *     - [x] With only email authenticator
  *   - [ ] Non-ACTIVE user states
  *
  * @param {Request} req - Express request object
  * @param {ResponseWithRequestState} res - Express response object
  * @param {UserResponse} user - Okta user object
  * @param {string} request_id - Request ID
+ * @param {boolean} loopDetectionFlag - Flag to prevent infinite loops
  * @returns {Promise<void | ResponseWithRequestState>}
  */
 const changePasswordEmailIdx = async (
@@ -101,6 +100,7 @@ const changePasswordEmailIdx = async (
 	res: ResponseWithRequestState,
 	user: UserResponse,
 	request_id?: string,
+	loopDetectionFlag: boolean = false,
 ): Promise<void | ResponseWithRequestState> => {
 	// placeholder warning message
 	logger.warn('Passcode reset password flow is not fully implemented yet', {
@@ -250,7 +250,7 @@ const changePasswordEmailIdx = async (
 							res.locals.queryParams,
 						),
 					);
-				} else if (passwordAuthenticatorId) {
+				} else if (passwordAuthenticatorId && !emailAuthenticatorId) {
 					// user has only password authenticator so:
 					// 2. ACTIVE users - has only password authenticator (okta idx email not verified)
 					// If the user only has a password authenticator, then they failed to use a passcode
@@ -265,13 +265,29 @@ const changePasswordEmailIdx = async (
 					// Once they've verified their account, we use the okta classic api to generate a
 					// recover token, and instantly show the set password page to the user for them to
 					// set their password.
-				} else if (emailAuthenticatorId) {
+				} else if (emailAuthenticatorId && !passwordAuthenticatorId) {
 					// user has only email authenticator so:
-					// 3. ACTIVE users - has only email authenticator (SOCIAL users - no password, or passcode only users (not implemented yet))
+					// 3. ACTIVE users - has only email authenticator (SOCIAL users, no password)
+
 					// If the user only has an email authenticator, that means that they don't have a
 					// password set, and most likely are user created via a social provider. In this case,
 					// we have to set a placeholder password for this user, then use the standard idx recovery
 					// flow to send them a passcode to verify their account and reset their password.
+
+					// if a loop is detected, then throw early to prevent infinite loop
+					if (loopDetectionFlag) {
+						throw new OktaError({
+							message: `Okta changePasswordEmailIdx failed with loop detection flag under ACTIVE users - has only email authenticator (SOCIAL users, no password)`,
+						});
+					}
+
+					// set a placeholder password for the user
+					await dangerouslySetPlaceholderPassword(user.id, req.ip);
+
+					// now that the placeholder password has been set, the user will be in
+					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+					// so we can call this method again to send the user a passcode
+					return changePasswordEmailIdx(req, res, user, request_id, true);
 				}
 			}
 			// eslint-disable-next-line no-fallthrough -- allow fallthrough for time being for cases we haven't implemented yet
