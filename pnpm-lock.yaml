@@ -33,8 +33,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4)
       '@guardian/source-development-kitchen':
-        specifier: ^7.1.0
-        version: 7.1.0(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@guardian/libs@18.0.2(tslib@2.7.0)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4)
+        specifier: ^9.0.0
+        version: 9.0.0(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@guardian/libs@18.0.2(tslib@2.7.0)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4)
       '@okta/jwt-verifier':
         specifier: ^4.0.1
         version: 4.0.1
@@ -1529,12 +1529,12 @@ packages:
       prettier: ^3.2.2
       tslib: ^2.6.2
 
-  '@guardian/source-development-kitchen@7.1.0':
-    resolution: {integrity: sha512-rVJDH4HPEsU7UqXjchAcAWwuTdmSd3h7ISmRJMJ5p/hNohKGwB9GM6jHtbHYXOL7o2wjH7c6ZYL8Tn+/83huKw==}
+  '@guardian/source-development-kitchen@9.0.0':
+    resolution: {integrity: sha512-7384llH2Q8eyWBd48ITY6TTis5YhhaOeEW6y7ziPNwlRmI1wP99hlxidXv9FxReiPcdTkQ2U+c0l5k2qdiRg1g==}
     peerDependencies:
       '@emotion/react': ^11.11.3
       '@guardian/libs': ^18.0.0
-      '@guardian/source': ^7.0.0
+      '@guardian/source': ^8.0.0
       '@types/react': ^18.2.11
       react: ^18.2.0
       tslib: ^2.6.2
@@ -9328,7 +9328,7 @@ snapshots:
       prettier: 3.3.3
       tslib: 2.7.0
 
-  '@guardian/source-development-kitchen@7.1.0(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@guardian/libs@18.0.2(tslib@2.7.0)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4)':
+  '@guardian/source-development-kitchen@9.0.0(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@guardian/libs@18.0.2(tslib@2.7.0)(typescript@5.5.4))(@guardian/source@7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4)':
     dependencies:
       '@guardian/libs': 18.0.2(tslib@2.7.0)(typescript@5.5.4)
       '@guardian/source': 7.0.1(@emotion/react@11.13.3(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5))(@preact/compat@17.1.2(preact@10.23.2))(@types/react@18.3.5)(tslib@2.7.0)(typescript@5.5.4)
