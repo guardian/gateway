@@ -37,6 +37,7 @@ export const ValidRoutePathsArray = [
 	'/register/email-sent/resend',
 	'/reset-password',
 	'/reset-password/:token',
+	'/reset-password/code',
 	'/reset-password/complete',
 	'/reset-password/email-sent',
 	'/reset-password/expired',

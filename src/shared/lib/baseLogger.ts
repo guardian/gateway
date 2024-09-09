@@ -3,6 +3,7 @@ import { LogLevel, Logger } from '@/shared/model/Logger';
 
 export interface ExtraLogFields {
 	request_id?: string;
+	ip?: string;
 	[key: string]: any;
 }
 

@@ -39,7 +39,8 @@ import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { ReturnToAppPage } from '@/client/pages/ReturnToAppPage';
 import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
 import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
-import { VerifyEmailResetPasswordPage } from './pages/VerifyEmailResetPasswordPage';
+import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
+import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -86,9 +87,7 @@ const routes: Array<{
 	},
 	{
 		path: '/reset-password/email-sent',
-		element: (
-			<EmailSentPage formTrackingName="forgot-password-resend" noAccountInfo />
-		),
+		element: <ResetPasswordEmailSentPage />,
 	},
 	{
 		path: '/reset-password/complete',

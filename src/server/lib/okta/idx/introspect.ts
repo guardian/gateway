@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { OAuthError } from '@/server/models/okta/Error';
 import { InteractResponse } from '@/server/lib/okta/idx/interact';
 import {
 	challengeAnswerRemediations,
@@ -14,6 +13,7 @@ import {
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	ExtractLiteralRemediationNames,
+	validateRemediation,
 } from '@/server/lib/okta/idx/shared/schemas';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
@@ -87,17 +87,20 @@ type IntrospectBody =
  *
  * @param interactionHandle - The interaction handle returned from the `interact` step
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<IntrospectResponse> - The introspect response
  */
 export const introspect = (
 	body: IntrospectBody,
 	request_id?: string,
+	ip?: string,
 ): Promise<IntrospectResponse> => {
 	return idxFetch<IntrospectResponse, IntrospectBody>({
 		path: 'introspect',
 		body,
 		schema: introspectResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -111,24 +114,11 @@ export type IntrospectRemediationNames = ExtractLiteralRemediationNames<
  * @description Validates that the introspect response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the introspect response, and the state is correct.
  * @param introspectResponse - The introspect response
  * @param remediationName - The name of the remediation to validate
+ * @param useThrow - Whether to throw an error if the remediation is not found (default: true)
  * @throws OAuthError - If the remediation is not found in the introspect response
- * @returns void
+ * @returns boolean | void - Whether the remediation was found in the response
  */
-export const validateIntrospectRemediation = (
-	introspectResponse: IntrospectResponse,
-	remediationName: IntrospectRemediationNames,
-) => {
-	const hasRemediation = introspectResponse.remediation.value.some(
-		({ name }) => name === remediationName,
-	);
-
-	if (!hasRemediation) {
-		throw new OAuthError(
-			{
-				error: 'invalid_request',
-				error_description: `Remediation ${remediationName} not found in introspect response`,
-			},
-			400,
-		);
-	}
-};
+export const validateIntrospectRemediation = validateRemediation<
+	IntrospectResponse,
+	IntrospectRemediationNames
+>;

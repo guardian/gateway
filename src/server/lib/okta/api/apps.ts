@@ -32,7 +32,7 @@ export const getApp = async (id: string): Promise<AppResponse> => {
 	const path = buildUrl(`/api/v1/apps/:id`, { id });
 
 	const app = await fetch(joinUrl(okta.orgUrl, path), {
-		headers: { ...defaultHeaders, ...authorizationHeader() },
+		headers: { ...defaultHeaders(), ...authorizationHeader() },
 	}).then(handleAppResponse);
 
 	AppCache.set(id, app);

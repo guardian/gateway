@@ -9,22 +9,28 @@ import { trackMetric } from '@/server/lib/trackMetric';
  * Used to update the user has verified/validated their email and set a password securely.
  *
  * @param {string} id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
+ * @param {string} ip The IP address of the user
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
 export const validateEmailAndPasswordSetSecurely = async (
 	id: string,
+	ip?: string,
 ): Promise<UserResponse> => {
 	try {
 		const timestamp = new Date().toISOString();
 
-		const user = await updateUser(id, {
-			profile: {
-				emailValidated: true,
-				lastEmailValidatedTimestamp: timestamp,
-				passwordSetSecurely: true,
-				lastPasswordSetSecurelyTimestamp: timestamp,
+		const user = await updateUser(
+			id,
+			{
+				profile: {
+					emailValidated: true,
+					lastEmailValidatedTimestamp: timestamp,
+					passwordSetSecurely: true,
+					lastPasswordSetSecurelyTimestamp: timestamp,
+				},
 			},
-		});
+			ip,
+		);
 
 		trackMetric('OktaAccountVerification::Success');
 		trackMetric('OktaUpdatePassword::Success');

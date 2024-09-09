@@ -8,8 +8,8 @@ import {
 	authenticatorAnswerSchema,
 	selectAuthenticationEnrollSchema,
 	ExtractLiteralRemediationNames,
+	validateRemediation,
 } from '@/server/lib/okta/idx/shared/schemas';
-import { OAuthError } from '@/server/models/okta/Error';
 
 // schema for the enroll-profile object inside the enroll response remediation object
 const enrollProfileSchema = baseRemediationValueSchema.merge(
@@ -41,11 +41,13 @@ type EnrollResponse = z.infer<typeof enrollResponseSchema>;
  *
  * @param stateHandle - The state handle from the `introspect` step
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<EnrollResponse> - The enroll response
  */
 export const enroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	request_id?: string,
+	ip?: string,
 ): Promise<EnrollResponse> => {
 	return idxFetch<EnrollResponse, IdxStateHandleBody>({
 		path: 'enroll',
@@ -54,6 +56,7 @@ export const enroll = (
 		},
 		schema: enrollResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -110,12 +113,14 @@ type EnrollNewResponse = z.infer<typeof enrollNewResponseSchema>;
  * @param stateHandle - The state handle from the `enroll`/`introspect` step
  * @param body - The user profile object, containing the email address
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<EnrollNewResponse> - The enroll new response
  */
 export const enrollNewWithEmail = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: EnrollNewWithEmailBody['userProfile'],
 	request_id?: string,
+	ip?: string,
 ): Promise<EnrollNewResponse> => {
 	return idxFetch<EnrollNewResponse, EnrollNewWithEmailBody>({
 		path: 'enroll/new',
@@ -125,6 +130,7 @@ export const enrollNewWithEmail = (
 		},
 		schema: enrollNewResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -140,26 +146,9 @@ export type EnrollNewRemediationNames = ExtractLiteralRemediationNames<
  * @param remediationName - The name of the remediation to validate
  * @param useThrow - Whether to throw an error if the remediation is not found
  * @throws OAuthError - If the remediation is not found in the enroll/new response
- * @returns void
+ * @returns boolean | void - Whether the remediation was found in the response
  */
-export const validateEnrollNewRemediation = (
-	enrollNewResponse: EnrollNewResponse,
-	remediationName: EnrollNewRemediationNames,
-	useThrow = true,
-) => {
-	const hasRemediation = enrollNewResponse.remediation.value.some(
-		({ name }) => name === remediationName,
-	);
-
-	if (!hasRemediation && useThrow) {
-		throw new OAuthError(
-			{
-				error: 'invalid_request',
-				error_description: `Remediation ${remediationName} not found in enroll/new response`,
-			},
-			400,
-		);
-	}
-
-	return hasRemediation;
-};
+export const validateEnrollNewRemediation = validateRemediation<
+	EnrollNewResponse,
+	EnrollNewRemediationNames
+>;

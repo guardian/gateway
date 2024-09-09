@@ -22,19 +22,22 @@ const { okta } = getConfiguration();
  * or throw an error on a failed response.
  *
  * @param idx Okta Identity Engine session cookie
+ * @param ip The IP address of the user
  * @returns Promise<SessionResponse>
  */
 export const getCurrentSession = async ({
 	idx,
+	ip,
 }: {
 	idx?: string;
+	ip?: string;
 }): Promise<SessionResponse> => {
 	const path = buildUrl('/api/v1/sessions/me');
 
 	const Cookie = `${idx ? `idx=${idx};` : ''}`;
 
 	const response = await fetch(joinUrl(okta.orgUrl, path), {
-		headers: { ...defaultHeaders, Cookie },
+		headers: { ...defaultHeaders(ip), Cookie },
 		credentials: 'include',
 	});
 
@@ -62,12 +65,15 @@ export const getCurrentSession = async ({
  * returns a 404 on invalid.
  *
  * @param idx Okta Identity Engine session cookie
+ * @param ip The IP address of the user
  * @returns Promise<void>
  */
 export const closeCurrentSession = async ({
 	idx,
+	ip,
 }: {
 	idx?: string;
+	ip?: string;
 }): Promise<undefined> => {
 	const path = buildUrl('/api/v1/sessions/me');
 
@@ -75,7 +81,7 @@ export const closeCurrentSession = async ({
 
 	const response = await fetch(joinUrl(okta.orgUrl, path), {
 		method: 'DELETE',
-		headers: { ...defaultHeaders, Cookie },
+		headers: { ...defaultHeaders(ip), Cookie },
 		credentials: 'include',
 	});
 

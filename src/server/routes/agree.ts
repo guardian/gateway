@@ -109,6 +109,7 @@ router.post(
 				firstName,
 				secondName,
 				state.oauthState.idToken.claims.sub,
+				req.ip,
 			);
 
 			// delete the ID token cookie, as we've updated the user model,

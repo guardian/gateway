@@ -1,8 +1,19 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-export const defaultHeaders = {
-	Accept: 'application/json',
-	'Content-Type': 'application/json',
+export const defaultHeaders = (ip?: string) => {
+	const headers = {
+		Accept: 'application/json',
+		'Content-Type': 'application/json',
+	};
+
+	if (ip) {
+		return {
+			...headers,
+			'X-Forwarded-For': ip,
+		};
+	}
+
+	return headers;
 };
 
 /**

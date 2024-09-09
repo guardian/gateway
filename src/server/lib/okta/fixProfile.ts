@@ -11,11 +11,11 @@ export const fixOktaProfile = async ({
 }: {
 	oktaId: string;
 	email?: string;
-	ip: string | undefined;
+	ip?: string;
 	request_id?: string;
 }): Promise<boolean> => {
 	try {
-		const oktaUser = await getUser(oktaId);
+		const oktaUser = await getUser(oktaId, ip);
 		// Check the legacyIdentityId field. If it's set, we don't need to do anything.
 		if (oktaUser.profile.legacyIdentityId) {
 			return true;
@@ -28,12 +28,16 @@ export const fixOktaProfile = async ({
 		if (!idapiUser.id) {
 			throw new Error(`fixOktaProfile - IDAPI profile missing ID`);
 		}
-		await updateUser(oktaId, {
-			profile: {
-				legacyIdentityId: idapiUser.id,
-				searchPartitionKey: sha256Hex(idapiUser.id),
+		await updateUser(
+			oktaId,
+			{
+				profile: {
+					legacyIdentityId: idapiUser.id,
+					searchPartitionKey: sha256Hex(idapiUser.id),
+				},
 			},
-		});
+			ip,
+		);
 		return true;
 	} catch (error) {
 		logger.warn('fixOktaProfile - Could not fix Okta profile', error);

@@ -35,12 +35,14 @@ type CredentialEnrollResponse = z.infer<typeof credentialEnrollResponse>;
  * @param stateHandle - The state handle from the `enroll` step
  * @param body - The authenticator object, containing the authenticator id and method type
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns	Promise<CredentialEnrollResponse> - The credential enroll response
  */
 export const credentialEnroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: AuthenticatorBody['authenticator'],
 	request_id?: string,
+	ip?: string,
 ): Promise<CredentialEnrollResponse> => {
 	return idxFetch<CredentialEnrollResponse, AuthenticatorBody>({
 		path: 'credential/enroll',
@@ -50,5 +52,6 @@ export const credentialEnroll = (
 		},
 		schema: credentialEnrollResponse,
 		request_id,
+		ip,
 	});
 };

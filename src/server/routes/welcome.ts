@@ -127,11 +127,12 @@ router.post(
 
 			// update the registration platform for social users, as we're not able to do this
 			// at the time of registration, as that happens in Okta
-			await updateRegistrationPlatform(
-				state.oauthState.accessToken,
-				state.queryParams.appClientId,
-				state.requestId,
-			);
+			await updateRegistrationPlatform({
+				accessToken: state.oauthState.accessToken,
+				appClientId: state.queryParams.appClientId,
+				request_id: state.requestId,
+				ip: req.ip,
+			});
 
 			const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
 
@@ -500,6 +501,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 				email,
 				appClientId: state.queryParams.appClientId,
 				request_id: state.requestId,
+				ip: req.ip,
 			});
 
 			trackMetric('OktaWelcomeResendEmail::Success');

@@ -135,6 +135,7 @@ const oktaIdxApiCheckHandler = async ({
 					stateHandle: encryptedState.stateHandle,
 				},
 				state.requestId,
+				req.ip,
 			);
 
 			if (path === '/welcome') {
@@ -237,6 +238,7 @@ export const checkTokenInOkta = async (
 		// return an error and we will show the link expired page.
 		const { _embedded } = await validateTokenInOkta({
 			recoveryToken,
+			ip: req.ip,
 		});
 		const email = _embedded?.user.profile.login;
 

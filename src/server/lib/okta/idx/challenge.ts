@@ -7,29 +7,21 @@ import { Request } from 'express';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
-import { OAuthError } from '@/server/models/okta/Error';
 import {
 	idxFetch,
 	idxFetchCompletion,
 } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
-	authenticatorAnswerSchema,
 	idxBaseResponseSchema,
 	IdxBaseResponse,
 	AuthenticatorBody,
 	selectAuthenticationEnrollSchema,
 	IdxStateHandleBody,
 	ExtractLiteralRemediationNames,
+	challengeAuthenticatorSchema,
+	validateRemediation,
 } from '@/server/lib/okta/idx/shared/schemas';
-
-// schema for the challenge-authenticator object inside the challenge response remediation object
-const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
-	z.object({
-		name: z.literal('challenge-authenticator'),
-		value: authenticatorAnswerSchema,
-	}),
-);
 
 // list of all possible remediations for the challenge response
 export const challengeRemediations = z.union([
@@ -71,12 +63,14 @@ type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
  * @param stateHandle - The state handle from the `identify`/`introspect` step
  * @param body - The authenticator object, containing the authenticator id and method type
  * @param request_id - The request id
+ * @param ip - The ip address
  * @returns	Promise<ChallengeResponse> - The given authenticator challenge response
  */
 export const challenge = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: AuthenticatorBody['authenticator'],
 	request_id?: string,
+	ip?: string,
 ): Promise<ChallengeResponse> => {
 	return idxFetch<ChallengeResponse, AuthenticatorBody>({
 		path: 'challenge',
@@ -86,6 +80,7 @@ export const challenge = (
 		},
 		schema: challengeResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -159,12 +154,14 @@ type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
  * @param stateHandle - The state handle from the previous step
  * @param body - The passcode object, containing the passcode
  * @param request_id - The request id
+ * @param ip - The ip address
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
 export const challengeAnswerPasscode = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: ChallengeAnswerPasswordBody['credentials'],
 	request_id?: string,
+	ip?: string,
 ): Promise<ChallengeAnswerResponse> => {
 	return idxFetch<ChallengeAnswerResponse, ChallengeAnswerPasswordBody>({
 		path: 'challenge/answer',
@@ -174,6 +171,7 @@ export const challengeAnswerPasscode = (
 		},
 		schema: challengeAnswerResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -183,11 +181,13 @@ export const challengeAnswerPasscode = (
  *
  * @param stateHandle - The state handle from the previous step
  * @param request_id - The request id
+ * @param ip - The ip address
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
 export const challengeResend = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	request_id?: string,
+	ip?: string,
 ): Promise<ChallengeAnswerResponse> => {
 	return idxFetch<ChallengeAnswerResponse, IdxStateHandleBody>({
 		path: 'challenge/resend',
@@ -196,6 +196,7 @@ export const challengeResend = (
 		},
 		schema: challengeAnswerResponseSchema,
 		request_id,
+		ip,
 	});
 };
 
@@ -206,6 +207,7 @@ export const challengeResend = (
  * @param body - The password object, containing the password
  * @param expressRes - The express response object
  * @param request_id - The request id
+ * @param ip - The ip address
  * @returns Promise<void> - Performs a express redirect
  */
 export const setPasswordAndRedirect = async ({
@@ -215,6 +217,7 @@ export const setPasswordAndRedirect = async ({
 	expressRes,
 	path,
 	request_id,
+	ip,
 }: {
 	stateHandle: IdxBaseResponse['stateHandle'];
 	body: ChallengeAnswerPasswordBody['credentials'];
@@ -222,6 +225,7 @@ export const setPasswordAndRedirect = async ({
 	expressRes: ResponseWithRequestState;
 	path?: string;
 	request_id?: string;
+	ip?: string;
 }): Promise<void> => {
 	const [completionResponse, redirectUrl] =
 		await idxFetchCompletion<ChallengeAnswerPasswordBody>({
@@ -232,12 +236,13 @@ export const setPasswordAndRedirect = async ({
 			},
 			expressRes,
 			request_id,
+			ip,
 		});
 
 	// set the validation flags in Okta
 	const { id } = completionResponse.user.value;
 	if (id) {
-		await validateEmailAndPasswordSetSecurely(id);
+		await validateEmailAndPasswordSetSecurely(id, ip);
 	} else {
 		logger.error(
 			'Failed to set validation flags in Okta as there was no id',
@@ -255,7 +260,7 @@ export const setPasswordAndRedirect = async ({
 	) {
 		if (id) {
 			const { firstName, secondName } = expressReq.body;
-			await setupJobsUserInOkta(firstName, secondName, id);
+			await setupJobsUserInOkta(firstName, secondName, id, ip);
 			trackMetric('JobsGRSGroupAgree::Success');
 		} else {
 			logger.error(
@@ -300,24 +305,11 @@ export type ChallengeAnswerRemediationNames = ExtractLiteralRemediationNames<
  * @description Validates that the challenge/answer response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the challenge/answer response, and the state is correct.
  * @param challengeAnswerResponse - The challenge/answer response
  * @param remediationName - The name of the remediation to validate
+ * @param useThrow - Whether to throw an error if the remediation is not found (default: true)
  * @throws OAuthError - If the remediation is not found in the challenge/answer response
- * @returns void
+ * @returns boolean | void - Whether the remediation was found in the response
  */
-export const validateChallengeAnswerRemediation = (
-	challengeAnswerResponse: ChallengeAnswerResponse,
-	remediationName: ChallengeAnswerRemediationNames,
-) => {
-	const hasRemediation = challengeAnswerResponse.remediation.value.some(
-		({ name }) => name === remediationName,
-	);
-
-	if (!hasRemediation) {
-		throw new OAuthError(
-			{
-				error: 'invalid_request',
-				error_description: `Remediation ${remediationName} not found in challenge/answer response`,
-			},
-			400,
-		);
-	}
-};
+export const validateChallengeAnswerRemediation = validateRemediation<
+	ChallengeAnswerResponse,
+	ChallengeAnswerRemediationNames
+>;

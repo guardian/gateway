@@ -124,6 +124,7 @@ const signOutFromOktaLocal = async (
 		if (oktaIdentityEngineSessionCookieId) {
 			await closeCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
+				ip: req.ip,
 			});
 			trackMetric('OktaSignOut::Success');
 		}
@@ -189,8 +190,12 @@ const signOutFromOktaGlobal = async (
 		if (oktaIdentityEngineSessionCookieId) {
 			const { userId } = await getCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
+				ip: req.ip,
 			});
-			await clearUserSessions(userId);
+			await clearUserSessions({
+				id: userId,
+				ip: req.ip,
+			});
 			trackMetric('OktaSignOutGlobal::Success');
 		}
 	} catch (error) {

@@ -242,7 +242,12 @@ describe('okta#activateUser', () => {
 			Promise.resolve({ ok: true, json } as Response),
 		);
 
-		await expect(activateUser(userId, true)).resolves.toEqual(undefined);
+		await expect(
+			activateUser({
+				id: userId,
+				sendEmail: true,
+			}),
+		).resolves.toEqual(undefined);
 	});
 
 	test('should throw an error when a user is already activated', async () => {
@@ -259,7 +264,11 @@ describe('okta#activateUser', () => {
 			Promise.resolve({ ok: false, status: 403, json } as Response),
 		);
 
-		await expect(activateUser(userId)).rejects.toThrowError(
+		await expect(
+			activateUser({
+				id: userId,
+			}),
+		).rejects.toThrowError(
 			new OktaError({
 				message: 'Activation failed because the user is already active',
 			}),
@@ -277,7 +286,12 @@ describe('okta#reactivateUser', () => {
 			Promise.resolve({ ok: true, json } as Response),
 		);
 
-		await expect(reactivateUser(userId, true)).resolves.toEqual(undefined);
+		await expect(
+			reactivateUser({
+				id: userId,
+				sendEmail: true,
+			}),
+		).resolves.toEqual(undefined);
 	});
 
 	test('throw a an error when a user cannot be reactivated', async () => {
@@ -295,7 +309,11 @@ describe('okta#reactivateUser', () => {
 			Promise.resolve({ ok: false, status: 403, json } as Response),
 		);
 
-		await expect(reactivateUser(userId)).rejects.toThrow(
+		await expect(
+			reactivateUser({
+				id: userId,
+			}),
+		).rejects.toThrow(
 			new OktaError({
 				message: "This operation is not allowed in the user's current status.",
 			}),
@@ -311,7 +329,11 @@ describe('okta#clearUserSessions', () => {
 	test('should clear user sessions', async () => {
 		mockedFetch.mockReturnValueOnce(Promise.resolve({ ok: true } as Response));
 
-		await expect(clearUserSessions(userId)).resolves.toEqual(undefined);
+		await expect(
+			clearUserSessions({
+				id: userId,
+			}),
+		).resolves.toEqual(undefined);
 	});
 
 	test('should throw an error when a user session cannot be cleared', async () => {
@@ -328,7 +350,11 @@ describe('okta#clearUserSessions', () => {
 			Promise.resolve({ ok: false, status: 404, json } as Response),
 		);
 
-		await expect(clearUserSessions(userId)).rejects.toThrow(
+		await expect(
+			clearUserSessions({
+				id: userId,
+			}),
+		).rejects.toThrow(
 			new OktaError({
 				message: 'Not found: Resource not found: <userId> (User)',
 			}),

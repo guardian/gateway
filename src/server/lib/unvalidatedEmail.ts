@@ -11,6 +11,7 @@ type Props = {
 	email: string;
 	appClientId?: string;
 	request_id?: string;
+	ip?: string;
 } & TrackingQueryParams;
 
 /**
@@ -29,8 +30,9 @@ export const sendEmailToUnvalidatedUser = async ({
 	request_id,
 	ref,
 	refViewId,
+	ip,
 }: Props): Promise<void> => {
-	const token = await forgotPassword(id);
+	const token = await forgotPassword(id, ip);
 	if (!token) {
 		throw new OktaError({
 			message: `Unvalidated email sign-in failed: missing reset password token`,

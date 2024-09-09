@@ -127,6 +127,7 @@ export const performAuthorizationCodeFlow = async (
 		if (oktaIdentityEngineSessionCookieId) {
 			await closeCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
+				ip: req.ip,
 			});
 		}
 	}

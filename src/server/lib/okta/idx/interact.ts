@@ -67,6 +67,7 @@ export const interact = async (
 			if (oktaIdentityEngineSessionCookieId) {
 				await closeCurrentSession({
 					idx: oktaIdentityEngineSessionCookieId,
+					ip: req.ip,
 				});
 			}
 		}
