@@ -8,8 +8,8 @@ import {
 	authenticatorAnswerSchema,
 	selectAuthenticationEnrollSchema,
 	ExtractLiteralRemediationNames,
+	validateRemediation,
 } from '@/server/lib/okta/idx/shared/schemas';
-import { OAuthError } from '@/server/models/okta/Error';
 
 // schema for the enroll-profile object inside the enroll response remediation object
 const enrollProfileSchema = baseRemediationValueSchema.merge(
@@ -140,26 +140,9 @@ export type EnrollNewRemediationNames = ExtractLiteralRemediationNames<
  * @param remediationName - The name of the remediation to validate
  * @param useThrow - Whether to throw an error if the remediation is not found
  * @throws OAuthError - If the remediation is not found in the enroll/new response
- * @returns void
+ * @returns boolean | void - Whether the remediation was found in the response
  */
-export const validateEnrollNewRemediation = (
-	enrollNewResponse: EnrollNewResponse,
-	remediationName: EnrollNewRemediationNames,
-	useThrow = true,
-) => {
-	const hasRemediation = enrollNewResponse.remediation.value.some(
-		({ name }) => name === remediationName,
-	);
-
-	if (!hasRemediation && useThrow) {
-		throw new OAuthError(
-			{
-				error: 'invalid_request',
-				error_description: `Remediation ${remediationName} not found in enroll/new response`,
-			},
-			400,
-		);
-	}
-
-	return hasRemediation;
-};
+export const validateEnrollNewRemediation = validateRemediation<
+	EnrollNewResponse,
+	EnrollNewRemediationNames
+>;
