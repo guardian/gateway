@@ -41,7 +41,7 @@ export const PasscodeUsed = ({ path, queryParams }: Props) => {
 	return (
 		<MinimalLayout pageHeader={title} imageId="email" leadText={leadText}>
 			<LinkButton
-				css={primaryButtonStyles()}
+				cssOverrides={primaryButtonStyles()}
 				href={buildUrlWithQueryParams(`${path}/password`, {}, queryParams)}
 				priority="primary"
 			>

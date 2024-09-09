@@ -95,13 +95,13 @@ export const MinimalLayout = ({
 							errorReportUrl={
 								showErrorReportUrl ? locations.REPORT_ISSUE : undefined
 							}
-							css={errorMessageStyles}
+							cssOverrides={errorMessageStyles}
 						/>
 					)}
 					{successMessage && !errorMessage && (
 						<SuccessSummary
 							message={successMessage}
-							css={successMessageStyles}
+							cssOverrides={successMessageStyles}
 						/>
 					)}
 					{children}

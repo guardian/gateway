@@ -76,7 +76,7 @@ export const Welcome = ({
 		>
 			{passwordSet ? (
 				<LinkButton
-					css={primaryButtonStyles()}
+					cssOverrides={primaryButtonStyles()}
 					href={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 					priority="primary"
 				>

@@ -45,7 +45,7 @@ const FirstNameInput = (props: NameInputProps) => {
 			name="firstName"
 			type="text"
 			autoComplete="given-name"
-			css={fieldSpacing}
+			cssOverrides={fieldSpacing}
 			onBlur={onBlur}
 			onInput={onInput}
 			onInvalid={onInvalid}

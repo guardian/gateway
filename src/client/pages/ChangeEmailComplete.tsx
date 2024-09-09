@@ -21,14 +21,14 @@ export const ChangeEmailComplete = ({
 			leadText="Success! Your email address has been updated."
 		>
 			<ExternalLinkButton
-				css={primaryButtonStyles()}
+				cssOverrides={primaryButtonStyles()}
 				href={`${accountManagementUrl}/account-settings`}
 			>
 				Back to account details
 			</ExternalLinkButton>
 			<ExternalLinkButton
 				priority="tertiary"
-				css={secondaryButtonStyles()}
+				cssOverrides={secondaryButtonStyles()}
 				href={returnUrl}
 			>
 				Continue to the Guardian

@@ -13,5 +13,5 @@ const linkThemeStyles = css`
 `;
 
 export default function ThemedLink(props: LinkProps) {
-	return <SourceLink {...props} css={linkThemeStyles} />;
+	return <SourceLink {...props} cssOverrides={linkThemeStyles} />;
 }
