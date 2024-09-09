@@ -51,12 +51,14 @@ type IdentifyBody = {
  * @param stateHandle - The state handle from the `introspect` step
  * @param email - The email address of the user
  * @param request_id - The request id
+ * @param ip - The IP address of the user
  * @returns Promise<IdentifyResponse> - The identify response
  */
 export const identify = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	email: string,
 	request_id?: string,
+	ip?: string,
 ): Promise<IdentifyResponse> => {
 	return idxFetch<IdentifyResponse, IdentifyBody>({
 		path: 'identify',
@@ -67,6 +69,7 @@ export const identify = (
 		},
 		schema: identifyResponseSchema,
 		request_id,
+		ip,
 	});
 };
 

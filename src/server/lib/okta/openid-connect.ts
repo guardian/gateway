@@ -1,4 +1,4 @@
-import { Issuer, IssuerMetadata, Client } from 'openid-client';
+import { Issuer, IssuerMetadata, Client, custom } from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request, CookieOptions } from 'express';
 import { joinUrl } from '@guardian/libs';
@@ -131,11 +131,32 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
  * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
  * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
  */
-const ProfileOpenIdClient = new OIDCIssuer.Client({
-	client_id: okta.clientId,
-	client_secret: okta.clientSecret,
-	redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
-}) as OpenIdClient;
+const ProfileOpenIdClient = (ip?: string) => {
+	const client = new OIDCIssuer.Client({
+		client_id: okta.clientId,
+		client_secret: okta.clientSecret,
+		redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
+	});
+
+	// Make sure we forward the IP address to Okta by adding it to the headers in the library calls
+	// https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing
+	// eslint-disable-next-line functional/immutable-data
+	client[custom.http_options] = (_, options) => {
+		// Add the IP address to the headers
+		const headers = options.headers || {};
+		if (ip) {
+			// eslint-disable-next-line functional/immutable-data
+			headers['X-Forwarded-For'] = ip;
+		}
+
+		return {
+			...options,
+			headers,
+		};
+	};
+
+	return client as OpenIdClient;
+};
 
 /**
  * @class DevProfileIdClient
@@ -149,17 +170,36 @@ const ProfileOpenIdClient = new OIDCIssuer.Client({
  * with the okta domain
  * @param devIssuer - The okta domain issuer url to use for development
  */
-const DevProfileIdClient = (devIssuer: string) => {
+const DevProfileIdClient = (devIssuer: string, ip?: string) => {
 	const devOidcIssuer = new Issuer({
 		...OIDC_METADATA,
 		issuer: issuer.replace(okta.orgUrl.replace('https://', ''), devIssuer),
 	});
 
-	return new devOidcIssuer.Client({
+	const devClient = new devOidcIssuer.Client({
 		client_id: okta.clientId,
 		client_secret: okta.clientSecret,
 		redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
-	}) as OpenIdClient;
+	});
+
+	// Make sure we forward the IP address to Okta by adding it to the headers in the library calls
+	// https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing
+	// eslint-disable-next-line functional/immutable-data
+	devClient[custom.http_options] = (_, options) => {
+		// Add the IP address to the headers
+		const headers = options.headers || {};
+		if (ip) {
+			// eslint-disable-next-line functional/immutable-data
+			headers['X-Forwarded-For'] = ip;
+		}
+
+		return {
+			...options,
+			headers,
+		};
+	};
+
+	return devClient as OpenIdClient;
 };
 
 /**
@@ -175,9 +215,10 @@ const DevProfileIdClient = (devIssuer: string) => {
  */
 export const getOpenIdClient = (req: Request): OpenIdClient => {
 	if (stage === 'DEV' && req.get('X-GU-Okta-Env')) {
-		return DevProfileIdClient(req.get('X-GU-Okta-Env') as string);
+		return DevProfileIdClient(req.get('X-GU-Okta-Env') as string, req.ip);
 	}
-	return ProfileOpenIdClient;
+
+	return ProfileOpenIdClient(req.ip);
 };
 
 /**

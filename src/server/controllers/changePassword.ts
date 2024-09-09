@@ -85,6 +85,7 @@ const oktaIdxApiPasswordHandler = async ({
 					stateHandle: encryptedState.stateHandle,
 				},
 				state.requestId,
+				req.ip,
 			);
 
 			// validate the introspect response to make sure we're in the correct state
@@ -112,7 +113,6 @@ const oktaIdxApiPasswordHandler = async ({
 			// the interaction code flow, eventually redirecting the user back to where they need to go.
 			return await setPasswordAndRedirect({
 				stateHandle: encryptedState.stateHandle,
-
 				body: {
 					passcode: password,
 				},
@@ -120,6 +120,7 @@ const oktaIdxApiPasswordHandler = async ({
 				expressRes: res,
 				path,
 				request_id: state.requestId,
+				ip: req.ip,
 			});
 		}
 	} catch (error) {
@@ -200,22 +201,26 @@ export const setPasswordController = (
 			const [recoveryToken, encryptedRegistrationConsents] =
 				decryptedRecoveryToken;
 
-			// We exhange the Okta recovery token for a freshly minted short-lived state
+			// We exchange the Okta recovery token for a freshly minted short-lived state
 			// token, to complete this change password operation. If the recovery token
 			// is invalid, we will show the user the link expired page.
 			const { stateToken } = await validateTokenInOkta({
 				recoveryToken,
+				ip: req.ip,
 			});
 
 			if (stateToken) {
-				const { sessionToken, _embedded } = await resetPasswordInOkta({
-					stateToken,
-					newPassword: password,
-				});
+				const { sessionToken, _embedded } = await resetPasswordInOkta(
+					{
+						stateToken,
+						newPassword: password,
+					},
+					req.ip,
+				);
 
 				const { id } = _embedded?.user ?? {};
 				if (id) {
-					await validateEmailAndPasswordSetSecurely(id);
+					await validateEmailAndPasswordSetSecurely(id, req.ip);
 				} else {
 					logger.error(
 						'Failed to set validation flags in Okta as there was no id',
@@ -229,7 +234,7 @@ export const setPasswordController = (
 				// When a jobs user is registering, we add them to the GRS group and set their name
 				if (clientId === 'jobs' && path === '/welcome') {
 					if (id) {
-						await setupJobsUserInOkta(firstName, secondName, id);
+						await setupJobsUserInOkta(firstName, secondName, id, req.ip);
 						trackMetric('JobsGRSGroupAgree::Success');
 					} else {
 						logger.error(

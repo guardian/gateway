@@ -20,6 +20,7 @@ import {
  * @param introspectRemediation The remediation object name to validate the introspect response against
  * @param challengeAnswerRemediation The remediation object name to validate the challenge answer response against
  * @param requestId The request id
+ * @param ip The IP address of the user
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
 export const submitPasscode = async ({
@@ -28,12 +29,14 @@ export const submitPasscode = async ({
 	introspectRemediation,
 	challengeAnswerRemediation,
 	requestId,
+	ip,
 }: {
 	passcode: string;
 	stateHandle: string;
 	introspectRemediation: IntrospectRemediationNames;
 	challengeAnswerRemediation: ChallengeAnswerRemediationNames;
 	requestId?: string;
+	ip?: string;
 }): Promise<ChallengeAnswerResponse> => {
 	// validate the code contains only numbers and is 6 characters long
 	// The okta api will validate the input fully, but validating here will prevent unnecessary requests
@@ -53,6 +56,7 @@ export const submitPasscode = async ({
 			stateHandle,
 		},
 		requestId,
+		ip,
 	);
 
 	// check if the remediation array contains the correct remediation object supplied
@@ -65,6 +69,7 @@ export const submitPasscode = async ({
 		stateHandle,
 		{ passcode },
 		requestId,
+		ip,
 	);
 
 	// check if the remediation array contains the correct remediation object supplied

@@ -45,6 +45,7 @@ export const loginMiddlewareOAuth = async (
 		// if there is an okta session cookie, check if it is valid, if not `getSession` will throw an error
 		await getCurrentSession({
 			idx: oktaIdentityEngineSessionCookieId,
+			ip: req.ip,
 		});
 	} catch (error) {
 		trackMetric('LoginMiddlewareOAuth::NoOktaSession');

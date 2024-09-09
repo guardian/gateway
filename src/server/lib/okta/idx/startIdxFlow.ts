@@ -67,6 +67,7 @@ export const startIdxFlow = async ({
 			interactionHandle: interaction_handle,
 		},
 		request_id,
+		req.ip,
 	);
 
 	// Encrypt any consents we need to preserve, if consents exist, i.e through the create account flow

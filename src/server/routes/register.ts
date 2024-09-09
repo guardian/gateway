@@ -153,6 +153,7 @@ router.post(
 					introspectRemediation: 'enroll-authenticator',
 					challengeAnswerRemediation: 'select-authenticator-enroll',
 					requestId,
+					ip: req.ip,
 				});
 
 				// if passcode challenge is successful, we can proceed to the next step
@@ -179,6 +180,7 @@ router.post(
 					stateHandle,
 					{ id: passwordAuthenticatorId, methodType: 'password' },
 					requestId,
+					req.ip,
 				);
 
 				updateEncryptedStateCookie(req, res, {
@@ -241,6 +243,7 @@ router.post(
 						stateHandle,
 					},
 					requestId,
+					req.ip,
 				);
 
 				// check if the remediation array contains a "enroll-authenticator"	object
@@ -251,7 +254,7 @@ router.post(
 				);
 
 				// attempt to resend the email
-				await challengeResend(stateHandle, requestId);
+				await challengeResend(stateHandle, requestId, req.ip);
 
 				// redirect to the email sent page
 				return res.redirect(
@@ -354,6 +357,7 @@ export const OktaRegistration = async (
 			const enrollResponse = await enroll(
 				introspectResponse.stateHandle,
 				request_id,
+				req.ip,
 			);
 
 			// if we don't have the `enroll-profile` remediation property
@@ -382,6 +386,7 @@ export const OktaRegistration = async (
 					registrationPlatform: await getRegistrationPlatform(appClientId),
 				},
 				request_id,
+				req.ip,
 			);
 
 			// we need to check if the email has been sent to the user, or if
@@ -417,6 +422,7 @@ export const OktaRegistration = async (
 					enrollNewWithEmailResponse.stateHandle,
 					{ id: emailAuthenticatorId, methodType: 'email' },
 					request_id,
+					req.ip,
 				);
 			}
 
@@ -472,6 +478,7 @@ export const OktaRegistration = async (
 			consents,
 			ref,
 			refViewId,
+			ip: req.ip,
 		});
 
 		// fire ophan component event if applicable
@@ -550,6 +557,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 				appClientId: queryParams?.appClientId,
 				ref: queryParams?.ref,
 				refViewId: queryParams?.refViewId,
+				ip: req.ip,
 			});
 			trackMetric('OktaRegistrationResendEmail::Success');
 			setEncryptedStateCookieForOktaRegistration(res, user);
