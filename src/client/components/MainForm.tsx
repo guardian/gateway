@@ -280,7 +280,7 @@ export const MainForm = ({
 					errorReportUrl={
 						showFormLevelReportUrl ? locations.REPORT_ISSUE : undefined
 					}
-					css={errorMessageStyles}
+					cssOverrides={errorMessageStyles}
 				/>
 			)}
 			{recaptchaEnabled && (
@@ -318,7 +318,7 @@ export const MainForm = ({
 				</ButtonLink>
 			) : (
 				<Button
-					css={
+					cssOverrides={
 						submitButtonPriority === 'primary'
 							? primaryButtonStyles(wideLayout ? 'half' : 'full')
 							: secondaryButtonStyles(wideLayout ? 'half' : 'full')

@@ -28,7 +28,7 @@ export const ChangePasswordComplete = ({
 				</MainBodyText>
 			}
 		>
-			<ExternalLinkButton css={primaryButtonStyles()} href={returnUrl}>
+			<ExternalLinkButton cssOverrides={primaryButtonStyles()} href={returnUrl}>
 				Continue to the Guardian
 			</ExternalLinkButton>
 		</MinimalLayout>

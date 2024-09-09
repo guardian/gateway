@@ -17,7 +17,7 @@ export const Default = () => (
 	<ErrorSummary
 		message="reCAPTCHA verification failed"
 		context={<DetailedRecaptchaError />}
-		css={errorMessageStyles}
+		cssOverrides={errorMessageStyles}
 	/>
 );
 Default.storyName = 'default';

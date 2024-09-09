@@ -37,7 +37,7 @@ export const Default = () => (
 		<InformationBoxText>
 			This also works with <ExternalLink href="#">external links</ExternalLink>{' '}
 			too. As well as{' '}
-			<ButtonLink css={buttonLinkStyles}>
+			<ButtonLink cssOverrides={buttonLinkStyles}>
 				buttons that look like links
 			</ButtonLink>
 			.

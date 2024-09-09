@@ -19,7 +19,7 @@ export const DeleteAccountComplete = ({ returnUrl }: Props) => {
 				</MainBodyText>
 			}
 		>
-			<ExternalLinkButton css={primaryButtonStyles()} href={returnUrl}>
+			<ExternalLinkButton cssOverrides={primaryButtonStyles()} href={returnUrl}>
 				Return to the Guardian
 			</ExternalLinkButton>
 		</MinimalLayout>

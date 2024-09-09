@@ -78,11 +78,11 @@ export const SignedInAs = ({
 				</MainBodyText>
 			}
 		>
-			<LinkButton css={primaryButtonStyles()} href={continueLink}>
+			<LinkButton cssOverrides={primaryButtonStyles()} href={continueLink}>
 				Continue
 			</LinkButton>
 			<LinkButton
-				css={secondaryButtonStyles()}
+				cssOverrides={secondaryButtonStyles()}
 				href={signOutLink}
 				priority="tertiary"
 			>

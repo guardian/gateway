@@ -19,7 +19,7 @@ export const ChangeEmailError = ({
 			"
 		>
 			<ExternalLinkButton
-				css={primaryButtonStyles()}
+				cssOverrides={primaryButtonStyles()}
 				href={`${accountManagementUrl}/account-settings`}
 			>
 				Back to account details
