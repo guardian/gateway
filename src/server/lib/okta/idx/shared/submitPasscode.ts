@@ -5,7 +5,7 @@ import {
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
 import {
-	challengeAnswerPasscode,
+	challengeAnswer,
 	ChallengeAnswerRemediationNames,
 	ChallengeAnswerResponse,
 	validateChallengeAnswerRemediation,
@@ -65,7 +65,7 @@ export const submitPasscode = async ({
 	validateIntrospectRemediation(introspectResponse, introspectRemediation);
 
 	// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
-	const challengeAnswerResponse = await challengeAnswerPasscode(
+	const challengeAnswerResponse = await challengeAnswer(
 		stateHandle,
 		{ passcode },
 		requestId,

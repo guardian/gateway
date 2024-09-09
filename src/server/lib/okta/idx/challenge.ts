@@ -141,7 +141,7 @@ export type ChallengeAnswerResponse = z.infer<
 >;
 
 // Body type for the challenge/answer request - passcode can refer to a OTP code or a password
-type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
+type ChallengeAnswerBody = IdxStateHandleBody<{
 	credentials: {
 		passcode: string;
 	};
@@ -157,13 +157,13 @@ type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
  * @param ip - The ip address
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
-export const challengeAnswerPasscode = (
+export const challengeAnswer = (
 	stateHandle: IdxBaseResponse['stateHandle'],
-	body: ChallengeAnswerPasswordBody['credentials'],
+	body: ChallengeAnswerBody['credentials'],
 	request_id?: string,
 	ip?: string,
 ): Promise<ChallengeAnswerResponse> => {
-	return idxFetch<ChallengeAnswerResponse, ChallengeAnswerPasswordBody>({
+	return idxFetch<ChallengeAnswerResponse, ChallengeAnswerBody>({
 		path: 'challenge/answer',
 		body: {
 			stateHandle,
@@ -220,7 +220,7 @@ export const setPasswordAndRedirect = async ({
 	ip,
 }: {
 	stateHandle: IdxBaseResponse['stateHandle'];
-	body: ChallengeAnswerPasswordBody['credentials'];
+	body: ChallengeAnswerBody['credentials'];
 	expressReq: Request;
 	expressRes: ResponseWithRequestState;
 	path?: string;
@@ -228,7 +228,7 @@ export const setPasswordAndRedirect = async ({
 	ip?: string;
 }): Promise<void> => {
 	const [completionResponse, redirectUrl] =
-		await idxFetchCompletion<ChallengeAnswerPasswordBody>({
+		await idxFetchCompletion<ChallengeAnswerBody>({
 			path: 'challenge/answer',
 			body: {
 				stateHandle,
