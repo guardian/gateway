@@ -24,7 +24,7 @@ import {
 	deactivateUser,
 } from '@/server/lib/okta/api/users';
 import { Status, UserResponse } from '@/server/models/okta/User';
-import { OAuthError, OktaError } from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
 import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { PasswordRoutePath } from '@/shared/model/Routes';
@@ -37,7 +37,10 @@ import {
 	identify,
 	validateIdentifyRemediation,
 } from '@/server/lib/okta/idx/identify';
-import { challenge } from '@/server/lib/okta/idx/challenge';
+import {
+	challenge,
+	validateChallengeRemediation,
+} from '@/server/lib/okta/idx/challenge';
 import { recover } from '@/server/lib/okta/idx/recover';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 
@@ -195,19 +198,12 @@ const changePasswordEmailIdx = async (
 
 					// validate that the response from the challenge endpoint is a password authenticator
 					// and has the "recover" remediation
-					if (
-						challengePasswordResponse.currentAuthenticatorEnrollment.value
-							.type !== 'password'
-					) {
-						throw new OAuthError(
-							{
-								error: 'idx_error',
-								error_description:
-									'challengePasswordResponse - recover not found',
-							},
-							400,
-						);
-					}
+					validateChallengeRemediation(
+						challengePasswordResponse,
+						'challenge-authenticator',
+						'password',
+						true,
+					);
 
 					// call the "recover" endpoint to start the password recovery process
 					const recoverResponse = await recover(

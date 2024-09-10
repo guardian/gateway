@@ -23,6 +23,7 @@ import {
 	ExtractLiteralRemediationNames,
 	challengeAuthenticatorSchema,
 	validateRemediation,
+	Authenticators,
 } from '@/server/lib/okta/idx/shared/schemas';
 
 // list of all possible remediations for the challenge response
@@ -57,7 +58,7 @@ const challengeResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
+export type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
 
 /**
  * @name challenge
@@ -84,6 +85,92 @@ export const challenge = (
 		request_id,
 		ip,
 	});
+};
+
+// Type to extract all the remediation names from the challenge/answer response
+type ChallengeResponseRemediationNames = ExtractLiteralRemediationNames<
+	ChallengeResponse['remediation']['value'][number]
+>;
+
+/**
+ * @name validateChallengeRemediation
+ * @description Validates that the challenge response contains a remediation with the given name and authenticator.
+ * @param challengeResponse - The challenge response
+ * @param remediationName - The name of the remediation to validate
+ * @param authenticator - The authenticator type - email or password
+ * @param checkForResendOrRecover - Whether to check for resend (email) or recover (password) functionality depending on the authenticator
+ * @param useThrow - Whether to throw an error if the remediation is not found (default: true)
+ * @returns boolean - Whether the remediation was found in the response
+ */
+export const validateChallengeRemediation = (
+	challengeResponse: ChallengeResponse,
+	remediationName: ChallengeResponseRemediationNames,
+	authenticator: Authenticators,
+	checkForResendOrRecover = false,
+	useThrow = true,
+): boolean => {
+	// Validate the remediation, will throw if useThrow is true and validation fails
+	const validRemediation = validateRemediation<
+		ChallengeResponse,
+		ChallengeResponseRemediationNames
+	>(challengeResponse, remediationName, useThrow);
+
+	// if useThrow is false and the remediation is invalid, return false
+	if (!validRemediation) {
+		return false;
+	}
+
+	// check if the current authenticator enrollment matches the expected authenticator
+	const validAuthenticator =
+		challengeResponse.currentAuthenticatorEnrollment.value.type ===
+		authenticator;
+
+	// if the authenticator is invalid, throw an error or return false depending on useThrow
+	if (!validAuthenticator) {
+		if (useThrow) {
+			throw new Error(
+				`The challenge response does not contain the expected ${authenticator} authenticator`,
+			);
+		}
+
+		return false;
+	}
+
+	// check for resend (email) or recover (password) if checkForResendOrRecover is true depending on the authenticator
+	if (checkForResendOrRecover) {
+		if (
+			authenticator === 'email' &&
+			challengeResponse.currentAuthenticatorEnrollment.value.type ===
+				authenticator &&
+			!challengeResponse.currentAuthenticatorEnrollment.value.resend
+		) {
+			if (useThrow) {
+				throw new Error(
+					'The challenge response does not contain the expected resend functionality for the email authenticator',
+				);
+			}
+
+			return false;
+		}
+
+		if (
+			authenticator === 'password' &&
+			challengeResponse.currentAuthenticatorEnrollment.value.type ===
+				authenticator &&
+			!challengeResponse.currentAuthenticatorEnrollment.value.recover
+		) {
+			if (useThrow) {
+				throw new Error(
+					'The challenge response does not contain the expected recover functionality for the password authenticator',
+				);
+			}
+
+			return false;
+		}
+	}
+
+	// return true if everything is valid
+	return true;
 };
 
 // Schema for the 'skip' object inside the challenge response remediation object
