@@ -95,6 +95,12 @@ const oktaIdxApiPasswordHandler = async ({
 					introspectResponse,
 					'enroll-authenticator',
 				);
+			} else {
+				// if we're setting a password, we should be in the reset-authenticator remediation
+				validateIntrospectRemediation(
+					introspectResponse,
+					'reset-authenticator',
+				);
 			}
 
 			// validate the password field
@@ -108,6 +114,9 @@ const oktaIdxApiPasswordHandler = async ({
 					error_description: PasswordFieldErrors.COMMON_PASSWORD,
 				});
 			}
+
+			// track the password change metric
+			trackMetric(changePasswordMetric(path, 'Success', true));
 
 			// Set the password in Okta, redirect the user to set a global session, and then complete
 			// the interaction code flow, eventually redirecting the user back to where they need to go.
@@ -127,6 +136,8 @@ const oktaIdxApiPasswordHandler = async ({
 		logger.error('Okta IDX setPassword failure', error, {
 			request_id: state.requestId,
 		});
+
+		trackMetric(changePasswordMetric(path, 'Failure', true));
 
 		if (error instanceof OAuthError) {
 			// case for session expired
@@ -166,9 +177,14 @@ export const setPasswordController = (
 		const { clientId, useOktaClassic } = res.locals.queryParams;
 
 		// OKTA IDX API FLOW
-		// If the user is using the passcode registration flow, we need to handle the password change/creation.
+		// If the user is using the passcode flow for registration/reset password,
+		// we need to handle the password change/creation.
 		// If there are specific failures, we fall back to the legacy Okta change password flow.
-		if (passcodesEnabled && !useOktaClassic && path === '/welcome') {
+		if (
+			passcodesEnabled &&
+			!useOktaClassic &&
+			(path === '/welcome' || res.locals.queryParams.usePasscodesResetPassword)
+		) {
 			await oktaIdxApiPasswordHandler({
 				req,
 				res,
@@ -265,7 +281,7 @@ export const setPasswordController = (
 					);
 				}
 
-				changePasswordMetric(path, 'Success');
+				trackMetric(changePasswordMetric(path, 'Success'));
 
 				return await performAuthorizationCodeFlow(req, res, {
 					sessionToken,
@@ -289,7 +305,7 @@ export const setPasswordController = (
 				request_id: res.locals.requestId,
 			});
 
-			changePasswordMetric(path, 'Failure');
+			trackMetric(changePasswordMetric(path, 'Failure'));
 
 			// see the comment above around the success metrics
 			if (clientId === 'jobs' && path === '/welcome') {

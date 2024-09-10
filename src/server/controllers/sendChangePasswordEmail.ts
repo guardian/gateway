@@ -23,8 +23,8 @@ import {
 	forgotPassword,
 	deactivateUser,
 } from '@/server/lib/okta/api/users';
-import { Status } from '@/server/models/okta/User';
-import { OktaError } from '@/server/models/okta/Error';
+import { Status, UserResponse } from '@/server/models/okta/User';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
 import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { PasswordRoutePath } from '@/shared/model/Routes';
@@ -32,6 +32,14 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
+import {
+	identify,
+	validateIdentifyRemediation,
+} from '@/server/lib/okta/idx/identify';
+import { challenge } from '@/server/lib/okta/idx/challenge';
+import { recover } from '@/server/lib/okta/idx/recover';
+import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 
 const { passcodesEnabled } = getConfiguration();
 
@@ -68,6 +76,237 @@ const setEncryptedCookieOkta = (
 	});
 };
 
+/**
+ * @name changePasswordEmailIdx
+ * @description Start the Okta IDX flow to change the user's password
+ *
+ * NB: This is a WIP and is not fully implemented yet, it should be used behind the `usePasscodesResetPassword` query param flag
+ * Current status:
+ *   - [x] ACTIVE users
+ * 	   - [x] With email + password authenticator
+ *     - [ ] With only password authenticator
+ *     - [x] With only email authenticator
+ *   - [ ] Non-ACTIVE user states
+ *
+ * @param {Request} req - Express request object
+ * @param {ResponseWithRequestState} res - Express response object
+ * @param {UserResponse} user - Okta user object
+ * @param {string} request_id - Request ID
+ * @param {boolean} loopDetectionFlag - Flag to prevent infinite loops
+ * @returns {Promise<void | ResponseWithRequestState>}
+ */
+const changePasswordEmailIdx = async (
+	req: Request,
+	res: ResponseWithRequestState,
+	user: UserResponse,
+	request_id?: string,
+	loopDetectionFlag: boolean = false,
+): Promise<void | ResponseWithRequestState> => {
+	// placeholder warning message
+	logger.warn('Passcode reset password flow is not fully implemented yet', {
+		request_id,
+	});
+
+	try {
+		// start the IDX flow by calling interact and introspect
+		const introspectResponse = await startIdxFlow({
+			req,
+			res,
+			authorizationCodeFlowOptions: {
+				// if the user has a password, then we show the reset password page
+				// otherwise we show the set password page
+				confirmationPagePath: user.credentials.password
+					? '/reset-password/complete'
+					: '/set-password/complete',
+			},
+			request_id,
+		});
+
+		// check the user's status to determine the correct remediation flow
+		switch (user.status) {
+			case Status.ACTIVE: {
+				/**
+				 *
+				 * If the user is ACTIVE, then they'll be in one of 3 states:
+				 * 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+				 * 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+				 * 3. ACTIVE users - has only email authenticator (SOCIAL users - no password, or passcode only users (not implemented yet))
+				 *
+				 * We can identify the users state by calling the IDX API /identify endpoint
+				 * and checking the authenticators available
+				 *
+				 * Depending on their state, we have to perform different steps to reset their password
+				 *
+				 * This only happens when the "Username enumeration protection" setting is disabled in Okta
+				 * under Security > General > User enumeration prevention
+				 *
+				 * When this is enabled, the IDX API will behave the same for every user,
+				 * regardless of their status
+				 *
+				 * When disabled, the IDX API will return different remediations based on the
+				 * user's status, which is helpful for us to determine the correct flow
+				 *
+				 */
+
+				// call "identify", essentially to start an authentication process
+				const identifyResponse = await identify(
+					introspectResponse.stateHandle,
+					user.profile.email,
+					request_id,
+					req.ip,
+				);
+
+				validateIdentifyRemediation(
+					identifyResponse,
+					'select-authenticator-authenticate',
+				);
+
+				const emailAuthenticatorId = findAuthenticatorId({
+					authenticator: 'email',
+					response: identifyResponse,
+					remediationName: 'select-authenticator-authenticate',
+				});
+
+				const passwordAuthenticatorId = findAuthenticatorId({
+					authenticator: 'password',
+					response: identifyResponse,
+					remediationName: 'select-authenticator-authenticate',
+				});
+
+				// check the user's authenticators to determine the correct flow
+				if (emailAuthenticatorId && passwordAuthenticatorId) {
+					// user has both email and password authenticators so:
+					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+
+					// ACTIVE users with a password *should* be able to user the `recover` flow
+					// even if we're not logging the user in, we have to perform these steps
+					// in order to ensure we replicate the behaviour the idx flow expects
+
+					// Call the "challenge" endpoint to start the password authentication process
+					const challengePasswordResponse = await challenge(
+						identifyResponse.stateHandle,
+						{
+							id: passwordAuthenticatorId,
+							methodType: 'password',
+						},
+						request_id,
+						req.ip,
+					);
+
+					// validate that the response from the challenge endpoint is a password authenticator
+					// and has the "recover" remediation
+					if (
+						challengePasswordResponse.currentAuthenticatorEnrollment.value
+							.type !== 'password'
+					) {
+						throw new OAuthError(
+							{
+								error: 'idx_error',
+								error_description:
+									'challengePasswordResponse - recover not found',
+							},
+							400,
+						);
+					}
+
+					// call the "recover" endpoint to start the password recovery process
+					const recoverResponse = await recover(
+						challengePasswordResponse.stateHandle,
+						request_id,
+						req.ip,
+					);
+
+					// call the "challenge" endpoint to start the email challenge process
+					// and send the user a passcode
+					const challengeEmailResponse = await challenge(
+						recoverResponse.stateHandle,
+						{
+							id: emailAuthenticatorId,
+							methodType: 'email',
+						},
+						request_id,
+						req.ip,
+					);
+
+					// track the success metrics
+					trackMetric('OktaIDXResetPasswordSend::Success');
+					trackMetric(`OktaIDXResetPasswordSend::${user.status}::Success`);
+
+					// at this point the user will have been sent an email with a passcode
+
+					// set the encrypted state cookie to persist the email and stateHandle
+					// which we need to persist during the passcode reset flow
+					setEncryptedStateCookie(res, {
+						email: user.profile.email,
+						stateHandle: challengeEmailResponse.stateHandle,
+						stateHandleExpiresAt: challengeEmailResponse.expiresAt,
+					});
+
+					// show the email sent page, with passcode instructions
+					return res.redirect(
+						303,
+						addQueryParamsToPath(
+							'/reset-password/email-sent',
+							res.locals.queryParams,
+						),
+					);
+				} else if (passwordAuthenticatorId && !emailAuthenticatorId) {
+					// user has only password authenticator so:
+					// 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+					// If the user only has a password authenticator, then they failed to use a passcode
+					// to verify their account when they created it, and instead set a password using
+					// the okta classic reset password flow. In this case, we have to have to enroll
+					// the user in the email authenticator to allow them to reset their password.
+					// We do this by first setting a placeholder password for the user, then using the
+					// identify flow to authenticate the user with the placeholder password. After
+					// authenticating the user, the IDX API will tell us that the user needs to enroll
+					// in the email authenticator, which we can then use to send them a passcode to verify
+					// their account.
+					// Once they've verified their account, we use the okta classic api to generate a
+					// recover token, and instantly show the set password page to the user for them to
+					// set their password.
+				} else if (emailAuthenticatorId && !passwordAuthenticatorId) {
+					// user has only email authenticator so:
+					// 3. ACTIVE users - has only email authenticator (SOCIAL users, no password)
+
+					// If the user only has an email authenticator, that means that they don't have a
+					// password set, and most likely are user created via a social provider. In this case,
+					// we have to set a placeholder password for this user, then use the standard idx recovery
+					// flow to send them a passcode to verify their account and reset their password.
+
+					// if a loop is detected, then throw early to prevent infinite loop
+					if (loopDetectionFlag) {
+						throw new OktaError({
+							message: `Okta changePasswordEmailIdx failed with loop detection flag under ACTIVE users - has only email authenticator (SOCIAL users, no password)`,
+						});
+					}
+
+					// set a placeholder password for the user
+					await dangerouslySetPlaceholderPassword(user.id, req.ip);
+
+					// now that the placeholder password has been set, the user will be in
+					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+					// so we can call this method again to send the user a passcode
+					return changePasswordEmailIdx(req, res, user, request_id, true);
+				}
+			}
+			// eslint-disable-next-line no-fallthrough -- allow fallthrough for time being for cases we haven't implemented yet
+			default:
+				throw new OktaError({
+					message: `Okta changePasswordEmailIdx failed with unaccepted Okta user status: ${user.status}`,
+				});
+		}
+	} catch (error) {
+		trackMetric('OktaIDXResetPasswordSend::Failure');
+
+		logger.error('Okta changePasswordEmailIdx failed', error, {
+			request_id,
+		});
+
+		// don't throw the error, so we can fall back to okta classic flow
+	}
+};
+
 export const sendEmailInOkta = async (
 	req: Request,
 	res: ResponseWithRequestState,
@@ -86,11 +325,13 @@ export const sendEmailInOkta = async (
 		const user = await getUser(email, req.ip);
 
 		if (passcodesEnabled && usePasscodesResetPassword) {
-			// TODO: implement passcode reset password flow
-			// this is a placeholder for now
-			logger.warn('Passcode reset password flow is not implemented yet', {
-				request_id,
-			});
+			// try to start the IDX flow to send the user a passcode for reset password
+			await changePasswordEmailIdx(req, res, user, request_id);
+			// if successful, the user will be redirected to the email sent page
+			// so we need to check if the headers have been sent to prevent further processing
+			if (res.headersSent) {
+				return;
+			}
 		}
 
 		switch (user.status) {

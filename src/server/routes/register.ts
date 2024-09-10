@@ -226,6 +226,7 @@ router.post(
 // Route to resend the email for passcode registration
 router.post(
 	'/register/code/resend',
+	handleRecaptcha,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { requestId } = res.locals;
