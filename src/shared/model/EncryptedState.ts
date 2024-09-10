@@ -1,12 +1,16 @@
 import { PersistableQueryParams } from './QueryParams';
 
 export interface EncryptedState {
+	// Email to persist across requests
 	email?: string;
+	// Flag to determine if the password was already set
 	passwordSetOnWelcomePage?: boolean;
-	status?: string;
-	signInRedirect?: boolean; // TODO: possibly rename for clarity
+	// Query params to persist across requests
 	queryParams?: PersistableQueryParams;
-	stateHandle?: string; // part of the Okta IDX flow
-	stateHandleExpiresAt?: string; // part of the Okta IDX flow
-	passcodeUsed?: boolean; // part of the Okta IDX flow, determines if the passcode has been used
+	// Okta IDX API - State handle to persist across requests
+	stateHandle?: string;
+	// Okta IDX API - Time when the state handle expires
+	stateHandleExpiresAt?: string;
+	// Okta IDX API - Flag to determine if the user has used a passcode
+	passcodeUsed?: boolean;
 }
