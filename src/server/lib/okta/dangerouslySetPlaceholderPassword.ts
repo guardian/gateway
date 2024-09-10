@@ -14,11 +14,14 @@ import { dangerouslyResetPassword } from './api/users';
  * After these operations, we can send the user a password reset email.
  * @param id The Okta user ID
  * @param id The IP address of the user
+ * @param returnPlaceholderPassword If true, return the placeholder password
+ * @returns The placeholder password if returnPlaceholderPassword is true, otherwise void (undefined)
  */
 const dangerouslySetPlaceholderPassword = async (
 	id: string,
 	ip?: string,
-): Promise<void> => {
+	returnPlaceholderPassword = false,
+): Promise<string | void> => {
 	try {
 		// Generate an recoveryToken OTT and put user into RECOVERY state
 		const recoveryToken = await dangerouslyResetPassword(id, ip);
@@ -35,13 +38,18 @@ const dangerouslySetPlaceholderPassword = async (
 			});
 		}
 		// Set the placeholder password as a cryptographically secure UUID
+		const placeholderPassword = crypto.randomUUID();
 		await resetPassword(
 			{
 				stateToken,
-				newPassword: crypto.randomUUID(),
+				newPassword: placeholderPassword,
 			},
 			ip,
 		);
+
+		if (returnPlaceholderPassword) {
+			return placeholderPassword;
+		}
 	} catch (error) {
 		logger.error(
 			`dangerouslySetPlaceholderPassword failed: Error setting placeholder password for user ${id}`,
