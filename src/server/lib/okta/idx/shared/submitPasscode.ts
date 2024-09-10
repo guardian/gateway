@@ -9,6 +9,16 @@ import {
 	ChallengeAnswerResponse,
 } from '@/server/lib/okta/idx/challenge';
 import { CompleteLoginResponse } from './idxFetch';
+import { validatePasswordFieldForOkta } from '@/server/lib/validatePasswordField';
+import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
+import { PasswordFieldErrors } from '@/shared/model/Errors';
+
+type Params = {
+	stateHandle: string;
+	introspectRemediation: IntrospectRemediationNames;
+	requestId?: string;
+	ip?: string;
+};
 
 /**
  * @name submitPasscode
@@ -27,13 +37,9 @@ export const submitPasscode = async ({
 	introspectRemediation,
 	requestId,
 	ip,
-}: {
-	passcode: string;
-	stateHandle: string;
-	introspectRemediation: IntrospectRemediationNames;
-	requestId?: string;
-	ip?: string;
-}): Promise<ChallengeAnswerResponse | CompleteLoginResponse> => {
+}: Params & { passcode: string }): Promise<
+	ChallengeAnswerResponse | CompleteLoginResponse
+> => {
 	// validate the code contains only numbers and is 6 characters long
 	// The okta api will validate the input fully, but validating here will prevent unnecessary requests
 	if (!/^\d{6}$/.test(passcode)) {
@@ -62,4 +68,52 @@ export const submitPasscode = async ({
 
 	// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
 	return challengeAnswer(stateHandle, { passcode }, requestId, ip);
+};
+
+/**
+ * @name submitPassword
+ * @description Submit a password to Okta to answer the password challenge using the `challenge/answer` endpoint and return the response. Validation should be enabled as needed through the params, validatePasswordLength and validateBreachedPassword (both default to false).
+ *
+ * @param password The password to submit
+ * @param stateHandle The state handle from the `identify`/`introspect` step
+ * @param introspectRemediation The remediation object name to validate the introspect response against
+ * @param requestId The request id
+ * @param ip The IP address of the user
+ * @returns {Promise<ChallengeAnswerResponse | CompleteLoginResponse>} challengeAnswerResponse - The challenge answer response
+ */
+export const submitPassword = async ({
+	password,
+	stateHandle,
+	introspectRemediation,
+	validateBreachedPassword = false,
+	validatePasswordLength = false,
+	requestId,
+	ip,
+}: Params & {
+	password: string;
+	validatePasswordLength?: boolean;
+	validateBreachedPassword?: boolean;
+}): Promise<ChallengeAnswerResponse | CompleteLoginResponse> => {
+	const introspectResponse = await introspect(
+		{
+			stateHandle,
+		},
+		requestId,
+		ip,
+	);
+
+	validateIntrospectRemediation(introspectResponse, introspectRemediation);
+
+	if (validatePasswordLength) {
+		validatePasswordFieldForOkta(password);
+	}
+
+	if (validateBreachedPassword && (await isBreachedPassword(password))) {
+		throw new OAuthError({
+			error: 'password.common',
+			error_description: PasswordFieldErrors.COMMON_PASSWORD,
+		});
+	}
+
+	return challengeAnswer(stateHandle, { passcode: password }, requestId, ip);
 };
