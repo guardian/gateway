@@ -3,6 +3,7 @@ import { LogLevel } from '@/shared/model/Logger';
 import { createLogger, transports } from 'winston';
 import { formatWithOptions, InspectOptions } from 'util';
 import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
+import { requestContext } from './middleware/requestContext';
 
 const winstonLogger = createLogger({
 	transports: [new transports.Console()],
@@ -25,6 +26,22 @@ class ServerSideLogger extends BaseLogger {
 		error?: any,
 		extraFields?: ExtraLogFields,
 	) {
+		const context = requestContext.getStore();
+
+		const extraFieldsWithContext = {
+			...extraFields,
+			...(context
+				? {
+						in_request_context: true,
+						request_id:
+							context.request.headers?.['x-request-id'] ?? 'no-request-id',
+						ip: context.request.ip ?? 'no-ip',
+					}
+				: {
+						in_request_context: false,
+					}),
+		};
+
 		if (
 			error &&
 			typeof error === 'object' &&
@@ -36,18 +53,22 @@ class ServerSideLogger extends BaseLogger {
 				`${formatLogParam(message)} - ${formatLogParam(
 					error.message,
 				)} - ${formatLogParam(error.stack)}`,
-				extraFields,
+				extraFieldsWithContext,
 			);
 		}
 		if (error) {
 			return winstonLogger.log(
 				level,
 				`${formatLogParam(message)} - ${formatLogParam(error)}`,
-				extraFields,
+				extraFieldsWithContext,
 			);
 		}
 
-		return winstonLogger.log(level, `${formatLogParam(message)}`, extraFields);
+		return winstonLogger.log(
+			level,
+			`${formatLogParam(message)}`,
+			extraFieldsWithContext,
+		);
 	}
 }
 
