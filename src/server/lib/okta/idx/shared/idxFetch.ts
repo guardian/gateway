@@ -10,7 +10,7 @@ import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
 const { okta } = getConfiguration();
 
 // Schema for when the authentication process is completed, and we return a base user object
-const completeLoginResponseSchema = idxBaseResponseSchema.merge(
+export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		user: z.object({
 			type: z.literal('object'),
@@ -25,7 +25,7 @@ const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type CompleteLoginResponse = z.infer<typeof completeLoginResponseSchema>;
+export type CompleteLoginResponse = z.infer<typeof completeLoginResponseSchema>;
 
 // Schema for the error object in the IDX API response
 const idxErrorObjectSchema = z.object({

@@ -27,7 +27,11 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import { challengeResend } from '@/server/lib/okta/idx/challenge';
+import {
+	challengeResend,
+	isChallengeAnswerCompleteLoginResponse,
+	validateChallengeAnswerRemediation,
+} from '@/server/lib/okta/idx/challenge';
 import {
 	enroll,
 	enrollNewWithEmail,
@@ -151,10 +155,24 @@ router.post(
 					passcode: code,
 					stateHandle,
 					introspectRemediation: 'enroll-authenticator',
-					challengeAnswerRemediation: 'select-authenticator-enroll',
 					requestId,
 					ip: req.ip,
 				});
+
+				if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+					throw new OAuthError({
+						error: 'invalid_response',
+						error_description:
+							'Invalid challenge/answer response - got a complete login response',
+					});
+				}
+
+				// check if the remediation array contains the correct remediation object supplied
+				// if it does, then we know that we're in the correct state and the passcode was correct
+				validateChallengeAnswerRemediation(
+					challengeAnswerResponse,
+					'select-authenticator-enroll',
+				);
 
 				// if passcode challenge is successful, we can proceed to the next step
 				// which is to enroll a password authenticator, as we still need users to set a password for the time being

@@ -8,6 +8,8 @@ import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import {
+	CompleteLoginResponse,
+	completeLoginResponseSchema,
 	idxFetch,
 	idxFetchCompletion,
 } from '@/server/lib/okta/idx/shared/idxFetch';
@@ -162,14 +164,17 @@ export const challengeAnswer = (
 	body: ChallengeAnswerBody['credentials'],
 	request_id?: string,
 	ip?: string,
-): Promise<ChallengeAnswerResponse> => {
-	return idxFetch<ChallengeAnswerResponse, ChallengeAnswerBody>({
+): Promise<ChallengeAnswerResponse | CompleteLoginResponse> => {
+	return idxFetch<
+		ChallengeAnswerResponse | CompleteLoginResponse,
+		ChallengeAnswerBody
+	>({
 		path: 'challenge/answer',
 		body: {
 			stateHandle,
 			credentials: body,
 		},
-		schema: challengeAnswerResponseSchema,
+		schema: challengeAnswerResponseSchema.or(completeLoginResponseSchema),
 		request_id,
 		ip,
 	});
@@ -312,3 +317,27 @@ export const validateChallengeAnswerRemediation = validateRemediation<
 	ChallengeAnswerResponse,
 	ChallengeAnswerRemediationNames
 >;
+
+/**
+ * @name isChallengeAnswerResponse
+ * @description Type guard to check if the response is a challenge answer response
+ *
+ * @param {ChallengeAnswerResponse | CompleteLoginResponse} response - The challenge answer response
+ * @returns {response is ChallengeAnswerResponse} - Whether the response is a challenge answer response
+ */
+export const isChallengeAnswerResponse = (
+	response: ChallengeAnswerResponse | CompleteLoginResponse,
+): response is ChallengeAnswerResponse =>
+	challengeAnswerResponseSchema.safeParse(response).success;
+
+/**
+ * @name isChallengeAnswerCompleteLoginResponse
+ * @description Type guard to check if the challenge answer response is a complete login response
+ *
+ * @param {ChallengeAnswerResponse | CompleteLoginResponse} response - The challenge answer response
+ * @returns	{response is CompleteLoginResponse} - Whether the response is a complete login response
+ */
+export const isChallengeAnswerCompleteLoginResponse = (
+	response: ChallengeAnswerResponse | CompleteLoginResponse,
+): response is CompleteLoginResponse =>
+	completeLoginResponseSchema.safeParse(response).success;
