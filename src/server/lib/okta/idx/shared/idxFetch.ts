@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { joinUrl } from '@guardian/libs';
 import { logger } from '@/client/lib/clientSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { OAuthError } from '@/server/models/okta/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { idxBaseResponseSchema } from '@/server/lib/okta/idx/shared/schemas';
@@ -46,12 +45,9 @@ type IDXFetchParams<ResponseType, BodyType> = {
 	path: IDXPath;
 	body: BodyType;
 	schema: z.Schema<ResponseType>;
-	expressRes: ResponseWithRequestState;
 	request_id?: string;
 	ip?: string;
 };
-// type for the idx cookie which is string, but named for clarity
-type IdxCookie = string;
 
 /**
  * @name idxFetchBase
@@ -60,15 +56,16 @@ type IdxCookie = string;
  * @param path - The path to the IDX API endpoint
  * @param body - The body of the request
  * @param ip - The IP address of the user
- * @returns Promise<[Response, IdxCookie | undefined]> - The response from the IDX API, and the IDX cookie if it exists
+ * @returns Promise<Response> - The response from the IDX API
  */
 const idxFetchBase = async ({
 	path,
 	body,
 	ip,
-}: Pick<IDXFetchParams<unknown, unknown>, 'path' | 'body' | 'ip'>): Promise<
-	[Response, IdxCookie | undefined]
-> => {
+}: Pick<
+	IDXFetchParams<unknown, unknown>,
+	'path' | 'body' | 'ip'
+>): Promise<Response> => {
 	const headers = {
 		Accept: 'application/ion+json; okta-version=1.0.0',
 		'Content-Type': 'application/ion+json; okta-version=1.0.0',
@@ -80,11 +77,7 @@ const idxFetchBase = async ({
 		body: JSON.stringify(body),
 	});
 
-	const cookies = response.headers.getSetCookie();
-
-	const idxCookie = cookies.find((cookie) => cookie.startsWith('idx='));
-
-	return [response, idxCookie];
+	return response;
 };
 
 /**
@@ -104,12 +97,9 @@ export const idxFetch = async <ResponseType, BodyType>({
 	schema,
 	request_id,
 	ip,
-}: Omit<
-	IDXFetchParams<ResponseType, BodyType>,
-	'expressRes'
->): Promise<ResponseType> => {
+}: IDXFetchParams<ResponseType, BodyType>): Promise<ResponseType> => {
 	try {
-		const [response] = await idxFetchBase({ path, body, ip });
+		const response = await idxFetchBase({ path, body, ip });
 
 		if (!response.ok) {
 			await handleError(response);
@@ -131,11 +121,10 @@ export const idxFetch = async <ResponseType, BodyType>({
 
 /**
  * @name idxFetchCompletion
- * @description Fetch data from the Okta IDX API, used when the authentication process is completed. This returns the IDX cookie, which we set on the response object, and we return the CompleteLoginResponse, along with the redirect URL which the user should be sent to in order to complete the login process.
+ * @description Fetch data from the Okta IDX API, used when the authentication process is completed. We return the CompleteLoginResponse, along with the redirect URL which the user should be sent to in order to complete the login process and set the okta global session cookie (idx cookie).
  *
  * @param path - The path to the IDX API endpoint
  * @param body - The body of the request
- * @param expressRes - The express response object
  * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns Promise<[CompleteLoginResponse, Redirect String]>
@@ -143,27 +132,16 @@ export const idxFetch = async <ResponseType, BodyType>({
 export const idxFetchCompletion = async <BodyType>({
 	path,
 	body,
-	expressRes,
 	request_id,
 	ip,
 }: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<
 	[CompleteLoginResponse, string]
 > => {
 	try {
-		const [response, idxCookie] = await idxFetchBase({ path, body, ip });
+		const response = await idxFetchBase({ path, body, ip });
 
 		if (!response.ok) {
 			await handleError(response);
-		}
-
-		if (!idxCookie) {
-			throw new OAuthError(
-				{
-					error: 'idx_error',
-					error_description: 'No IDX cookie returned',
-				},
-				403,
-			);
 		}
 
 		const completeLoginResponse = completeLoginResponseSchema.safeParse(
@@ -181,12 +159,6 @@ export const idxFetchCompletion = async <BodyType>({
 		}
 
 		trackMetric(`OktaIDX::${path}::Success`);
-
-		expressRes.cookie('idx', idxCookie.replace('idx=', ''), {
-			httpOnly: true,
-			secure: true,
-			sameSite: 'none',
-		});
 
 		return [
 			completeLoginResponse.data,

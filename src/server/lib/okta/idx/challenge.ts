@@ -234,7 +234,6 @@ export const setPasswordAndRedirect = async ({
 				stateHandle,
 				credentials: body,
 			},
-			expressRes,
 			request_id,
 			ip,
 		});
