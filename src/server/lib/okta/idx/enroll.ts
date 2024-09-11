@@ -60,6 +60,25 @@ export const enroll = (
 	});
 };
 
+// Type to extract all the remediation names from the enroll response
+export type EnrollRemediationNames = ExtractLiteralRemediationNames<
+	EnrollResponse['remediation']['value'][number]
+>;
+
+/**
+ * @name validateEnrollRemediation
+ * @description Validates that the enroll response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the enroll/new response, and the state is correct.
+ * @param enrollResponse - The enroll response
+ * @param remediationName - The name of the remediation to validate
+ * @param useThrow - Whether to throw an error if the remediation is not found
+ * @throws OAuthError - If the remediation is not found in the enroll response
+ * @returns boolean | void - Whether the remediation was found in the response
+ */
+export const validateEnrollRemediation = validateRemediation<
+	EnrollResponse,
+	EnrollRemediationNames
+>;
+
 // Request body type for the enroll/new endpoint
 type EnrollNewWithEmailBody = IdxStateHandleBody<{
 	userProfile: {

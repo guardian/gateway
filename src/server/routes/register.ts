@@ -36,6 +36,7 @@ import {
 	enroll,
 	enrollNewWithEmail,
 	validateEnrollNewRemediation,
+	validateEnrollRemediation,
 } from '@/server/lib/okta/idx/enroll';
 import {
 	introspect,
@@ -376,19 +377,7 @@ const oktaIdxCreateAccount = async (
 
 		// if we don't have the `enroll-profile` remediation property
 		// throw an error and fall back to the legacy Okta registration flow
-		if (
-			!enrollResponse.remediation.value.find(
-				({ name }) => name === 'enroll-profile',
-			)
-		) {
-			throw new OAuthError(
-				{
-					error: 'idx_error',
-					error_description: '`enroll-profile` remediation not found',
-				},
-				404,
-			);
-		}
+		validateEnrollRemediation(enrollResponse, 'enroll-profile');
 
 		// call the enroll/new endpoint to attempt to register the user with email
 		const enrollNewWithEmailResponse = await enrollNewWithEmail(
