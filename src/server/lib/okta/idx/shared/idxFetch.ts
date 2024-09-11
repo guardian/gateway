@@ -4,7 +4,10 @@ import { logger } from '@/client/lib/clientSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OAuthError } from '@/server/models/okta/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { idxBaseResponseSchema } from '@/server/lib/okta/idx/shared/schemas';
+import {
+	IdxBaseResponse,
+	idxBaseResponseSchema,
+} from '@/server/lib/okta/idx/shared/schemas';
 import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
 
 const { okta } = getConfiguration();
@@ -120,58 +123,14 @@ export const idxFetch = async <ResponseType, BodyType>({
 };
 
 /**
- * @name idxFetchCompletion
- * @description Fetch data from the Okta IDX API, used when the authentication process is completed. We return the CompleteLoginResponse, along with the redirect URL which the user should be sent to in order to complete the login process and set the okta global session cookie (idx cookie).
+ * @name getLoginRedirectUrl
+ * @description Get the URL to redirect the user to after they have completed the IDX authentication process
  *
- * @param path - The path to the IDX API endpoint
- * @param body - The body of the request
- * @param request_id - The request id
- * @param ip - The IP address of the user
- * @returns Promise<[CompleteLoginResponse, Redirect String]>
+ * @param response - The latest response from the IDX API
+ * @returns string - The URL to redirect the user to
  */
-export const idxFetchCompletion = async <BodyType>({
-	path,
-	body,
-	request_id,
-	ip,
-}: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<
-	[CompleteLoginResponse, string]
-> => {
-	try {
-		const response = await idxFetchBase({ path, body, ip });
-
-		if (!response.ok) {
-			await handleError(response);
-		}
-
-		const completeLoginResponse = completeLoginResponseSchema.safeParse(
-			await response.json(),
-		);
-
-		if (!completeLoginResponse.success) {
-			throw new OAuthError(
-				{
-					error: 'idx_error',
-					error_description: 'Schema does not match response',
-				},
-				400,
-			);
-		}
-
-		trackMetric(`OktaIDX::${path}::Success`);
-
-		return [
-			completeLoginResponse.data,
-			`/login/token/redirect?stateToken=${completeLoginResponse.data.stateHandle.split('~')[0]}`,
-		];
-	} catch (error) {
-		trackMetric(`OktaIDX::${path}::Failure`);
-		logger.error(`Okta IDX ${path}`, error, {
-			request_id,
-		});
-		throw error;
-	}
-};
+export const getLoginRedirectUrl = <R extends IdxBaseResponse>(response: R) =>
+	`/login/token/redirect?stateToken=${response.stateHandle.split('~')[0]}`;
 
 /**
  * @name findErrorMessage

@@ -10,8 +10,8 @@ import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan
 import {
 	CompleteLoginResponse,
 	completeLoginResponseSchema,
+	getLoginRedirectUrl,
 	idxFetch,
-	idxFetchCompletion,
 } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
@@ -25,6 +25,9 @@ import {
 	validateRemediation,
 	Authenticators,
 } from '@/server/lib/okta/idx/shared/schemas';
+import { submitPassword } from '@/server/lib/okta/idx/shared/submitPasscode';
+import { IntrospectRemediationNames } from '@/server/lib/okta/idx/introspect';
+import { OAuthError } from '@/server/models/okta/Error';
 
 // list of all possible remediations for the challenge response
 export const challengeRemediations = z.union([
@@ -296,42 +299,55 @@ export const challengeResend = (
  * @name setPasswordAndRedirect
  * @description Okta IDX API/Interaction Code flow - Answer a challenge with a password, and redirect the user to set a global session and then back to the app. This could be one the final possible steps in the authentication process.
  * @param stateHandle - The state handle from the previous step
- * @param body - The password object, containing the password
+ * @param password - The password to set
+ * @param expressReq - The express request object
  * @param expressRes - The express response object
+ * @param introspectRemediation - The remediation object name to validate the introspect response against
+ * @param path - The path of the page
  * @param request_id - The request id
  * @param ip - The ip address
  * @returns Promise<void> - Performs a express redirect
  */
 export const setPasswordAndRedirect = async ({
 	stateHandle,
-	body,
+	password,
 	expressReq,
 	expressRes,
+	introspectRemediation,
 	path,
 	request_id,
 	ip,
 }: {
 	stateHandle: IdxBaseResponse['stateHandle'];
-	body: ChallengeAnswerBody['credentials'];
+	password: string;
 	expressReq: Request;
 	expressRes: ResponseWithRequestState;
+	introspectRemediation: IntrospectRemediationNames;
 	path?: string;
 	request_id?: string;
 	ip?: string;
 }): Promise<void> => {
-	const [completionResponse, redirectUrl] =
-		await idxFetchCompletion<ChallengeAnswerBody>({
-			path: 'challenge/answer',
-			body: {
-				stateHandle,
-				credentials: body,
-			},
-			request_id,
-			ip,
+	const challengeAnswerResponse = await submitPassword({
+		stateHandle,
+		password,
+		introspectRemediation,
+		requestId: request_id,
+		ip,
+		validateBreachedPassword: true,
+		validatePasswordLength: true,
+	});
+
+	if (!isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+		throw new OAuthError({
+			error: 'idx.invalid.response',
+			error_description: 'The response was not a complete login response',
 		});
+	}
+
+	const loginRedirectUrl = getLoginRedirectUrl(challengeAnswerResponse);
 
 	// set the validation flags in Okta
-	const { id } = completionResponse.user.value;
+	const { id } = challengeAnswerResponse.user.value;
 	if (id) {
 		await validateEmailAndPasswordSetSecurely(id, ip);
 	} else {
@@ -383,7 +399,7 @@ export const setPasswordAndRedirect = async ({
 	}
 
 	// redirect the user to set a global session and then back to completing the authorization flow
-	return expressRes.redirect(303, redirectUrl);
+	return expressRes.redirect(303, loginRedirectUrl);
 };
 
 // Type to extract all the remediation names from the challenge/answer response
