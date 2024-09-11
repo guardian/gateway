@@ -26,7 +26,6 @@ describe('mdapi#getUserAttributes - OAuth Access Token', () => {
 
 	test('should return user attributes', async () => {
 		const accessToken = '123';
-		const request_id = '456';
 
 		const userAttributesResponse: UserAttributesResponse = {
 			contentAccess: {
@@ -47,14 +46,13 @@ describe('mdapi#getUserAttributes - OAuth Access Token', () => {
 		const response = { ok: true, status: 200, json } as Response;
 		mockedFetch.mockReturnValueOnce(Promise.resolve(response));
 
-		const result = await getUserAttributes({ accessToken, request_id });
+		const result = await getUserAttributes({ accessToken });
 
 		expect(result).toEqual(userAttributesResponse);
 	});
 
 	test('should return undefined if response is not ok', async () => {
 		const accessToken = '123';
-		const request_id = '456';
 
 		const response = {
 			ok: false,
@@ -63,14 +61,13 @@ describe('mdapi#getUserAttributes - OAuth Access Token', () => {
 
 		mockedFetch.mockReturnValueOnce(Promise.resolve(response));
 
-		const result = await getUserAttributes({ accessToken, request_id });
+		const result = await getUserAttributes({ accessToken });
 
 		expect(result).toBeUndefined();
 	});
 
 	test('should return undefined if response is invalid', async () => {
 		const accessToken = '123';
-		const request_id = '456';
 
 		const userAttributesResponse = {
 			contentAccess: {
@@ -88,7 +85,7 @@ describe('mdapi#getUserAttributes - OAuth Access Token', () => {
 		const response = { ok: true, status: 200, json } as Response;
 		mockedFetch.mockReturnValueOnce(Promise.resolve(response));
 
-		const result = await getUserAttributes({ accessToken, request_id });
+		const result = await getUserAttributes({ accessToken });
 
 		expect(result).toBeUndefined();
 	});

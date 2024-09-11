@@ -36,7 +36,7 @@ const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
 	};
 };
 
-export const read = async (request_id?: string): Promise<NewsLetter[]> => {
+export const read = async (): Promise<NewsLetter[]> => {
 	const options = APIGetOptions();
 	try {
 		return (
@@ -46,9 +46,7 @@ export const read = async (request_id?: string): Promise<NewsLetter[]> => {
 			})) as NewsletterAPIResponse[]
 		).map(responseToEntity);
 	} catch (error) {
-		logger.error(`IDAPI Error newsletters read '/newsletters'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error newsletters read '/newsletters'`, error);
 		return handleError();
 	}
 };
@@ -56,11 +54,9 @@ export const read = async (request_id?: string): Promise<NewsLetter[]> => {
 export const update = async ({
 	accessToken,
 	payload,
-	request_id,
 }: {
 	accessToken: string;
 	payload: NewsletterPatch[];
-	request_id?: string;
 }) => {
 	const options = APIAddOAuthAuthorization(
 		APIPatchOptions(payload),
@@ -77,9 +73,6 @@ export const update = async ({
 		logger.error(
 			`IDAPI Error newsletters update '/users/me/newsletters'`,
 			error,
-			{
-				request_id,
-			},
 		);
 		return handleError();
 	}
@@ -91,11 +84,9 @@ interface Subscription {
 
 export const readUserNewsletters = async ({
 	accessToken,
-	request_id,
 }: {
 	ip?: string;
 	accessToken: string;
-	request_id?: string;
 }) => {
 	const options = APIAddOAuthAuthorization(APIGetOptions(), accessToken);
 
@@ -110,21 +101,12 @@ export const readUserNewsletters = async ({
 		logger.error(
 			`IDAPI Error readUserNewsletters '/users/me/newsletters'`,
 			error,
-			{
-				request_id,
-			},
 		);
 		return handleError();
 	}
 };
 
-export const touchBraze = async ({
-	accessToken,
-	request_id,
-}: {
-	accessToken: string;
-	request_id?: string;
-}) => {
+export const touchBraze = async ({ accessToken }: { accessToken: string }) => {
 	const options = APIAddOAuthAuthorization(APIPostOptions(), accessToken);
 
 	try {
@@ -134,9 +116,7 @@ export const touchBraze = async ({
 		});
 		return;
 	} catch (error) {
-		logger.error(`IDAPI Error touchBraze '/users/me/touch-braze'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error touchBraze '/users/me/touch-braze'`, error);
 		return handleError();
 	}
 };

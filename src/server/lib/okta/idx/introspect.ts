@@ -86,20 +86,17 @@ type IntrospectBody =
  * in the flow.
  *
  * @param interactionHandle - The interaction handle returned from the `interact` step
- * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns Promise<IntrospectResponse> - The introspect response
  */
 export const introspect = (
 	body: IntrospectBody,
-	request_id?: string,
 	ip?: string,
 ): Promise<IntrospectResponse> => {
 	return idxFetch<IntrospectResponse, IntrospectBody>({
 		path: 'introspect',
 		body,
 		schema: introspectResponseSchema,
-		request_id,
 		ip,
 	});
 };

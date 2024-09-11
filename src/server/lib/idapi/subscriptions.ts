@@ -72,7 +72,6 @@ export const makeSubscriptionRequest = async (
 	unsubscribeData: SubscriptionData,
 	token: string,
 	ip: string | undefined,
-	request_id?: string,
 ): Promise<unknown> => {
 	const body = {
 		emailType,
@@ -91,9 +90,6 @@ export const makeSubscriptionRequest = async (
 		logger.error(
 			`IDAPI Error ${subscriptionAction} '/${subscriptionAction}'`,
 			error,
-			{
-				request_id,
-			},
 		);
 		return handleError(subscriptionAction, error as IDAPIError);
 	}
@@ -104,7 +100,6 @@ export const makeUnsubscribeAllRequest = async (
 	unsubscribeData: UnsubscribeAllData,
 	token: string,
 	ip: string | undefined,
-	request_id?: string,
 ) => {
 	const body = {
 		...unsubscribeData,
@@ -119,9 +114,7 @@ export const makeUnsubscribeAllRequest = async (
 			options,
 		});
 	} catch (error) {
-		logger.error(`IDAPI Error '${unsubscribeAllPath}'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error '${unsubscribeAllPath}'`, error);
 
 		throw new IdapiError({ message: 'Unsubscribe all failed', status: 500 });
 	}

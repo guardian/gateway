@@ -32,15 +32,13 @@ router.get(
 		const { token } = req.params;
 
 		try {
-			await changeEmail(token, req.ip, res.locals.requestId);
+			await changeEmail(token, req.ip);
 
 			trackMetric('ChangeEmail::Success');
 
 			return res.redirect(303, '/change-email/complete');
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
 			trackMetric('ChangeEmail::Failure');
 

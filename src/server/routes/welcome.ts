@@ -130,7 +130,6 @@ router.post(
 			await updateRegistrationPlatform({
 				accessToken: state.oauthState.accessToken,
 				appClientId: state.queryParams.appClientId,
-				request_id: state.requestId,
 				ip: req.ip,
 			});
 
@@ -142,7 +141,6 @@ router.post(
 					await updateConsents({
 						accessToken: state.oauthState.accessToken.toString(),
 						payload: registrationConsents.consents,
-						request_id: state.requestId,
 					});
 
 					// since the CODE newsletters API isn't up to date with PROD newsletters API the
@@ -161,9 +159,6 @@ router.post(
 						{
 							error,
 						},
-						{
-							request_id: state.requestId,
-						},
 					);
 				}
 			}
@@ -173,7 +168,6 @@ router.post(
 					await updateNewsletters({
 						accessToken: state.oauthState.accessToken.toString(),
 						payload: registrationConsents.newsletters,
-						request_id: state.requestId,
 					});
 					// since the CODE newsletters API isn't up to date with PROD newsletters API the
 					// review page will not show the correct newsletters on CODE.
@@ -191,17 +185,12 @@ router.post(
 						{
 							error,
 						},
-						{
-							request_id: state.requestId,
-						},
 					);
 				}
 			}
 		} catch (error) {
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
 			// otherwise redirect the user to the review page
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
@@ -279,7 +268,6 @@ router.get(
 			const consentsData = {
 				consents: await getUserConsentsForPage({
 					pageConsents: CONSENTS_DATA_PAGE,
-					request_id: state.requestId,
 					accessToken: state.oauthState.accessToken.toString(),
 				}),
 			};
@@ -292,9 +280,7 @@ router.get(
 
 			trackMetric('NewAccountReview::Success');
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
 			const { message } = error instanceof ApiError ? error : new ApiError();
 
@@ -331,7 +317,6 @@ router.get(
 		const geolocation = state.pageData.geolocation;
 		const newsletters = await getUserNewsletterSubscriptions({
 			newslettersOnPage: NewsletterMap.get(geolocation) as string[],
-			request_id: state.requestId,
 			accessToken: state.oauthState.accessToken.toString(),
 		});
 
@@ -379,15 +364,12 @@ router.post(
 			await patchConsents({
 				accessToken: state.oauthState.accessToken.toString(),
 				payload: consents,
-				request_id: state.requestId,
 			});
 
 			trackMetric('NewAccountReviewSubmit::Success');
 		} catch (error) {
 			// Never block the user at this point, so we'll just log the error
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
 			trackMetric('NewAccountReviewSubmit::Failure');
 		} finally {
@@ -419,7 +401,6 @@ router.post(
 		try {
 			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
 				newslettersOnPage: ALL_NEWSLETTER_IDS,
-				request_id: state.requestId,
 				accessToken: state.oauthState.accessToken.toString(),
 			});
 
@@ -454,7 +435,6 @@ router.post(
 				);
 
 			await updateNewsletters({
-				request_id: state.requestId,
 				accessToken: state.oauthState.accessToken.toString(),
 				payload: newsletterSubscriptionsToUpdate,
 			});
@@ -462,9 +442,7 @@ router.post(
 			trackMetric('NewAccountNewslettersSubmit::Success');
 		} catch (error) {
 			// Never block the user at this point, so we'll just log the error
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 			trackMetric('NewAccountNewslettersSubmit::Failure');
 		} finally {
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
@@ -500,7 +478,6 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			const user = await register({
 				email,
 				appClientId: state.queryParams.appClientId,
-				request_id: state.requestId,
 				ip: req.ip,
 			});
 
@@ -519,9 +496,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 				message: 'Could not resend welcome email as email was undefined',
 			});
 	} catch (error) {
-		logger.error('Okta Registration resend email failure', error, {
-			request_id: state.requestId,
-		});
+		logger.error('Okta Registration resend email failure', error);
 
 		trackMetric('OktaWelcomeResendEmail::Failure');
 

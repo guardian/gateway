@@ -87,8 +87,7 @@ router.get(
 
 		// first attempt to get email from IDAPI encryptedEmail if it exists
 		const decryptedEmail =
-			encryptedEmail &&
-			(await decrypt(encryptedEmail, req.ip, res.locals.requestId));
+			encryptedEmail && (await decrypt(encryptedEmail, req.ip));
 
 		// followed by the gateway EncryptedState
 		// if it exists
@@ -131,7 +130,6 @@ router.post(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const {
 			queryParams: { appClientId },
-			requestId: request_id,
 		} = res.locals;
 
 		try {
@@ -163,7 +161,6 @@ router.post(
 				id,
 				email: user.profile.email,
 				appClientId,
-				request_id,
 				ip: req.ip,
 			});
 			setEncryptedStateCookie(res, {
@@ -177,9 +174,7 @@ router.post(
 				}),
 			);
 		} catch (error) {
-			logger.error('Okta unvalidated user resend email failure', error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error('Okta unvalidated user resend email failure', error);
 			return res.type('html').send(
 				renderer('/signin/email-sent', {
 					pageTitle: 'Check Your Inbox',
@@ -205,8 +200,7 @@ router.get(
 
 		// first attempt to get email from IDAPI encryptedEmail if it exists
 		const decryptedEmail =
-			encryptedEmail &&
-			(await decrypt(encryptedEmail, req.ip, res.locals.requestId));
+			encryptedEmail && (await decrypt(encryptedEmail, req.ip));
 
 		// followed by the gateway EncryptedState
 		// if it exists
@@ -233,7 +227,6 @@ router.post(
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
 		const {
 			queryParams: { appClientId },
-			requestId: request_id,
 		} = res.locals;
 		// if okta feature switch enabled, use okta authentication
 		return oktaSignInController({
@@ -241,7 +234,6 @@ router.post(
 			res,
 			isReauthenticate: true,
 			appClientId,
-			request_id,
 		});
 	}),
 );
@@ -252,7 +244,6 @@ router.post(
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
 		const {
 			queryParams: { appClientId },
-			requestId: request_id,
 		} = res.locals;
 		// if okta feature switch enabled, use okta authentication
 		return oktaSignInController({
@@ -260,7 +251,6 @@ router.post(
 			res,
 			isReauthenticate: false,
 			appClientId,
-			request_id,
 		});
 	}),
 );
@@ -285,13 +275,11 @@ const oktaSignInController = async ({
 	res,
 	isReauthenticate = false,
 	appClientId,
-	request_id,
 }: {
 	req: Request;
 	res: ResponseWithRequestState;
 	isReauthenticate?: boolean;
 	appClientId?: string;
-	request_id?: string;
 }) => {
 	// get the email and password from the request body
 	const { email = '', password = '' } = req.body;
@@ -314,7 +302,6 @@ const oktaSignInController = async ({
 			logger.info(
 				'User POSTed to /signin with an invalid `idx` session cookie',
 				undefined,
-				{ request_id: res.locals.requestId },
 			);
 		}
 	}
@@ -349,7 +336,6 @@ const oktaSignInController = async ({
 				'SIGN_IN',
 				'web',
 				res.locals.ophanConfig.consentUUID,
-				res.locals.requestId,
 			);
 		}
 
@@ -388,7 +374,6 @@ const oktaSignInController = async ({
 					id: response._embedded.user.id,
 					email: response._embedded.user.profile.login,
 					appClientId,
-					request_id,
 					ip: req.ip,
 				});
 				setEncryptedStateCookie(res, {
@@ -417,9 +402,7 @@ const oktaSignInController = async ({
 	} catch (error) {
 		trackMetric('OktaSignIn::Failure');
 
-		logger.error('Okta authentication error:', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('Okta authentication error:', error);
 
 		const { message, status } = oktaSignInControllerErrorHandler(error);
 
@@ -501,7 +484,6 @@ router.get(
 				'SIGN_IN',
 				req.params.social,
 				res.locals.ophanConfig.consentUUID,
-				res.locals.requestId,
 			);
 		}
 
@@ -517,7 +499,6 @@ router.get(
 				{
 					interactionHandle: interaction_handle,
 				},
-				res.locals.requestId,
 				req.ip,
 			);
 
@@ -550,9 +531,7 @@ router.get(
 			}
 		} catch (error) {
 			trackMetric('OktaIDXSocialSignIn::Failure');
-			logger.error('IDX API - Social sign in error:', error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error('IDX API - Social sign in error:', error);
 		}
 
 		// OKTA LEGACY SOCIAL FLOW

@@ -31,7 +31,6 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 export const exchangeAccessTokenForCookies = async (
 	token: string,
 	ip: string | undefined,
-	request_id?: string,
 ) => {
 	const options = APIPostOptions({
 		token,
@@ -48,9 +47,6 @@ export const exchangeAccessTokenForCookies = async (
 		logger.error(
 			`IDAPI Error auth exchangeAccessTokenForCookies '/auth/oauth-token'`,
 			error,
-			{
-				request_id,
-			},
 		);
 		handleError(error as IDAPIError);
 	}

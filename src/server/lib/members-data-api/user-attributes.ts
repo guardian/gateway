@@ -20,15 +20,12 @@ const { membersDataApiUrl } = getConfiguration();
  * @name getUserAttributes
  * @description Call members-data-api to get user product information
  *
- * @param request_id optional request id for logging
  * @returns UserAttributesResponse | undefined
  */
 export const getUserAttributes = async ({
 	accessToken,
-	request_id,
 }: {
 	accessToken: string;
-	request_id?: string;
 }): Promise<UserAttributesResponse | undefined> => {
 	try {
 		const path = buildUrl('/user-attributes/me');
@@ -49,8 +46,6 @@ export const getUserAttributes = async ({
 
 		return userAttributesResponseSchema.parse(await response.json());
 	} catch (error) {
-		logger.error(`MDAPI Error getUserAttributes '/user-attributes/me'`, error, {
-			request_id,
-		});
+		logger.error(`MDAPI Error getUserAttributes '/user-attributes/me'`, error);
 	}
 };

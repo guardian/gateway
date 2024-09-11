@@ -141,7 +141,6 @@ router.post(
 	'/register/code',
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { requestId } = res.locals;
 		const { code } = req.body;
 
 		const encryptedState = readEncryptedStateCookie(req);
@@ -156,7 +155,6 @@ router.post(
 					passcode: code,
 					stateHandle,
 					introspectRemediation: 'enroll-authenticator',
-					requestId,
 					ip: req.ip,
 				});
 
@@ -198,7 +196,6 @@ router.post(
 				await credentialEnroll(
 					stateHandle,
 					{ id: passwordAuthenticatorId, methodType: 'password' },
-					requestId,
 					req.ip,
 				);
 
@@ -213,9 +210,7 @@ router.post(
 				);
 			} catch (error) {
 				// track and log the failure
-				logger.error(`IDX API - ${req.path} error:`, error, {
-					request_id: requestId,
-				});
+				logger.error(`IDX API - ${req.path} error:`, error);
 
 				handlePasscodeError({
 					error,
@@ -248,8 +243,6 @@ router.post(
 	handleRecaptcha,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { requestId } = res.locals;
-
 		const encryptedState = readEncryptedStateCookie(req);
 
 		// make sure we have the state handle
@@ -262,7 +255,6 @@ router.post(
 					{
 						stateHandle,
 					},
-					requestId,
 					req.ip,
 				);
 
@@ -274,7 +266,7 @@ router.post(
 				);
 
 				// attempt to resend the email
-				await challengeResend(stateHandle, requestId, req.ip);
+				await challengeResend(stateHandle, req.ip);
 
 				// redirect to the email sent page
 				return res.redirect(
@@ -285,9 +277,7 @@ router.post(
 				);
 			} catch (error) {
 				// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
-				logger.error('IDX API - register/code/resend error:', error, {
-					request_id: requestId,
-				});
+				logger.error('IDX API - register/code/resend error:', error);
 
 				if (error instanceof OAuthError) {
 					if (error.name === 'idx.session.expired') {
@@ -346,7 +336,6 @@ const oktaIdxCreateAccount = async (
 
 	const {
 		queryParams: { appClientId },
-		requestId: request_id,
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -362,18 +351,13 @@ const oktaIdxCreateAccount = async (
 				confirmationPagePath: '/welcome/review',
 			},
 			consents,
-			request_id,
 		});
 
 		// check if we have the `select-enroll-profile` remediation property which means registration is allowed
 		validateIntrospectRemediation(introspectResponse, 'select-enroll-profile');
 
 		// call the enroll endpoint to attempt to start the registration process
-		const enrollResponse = await enroll(
-			introspectResponse.stateHandle,
-			request_id,
-			req.ip,
-		);
+		const enrollResponse = await enroll(introspectResponse.stateHandle, req.ip);
 
 		// if we don't have the `enroll-profile` remediation property
 		// throw an error and fall back to the legacy Okta registration flow
@@ -388,7 +372,6 @@ const oktaIdxCreateAccount = async (
 				registrationLocation: registrationLocation,
 				registrationPlatform: await getRegistrationPlatform(appClientId),
 			},
-			request_id,
 			req.ip,
 		);
 
@@ -424,7 +407,6 @@ const oktaIdxCreateAccount = async (
 			await credentialEnroll(
 				enrollNewWithEmailResponse.stateHandle,
 				{ id: emailAuthenticatorId, methodType: 'email' },
-				request_id,
 				req.ip,
 			);
 		}
@@ -445,7 +427,6 @@ const oktaIdxCreateAccount = async (
 				'CREATE_ACCOUNT',
 				'web',
 				res.locals.ophanConfig.consentUUID,
-				res.locals.requestId,
 			);
 		}
 
@@ -466,9 +447,7 @@ const oktaIdxCreateAccount = async (
 
 		// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
 		trackMetric('OktaIDXRegister::Failure');
-		logger.error('IDX API - registration error:', error, {
-			request_id,
-		});
+		logger.error('IDX API - registration error:', error);
 	}
 };
 
@@ -480,7 +459,6 @@ export const OktaRegistration = async (
 
 	const {
 		queryParams: { appClientId, ref, refViewId, useOktaClassic },
-		requestId: request_id,
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -508,7 +486,6 @@ export const OktaRegistration = async (
 			email,
 			registrationLocation,
 			appClientId,
-			request_id,
 			consents,
 			ref,
 			refViewId,
@@ -522,7 +499,6 @@ export const OktaRegistration = async (
 				'CREATE_ACCOUNT',
 				'web',
 				res.locals.ophanConfig.consentUUID,
-				res.locals.requestId,
 			);
 		}
 
@@ -542,9 +518,7 @@ export const OktaRegistration = async (
 			addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
 		);
 	} catch (error) {
-		logger.error('Okta Registration failure', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('Okta Registration failure', error);
 
 		const errorMessage = () => {
 			if (
@@ -606,9 +580,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			});
 		}
 	} catch (error) {
-		logger.error('Okta Registration resend email failure', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('Okta Registration resend email failure', error);
 
 		trackMetric('OktaRegistrationResendEmail::Failure');
 

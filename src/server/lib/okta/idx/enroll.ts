@@ -40,13 +40,11 @@ type EnrollResponse = z.infer<typeof enrollResponseSchema>;
  * @description Okta IDX API/Interaction Code flow - Use the stateHandle from the `introspect` step to start the enrollment process. This is used when registration a new user. Has to be called before `enrollNewWithEmail`.
  *
  * @param stateHandle - The state handle from the `introspect` step
- * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns Promise<EnrollResponse> - The enroll response
  */
 export const enroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
-	request_id?: string,
 	ip?: string,
 ): Promise<EnrollResponse> => {
 	return idxFetch<EnrollResponse, IdxStateHandleBody>({
@@ -55,7 +53,6 @@ export const enroll = (
 			stateHandle,
 		},
 		schema: enrollResponseSchema,
-		request_id,
 		ip,
 	});
 };
@@ -131,14 +128,12 @@ type EnrollNewResponse = z.infer<typeof enrollNewResponseSchema>;
  *
  * @param stateHandle - The state handle from the `enroll`/`introspect` step
  * @param body - The user profile object, containing the email address
- * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns Promise<EnrollNewResponse> - The enroll new response
  */
 export const enrollNewWithEmail = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: EnrollNewWithEmailBody['userProfile'],
-	request_id?: string,
 	ip?: string,
 ): Promise<EnrollNewResponse> => {
 	return idxFetch<EnrollNewResponse, EnrollNewWithEmailBody>({
@@ -148,7 +143,6 @@ export const enrollNewWithEmail = (
 			userProfile: body,
 		},
 		schema: enrollNewResponseSchema,
-		request_id,
 		ip,
 	});
 };

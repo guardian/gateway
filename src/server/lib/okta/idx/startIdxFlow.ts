@@ -24,7 +24,6 @@ type StartIdxFlowParams = {
 		| 'extraData'
 	>;
 	consents?: RegistrationConsents;
-	request_id?: string;
 };
 
 /**
@@ -38,7 +37,6 @@ type StartIdxFlowParams = {
  * @param res - Express response
  * @param authorizationCodeFlowOptions - Subset of the `PerformAuthorizationCodeFlowOptions` used by our standard authorization code flow, namely the parameters needed for authentication
  * @param consents - The registration consents to encrypt and store in the authorization state if they exist
- * @param request_id - The request id
  * @returns Promise<IntrospectResponse>
  */
 export const startIdxFlow = async ({
@@ -51,7 +49,6 @@ export const startIdxFlow = async ({
 		extraData,
 	},
 	consents,
-	request_id,
 }: StartIdxFlowParams): Promise<IntrospectResponse> => {
 	// start the interaction code flow, and get the interaction handle + authState
 	const [{ interaction_handle }, authState] = await interact(req, res, {
@@ -66,7 +63,6 @@ export const startIdxFlow = async ({
 		{
 			interactionHandle: interaction_handle,
 		},
-		request_id,
 		req.ip,
 	);
 

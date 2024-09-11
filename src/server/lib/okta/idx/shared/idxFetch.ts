@@ -48,7 +48,6 @@ type IDXFetchParams<ResponseType, BodyType> = {
 	path: IDXPath;
 	body: BodyType;
 	schema: z.Schema<ResponseType>;
-	request_id?: string;
 	ip?: string;
 };
 
@@ -90,7 +89,6 @@ const idxFetchBase = async ({
  * @param path - The path to the IDX API endpoint
  * @param body - The body of the request
  * @param schema - The zod schema to validate the response
- * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns Promise<ResponseType> - The response from the IDX API
  */
@@ -98,7 +96,6 @@ export const idxFetch = async <ResponseType, BodyType>({
 	path,
 	body,
 	schema,
-	request_id,
 	ip,
 }: IDXFetchParams<ResponseType, BodyType>): Promise<ResponseType> => {
 	try {
@@ -115,9 +112,7 @@ export const idxFetch = async <ResponseType, BodyType>({
 		return parsed;
 	} catch (error) {
 		trackMetric(`OktaIDX::${path}::Failure`);
-		logger.error(`Okta IDX ${path}`, error, {
-			request_id,
-		});
+		logger.error(`Okta IDX ${path}`, error);
 		throw error;
 	}
 };

@@ -95,10 +95,6 @@ export const redirectIfLoggedIn = async (
 		clearIDAPICookies(res);
 		logger.info(
 			'User attempting to access signed-out-only route had an existing Okta session cookie, but it was invalid',
-			undefined,
-			{
-				request_id: res.locals.requestId,
-			},
 		);
 		//we redirect to /reauthenticate to make sure the cookies has been removed
 		return res.redirect(

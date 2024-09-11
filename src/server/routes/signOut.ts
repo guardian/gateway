@@ -129,9 +129,7 @@ const signOutFromOktaLocal = async (
 			trackMetric('OktaSignOut::Success');
 		}
 	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		trackMetric('OktaSignOut::Failure');
 	} finally {
 		//clear okta cookie
@@ -154,14 +152,12 @@ const signOutFromIDAPIGlobal = async (
 		// attempt log out from Identity if we have a SC_GU_U cookie
 		if (sc_gu_u) {
 			// perform the logout from IDAPI
-			await logoutFromIDAPI(sc_gu_u, req.ip, res.locals.requestId);
+			await logoutFromIDAPI(sc_gu_u, req.ip);
 		}
 
 		trackMetric('SignOutGlobal::Success');
 	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		trackMetric('SignOutGlobal::Failure');
 	} finally {
 		// we want to clear the IDAPI cookies anyway even if there was an
@@ -199,9 +195,7 @@ const signOutFromOktaGlobal = async (
 			trackMetric('OktaSignOutGlobal::Success');
 		}
 	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		trackMetric('OktaSignOutGlobal::Failure');
 	} finally {
 		//clear okta cookie

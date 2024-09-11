@@ -335,9 +335,7 @@ export const setAuthorizationStateCookie = (
 			AuthorizationStateCookieOptions,
 		);
 	} catch (error) {
-		logger.error('setAuthorizationStateCookie Error', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('setAuthorizationStateCookie Error', error);
 	}
 };
 
@@ -372,9 +370,7 @@ export const getAuthorizationStateCookie = (
 
 		return null;
 	} catch (error) {
-		logger.error('getAuthorizationStateCookie Error', error, {
-			request_id: req.get('x-request-id'),
-		});
+		logger.error('getAuthorizationStateCookie Error', error);
 		return null;
 	}
 };

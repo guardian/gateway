@@ -10,7 +10,6 @@ type Props = {
 	id: string;
 	email: string;
 	appClientId?: string;
-	request_id?: string;
 	ip?: string;
 } & TrackingQueryParams;
 
@@ -27,7 +26,6 @@ export const sendEmailToUnvalidatedUser = async ({
 	id,
 	email,
 	appClientId,
-	request_id,
 	ref,
 	refViewId,
 	ip,
@@ -43,7 +41,6 @@ export const sendEmailToUnvalidatedUser = async ({
 		resetPasswordToken: await encryptOktaRecoveryToken({
 			token,
 			appClientId,
-			request_id,
 		}),
 		ref,
 		refViewId,

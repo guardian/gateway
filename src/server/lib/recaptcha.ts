@@ -71,9 +71,6 @@ const handleRecaptcha = async (
 			logger.error(
 				'Problem verifying reCAPTCHA, error response',
 				formattedErrorCodes,
-				{
-					request_id: req.get('x-request-id'),
-				},
 			);
 			return next(recaptchaError);
 		}
@@ -81,9 +78,7 @@ const handleRecaptcha = async (
 		trackMetric('RecaptchaMiddleware::Success');
 		next();
 	} catch (error) {
-		logger.error('Error verifying reCAPTCHA token', error, {
-			request_id: req.get('x-request-id'),
-		});
+		logger.error('Error verifying reCAPTCHA token', error);
 		return next(recaptchaError);
 	}
 };

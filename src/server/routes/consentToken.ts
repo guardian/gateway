@@ -22,7 +22,7 @@ router.get(
 		const ip = req.ip;
 		const token = req.params.token;
 		try {
-			await validateConsentToken(ip, token, res.locals.requestId);
+			await validateConsentToken(ip, token);
 
 			trackMetric('ConsentToken::Success');
 
@@ -35,9 +35,7 @@ router.get(
 				),
 			);
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl} Error`, error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl} Error`, error);
 
 			trackMetric('ConsentToken::Failure');
 
@@ -76,13 +74,11 @@ router.post(
 		const ip = req.ip;
 		const { token } = req.body;
 		try {
-			await resendConsentEmail(ip, token, res.locals.requestId);
+			await resendConsentEmail(ip, token);
 
 			trackMetric('ConsentTokenResend::Success');
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl} Error`, error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl} Error`, error);
 
 			trackMetric('ConsentTokenResend::Failure');
 		} finally {

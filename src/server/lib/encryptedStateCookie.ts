@@ -69,9 +69,6 @@ export const readEncryptedStateCookie = (
 			`Error parsing cookie with length ${
 				encryptedCookie ? encryptedCookie.length : 'undefined'
 			}`,
-			{
-				request_id: req.get('x-request-id'),
-			},
 		);
 	}
 };
