@@ -321,6 +321,168 @@ export const setEncryptedStateCookieForOktaRegistration = (
 	});
 };
 
+/**
+ * @name oktaIdxCreateAccount
+ * @description Attempt to create an account for the user using the Okta IDX API, and use passcodes to verify the user.
+ *
+ * NB. This currently only supports creating account for new users, and verifying them with a passcode.
+ * Currently if an existing user who tries to register, will fall back to the legacy Okta registration flow, where they
+ * will be sent a link instead to either sign in or reset their password.
+ * However the behaviour of this flow should be the same regardless of whether the user is new or existing, in either case
+ * they should be sent a passcode to verify their account (for new users), or sign in (existing users).
+ * TODO: This flow SHOULD be updated to support existing users in the future, once we have finished implementing passcodes
+ * for sign in and reset password flows.
+ *
+ * @param {Request} req - Express request object
+ * @param {ResponseWithRequestState} res - Express response object
+ * @returns {Promise<void | ResponseWithRequestState>}
+ */
+const oktaIdxCreateAccount = async (
+	req: Request,
+	res: ResponseWithRequestState,
+) => {
+	const { email = '' } = req.body;
+
+	const {
+		queryParams: { appClientId },
+		requestId: request_id,
+	} = res.locals;
+
+	const consents = bodyFormFieldsToRegistrationConsents(req.body);
+
+	const registrationLocation: RegistrationLocation | undefined =
+		getRegistrationLocation(req);
+
+	try {
+		const introspectResponse = await startIdxFlow({
+			req,
+			res,
+			authorizationCodeFlowOptions: {
+				confirmationPagePath: '/welcome/review',
+			},
+			consents,
+			request_id,
+		});
+
+		// check if we have the `select-enroll-profile` remediation property which means registration is allowed
+		validateIntrospectRemediation(introspectResponse, 'select-enroll-profile');
+
+		// call the enroll endpoint to attempt to start the registration process
+		const enrollResponse = await enroll(
+			introspectResponse.stateHandle,
+			request_id,
+			req.ip,
+		);
+
+		// if we don't have the `enroll-profile` remediation property
+		// throw an error and fall back to the legacy Okta registration flow
+		if (
+			!enrollResponse.remediation.value.find(
+				({ name }) => name === 'enroll-profile',
+			)
+		) {
+			throw new OAuthError(
+				{
+					error: 'idx_error',
+					error_description: '`enroll-profile` remediation not found',
+				},
+				404,
+			);
+		}
+
+		// call the enroll/new endpoint to attempt to register the user with email
+		const enrollNewWithEmailResponse = await enrollNewWithEmail(
+			enrollResponse.stateHandle,
+			{
+				email,
+				isGuardianUser: true,
+				registrationLocation: registrationLocation,
+				registrationPlatform: await getRegistrationPlatform(appClientId),
+			},
+			request_id,
+			req.ip,
+		);
+
+		// we need to check if the email has been sent to the user, or if
+		// we need to select an authenticator to enroll
+		const hasSelectAuthenticator = validateEnrollNewRemediation(
+			enrollNewWithEmailResponse,
+			'select-authenticator-enroll',
+			false,
+		);
+
+		// if we have the `select-authenticator-enroll` remediation property
+		// we need to handle this by selecting the authenticator email
+		// to send the passcode to the user
+		if (hasSelectAuthenticator) {
+			const emailAuthenticatorId = findAuthenticatorId({
+				response: enrollNewWithEmailResponse,
+				remediationName: 'select-authenticator-enroll',
+				authenticator: 'email',
+			});
+
+			if (!emailAuthenticatorId) {
+				throw new OAuthError(
+					{
+						error: 'idx_error',
+						error_description: 'Email authenticator id not found',
+					},
+					400,
+				);
+			}
+
+			// start the credential enroll flow
+			await credentialEnroll(
+				enrollNewWithEmailResponse.stateHandle,
+				{ id: emailAuthenticatorId, methodType: 'email' },
+				request_id,
+				req.ip,
+			);
+		}
+
+		// at this point the user will have been sent an email with a passcode
+
+		// set the encrypted state cookie to persist the email and stateHandle
+		setEncryptedStateCookie(res, {
+			email,
+			stateHandle: enrollNewWithEmailResponse.stateHandle,
+			stateHandleExpiresAt: enrollNewWithEmailResponse.expiresAt,
+		});
+
+		// fire ophan component event if applicable
+		if (res.locals.queryParams.componentEventParams) {
+			void sendOphanComponentEventFromQueryParamsServer(
+				res.locals.queryParams.componentEventParams,
+				'CREATE_ACCOUNT',
+				'web',
+				res.locals.ophanConfig.consentUUID,
+				res.locals.requestId,
+			);
+		}
+
+		trackMetric('OktaIDXRegister::Success');
+
+		// redirect to the email sent page
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+		);
+	} catch (error) {
+		if (error instanceof OAuthError) {
+			if (error.name === 'registration.error.notUniqueWithinOrg') {
+				// case for user already exists
+				// will implement when full passwordless is implemented
+			}
+		}
+
+		// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
+		trackMetric('OktaIDXRegister::Failure');
+		logger.error('IDX API - registration error:', error, {
+			request_id,
+		});
+	}
+};
+
 export const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
@@ -342,148 +504,13 @@ export const OktaRegistration = async (
 	// and specifically using passcodes.
 	// If there are specific failures, we fall back to the legacy Okta registration flow
 	if (passcodesEnabled && !useOktaClassic) {
-		try {
-			const introspectResponse = await startIdxFlow({
-				req,
-				res,
-				authorizationCodeFlowOptions: {
-					confirmationPagePath: '/welcome/review',
-				},
-				consents,
-				request_id,
-			});
+		// try to start the IDX flow to create an account for the user
+		await oktaIdxCreateAccount(req, res);
 
-			// check if we have the `select-enroll-profile` remediation property which means registration is allowed
-			const introspectEnrollProfileCheck =
-				introspectResponse.remediation.value.find(
-					({ name }) => name === 'select-enroll-profile',
-				);
-
-			// if we don't have the `select-enroll-profile` remediation property
-			// throw an error and fall back to the legacy Okta registration flow
-			if (!introspectEnrollProfileCheck) {
-				throw new OAuthError(
-					{
-						error: 'idx_error',
-						error_description: '`select-enroll-profile` remediation not found',
-					},
-					404,
-				);
-			}
-
-			// call the enroll endpoint to attempt to start the registration process
-			const enrollResponse = await enroll(
-				introspectResponse.stateHandle,
-				request_id,
-				req.ip,
-			);
-
-			// if we don't have the `enroll-profile` remediation property
-			// throw an error and fall back to the legacy Okta registration flow
-			if (
-				!enrollResponse.remediation.value.find(
-					({ name }) => name === 'enroll-profile',
-				)
-			) {
-				throw new OAuthError(
-					{
-						error: 'idx_error',
-						error_description: '`enroll-profile` remediation not found',
-					},
-					404,
-				);
-			}
-
-			// call the enroll/new endpoint to attempt to register the user with email
-			const enrollNewWithEmailResponse = await enrollNewWithEmail(
-				enrollResponse.stateHandle,
-				{
-					email,
-					isGuardianUser: true,
-					registrationLocation: registrationLocation,
-					registrationPlatform: await getRegistrationPlatform(appClientId),
-				},
-				request_id,
-				req.ip,
-			);
-
-			// we need to check if the email has been sent to the user, or if
-			// we need to select an authenticator to enroll
-			const hasSelectAuthenticator = validateEnrollNewRemediation(
-				enrollNewWithEmailResponse,
-				'select-authenticator-enroll',
-				false,
-			);
-
-			// if we have the `select-authenticator-enroll` remediation property
-			// we need to handle this by selecting the authenticator email
-			// to send the passcode to the user
-			if (hasSelectAuthenticator) {
-				const emailAuthenticatorId = findAuthenticatorId({
-					response: enrollNewWithEmailResponse,
-					remediationName: 'select-authenticator-enroll',
-					authenticator: 'email',
-				});
-
-				if (!emailAuthenticatorId) {
-					throw new OAuthError(
-						{
-							error: 'idx_error',
-							error_description: 'Email authenticator id not found',
-						},
-						400,
-					);
-				}
-
-				// start the credential enroll flow
-				await credentialEnroll(
-					enrollNewWithEmailResponse.stateHandle,
-					{ id: emailAuthenticatorId, methodType: 'email' },
-					request_id,
-					req.ip,
-				);
-			}
-
-			// at this point the user will have been sent an email with a passcode
-
-			// set the encrypted state cookie to persist the email and stateHandle
-			setEncryptedStateCookie(res, {
-				email,
-				stateHandle: enrollNewWithEmailResponse.stateHandle,
-				stateHandleExpiresAt: enrollNewWithEmailResponse.expiresAt,
-			});
-
-			// fire ophan component event if applicable
-			if (res.locals.queryParams.componentEventParams) {
-				void sendOphanComponentEventFromQueryParamsServer(
-					res.locals.queryParams.componentEventParams,
-					'CREATE_ACCOUNT',
-					'web',
-					res.locals.ophanConfig.consentUUID,
-					res.locals.requestId,
-				);
-			}
-
-			trackMetric('OktaIDXRegister::Success');
-
-			// redirect to the email sent page
-			return res.redirect(
-				303,
-				addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
-			);
-		} catch (error) {
-			if (error instanceof OAuthError) {
-				if (error.name === 'registration.error.notUniqueWithinOrg') {
-					// case for user already exists
-					// will implement when full passwordless is implemented
-				}
-			}
-
-			// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
-			trackMetric('OktaIDXRegister::Failure');
-			logger.error('IDX API - registration error:', error, {
-				request_id,
-			});
+		// if successful, the user will be redirected to the email sent page
+		// so we need to check if the headers have been sent to prevent further processing
+		if (res.headersSent) {
+			return;
 		}
 	}
 
