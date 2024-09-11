@@ -151,7 +151,6 @@ router.post(
 					passcode: code,
 					stateHandle,
 					introspectRemediation: 'challenge-authenticator',
-					challengeAnswerRemediation: 'reset-authenticator',
 					ip: req.ip,
 				});
 

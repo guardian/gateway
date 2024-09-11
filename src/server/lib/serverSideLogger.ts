@@ -30,16 +30,7 @@ class ServerSideLogger extends BaseLogger {
 
 		const extraFieldsWithContext = {
 			...extraFields,
-			...(context
-				? {
-						in_request_context: true,
-						request_id:
-							context.request.headers?.['x-request-id'] ?? 'no-request-id',
-						ip: context.request.ip ?? 'no-ip',
-					}
-				: {
-						in_request_context: false,
-					}),
+			...(context ?? {}),
 		};
 
 		if (

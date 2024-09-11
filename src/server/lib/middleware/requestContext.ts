@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-type LoggerContext = {
-	request: Request;
-	response: Response;
+type RequestContext = {
+	requestId?: string;
+	ip?: string;
 };
 
-export const requestContext = new AsyncLocalStorage<LoggerContext>();
+export const requestContext = new AsyncLocalStorage<RequestContext>();
 
 /**
  * This middleware handles creating a new context store for each request.
@@ -21,15 +21,15 @@ export const requestContext = new AsyncLocalStorage<LoggerContext>();
  */
 export const requestContextMiddleware = (
 	request: Request,
-	response: Response,
+	_: Response,
 	next: NextFunction,
 ) => {
 	// Express middlewares form a function call chain under the hood, so wrapping one middleware in a Store
 	// will make it available to all subsequent middlewares in the chain.
 	requestContext.run(
 		{
-			request,
-			response,
+			requestId: request.get('x-request-id'),
+			ip: request.ip,
 		},
 		next,
 	);
