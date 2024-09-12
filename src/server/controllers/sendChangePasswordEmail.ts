@@ -278,7 +278,10 @@ const changePasswordEmailIdx = async (
 					}
 
 					// set a placeholder password for the user
-					await dangerouslySetPlaceholderPassword(user.id, req.ip);
+					await dangerouslySetPlaceholderPassword({
+						id: user.id,
+						ip: req.ip,
+					});
 
 					// now that the placeholder password has been set, the user will be in
 					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
@@ -381,7 +384,10 @@ export const sendEmailInOkta = async (
 						// check for user does not have a password set
 						// (to make sure we don't override any existing password)
 						if (!user.credentials.password) {
-							await dangerouslySetPlaceholderPassword(user.id, req.ip);
+							await dangerouslySetPlaceholderPassword({
+								id: user.id,
+								ip: req.ip,
+							});
 							// now that the placeholder password has been set, the user behaves like a
 							// normal user (provider = OKTA) and we can send the email by calling this method again
 							return sendEmailInOkta(req, res, true);

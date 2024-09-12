@@ -4,6 +4,13 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { validateRecoveryToken, resetPassword } from './api/authentication';
 import { dangerouslyResetPassword } from './api/users';
 
+// Define the parameter object type
+interface PlaceholderPasswordParams {
+	id: string;
+	ip?: string;
+	returnPlaceholderPassword?: boolean;
+}
+
 /**
  * This function is used ONLY for users who do not have a password set at all
  * (i.e. social users or users imported from IDAPI). It does the following:
@@ -17,11 +24,19 @@ import { dangerouslyResetPassword } from './api/users';
  * @param returnPlaceholderPassword If true, return the placeholder password
  * @returns The placeholder password if returnPlaceholderPassword is true, otherwise void (undefined)
  */
-const dangerouslySetPlaceholderPassword = async (
-	id: string,
-	ip?: string,
+// Overload signatures
+async function dangerouslySetPlaceholderPassword(
+	params: PlaceholderPasswordParams & { returnPlaceholderPassword: true },
+): Promise<string>;
+async function dangerouslySetPlaceholderPassword(
+	params: PlaceholderPasswordParams & { returnPlaceholderPassword?: false },
+): Promise<void>;
+// Implementation
+async function dangerouslySetPlaceholderPassword({
+	id,
+	ip,
 	returnPlaceholderPassword = false,
-): Promise<string | void> => {
+}: PlaceholderPasswordParams): Promise<string | void> {
 	try {
 		// Generate an recoveryToken OTT and put user into RECOVERY state
 		const recoveryToken = await dangerouslyResetPassword(id, ip);
@@ -57,6 +72,6 @@ const dangerouslySetPlaceholderPassword = async (
 		);
 		throw error;
 	}
-};
+}
 
 export default dangerouslySetPlaceholderPassword;
