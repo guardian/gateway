@@ -17,7 +17,6 @@ const handleError = (): never => {
 export const validateConsentToken = async (
 	ip: string | undefined,
 	token: string,
-	request_id?: string,
 ) => {
 	const options = APIAddClientAccessToken(APIPostOptions(), ip);
 	try {
@@ -30,9 +29,6 @@ export const validateConsentToken = async (
 		logger.error(
 			`IDAPI Error validating consent token with route '/consent-email/:token'`,
 			error,
-			{
-				request_id,
-			},
 		);
 		return handleError();
 	}
@@ -41,7 +37,6 @@ export const validateConsentToken = async (
 export const resendConsentEmail = async (
 	ip: string | undefined,
 	token: string,
-	request_id?: string,
 ) => {
 	const options = APIAddClientAccessToken(APIPostOptions(), ip);
 	try {
@@ -54,9 +49,6 @@ export const resendConsentEmail = async (
 		logger.error(
 			`IDAPI Error resending consent email with route '/consent-email/resend/:token'`,
 			error,
-			{
-				request_id,
-			},
 		);
 		return handleError();
 	}

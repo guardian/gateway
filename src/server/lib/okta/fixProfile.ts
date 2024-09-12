@@ -7,12 +7,10 @@ export const fixOktaProfile = async ({
 	oktaId,
 	email,
 	ip,
-	request_id,
 }: {
 	oktaId: string;
 	email?: string;
 	ip?: string;
-	request_id?: string;
 }): Promise<boolean> => {
 	try {
 		const oktaUser = await getUser(oktaId, ip);
@@ -24,7 +22,7 @@ export const fixOktaProfile = async ({
 		if (!email) {
 			throw new Error(`fixOktaProfile - Email is required to fix Okta profile`);
 		}
-		const idapiUser = await getUserByEmailAddress(email, ip, request_id);
+		const idapiUser = await getUserByEmailAddress(email, ip);
 		if (!idapiUser.id) {
 			throw new Error(`fixOktaProfile - IDAPI profile missing ID`);
 		}

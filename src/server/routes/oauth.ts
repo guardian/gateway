@@ -113,10 +113,6 @@ const authenticationHandler = async (
 		if (!tokenSet.access_token) {
 			logger.error(
 				'Missing access_token from /token endpoint in OAuth Callback',
-				undefined,
-				{
-					request_id: res.locals.requestId,
-				},
 			);
 			trackMetric('OAuthAuthenticationCallback::Failure');
 			return redirectForGenericError(req, res);
@@ -148,15 +144,12 @@ const authenticationHandler = async (
 		const cookies = await exchangeAccessTokenForCookies(
 			tokenSet.access_token,
 			req.ip,
-			res.locals.requestId,
 		);
 		if (cookies) {
 			// adds set cookie headers
 			setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
 		} else {
-			logger.error('No cookies returned from IDAPI', undefined, {
-				request_id: res.locals.requestId,
-			});
+			logger.error('No cookies returned from IDAPI');
 		}
 
 		// We want to ensure that the user has a legacyIdentityId set in their
@@ -170,10 +163,6 @@ const authenticationHandler = async (
 			trackMetric('OAuthAuthorization::ProvisioningFailure');
 			logger.error(
 				'Access token missing legacy_identity_id and no refresh token available',
-				undefined,
-				{
-					request_id: res.locals.requestId,
-				},
 			);
 		} else if (refreshToken && !legacy_identity_id) {
 			try {
@@ -190,7 +179,6 @@ const authenticationHandler = async (
 					oktaId: sub,
 					email,
 					ip: req.ip,
-					request_id: res.locals.requestId,
 				});
 				if (!isOktaProfileFixed) {
 					throw new Error('Failed to fix Okta profile');
@@ -211,7 +199,6 @@ const authenticationHandler = async (
 				trackMetric('OAuthAuthorization::ProvisioningFailure');
 				trackMetric('OAuthAuthenticationCallback::Failure');
 				logger.error('Okta or IDAPI profile broken', error, {
-					request_id: res.locals.requestId,
 					oktaId: sub,
 				});
 			}
@@ -275,7 +262,6 @@ const authenticationHandler = async (
 				try {
 					await touchBraze({
 						accessToken: tokenSet.access_token,
-						request_id: res.locals.requestId,
 					});
 				} catch (error) {
 					logger.error(
@@ -284,7 +270,6 @@ const authenticationHandler = async (
 							error,
 						},
 						{
-							request_id: res.locals.requestId,
 							socialProvider: authState.data?.socialProvider,
 						},
 					);
@@ -309,7 +294,6 @@ const authenticationHandler = async (
 						await updateConsents({
 							accessToken: tokenSet.access_token,
 							payload: decryptedConsents.consents,
-							request_id: res.locals.requestId,
 						});
 
 						// since the CODE newsletters API isn't up to date with PROD newsletters API the
@@ -328,9 +312,6 @@ const authenticationHandler = async (
 							{
 								error,
 							},
-							{
-								request_id: res.locals.requestId,
-							},
 						);
 					}
 				}
@@ -339,7 +320,6 @@ const authenticationHandler = async (
 						await updateNewsletters({
 							accessToken: tokenSet.access_token,
 							payload: decryptedConsents.newsletters,
-							request_id: res.locals.requestId,
 						});
 						// since the CODE newsletters API isn't up to date with PROD newsletters API the
 						// review page will not show the correct newsletters on CODE.
@@ -357,9 +337,6 @@ const authenticationHandler = async (
 							{
 								error,
 							},
-							{
-								request_id: res.locals.requestId,
-							},
 						);
 					}
 				} else {
@@ -369,16 +346,12 @@ const authenticationHandler = async (
 					try {
 						await touchBraze({
 							accessToken: tokenSet.access_token,
-							request_id: res.locals.requestId,
 						});
 					} catch (error) {
 						logger.error(
 							'Error touching braze on oauth callback - new user no newsletters',
 							{
 								error,
-							},
-							{
-								request_id: res.locals.requestId,
 							},
 						);
 					}
@@ -395,7 +368,6 @@ const authenticationHandler = async (
 		await setUserFeatureCookies({
 			accessToken: tokenSet.access_token,
 			res,
-			requestId: res.locals.requestId,
 		});
 
 		// clear any existing oauth application cookies if they exist
@@ -488,19 +460,11 @@ const authenticationHandler = async (
 		// check if it's an oauth/oidc error
 		if (isOAuthError(error)) {
 			// log the specific error
-			logger.error(
-				`${req.method} ${req.originalUrl} OAuth/OIDC Error:`,
-				error,
-				{
-					request_id: res.locals.requestId,
-				},
-			);
+			logger.error(`${req.method} ${req.originalUrl} OAuth/OIDC Error:`, error);
 		}
 
 		// log and track the error
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		trackMetric('OAuthAuthenticationCallback::Failure');
 
 		// fallthrough redirect to sign in with generic error
@@ -525,10 +489,6 @@ const applicationHandler = (
 		if (!(tokenSet.access_token && tokenSet.id_token)) {
 			logger.error(
 				'Missing access_token or id_token from /token endpoint in OAuth Callback',
-				undefined,
-				{
-					request_id: res.locals.requestId,
-				},
 			);
 			trackMetric('OAuthApplicationCallback::Failure');
 			return redirectForGenericError(req, res);
@@ -550,19 +510,11 @@ const applicationHandler = (
 		// check if it's an oauth/oidc error
 		if (isOAuthError(error)) {
 			// log the specific error
-			logger.error(
-				`${req.method} ${req.originalUrl} OAuth/OIDC Error:`,
-				error,
-				{
-					request_id: res.locals.requestId,
-				},
-			);
+			logger.error(`${req.method} ${req.originalUrl} OAuth/OIDC Error:`, error);
 		}
 
 		// log and track the error
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		trackMetric('OAuthApplicationCallback::Failure');
 
 		// fallthrough redirect to sign in with generic error
@@ -581,10 +533,6 @@ const deleteHandler = async (
 		if (!tokenSet.access_token) {
 			logger.error(
 				'Missing access_token from /token endpoint in OAuth Callback',
-				undefined,
-				{
-					request_id: res.locals.requestId,
-				},
 			);
 			trackMetric('OAuthDeleteCallback::Failure');
 			return redirectForGenericError(req, res);
@@ -630,19 +578,11 @@ const deleteHandler = async (
 		// check if it's an oauth/oidc error
 		if (isOAuthError(error)) {
 			// log the specific error
-			logger.error(
-				`${req.method} ${req.originalUrl} OAuth/OIDC Error:`,
-				error,
-				{
-					request_id: res.locals.requestId,
-				},
-			);
+			logger.error(`${req.method} ${req.originalUrl} OAuth/OIDC Error:`, error);
 		}
 
 		// log and track the error
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		trackMetric('OAuthDeleteCallback::Failure');
 
 		return res.redirect(
@@ -699,9 +639,7 @@ router.get(
 			// b) someone is trying to attack the oauth flow
 			// for example with an invalid state cookie, or without the state cookie
 			// the state cookie is used to prevent CSRF attacks
-			logger.error('Missing auth state cookie on OAuth Callback!', undefined, {
-				request_id: res.locals.requestId,
-			});
+			logger.error('Missing auth state cookie on OAuth Callback!', undefined);
 			trackMetric('OAuthAuthorization::Failure');
 			return redirectForGenericError(req, res);
 		}

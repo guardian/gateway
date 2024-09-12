@@ -51,7 +51,6 @@ const handler = (action: SubscriptionAction) =>
 				subscriptionData,
 				token,
 				req.ip,
-				res.locals.requestId,
 			);
 
 			trackMetric(`${subscriptionActionName(action)}::Success`);
@@ -65,9 +64,7 @@ const handler = (action: SubscriptionAction) =>
 
 			return res.type('html').send(html);
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
 			trackMetric(`${subscriptionActionName(action)}::Failure`);
 
@@ -95,20 +92,13 @@ router.post(
 		try {
 			const subscriptionData = parseUnsubscribeAllData(data);
 
-			await makeUnsubscribeAllRequest(
-				subscriptionData,
-				token,
-				req.ip,
-				res.locals.requestId,
-			);
+			await makeUnsubscribeAllRequest(subscriptionData, token, req.ip);
 
 			trackMetric(`UnsubscribeAll::Success`);
 
 			return res.status(200).send();
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
 			trackMetric(`UnsubscribeAll::Failure`);
 

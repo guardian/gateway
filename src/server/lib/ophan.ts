@@ -47,7 +47,6 @@ export interface OphanConfig {
  */
 export const parseComponentEventParams = async (
 	componentEventParams: string,
-	request_id?: string,
 ): Promise<ComponentEventParams | undefined> => {
 	try {
 		const parsedQuery = Object.fromEntries(
@@ -61,14 +60,10 @@ export const parseComponentEventParams = async (
 			return componentEventParamsParsed.data;
 		}
 	} catch (error) {
-		logger.warn(`Ophan: Error parsing componentEventParams`, error, {
-			request_id,
-		});
+		logger.warn(`Ophan: Error parsing componentEventParams`, error);
 	}
 
-	logger.warn(`Ophan: Failed to parse componentEventParams`, undefined, {
-		request_id,
-	});
+	logger.warn(`Ophan: Failed to parse componentEventParams`, undefined);
 };
 
 /**
@@ -135,11 +130,7 @@ export const generateOphanComponentEvent = (
  * @param config The ophan configuration for this event
  * @returns void - This is a fire and forget call so no need to wait for a response
  */
-const record = (
-	event: OphanEvent,
-	config: OphanConfig = {},
-	request_id?: string,
-) => {
+const record = (event: OphanEvent, config: OphanConfig = {}) => {
 	const { bwid, consentUUID, viewId } = config;
 
 	if (bwid && viewId) {
@@ -164,10 +155,10 @@ const record = (
 				Cookie: cookie.toString().replace('&', ';'),
 			},
 		}).catch((error) => {
-			logger.warn(`Ophan: Failed to record Ophan event`, error, { request_id });
+			logger.warn(`Ophan: Failed to record Ophan event`, error);
 		});
 	} else {
-		logger.warn(`Ophan: Missing bwid or viewId`, undefined, { request_id });
+		logger.warn(`Ophan: Missing bwid or viewId`, undefined);
 	}
 };
 
@@ -197,11 +188,9 @@ export const sendOphanComponentEventFromQueryParamsServer = async (
 	action: OphanAction,
 	value?: string,
 	consentUUID?: string,
-	request_id?: string,
 ) => {
 	const componentEventParams = await parseComponentEventParams(
 		componentEventParamsQuery,
-		request_id,
 	);
 
 	if (componentEventParams) {
@@ -222,7 +211,6 @@ export const sendOphanComponentEventFromQueryParamsServer = async (
 				config,
 			)} componentEvent ${serialize(componentEvent)} `,
 			undefined,
-			{ request_id },
 		);
 
 		record({ componentEvent }, config);

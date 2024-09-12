@@ -76,9 +76,6 @@ router.get(
 			logger.error(
 				`${req.method} ${req.originalUrl} Error fetching Jobs user in Okta`,
 				error,
-				{
-					request_id: state.requestId,
-				},
 			);
 			// Redirect to /signin if an error occurs when fetching the users' data.
 			return res.redirect(
@@ -121,9 +118,6 @@ router.post(
 			logger.error(
 				`${req.method} ${req.originalUrl} Error updating Jobs user information`,
 				error,
-				{
-					request_id: state.requestId,
-				},
 			);
 			trackMetric('JobsGRSGroupAgree::Failure');
 		} finally {

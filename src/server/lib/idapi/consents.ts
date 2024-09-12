@@ -38,10 +38,8 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 
 const read = async ({
 	filter,
-	request_id,
 }: {
 	filter: IdApiQueryParams['filter'];
-	request_id?: string;
 }): Promise<Consent[]> => {
 	const options = APIGetOptions();
 	try {
@@ -55,19 +53,15 @@ const read = async ({
 			})) as ConsentAPIResponse[]
 		).map(responseToEntity);
 	} catch (error) {
-		logger.error(`IDAPI Error consents read '/consents'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error consents read '/consents'`, error);
 		return handleError();
 	}
 };
 
 const readUserConsents = async ({
 	accessToken,
-	request_id,
 }: {
 	accessToken: string;
-	request_id?: string;
 }): Promise<UserConsent[]> => {
 	const options = APIAddOAuthAuthorization(APIGetOptions(), accessToken);
 	try {
@@ -76,9 +70,7 @@ const readUserConsents = async ({
 			options,
 		})) as UserConsent[];
 	} catch (error) {
-		logger.error(`IDAPI Error consents read '/users/me/consents'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error consents read '/users/me/consents'`, error);
 		return handleError();
 	}
 };
@@ -86,11 +78,9 @@ const readUserConsents = async ({
 export const update = async ({
 	payload,
 	accessToken,
-	request_id,
 }: {
 	payload: UserConsent[];
 	accessToken: string;
-	request_id?: string;
 }) => {
 	// Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
 	// but which are presented as opt INs on the client UI/UX
@@ -107,9 +97,7 @@ export const update = async ({
 		});
 		return;
 	} catch (error) {
-		logger.error(`IDAPI Error consents update  '/users/me/consents'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error consents update  '/users/me/consents'`, error);
 		return handleError();
 	}
 };
@@ -117,19 +105,15 @@ export const update = async ({
 export const getUserConsentsForPage = async ({
 	pageConsents,
 	accessToken,
-	request_id,
 }: {
 	pageConsents: string[];
-	request_id?: string;
 	accessToken: string;
 }): Promise<Consent[]> => {
 	// Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
 	// but which are presented as opt INs on the client UI/UX
-	const allConsents = invertOptOutConsents(
-		await read({ filter: 'all', request_id }),
-	);
+	const allConsents = invertOptOutConsents(await read({ filter: 'all' }));
 	const userConsents = invertOptOutConsents(
-		await readUserConsents({ accessToken, request_id }),
+		await readUserConsents({ accessToken }),
 	);
 
 	return pageConsents

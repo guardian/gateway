@@ -8,7 +8,6 @@ import { logger } from '@/server/lib/serverSideLogger';
 export const decrypt = async (
 	token: string,
 	ip: string | undefined,
-	request_id?: string,
 ): Promise<string | undefined> => {
 	const options = APIGetOptions();
 	try {
@@ -22,9 +21,6 @@ export const decrypt = async (
 		logger.error(
 			`IDAPI Error decryptEmail decrypt '/signin-token/token/:token'`,
 			error,
-			{
-				request_id,
-			},
 		);
 	}
 };

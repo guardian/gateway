@@ -94,7 +94,6 @@ const setEncryptedCookieOkta = (
  * @param {Request} req - Express request object
  * @param {ResponseWithRequestState} res - Express response object
  * @param {UserResponse} user - Okta user object
- * @param {string} request_id - Request ID
  * @param {boolean} loopDetectionFlag - Flag to prevent infinite loops
  * @returns {Promise<void | ResponseWithRequestState>}
  */
@@ -102,13 +101,10 @@ const changePasswordEmailIdx = async (
 	req: Request,
 	res: ResponseWithRequestState,
 	user: UserResponse,
-	request_id?: string,
 	loopDetectionFlag: boolean = false,
 ): Promise<void | ResponseWithRequestState> => {
 	// placeholder warning message
-	logger.warn('Passcode reset password flow is not fully implemented yet', {
-		request_id,
-	});
+	logger.warn('Passcode reset password flow is not fully implemented yet');
 
 	try {
 		// start the IDX flow by calling interact and introspect
@@ -122,7 +118,6 @@ const changePasswordEmailIdx = async (
 					? '/reset-password/complete'
 					: '/set-password/complete',
 			},
-			request_id,
 		});
 
 		// check the user's status to determine the correct remediation flow
@@ -155,7 +150,6 @@ const changePasswordEmailIdx = async (
 				const identifyResponse = await identify(
 					introspectResponse.stateHandle,
 					user.profile.email,
-					request_id,
 					req.ip,
 				);
 
@@ -192,7 +186,6 @@ const changePasswordEmailIdx = async (
 							id: passwordAuthenticatorId,
 							methodType: 'password',
 						},
-						request_id,
 						req.ip,
 					);
 
@@ -208,7 +201,6 @@ const changePasswordEmailIdx = async (
 					// call the "recover" endpoint to start the password recovery process
 					const recoverResponse = await recover(
 						challengePasswordResponse.stateHandle,
-						request_id,
 						req.ip,
 					);
 
@@ -220,7 +212,6 @@ const changePasswordEmailIdx = async (
 							id: emailAuthenticatorId,
 							methodType: 'email',
 						},
-						request_id,
 						req.ip,
 					);
 
@@ -286,7 +277,7 @@ const changePasswordEmailIdx = async (
 					// now that the placeholder password has been set, the user will be in
 					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
 					// so we can call this method again to send the user a passcode
-					return changePasswordEmailIdx(req, res, user, request_id, true);
+					return changePasswordEmailIdx(req, res, user, true);
 				}
 			}
 			// eslint-disable-next-line no-fallthrough -- allow fallthrough for time being for cases we haven't implemented yet
@@ -298,9 +289,7 @@ const changePasswordEmailIdx = async (
 	} catch (error) {
 		trackMetric('OktaIDXResetPasswordSend::Failure');
 
-		logger.error('Okta changePasswordEmailIdx failed', error, {
-			request_id,
-		});
+		logger.error('Okta changePasswordEmailIdx failed', error);
 
 		// don't throw the error, so we can fall back to okta classic flow
 	}
@@ -316,7 +305,6 @@ export const sendEmailInOkta = async (
 	const path = getPath(req);
 	const {
 		queryParams: { appClientId, ref, refViewId, usePasscodesResetPassword },
-		requestId: request_id,
 	} = state;
 
 	try {
@@ -325,7 +313,7 @@ export const sendEmailInOkta = async (
 
 		if (passcodesEnabled && usePasscodesResetPassword) {
 			// try to start the IDX flow to send the user a passcode for reset password
-			await changePasswordEmailIdx(req, res, user, request_id);
+			await changePasswordEmailIdx(req, res, user);
 			// if successful, the user will be redirected to the email sent page
 			// so we need to check if the headers have been sent to prevent further processing
 			if (res.headersSent) {
@@ -348,7 +336,6 @@ export const sendEmailInOkta = async (
 						resetPasswordToken: await encryptOktaRecoveryToken({
 							token,
 							appClientId,
-							request_id,
 						}),
 						ref,
 						refViewId,
@@ -420,7 +407,6 @@ export const sendEmailInOkta = async (
 							setPasswordToken: await encryptOktaRecoveryToken({
 								token: tokenResponse.token,
 								appClientId,
-								request_id,
 							}),
 							ref,
 							refViewId,
@@ -459,9 +445,6 @@ export const sendEmailInOkta = async (
 								logger.error(
 									'Okta user deactivation failed',
 									error instanceof OktaError ? error.message : error,
-									{
-										request_id,
-									},
 								);
 								throw error;
 							}
@@ -477,9 +460,6 @@ export const sendEmailInOkta = async (
 						logger.error(
 							'Okta user activation failed',
 							error instanceof OktaError ? error.message : error,
-							{
-								request_id,
-							},
 						);
 
 						// otherwise throw the error to the outer catch block
@@ -509,7 +489,6 @@ export const sendEmailInOkta = async (
 							setPasswordToken: await encryptOktaRecoveryToken({
 								token: tokenResponse.token,
 								appClientId,
-								request_id,
 							}),
 							ref,
 							refViewId,
@@ -548,9 +527,6 @@ export const sendEmailInOkta = async (
 								logger.error(
 									'Okta user deactivation failed',
 									error instanceof OktaError ? error.message : error,
-									{
-										request_id,
-									},
 								);
 								throw error;
 							}
@@ -566,9 +542,6 @@ export const sendEmailInOkta = async (
 						logger.error(
 							'Okta user reactivation failed',
 							error instanceof OktaError ? error.message : error,
-							{
-								request_id,
-							},
 						);
 
 						// otherwise throw the error to the outer catch block
@@ -596,7 +569,6 @@ export const sendEmailInOkta = async (
 						resetPasswordToken: await encryptOktaRecoveryToken({
 							token,
 							appClientId,
-							request_id,
 						}),
 						ref,
 						refViewId,
@@ -646,9 +618,7 @@ export const sendEmailInOkta = async (
 			);
 		}
 
-		logger.error('Okta send reset password email failed', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('Okta send reset password email failed', error);
 
 		const html = renderer('/reset-password', {
 			pageTitle: 'Reset Password',

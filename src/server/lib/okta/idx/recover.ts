@@ -56,13 +56,11 @@ type RecoverResponse = z.infer<typeof recoverResponseSchema>;
  * @name recover
  * @description Okta IDX API/Interaction Code flow - Start password recovery process.
  * @param stateHandle - The state handle from the `identify`/`introspect` step
- * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns	Promise<RecoverResponse> - The recover response
  */
 export const recover = (
 	stateHandle: IdxBaseResponse['stateHandle'],
-	request_id?: string,
 	ip?: string,
 ): Promise<RecoverResponse> => {
 	return idxFetch<RecoverResponse, IdxStateHandleBody>({
@@ -71,7 +69,6 @@ export const recover = (
 			stateHandle,
 		},
 		schema: recoverResponseSchema,
-		request_id,
 		ip,
 	});
 };

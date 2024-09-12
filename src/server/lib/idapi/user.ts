@@ -65,11 +65,7 @@ const responseToEntity = (response: APIResponse): User => {
 	};
 };
 
-export const changeEmail = async (
-	token: string,
-	ip: string | undefined,
-	request_id?: string,
-) => {
+export const changeEmail = async (token: string, ip: string | undefined) => {
 	const options = APIPostOptions({
 		token,
 	});
@@ -79,9 +75,7 @@ export const changeEmail = async (
 			options: APIAddClientAccessToken(options, ip),
 		});
 	} catch (error) {
-		logger.error(`IDAPI Error change email '/user/change-email'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error change email '/user/change-email'`, error);
 		return handleError(error as IDAPIError);
 	}
 };
@@ -89,7 +83,6 @@ export const changeEmail = async (
 export const getUserByEmailAddress = async (
 	email: string,
 	ip: string | undefined,
-	request_id?: string,
 ): Promise<User> => {
 	const options = APIAddClientAccessToken(APIGetOptions(), ip);
 	try {
@@ -101,9 +94,7 @@ export const getUserByEmailAddress = async (
 		})) as APIResponse;
 		return responseToEntity(response);
 	} catch (error) {
-		logger.warn(`IDAPI Error user get '/user?emailAddress'`, error, {
-			request_id,
-		});
+		logger.warn(`IDAPI Error user get '/user?emailAddress'`, error);
 		return handleError(error as IDAPIError);
 	}
 };

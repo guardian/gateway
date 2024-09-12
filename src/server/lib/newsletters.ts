@@ -36,16 +36,13 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
 
 export const getUserNewsletterSubscriptions = async ({
 	newslettersOnPage,
-	request_id,
 	accessToken,
 }: {
 	newslettersOnPage: string[];
-	request_id?: string;
 	accessToken: string;
 }): Promise<NewsLetter[]> => {
-	const allNewsletters = await getNewsletters(request_id);
+	const allNewsletters = await getNewsletters();
 	const userNewsletterSubscriptions = await readUserNewsletters({
-		request_id,
 		accessToken,
 	});
 

@@ -37,12 +37,10 @@ export const getRegistrationPlatform = async (
 export const updateRegistrationPlatform = async ({
 	accessToken,
 	appClientId,
-	request_id,
 	ip,
 }: {
 	accessToken: Jwt;
 	appClientId?: string;
-	request_id?: string;
 	ip?: string;
 }): Promise<void> => {
 	if (!accessToken) {
@@ -69,8 +67,6 @@ export const updateRegistrationPlatform = async ({
 			ip,
 		);
 	} catch (error) {
-		logger.error(`Error updating registrationLocation via Okta`, error, {
-			request_id,
-		});
+		logger.error(`Error updating registrationLocation via Okta`, error);
 	}
 };

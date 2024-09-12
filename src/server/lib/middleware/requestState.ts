@@ -83,9 +83,7 @@ const getRequestState = async (
 			}
 		}
 	} catch (error) {
-		logger.error('Error getting app info in request state', error, {
-			request_id: req.get('x-request-id'),
-		});
+		logger.error('Error getting app info in request state', error);
 	}
 
 	const encryptedState = readEncryptedStateCookie(req);

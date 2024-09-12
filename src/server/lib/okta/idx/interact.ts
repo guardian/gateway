@@ -168,9 +168,7 @@ export const interact = async (
 		return [interactResponse, authState];
 	} catch (error) {
 		trackMetric('OktaIDXInteract::Failure');
-		logger.error('Error - Okta IDX interact:', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('Error - Okta IDX interact:', error);
 
 		throw error;
 	}

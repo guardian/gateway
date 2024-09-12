@@ -16,21 +16,17 @@ const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
  *
  * @param accessToken - the value of the oauth access token if using Okta
  * @param res - the express response object
- * @param requestId - loggable identifier for the request
  */
 export const setUserFeatureCookies = async ({
 	accessToken,
 	res,
-	requestId,
 }: {
 	accessToken: string;
 	res: Response;
-	requestId?: string;
 }): Promise<void> => {
 	// call the members-data-api to get the user's attributes/products if any
 	const userAttributes = await getUserAttributes({
 		accessToken,
-		request_id: requestId,
 	});
 
 	// set the GU_AF1 cookie if the user has the ad-free product

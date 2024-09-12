@@ -50,7 +50,6 @@ const { okta } = getConfiguration();
 const sendRegistrationEmailByUserState = async ({
 	email,
 	appClientId,
-	request_id,
 	ref,
 	refViewId,
 	loopDetectionFlag = false,
@@ -58,7 +57,6 @@ const sendRegistrationEmailByUserState = async ({
 }: {
 	email: string;
 	appClientId?: string;
-	request_id?: string;
 	loopDetectionFlag?: boolean;
 	ip?: string;
 } & TrackingQueryParams): Promise<UserResponse> => {
@@ -90,7 +88,6 @@ const sendRegistrationEmailByUserState = async ({
 					activationToken: await encryptOktaRecoveryToken({
 						token: tokenResponse.token,
 						appClientId,
-						request_id,
 					}),
 					ref,
 					refViewId,
@@ -131,9 +128,6 @@ const sendRegistrationEmailByUserState = async ({
 						logger.error(
 							'Okta user deactivation failed',
 							error instanceof OktaError ? error.message : error,
-							{
-								request_id,
-							},
 						);
 						throw error;
 					}
@@ -146,7 +140,6 @@ const sendRegistrationEmailByUserState = async ({
 					return sendRegistrationEmailByUserState({
 						email,
 						appClientId,
-						request_id,
 						ref,
 						refViewId,
 						loopDetectionFlag: true,
@@ -157,9 +150,6 @@ const sendRegistrationEmailByUserState = async ({
 				logger.error(
 					'Okta user activation failed',
 					error instanceof OktaError ? error.message : error,
-					{
-						request_id,
-					},
 				);
 
 				// otherwise throw the error to the outer catch block
@@ -194,7 +184,6 @@ const sendRegistrationEmailByUserState = async ({
 					activationToken: await encryptOktaRecoveryToken({
 						token: tokenResponse.token,
 						appClientId,
-						request_id,
 					}),
 					ref,
 					refViewId,
@@ -235,9 +224,6 @@ const sendRegistrationEmailByUserState = async ({
 						logger.error(
 							'Okta user deactivation failed',
 							error instanceof OktaError ? error.message : error,
-							{
-								request_id,
-							},
 						);
 						throw error;
 					}
@@ -250,7 +236,6 @@ const sendRegistrationEmailByUserState = async ({
 					return sendRegistrationEmailByUserState({
 						email,
 						appClientId,
-						request_id,
 						ref,
 						refViewId,
 						loopDetectionFlag: true,
@@ -261,9 +246,6 @@ const sendRegistrationEmailByUserState = async ({
 				logger.error(
 					'Okta user reactivation failed',
 					error instanceof OktaError ? error.message : error,
-					{
-						request_id,
-					},
 				);
 
 				// otherwise throw the error to the outer catch block
@@ -320,7 +302,6 @@ const sendRegistrationEmailByUserState = async ({
 					id,
 					email: user.profile.email,
 					appClientId,
-					request_id,
 					ref,
 					refViewId,
 					ip,
@@ -338,7 +319,6 @@ const sendRegistrationEmailByUserState = async ({
 						activationToken: await encryptOktaRecoveryToken({
 							token: activationToken,
 							appClientId,
-							request_id,
 						}),
 						ref,
 						refViewId,
@@ -385,7 +365,6 @@ const sendRegistrationEmailByUserState = async ({
 				resetPasswordToken: await encryptOktaRecoveryToken({
 					token,
 					appClientId,
-					request_id,
 				}),
 				ref,
 				refViewId,
@@ -422,7 +401,6 @@ export const register = async ({
 	email,
 	registrationLocation,
 	appClientId,
-	request_id,
 	consents,
 	ref,
 	refViewId,
@@ -431,7 +409,6 @@ export const register = async ({
 	email: string;
 	registrationLocation?: RegistrationLocation;
 	appClientId?: string;
-	request_id?: string;
 	consents?: RegistrationConsents;
 	ip?: string;
 } & TrackingQueryParams): Promise<UserResponse> => {
@@ -481,7 +458,6 @@ export const register = async ({
 				token: tokenResponse.token,
 				encryptedRegistrationConsents: encryptedConsents,
 				appClientId,
-				request_id,
 			}),
 			ref,
 			refViewId,
@@ -503,7 +479,6 @@ export const register = async ({
 			return sendRegistrationEmailByUserState({
 				email,
 				appClientId,
-				request_id,
 				ip,
 			});
 		} else {

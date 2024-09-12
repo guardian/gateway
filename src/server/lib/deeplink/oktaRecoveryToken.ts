@@ -44,7 +44,6 @@ export const extractOktaRecoveryToken = (token: string): string => {
 export const addAppPrefixToOktaRecoveryToken = async (
 	token: string,
 	appClientId?: string,
-	request_id?: string,
 ): Promise<string> => {
 	if (!appClientId) {
 		return token;
@@ -62,9 +61,6 @@ export const addAppPrefixToOktaRecoveryToken = async (
 		logger.error(
 			'Error getting app info in addAppPrefixToOktaRecoveryToken',
 			error,
-			{
-				request_id,
-			},
 		);
 		return token;
 	}
@@ -76,19 +72,16 @@ export const addAppPrefixToOktaRecoveryToken = async (
  * @param token string representing the recovery token
  * @param encryptedRegistrationConsents string representing the encrypted registration consents
  * @param appClientId string representing the app client id
- * @param request_id string representing the request id
  * @returns string representing the encrypted recovery token
  */
 export const encryptOktaRecoveryToken = ({
 	token,
 	encryptedRegistrationConsents,
 	appClientId,
-	request_id,
 }: {
 	token: string;
 	encryptedRegistrationConsents?: string;
 	appClientId?: string;
-	request_id?: string;
 }): Promise<string> => {
 	try {
 		const encrypted = encrypt(
@@ -101,16 +94,11 @@ export const encryptOktaRecoveryToken = ({
 		return addAppPrefixToOktaRecoveryToken(
 			base64ToUrlSafeString(encrypted),
 			appClientId,
-			request_id,
 		);
 	} catch (error) {
-		logger.error('Error encrypting token in encryptOktaRecoveryToken', error, {
-			request_id,
-		});
+		logger.error('Error encrypting token in encryptOktaRecoveryToken', error);
 		// if the token cannot be encrypted use token as is
-		return Promise.resolve(
-			addAppPrefixToOktaRecoveryToken(token, appClientId, request_id),
-		);
+		return Promise.resolve(addAppPrefixToOktaRecoveryToken(token, appClientId));
 	}
 };
 
@@ -118,15 +106,12 @@ export const encryptOktaRecoveryToken = ({
  * @name decryptOktaRecoveryToken
  * @description Decrypts an okta recovery token, and optionally also get the encrypted registration consents that are part of a link we send to the user. It can also call extractOktaRecoveryToken to remove a prefix representing an native application from the recovery token. See extractOktaRecoveryToken for more details.
  * @param encryptedToken string representing the encrypted recovery token
- * @param request_id string representing the request id
  * @returns [string] representing the decrypted recovery token
  */
 export const decryptOktaRecoveryToken = ({
 	encryptedToken,
-	request_id,
 }: {
 	encryptedToken: string;
-	request_id?: string;
 }): [recoveryToken: string, encryptedRegistrationConsents?: string] => {
 	try {
 		const token = extractOktaRecoveryToken(encryptedToken);
@@ -140,9 +125,7 @@ export const decryptOktaRecoveryToken = ({
 
 		return [recoveryToken, encryptedRegistrationConsents];
 	} catch (error) {
-		logger.error('Error decrypting token in decryptOktaRecoveryToken', error, {
-			request_id,
-		});
+		logger.error('Error decrypting token in decryptOktaRecoveryToken', error);
 		// if the token cannot be decrypted, it is likely that it is not encrypted
 		return [extractOktaRecoveryToken(encryptedToken)];
 	}

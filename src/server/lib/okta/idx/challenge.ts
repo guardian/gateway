@@ -68,14 +68,12 @@ export type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
  * @description Okta IDX API/Interaction Code flow - Authenticate with a given authenticator (currently `email` or `password`) for the user.
  * @param stateHandle - The state handle from the `identify`/`introspect` step
  * @param body - The authenticator object, containing the authenticator id and method type
- * @param request_id - The request id
  * @param ip - The ip address
  * @returns	Promise<ChallengeResponse> - The given authenticator challenge response
  */
 export const challenge = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: AuthenticatorBody['authenticator'],
-	request_id?: string,
 	ip?: string,
 ): Promise<ChallengeResponse> => {
 	return idxFetch<ChallengeResponse, AuthenticatorBody>({
@@ -85,7 +83,6 @@ export const challenge = (
 			authenticator: body,
 		},
 		schema: challengeResponseSchema,
-		request_id,
 		ip,
 	});
 };
@@ -245,14 +242,12 @@ type ChallengeAnswerBody = IdxStateHandleBody<{
  *
  * @param stateHandle - The state handle from the previous step
  * @param body - The passcode object, containing the passcode
- * @param request_id - The request id
  * @param ip - The ip address
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
 export const challengeAnswer = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: ChallengeAnswerBody['credentials'],
-	request_id?: string,
 	ip?: string,
 ): Promise<ChallengeAnswerResponse | CompleteLoginResponse> => {
 	return idxFetch<
@@ -265,7 +260,6 @@ export const challengeAnswer = (
 			credentials: body,
 		},
 		schema: challengeAnswerResponseSchema.or(completeLoginResponseSchema),
-		request_id,
 		ip,
 	});
 };
@@ -275,13 +269,11 @@ export const challengeAnswer = (
  * @description Okta IDX API/Interaction Code flow - Resend a challenge.
  *
  * @param stateHandle - The state handle from the previous step
- * @param request_id - The request id
  * @param ip - The ip address
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
 export const challengeResend = (
 	stateHandle: IdxBaseResponse['stateHandle'],
-	request_id?: string,
 	ip?: string,
 ): Promise<ChallengeAnswerResponse> => {
 	return idxFetch<ChallengeAnswerResponse, IdxStateHandleBody>({
@@ -290,7 +282,6 @@ export const challengeResend = (
 			stateHandle,
 		},
 		schema: challengeAnswerResponseSchema,
-		request_id,
 		ip,
 	});
 };
@@ -304,7 +295,6 @@ export const challengeResend = (
  * @param expressRes - The express response object
  * @param introspectRemediation - The remediation object name to validate the introspect response against
  * @param path - The path of the page
- * @param request_id - The request id
  * @param ip - The ip address
  * @returns Promise<void> - Performs a express redirect
  */
@@ -315,7 +305,6 @@ export const setPasswordAndRedirect = async ({
 	expressRes,
 	introspectRemediation,
 	path,
-	request_id,
 	ip,
 }: {
 	stateHandle: IdxBaseResponse['stateHandle'];
@@ -324,14 +313,12 @@ export const setPasswordAndRedirect = async ({
 	expressRes: ResponseWithRequestState;
 	introspectRemediation: IntrospectRemediationNames;
 	path?: string;
-	request_id?: string;
 	ip?: string;
 }): Promise<void> => {
 	const challengeAnswerResponse = await submitPassword({
 		stateHandle,
 		password,
 		introspectRemediation,
-		requestId: request_id,
 		ip,
 		validateBreachedPassword: true,
 		validatePasswordLength: true,
@@ -354,9 +341,6 @@ export const setPasswordAndRedirect = async ({
 		logger.error(
 			'Failed to set validation flags in Okta as there was no id',
 			undefined,
-			{
-				request_id,
-			},
 		);
 	}
 
@@ -372,10 +356,6 @@ export const setPasswordAndRedirect = async ({
 		} else {
 			logger.error(
 				'Failed to set jobs user name and field in Okta as there was no id',
-				undefined,
-				{
-					request_id,
-				},
 			);
 		}
 	}
@@ -394,7 +374,6 @@ export const setPasswordAndRedirect = async ({
 			'SIGN_IN',
 			'web',
 			expressRes.locals.ophanConfig.consentUUID,
-			expressRes.locals.requestId,
 		);
 	}
 

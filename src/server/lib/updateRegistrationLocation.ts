@@ -41,9 +41,6 @@ export const updateRegistrationLocationViaOkta = async (
 		logger.error(
 			`${req.method} ${req.originalUrl} Error updating registrationLocation via Okta`,
 			error,
-			{
-				request_id: req.get('x-request-id'),
-			},
 		);
 	}
 };

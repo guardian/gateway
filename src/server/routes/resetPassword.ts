@@ -137,7 +137,6 @@ router.get(
 router.post(
 	'/reset-password/code',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { requestId } = res.locals;
 		const { code } = req.body;
 
 		const encryptedState = readEncryptedStateCookie(req);
@@ -152,7 +151,6 @@ router.post(
 					passcode: code,
 					stateHandle,
 					introspectRemediation: 'challenge-authenticator',
-					requestId,
 					ip: req.ip,
 				});
 

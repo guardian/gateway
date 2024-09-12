@@ -16,7 +16,6 @@ import { PasswordFieldErrors } from '@/shared/model/Errors';
 type Params = {
 	stateHandle: string;
 	introspectRemediation: IntrospectRemediationNames;
-	requestId?: string;
 	ip?: string;
 };
 
@@ -27,7 +26,6 @@ type Params = {
  * @param passcode The passcode to submit
  * @param stateHandle The state handle from the `identify`/`introspect` step
  * @param introspectRemediation The remediation object name to validate the introspect response against
- * @param requestId The request id
  * @param ip The IP address of the user
  * @returns Promise<ChallengeAnswerResponse | CompleteLoginResponse> - The challenge answer response
  */
@@ -35,7 +33,6 @@ export const submitPasscode = async ({
 	passcode,
 	stateHandle,
 	introspectRemediation,
-	requestId,
 	ip,
 }: Params & { passcode: string }): Promise<
 	ChallengeAnswerResponse | CompleteLoginResponse
@@ -57,7 +54,6 @@ export const submitPasscode = async ({
 		{
 			stateHandle,
 		},
-		requestId,
 		ip,
 	);
 
@@ -67,7 +63,7 @@ export const submitPasscode = async ({
 	validateIntrospectRemediation(introspectResponse, introspectRemediation);
 
 	// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
-	return challengeAnswer(stateHandle, { passcode }, requestId, ip);
+	return challengeAnswer(stateHandle, { passcode }, ip);
 };
 
 /**
@@ -77,7 +73,6 @@ export const submitPasscode = async ({
  * @param password The password to submit
  * @param stateHandle The state handle from the `identify`/`introspect` step
  * @param introspectRemediation The remediation object name to validate the introspect response against
- * @param requestId The request id
  * @param ip The IP address of the user
  * @returns {Promise<ChallengeAnswerResponse | CompleteLoginResponse>} challengeAnswerResponse - The challenge answer response
  */
@@ -87,7 +82,6 @@ export const submitPassword = async ({
 	introspectRemediation,
 	validateBreachedPassword = false,
 	validatePasswordLength = false,
-	requestId,
 	ip,
 }: Params & {
 	password: string;
@@ -98,7 +92,6 @@ export const submitPassword = async ({
 		{
 			stateHandle,
 		},
-		requestId,
 		ip,
 	);
 
@@ -115,5 +108,5 @@ export const submitPassword = async ({
 		});
 	}
 
-	return challengeAnswer(stateHandle, { passcode: password }, requestId, ip);
+	return challengeAnswer(stateHandle, { passcode: password }, ip);
 };

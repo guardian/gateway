@@ -44,10 +44,6 @@ export const rateLimiterMiddleware = async (
 	if (!ValidRoutePathsArray.includes(routePathDefinition)) {
 		logger.info(
 			`RateLimit falling back to default configuration for unregistered path: ${routePathDefinition}`,
-			undefined,
-			{
-				request_id: res.locals.requestId,
-			},
 		);
 	}
 
@@ -87,10 +83,6 @@ export const rateLimiterMiddleware = async (
 		// We append `-Gateway` so that we can differentiate between IDAPI rate limit log entries.
 		logger.info(
 			`RateLimit-Gateway ${ratelimitBucketTypeIfHit}Bucket email=${rateLimitData.email} ip=${rateLimitData.ip} accessToken=${truncatedAccessToken} identity-gateway ${req.method} ${routePathDefinition}`,
-			undefined,
-			{
-				request_id: res.locals.requestId,
-			},
 		);
 
 		trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));

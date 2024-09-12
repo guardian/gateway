@@ -16,7 +16,6 @@ const handleError = ({ status = 500 }: IDAPIError) => {
 export const logoutFromIDAPI = async (
 	sc_gu_u: string,
 	ip: string | undefined,
-	request_id?: string,
 ): Promise<IdapiCookies | undefined> => {
 	const options = APIAddClientAccessToken(APIPostOptions(), ip);
 	// eslint-disable-next-line functional/immutable-data
@@ -32,9 +31,7 @@ export const logoutFromIDAPI = async (
 
 		return response.cookies;
 	} catch (error) {
-		logger.error(`IDAPI Error auth logout '/unauth'`, error, {
-			request_id,
-		});
+		logger.error(`IDAPI Error auth logout '/unauth'`, error);
 		return handleError(error as IDAPIError);
 	}
 };

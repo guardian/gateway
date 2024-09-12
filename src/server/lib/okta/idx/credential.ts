@@ -34,14 +34,12 @@ type CredentialEnrollResponse = z.infer<typeof credentialEnrollResponse>;
  * @description Okta IDX API/Interaction Code flow - Enroll a new credential (currently `email` or `password`) for the user.
  * @param stateHandle - The state handle from the `enroll` step
  * @param body - The authenticator object, containing the authenticator id and method type
- * @param request_id - The request id
  * @param ip - The IP address of the user
  * @returns	Promise<CredentialEnrollResponse> - The credential enroll response
  */
 export const credentialEnroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: AuthenticatorBody['authenticator'],
-	request_id?: string,
 	ip?: string,
 ): Promise<CredentialEnrollResponse> => {
 	return idxFetch<CredentialEnrollResponse, AuthenticatorBody>({
@@ -51,7 +49,6 @@ export const credentialEnroll = (
 			authenticator: body,
 		},
 		schema: credentialEnrollResponse,
-		request_id,
 		ip,
 	});
 };

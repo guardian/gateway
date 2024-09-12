@@ -90,14 +90,11 @@ const oktaIdxApiPasswordHandler = async ({
 				expressRes: res,
 				introspectRemediation,
 				path,
-				request_id: state.requestId,
 				ip: req.ip,
 			});
 		}
 	} catch (error) {
-		logger.error('Okta IDX setPassword failure', error, {
-			request_id: state.requestId,
-		});
+		logger.error('Okta IDX setPassword failure', error);
 
 		trackMetric(changePasswordMetric(path, 'Failure', true));
 
@@ -174,7 +171,6 @@ export const setPasswordController = (
 			// decrypt the recovery token
 			const decryptedRecoveryToken = decryptOktaRecoveryToken({
 				encryptedToken: encryptedRecoveryToken,
-				request_id: res.locals.requestId,
 			});
 			const [recoveryToken, encryptedRegistrationConsents] =
 				decryptedRecoveryToken;
@@ -203,9 +199,6 @@ export const setPasswordController = (
 					logger.error(
 						'Failed to set validation flags in Okta as there was no id',
 						undefined,
-						{
-							request_id: res.locals.requestId,
-						},
 					);
 				}
 
@@ -218,9 +211,6 @@ export const setPasswordController = (
 						logger.error(
 							'Failed to set jobs user name and field in Okta as there was no id',
 							undefined,
-							{
-								request_id: res.locals.requestId,
-							},
 						);
 					}
 				}
@@ -239,7 +229,6 @@ export const setPasswordController = (
 						'SIGN_IN',
 						'web',
 						res.locals.ophanConfig.consentUUID,
-						res.locals.requestId,
 					);
 				}
 
@@ -263,9 +252,7 @@ export const setPasswordController = (
 				throw new OktaError({ message: 'Okta state token missing' });
 			}
 		} catch (error) {
-			logger.error('Okta change password failure', error, {
-				request_id: res.locals.requestId,
-			});
+			logger.error('Okta change password failure', error);
 
 			trackMetric(changePasswordMetric(path, 'Failure'));
 

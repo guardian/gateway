@@ -97,7 +97,6 @@ router.get(
 			// get the user's attributes from the members data api
 			const userAttributes = await getUserAttributes({
 				accessToken: state.oauthState.accessToken.toString(),
-				request_id: state.requestId,
 			});
 
 			// check if the user has a paid product
@@ -202,9 +201,7 @@ router.get(
 
 			return res.type('html').send(html);
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 			const { message, status } =
 				error instanceof ApiError ? error : new ApiError();
 
@@ -268,9 +265,7 @@ router.post(
 				confirmationPagePath: '/delete/complete',
 			});
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 			if (
 				error instanceof OktaError &&
 				error.name === 'AuthenticationFailedError'
@@ -342,7 +337,6 @@ router.post(
 			await sendEmailToUnvalidatedUser({
 				id: sub,
 				email: user.profile.email,
-				request_id: state.requestId,
 				ip: req.ip,
 			});
 
@@ -354,9 +348,7 @@ router.post(
 				}),
 			);
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: state.requestId,
-			});
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 			return res.redirect(
 				303,
 				addQueryParamsToPath('/delete', state.queryParams, {

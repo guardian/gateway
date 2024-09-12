@@ -152,7 +152,6 @@ const oktaIdxApiCheckHandler = async ({
 				{
 					stateHandle: encryptedState.stateHandle,
 				},
-				state.requestId,
 				req.ip,
 			);
 
@@ -191,9 +190,6 @@ const oktaIdxApiCheckHandler = async ({
 		logger.error(
 			'IDX API - check state handle token - checkPasswordToken',
 			error,
-			{
-				request_id: state.requestId,
-			},
 		);
 	}
 };
@@ -242,7 +238,6 @@ export const checkTokenInOkta = async (
 		// decrypt the recovery token
 		const decryptedRecoveryToken = decryptOktaRecoveryToken({
 			encryptedToken: token,
-			request_id: state.requestId,
 		});
 		const [recoveryToken] = decryptedRecoveryToken;
 
@@ -333,9 +328,7 @@ export const checkTokenInOkta = async (
 
 		return res.type('html').send(html);
 	} catch (error) {
-		logger.error('Okta validate password token failure', error, {
-			request_id: res.locals.requestId,
-		});
+		logger.error('Okta validate password token failure', error);
 
 		trackMetric('OktaValidatePasswordToken::Failure');
 
