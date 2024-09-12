@@ -2,6 +2,9 @@ import { z } from 'zod';
 import { logger } from '@/client/lib/clientSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 
+// Define the authenticators that can be used with the IDX API
+export type Authenticators = 'email' | 'password';
+
 // Schema to check the version of the IDX API, and warn if it's not 1.0.0
 const idxVersionSchema = z.string().refine((val) => {
 	// warn if the version is not 1.0.0
@@ -102,7 +105,7 @@ export const challengeAuthenticatorSchema = baseRemediationValueSchema.merge(
 export type AuthenticatorBody = IdxStateHandleBody<{
 	authenticator: {
 		id: string;
-		methodType: 'email' | 'password';
+		methodType: Authenticators;
 	};
 }>;
 

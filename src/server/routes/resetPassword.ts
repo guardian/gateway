@@ -18,6 +18,11 @@ import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/c
 import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
 import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
 import { getAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
+import {
+	isChallengeAnswerCompleteLoginResponse,
+	validateChallengeAnswerRemediation,
+} from '@/server/lib/okta/idx/challenge';
+import { OAuthError } from '@/server/models/okta/Error';
 
 // reset password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
@@ -143,14 +148,28 @@ router.post(
 
 			try {
 				// submit the passcode to Okta
-				await submitPasscode({
+				const challengeAnswerResponse = await submitPasscode({
 					passcode: code,
 					stateHandle,
 					introspectRemediation: 'challenge-authenticator',
-					challengeAnswerRemediation: 'reset-authenticator',
 					requestId,
 					ip: req.ip,
 				});
+
+				if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+					throw new OAuthError({
+						error: 'invalid_response',
+						error_description:
+							'Invalid challenge/answer response - got a complete login response',
+					});
+				}
+
+				// check if the remediation array contains the correct remediation object supplied
+				// if it does, then we know that we're in the correct state and the passcode was correct
+				validateChallengeAnswerRemediation(
+					challengeAnswerResponse,
+					'reset-authenticator',
+				);
 
 				// update the encrypted state cookie to show the passcode was used
 				// so that if the user clicks back to the email sent page, they will be shown a message

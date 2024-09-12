@@ -52,7 +52,7 @@ export const ResetPasswordEmailSentPage = () => {
 			email={email}
 			queryString={queryString}
 			changeEmailPage={buildUrl('/reset-password')}
-			resendEmailAction={buildUrl('/register/email-sent/resend')}
+			resendEmailAction={buildUrl('/reset-password/resend')}
 			instructionContext="verify and complete creating your account"
 			showSuccess={emailSentSuccess}
 			errorMessage={error}

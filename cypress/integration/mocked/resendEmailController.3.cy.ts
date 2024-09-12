@@ -46,7 +46,6 @@ userStatuses.forEach((status) => {
 				// env variable to be set, otherwise it won't be able to read the cookie.
 				cy.setEncryptedStateCookie({
 					email: 'example@example.com',
-					status: String(status),
 				});
 				cy.visit(`/register/email-sent`);
 			});
@@ -174,7 +173,6 @@ userStatuses.forEach((status) => {
 				// env variable to be set, otherwise it won't be able to read the cookie.
 				cy.setEncryptedStateCookie({
 					email: 'example@example.com',
-					status: String(status),
 				});
 				cy.visit(`/welcome/email-sent`);
 			});

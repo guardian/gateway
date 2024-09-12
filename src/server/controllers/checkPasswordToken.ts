@@ -26,6 +26,7 @@ import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToke
 import { AppName, getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
 import {
 	introspect,
+	IntrospectRemediationNames,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
@@ -91,6 +92,21 @@ const getReturnUrl = (
 };
 
 /**
+ * @name getExpectedRemediationByPath
+ * @description Get the expected remediation name based on the password route path
+ * @param path - The path of the page
+ * @returns {IntrospectRemediationNames} - The expected remediation name
+ */
+export const getExpectedRemediationByPath = (
+	path: PasswordRoutePath,
+): IntrospectRemediationNames => {
+	if (path === '/welcome') {
+		return 'enroll-authenticator';
+	}
+	return 'reset-authenticator';
+};
+
+/**
  * Okta IDX API Flow
  *
  * @name oktaIdxApiCheckHandler
@@ -129,6 +145,8 @@ const oktaIdxApiCheckHandler = async ({
 		// Read the encrypted state cookie to get the state handle and email
 		const encryptedState = readEncryptedStateCookie(req);
 		if (encryptedState?.email && encryptedState.stateHandle) {
+			const introspectRemediation = getExpectedRemediationByPath(path);
+
 			// introspect the stateHandle to make sure it's valid
 			const introspectResponse = await introspect(
 				{
@@ -139,19 +157,7 @@ const oktaIdxApiCheckHandler = async ({
 			);
 
 			// validate the introspect response to make sure we're in the correct state
-			// if we're creating a new user (/welcome) we should be in the enroll-authenticator remediation
-			if (path === '/welcome') {
-				validateIntrospectRemediation(
-					introspectResponse,
-					'enroll-authenticator',
-				);
-			} else {
-				// if we're setting a password, we should be in the reset-authenticator remediation
-				validateIntrospectRemediation(
-					introspectResponse,
-					'reset-authenticator',
-				);
-			}
+			validateIntrospectRemediation(introspectResponse, introspectRemediation);
 
 			// show the set password page
 			const html = renderer(

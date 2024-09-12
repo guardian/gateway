@@ -21,7 +21,10 @@ import {
 	validateRecoveryToken as validateTokenInOkta,
 } from '@/server/lib/okta/api/authentication';
 import { OAuthError, OktaError } from '@/server/models/okta/Error';
-import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
+import {
+	checkTokenInOkta,
+	getExpectedRemediationByPath,
+} from '@/server/controllers/checkPasswordToken';
 import {
 	performAuthorizationCodeFlow,
 	scopesForAuthentication,
@@ -33,13 +36,7 @@ import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connec
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { changePasswordMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
-import {
-	introspect,
-	validateIntrospectRemediation,
-} from '@/server/lib/okta/idx/introspect';
 import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
-import { PasswordFieldErrors } from '@/shared/model/Errors';
-import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 
 const { passcodesEnabled } = getConfiguration();
 
@@ -79,41 +76,7 @@ const oktaIdxApiPasswordHandler = async ({
 		// Read the encrypted state cookie to get the state handle and email
 		const encryptedState = readEncryptedStateCookie(req);
 		if (encryptedState?.email && encryptedState.stateHandle) {
-			// introspect the stateHandle to make sure it's valid
-			const introspectResponse = await introspect(
-				{
-					stateHandle: encryptedState.stateHandle,
-				},
-				state.requestId,
-				req.ip,
-			);
-
-			// validate the introspect response to make sure we're in the correct state
-			// if we're creating a new user (/welcome) we should be in the enroll-authenticator remediation
-			if (path === '/welcome') {
-				validateIntrospectRemediation(
-					introspectResponse,
-					'enroll-authenticator',
-				);
-			} else {
-				// if we're setting a password, we should be in the reset-authenticator remediation
-				validateIntrospectRemediation(
-					introspectResponse,
-					'reset-authenticator',
-				);
-			}
-
-			// validate the password field
-			validatePasswordFieldForOkta(password);
-
-			// check if the password is breached
-			const isBreached = await isBreachedPassword(password);
-			if (isBreached) {
-				throw new OAuthError({
-					error: 'password.common',
-					error_description: PasswordFieldErrors.COMMON_PASSWORD,
-				});
-			}
+			const introspectRemediation = getExpectedRemediationByPath(path);
 
 			// track the password change metric
 			trackMetric(changePasswordMetric(path, 'Success', true));
@@ -122,11 +85,10 @@ const oktaIdxApiPasswordHandler = async ({
 			// the interaction code flow, eventually redirecting the user back to where they need to go.
 			return await setPasswordAndRedirect({
 				stateHandle: encryptedState.stateHandle,
-				body: {
-					passcode: password,
-				},
+				password,
 				expressReq: req,
 				expressRes: res,
+				introspectRemediation,
 				path,
 				request_id: state.requestId,
 				ip: req.ip,

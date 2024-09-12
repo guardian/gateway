@@ -1,7 +1,7 @@
 import { selectAuthenticationAuthenticateSchema } from '../identify';
 import { IntrospectRemediationNames, IntrospectResponse } from '../introspect';
 import { authenticatorVerificationDataRemediationSchema } from '../recover';
-import { selectAuthenticationEnrollSchema } from './schemas';
+import { Authenticators, selectAuthenticationEnrollSchema } from './schemas';
 
 type Params = {
 	response: IntrospectResponse; // all responses regardless of api call will overlap with the introspect response
@@ -11,7 +11,7 @@ type Params = {
 		| 'select-authenticator-authenticate'
 		| 'select-authenticator-enroll'
 	>;
-	authenticator: 'email' | 'password';
+	authenticator: Authenticators;
 };
 
 /**

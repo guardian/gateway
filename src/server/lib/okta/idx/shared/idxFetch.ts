@@ -2,16 +2,18 @@ import { z } from 'zod';
 import { joinUrl } from '@guardian/libs';
 import { logger } from '@/client/lib/clientSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { OAuthError } from '@/server/models/okta/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { idxBaseResponseSchema } from '@/server/lib/okta/idx/shared/schemas';
+import {
+	IdxBaseResponse,
+	idxBaseResponseSchema,
+} from '@/server/lib/okta/idx/shared/schemas';
 import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
 
 const { okta } = getConfiguration();
 
 // Schema for when the authentication process is completed, and we return a base user object
-const completeLoginResponseSchema = idxBaseResponseSchema.merge(
+export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		user: z.object({
 			type: z.literal('object'),
@@ -26,7 +28,7 @@ const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type CompleteLoginResponse = z.infer<typeof completeLoginResponseSchema>;
+export type CompleteLoginResponse = z.infer<typeof completeLoginResponseSchema>;
 
 // Schema for the error object in the IDX API response
 const idxErrorObjectSchema = z.object({
@@ -46,12 +48,9 @@ type IDXFetchParams<ResponseType, BodyType> = {
 	path: IDXPath;
 	body: BodyType;
 	schema: z.Schema<ResponseType>;
-	expressRes: ResponseWithRequestState;
 	request_id?: string;
 	ip?: string;
 };
-// type for the idx cookie which is string, but named for clarity
-type IdxCookie = string;
 
 /**
  * @name idxFetchBase
@@ -60,15 +59,16 @@ type IdxCookie = string;
  * @param path - The path to the IDX API endpoint
  * @param body - The body of the request
  * @param ip - The IP address of the user
- * @returns Promise<[Response, IdxCookie | undefined]> - The response from the IDX API, and the IDX cookie if it exists
+ * @returns Promise<Response> - The response from the IDX API
  */
 const idxFetchBase = async ({
 	path,
 	body,
 	ip,
-}: Pick<IDXFetchParams<unknown, unknown>, 'path' | 'body' | 'ip'>): Promise<
-	[Response, IdxCookie | undefined]
-> => {
+}: Pick<
+	IDXFetchParams<unknown, unknown>,
+	'path' | 'body' | 'ip'
+>): Promise<Response> => {
 	const headers = {
 		Accept: 'application/ion+json; okta-version=1.0.0',
 		'Content-Type': 'application/ion+json; okta-version=1.0.0',
@@ -80,11 +80,7 @@ const idxFetchBase = async ({
 		body: JSON.stringify(body),
 	});
 
-	const cookies = response.headers.getSetCookie();
-
-	const idxCookie = cookies.find((cookie) => cookie.startsWith('idx='));
-
-	return [response, idxCookie];
+	return response;
 };
 
 /**
@@ -104,12 +100,9 @@ export const idxFetch = async <ResponseType, BodyType>({
 	schema,
 	request_id,
 	ip,
-}: Omit<
-	IDXFetchParams<ResponseType, BodyType>,
-	'expressRes'
->): Promise<ResponseType> => {
+}: IDXFetchParams<ResponseType, BodyType>): Promise<ResponseType> => {
 	try {
-		const [response] = await idxFetchBase({ path, body, ip });
+		const response = await idxFetchBase({ path, body, ip });
 
 		if (!response.ok) {
 			await handleError(response);
@@ -130,76 +123,14 @@ export const idxFetch = async <ResponseType, BodyType>({
 };
 
 /**
- * @name idxFetchCompletion
- * @description Fetch data from the Okta IDX API, used when the authentication process is completed. This returns the IDX cookie, which we set on the response object, and we return the CompleteLoginResponse, along with the redirect URL which the user should be sent to in order to complete the login process.
+ * @name getLoginRedirectUrl
+ * @description Get the URL to redirect the user to after they have completed the IDX authentication process
  *
- * @param path - The path to the IDX API endpoint
- * @param body - The body of the request
- * @param expressRes - The express response object
- * @param request_id - The request id
- * @param ip - The IP address of the user
- * @returns Promise<[CompleteLoginResponse, Redirect String]>
+ * @param response - The latest response from the IDX API
+ * @returns string - The URL to redirect the user to
  */
-export const idxFetchCompletion = async <BodyType>({
-	path,
-	body,
-	expressRes,
-	request_id,
-	ip,
-}: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<
-	[CompleteLoginResponse, string]
-> => {
-	try {
-		const [response, idxCookie] = await idxFetchBase({ path, body, ip });
-
-		if (!response.ok) {
-			await handleError(response);
-		}
-
-		if (!idxCookie) {
-			throw new OAuthError(
-				{
-					error: 'idx_error',
-					error_description: 'No IDX cookie returned',
-				},
-				403,
-			);
-		}
-
-		const completeLoginResponse = completeLoginResponseSchema.safeParse(
-			await response.json(),
-		);
-
-		if (!completeLoginResponse.success) {
-			throw new OAuthError(
-				{
-					error: 'idx_error',
-					error_description: 'Schema does not match response',
-				},
-				400,
-			);
-		}
-
-		trackMetric(`OktaIDX::${path}::Success`);
-
-		expressRes.cookie('idx', idxCookie.replace('idx=', ''), {
-			httpOnly: true,
-			secure: true,
-			sameSite: 'none',
-		});
-
-		return [
-			completeLoginResponse.data,
-			`/login/token/redirect?stateToken=${completeLoginResponse.data.stateHandle.split('~')[0]}`,
-		];
-	} catch (error) {
-		trackMetric(`OktaIDX::${path}::Failure`);
-		logger.error(`Okta IDX ${path}`, error, {
-			request_id,
-		});
-		throw error;
-	}
-};
+export const getLoginRedirectUrl = <R extends IdxBaseResponse>(response: R) =>
+	`/login/token/redirect?stateToken=${response.stateHandle.split('~')[0]}`;
 
 /**
  * @name findErrorMessage

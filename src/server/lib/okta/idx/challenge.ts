@@ -8,8 +8,10 @@ import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import {
+	CompleteLoginResponse,
+	completeLoginResponseSchema,
+	getLoginRedirectUrl,
 	idxFetch,
-	idxFetchCompletion,
 } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
 	baseRemediationValueSchema,
@@ -21,7 +23,11 @@ import {
 	ExtractLiteralRemediationNames,
 	challengeAuthenticatorSchema,
 	validateRemediation,
+	Authenticators,
 } from '@/server/lib/okta/idx/shared/schemas';
+import { submitPassword } from '@/server/lib/okta/idx/shared/submitPasscode';
+import { IntrospectRemediationNames } from '@/server/lib/okta/idx/introspect';
+import { OAuthError } from '@/server/models/okta/Error';
 
 // list of all possible remediations for the challenge response
 export const challengeRemediations = z.union([
@@ -55,7 +61,7 @@ const challengeResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
+export type ChallengeResponse = z.infer<typeof challengeResponseSchema>;
 
 /**
  * @name challenge
@@ -82,6 +88,92 @@ export const challenge = (
 		request_id,
 		ip,
 	});
+};
+
+// Type to extract all the remediation names from the challenge/answer response
+type ChallengeResponseRemediationNames = ExtractLiteralRemediationNames<
+	ChallengeResponse['remediation']['value'][number]
+>;
+
+/**
+ * @name validateChallengeRemediation
+ * @description Validates that the challenge response contains a remediation with the given name and authenticator.
+ * @param challengeResponse - The challenge response
+ * @param remediationName - The name of the remediation to validate
+ * @param authenticator - The authenticator type - email or password
+ * @param checkForResendOrRecover - Whether to check for resend (email) or recover (password) functionality depending on the authenticator
+ * @param useThrow - Whether to throw an error if the remediation is not found (default: true)
+ * @returns boolean - Whether the remediation was found in the response
+ */
+export const validateChallengeRemediation = (
+	challengeResponse: ChallengeResponse,
+	remediationName: ChallengeResponseRemediationNames,
+	authenticator: Authenticators,
+	checkForResendOrRecover = false,
+	useThrow = true,
+): boolean => {
+	// Validate the remediation, will throw if useThrow is true and validation fails
+	const validRemediation = validateRemediation<
+		ChallengeResponse,
+		ChallengeResponseRemediationNames
+	>(challengeResponse, remediationName, useThrow);
+
+	// if useThrow is false and the remediation is invalid, return false
+	if (!validRemediation) {
+		return false;
+	}
+
+	// check if the current authenticator enrollment matches the expected authenticator
+	const validAuthenticator =
+		challengeResponse.currentAuthenticatorEnrollment.value.type ===
+		authenticator;
+
+	// if the authenticator is invalid, throw an error or return false depending on useThrow
+	if (!validAuthenticator) {
+		if (useThrow) {
+			throw new Error(
+				`The challenge response does not contain the expected ${authenticator} authenticator`,
+			);
+		}
+
+		return false;
+	}
+
+	// check for resend (email) or recover (password) if checkForResendOrRecover is true depending on the authenticator
+	if (checkForResendOrRecover) {
+		if (
+			authenticator === 'email' &&
+			challengeResponse.currentAuthenticatorEnrollment.value.type ===
+				authenticator &&
+			!challengeResponse.currentAuthenticatorEnrollment.value.resend
+		) {
+			if (useThrow) {
+				throw new Error(
+					'The challenge response does not contain the expected resend functionality for the email authenticator',
+				);
+			}
+
+			return false;
+		}
+
+		if (
+			authenticator === 'password' &&
+			challengeResponse.currentAuthenticatorEnrollment.value.type ===
+				authenticator &&
+			!challengeResponse.currentAuthenticatorEnrollment.value.recover
+		) {
+			if (useThrow) {
+				throw new Error(
+					'The challenge response does not contain the expected recover functionality for the password authenticator',
+				);
+			}
+
+			return false;
+		}
+	}
+
+	// return true if everything is valid
+	return true;
 };
 
 // Schema for the 'skip' object inside the challenge response remediation object
@@ -141,7 +233,7 @@ export type ChallengeAnswerResponse = z.infer<
 >;
 
 // Body type for the challenge/answer request - passcode can refer to a OTP code or a password
-type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
+type ChallengeAnswerBody = IdxStateHandleBody<{
 	credentials: {
 		passcode: string;
 	};
@@ -157,19 +249,22 @@ type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
  * @param ip - The ip address
  * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
  */
-export const challengeAnswerPasscode = (
+export const challengeAnswer = (
 	stateHandle: IdxBaseResponse['stateHandle'],
-	body: ChallengeAnswerPasswordBody['credentials'],
+	body: ChallengeAnswerBody['credentials'],
 	request_id?: string,
 	ip?: string,
-): Promise<ChallengeAnswerResponse> => {
-	return idxFetch<ChallengeAnswerResponse, ChallengeAnswerPasswordBody>({
+): Promise<ChallengeAnswerResponse | CompleteLoginResponse> => {
+	return idxFetch<
+		ChallengeAnswerResponse | CompleteLoginResponse,
+		ChallengeAnswerBody
+	>({
 		path: 'challenge/answer',
 		body: {
 			stateHandle,
 			credentials: body,
 		},
-		schema: challengeAnswerResponseSchema,
+		schema: challengeAnswerResponseSchema.or(completeLoginResponseSchema),
 		request_id,
 		ip,
 	});
@@ -204,43 +299,55 @@ export const challengeResend = (
  * @name setPasswordAndRedirect
  * @description Okta IDX API/Interaction Code flow - Answer a challenge with a password, and redirect the user to set a global session and then back to the app. This could be one the final possible steps in the authentication process.
  * @param stateHandle - The state handle from the previous step
- * @param body - The password object, containing the password
+ * @param password - The password to set
+ * @param expressReq - The express request object
  * @param expressRes - The express response object
+ * @param introspectRemediation - The remediation object name to validate the introspect response against
+ * @param path - The path of the page
  * @param request_id - The request id
  * @param ip - The ip address
  * @returns Promise<void> - Performs a express redirect
  */
 export const setPasswordAndRedirect = async ({
 	stateHandle,
-	body,
+	password,
 	expressReq,
 	expressRes,
+	introspectRemediation,
 	path,
 	request_id,
 	ip,
 }: {
 	stateHandle: IdxBaseResponse['stateHandle'];
-	body: ChallengeAnswerPasswordBody['credentials'];
+	password: string;
 	expressReq: Request;
 	expressRes: ResponseWithRequestState;
+	introspectRemediation: IntrospectRemediationNames;
 	path?: string;
 	request_id?: string;
 	ip?: string;
 }): Promise<void> => {
-	const [completionResponse, redirectUrl] =
-		await idxFetchCompletion<ChallengeAnswerPasswordBody>({
-			path: 'challenge/answer',
-			body: {
-				stateHandle,
-				credentials: body,
-			},
-			expressRes,
-			request_id,
-			ip,
+	const challengeAnswerResponse = await submitPassword({
+		stateHandle,
+		password,
+		introspectRemediation,
+		requestId: request_id,
+		ip,
+		validateBreachedPassword: true,
+		validatePasswordLength: true,
+	});
+
+	if (!isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+		throw new OAuthError({
+			error: 'idx.invalid.response',
+			error_description: 'The response was not a complete login response',
 		});
+	}
+
+	const loginRedirectUrl = getLoginRedirectUrl(challengeAnswerResponse);
 
 	// set the validation flags in Okta
-	const { id } = completionResponse.user.value;
+	const { id } = challengeAnswerResponse.user.value;
 	if (id) {
 		await validateEmailAndPasswordSetSecurely(id, ip);
 	} else {
@@ -292,7 +399,7 @@ export const setPasswordAndRedirect = async ({
 	}
 
 	// redirect the user to set a global session and then back to completing the authorization flow
-	return expressRes.redirect(303, redirectUrl);
+	return expressRes.redirect(303, loginRedirectUrl);
 };
 
 // Type to extract all the remediation names from the challenge/answer response
@@ -313,3 +420,27 @@ export const validateChallengeAnswerRemediation = validateRemediation<
 	ChallengeAnswerResponse,
 	ChallengeAnswerRemediationNames
 >;
+
+/**
+ * @name isChallengeAnswerResponse
+ * @description Type guard to check if the response is a challenge answer response
+ *
+ * @param {ChallengeAnswerResponse | CompleteLoginResponse} response - The challenge answer response
+ * @returns {response is ChallengeAnswerResponse} - Whether the response is a challenge answer response
+ */
+export const isChallengeAnswerResponse = (
+	response: ChallengeAnswerResponse | CompleteLoginResponse,
+): response is ChallengeAnswerResponse =>
+	challengeAnswerResponseSchema.safeParse(response).success;
+
+/**
+ * @name isChallengeAnswerCompleteLoginResponse
+ * @description Type guard to check if the challenge answer response is a complete login response
+ *
+ * @param {ChallengeAnswerResponse | CompleteLoginResponse} response - The challenge answer response
+ * @returns	{response is CompleteLoginResponse} - Whether the response is a complete login response
+ */
+export const isChallengeAnswerCompleteLoginResponse = (
+	response: ChallengeAnswerResponse | CompleteLoginResponse,
+): response is CompleteLoginResponse =>
+	completeLoginResponseSchema.safeParse(response).success;
