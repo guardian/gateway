@@ -32,6 +32,7 @@ import { OAuthError } from '@/server/models/okta/Error';
 // list of all possible remediations for the challenge response
 export const challengeRemediations = z.union([
 	challengeAuthenticatorSchema,
+	selectAuthenticationEnrollSchema,
 	baseRemediationValueSchema,
 ]);
 
