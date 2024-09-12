@@ -304,7 +304,10 @@ const sendRegistrationEmailByUserState = async ({
 			if (doesNotHavePassword) {
 				// The user does not have a password set, so we set a placeholder
 				// password first, then proceed with the rest of the operation.
-				await dangerouslySetPlaceholderPassword(user.id, ip);
+				await dangerouslySetPlaceholderPassword({
+					id: user.id,
+					ip,
+				});
 			}
 			// Now the user has a password set, so we can get a reset password token
 			// and send them an email which contains it, allowing them to immediately

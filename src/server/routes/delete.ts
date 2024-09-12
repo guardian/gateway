@@ -332,7 +332,10 @@ router.post(
 
 			// if the user doesn't have a password set, set a placeholder password
 			if (!user.credentials.password) {
-				await dangerouslySetPlaceholderPassword(user.id, req.ip);
+				await dangerouslySetPlaceholderPassword({
+					id: user.id,
+					ip: req.ip,
+				});
 			}
 
 			// attempt to send the email
