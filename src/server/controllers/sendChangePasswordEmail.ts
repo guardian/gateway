@@ -39,10 +39,14 @@ import {
 } from '@/server/lib/okta/idx/identify';
 import {
 	challenge,
+	isChallengeAnswerCompleteLoginResponse,
+	validateChallengeAnswerRemediation,
 	validateChallengeRemediation,
 } from '@/server/lib/okta/idx/challenge';
 import { recover } from '@/server/lib/okta/idx/recover';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
+import { submitPassword } from '@/server/lib/okta/idx/shared/submitPasscode';
+import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 
 const { passcodesEnabled } = getConfiguration();
 
@@ -227,6 +231,7 @@ const changePasswordEmailIdx = async (
 						email: user.profile.email,
 						stateHandle: challengeEmailResponse.stateHandle,
 						stateHandleExpiresAt: challengeEmailResponse.expiresAt,
+						userState: 1,
 					});
 
 					// show the email sent page, with passcode instructions
@@ -240,10 +245,12 @@ const changePasswordEmailIdx = async (
 				} else if (passwordAuthenticatorId && !emailAuthenticatorId) {
 					// user has only password authenticator so:
 					// 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+
 					// If the user only has a password authenticator, then they failed to use a passcode
 					// to verify their account when they created it, and instead set a password using
 					// the okta classic reset password flow. In this case, we have to have to enroll
 					// the user in the email authenticator to allow them to reset their password.
+
 					// We do this by first setting a placeholder password for the user, then using the
 					// identify flow to authenticate the user with the placeholder password. After
 					// authenticating the user, the IDX API will tell us that the user needs to enroll
@@ -252,6 +259,111 @@ const changePasswordEmailIdx = async (
 					// Once they've verified their account, we use the okta classic api to generate a
 					// recover token, and instantly show the set password page to the user for them to
 					// set their password.
+
+					// set a placeholder password for the user
+					const placeholderPassword = await dangerouslySetPlaceholderPassword({
+						id: user.id,
+						ip: req.ip,
+						returnPlaceholderPassword: true,
+					});
+
+					// call "challenge" to start the password authentication process
+					const challengePasswordResponse = await challenge(
+						introspectResponse.stateHandle,
+						{
+							id: passwordAuthenticatorId,
+							methodType: 'password',
+						},
+						req.ip,
+					);
+
+					// validate that the response from the challenge endpoint is a password authenticator
+					// and has the "recover" remediation
+					validateChallengeRemediation(
+						challengePasswordResponse,
+						'challenge-authenticator',
+						'password',
+					);
+
+					// call "challenge/answer" to answer the password challenge
+					const challengeAnswerResponse = await submitPassword({
+						password: placeholderPassword,
+						stateHandle: challengePasswordResponse.stateHandle,
+						introspectRemediation: 'challenge-authenticator',
+						ip: req.ip,
+					});
+
+					// check the response from the challenge/answer endpoint
+					// if it's a "CompleteLoginResponse" then Okta is in the state
+					// where email verification or enrollment is disabled, and a user
+					// can authenticate with a password only
+					// in this case we want to fall back to the classic reset password flow
+					// as this is the only way for these users to reset their password while
+					// Okta is in this state
+					if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+						// track the metric so we can see if we accidentally hit this case
+						trackMetric('OktaIDXEmailVerificationDisabled');
+						// throw an error to fall back to the classic reset password flow
+						throw new OktaError({
+							message: `Okta changePasswordEmailIdx failed as email verification or enrollment is disabled in Okta`,
+						});
+					}
+
+					// otherwise the response is a "ChallengeAnswerResponse" and we can continue
+					// but first we have to check that the response remediation is the "select-authenticator-enroll"
+					validateChallengeAnswerRemediation(
+						challengeAnswerResponse,
+						'select-authenticator-enroll',
+					);
+
+					// check for the email authenticator id in the response to make sure that it's the correct enrollment flow
+					const challengeAnswerEmailAuthenticatorId = findAuthenticatorId({
+						authenticator: 'email',
+						response: challengeAnswerResponse,
+						remediationName: 'select-authenticator-enroll',
+					});
+
+					// if the email authenticator id is not found, then throw an error to fall back to the classic reset password flow
+					if (!challengeAnswerEmailAuthenticatorId) {
+						throw new OktaError({
+							message: `Okta changePasswordEmailIdx failed as email authenticator id is not found in the response`,
+						});
+					}
+
+					// call the "challenge" endpoint to start the email challenge process
+					// and send the user a passcode
+					const challengeEmailResponse = await credentialEnroll(
+						challengeAnswerResponse.stateHandle,
+						{
+							id: challengeAnswerEmailAuthenticatorId,
+							methodType: 'email',
+						},
+						req.ip,
+					);
+
+					// track the success metrics
+					trackMetric('OktaIDXResetPasswordSend::Success');
+					trackMetric(`OktaIDXResetPasswordSend::${user.status}::Success`);
+
+					// at this point the user will have been sent an email with a passcode
+
+					// set the encrypted state cookie to persist the email and stateHandle
+					// which we need to persist during the passcode reset flow
+					setEncryptedStateCookie(res, {
+						email: user.profile.email,
+						stateHandle: challengeEmailResponse.stateHandle,
+						stateHandleExpiresAt: challengeEmailResponse.expiresAt,
+						userState: 2,
+					});
+
+					// show the email sent page, with passcode instructions
+					return res.redirect(
+						303,
+						addQueryParamsToPath(
+							'/reset-password/email-sent',
+							res.locals.queryParams,
+						),
+					);
 				} else if (emailAuthenticatorId && !passwordAuthenticatorId) {
 					// user has only email authenticator so:
 					// 3. ACTIVE users - has only email authenticator (SOCIAL users, no password)
