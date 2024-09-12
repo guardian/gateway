@@ -23,6 +23,8 @@ import {
 	validateChallengeAnswerRemediation,
 } from '@/server/lib/okta/idx/challenge';
 import { OAuthError } from '@/server/models/okta/Error';
+import { forgotPassword } from '@/server/lib/okta/api/users';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 // reset password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
@@ -150,16 +152,58 @@ router.post(
 				const challengeAnswerResponse = await submitPasscode({
 					passcode: code,
 					stateHandle,
-					introspectRemediation: 'challenge-authenticator',
+					introspectRemediation:
+						// if the user is in the `2` state, then they are trying enroll the email authenticator
+						// otherwise they are trying to recover their password, see the comment below for more info
+						encryptedState.userState === 2
+							? 'select-authenticator-enroll'
+							: 'challenge-authenticator',
 					ip: req.ip,
 				});
 
+				// if a user submits a passcode that is correct, but the response is a complete login response
+				// then they were very likely a user who was stuck in the
+				// "2. ACTIVE users - has only password authenticator (okta idx email not verified)" state at the
+				// start of the reset password flow, but verify using the `userState` from encrypted state
 				if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
-					throw new OAuthError({
-						error: 'invalid_response',
-						error_description:
-							'Invalid challenge/answer response - got a complete login response',
+					if (encryptedState.userState !== 2) {
+						throw new OAuthError({
+							error: 'invalid_response',
+							error_description:
+								'Invalid challenge/answer response - got a complete login response',
+						});
+					}
+
+					// if the user was in the `2` state and they were trying to reset their password
+					// since they've verified their email using the passcode, we can allow them to set a password
+					// rather than sending them down the reset password flow again to get another passcode
+					// we instead generate a recovery token for them and allow them to set a password right away
+					const token = await forgotPassword(
+						challengeAnswerResponse.user.value.id,
+						req.ip,
+					);
+
+					// update the encrypted state cookie to show the passcode was used
+					// and to remove the state handle and expiry time, and the active user state
+					updateEncryptedStateCookie(req, res, {
+						passcodeUsed: true,
+						stateHandle: undefined,
+						stateHandleExpiresAt: undefined,
+						userState: undefined,
 					});
+
+					// redirect to the password page to set a password, everything from this point is the same as
+					// the classic reset password flow
+					return res.redirect(
+						303,
+						buildUrlWithQueryParams(
+							'/set-password/:token',
+							{
+								token,
+							},
+							res.locals.queryParams,
+						),
+					);
 				}
 
 				// check if the remediation array contains the correct remediation object supplied
