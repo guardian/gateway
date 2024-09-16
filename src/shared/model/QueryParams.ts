@@ -37,6 +37,8 @@ export interface PersistableQueryParams
 	extends TrackingQueryParams,
 		StringifiableRecord {
 	returnUrl: string;
+
+	listName?: string;
 	clientId?: ValidClientId;
 	// This is the fromURI query parameter from Otka authorization code flow
 	// that we intercept in fastly. We can send a user back to this uri
