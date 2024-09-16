@@ -40,7 +40,7 @@
 		"@babel/preset-env": "^7.25.4",
 		"@babel/preset-react": "^7.24.7",
 		"@babel/preset-typescript": "^7.24.7",
-		"@chromatic-com/storybook": "^1.9.0",
+		"@chromatic-com/storybook": "^2.0.2",
 		"@emotion/babel-preset-css-prop": "^11.12.0",
 		"@guardian/eslint-config-typescript": "^12.0.0",
 		"@guardian/prettier": "^8.0.1",

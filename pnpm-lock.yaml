@@ -130,8 +130,8 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.25.2)
       '@chromatic-com/storybook':
-        specifier: ^1.9.0
-        version: 1.9.0(@preact/compat@17.1.2(preact@10.23.2))
+        specifier: ^2.0.2
+        version: 2.0.2(@preact/compat@17.1.2(preact@10.23.2))
       '@emotion/babel-preset-css-prop':
         specifier: ^11.12.0
         version: 11.12.0(@babel/core@7.25.2)
@@ -1245,8 +1245,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@chromatic-com/storybook@1.9.0':
-    resolution: {integrity: sha512-vYQ+TcfktEE3GHnLZXHCzXF/sN9dw+KivH8a5cmPyd9YtQs7fZtHrEgsIjWpYycXiweKMo1Lm1RZsjxk8DH3rA==}
+  '@chromatic-com/storybook@2.0.2':
+    resolution: {integrity: sha512-7bPIliISedeIpnVKbzktysFYW5n56bN91kxuOj1XXKixmjbUHRUMvcXd4K2liN6MiR5ZqJtmtcPsZ6CebbGlEA==}
     engines: {node: '>=16.0.0', yarn: '>=1.22.18'}
 
   '@colors/colors@1.5.0':
@@ -9042,7 +9042,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@chromatic-com/storybook@1.9.0(@preact/compat@17.1.2(preact@10.23.2))':
+  '@chromatic-com/storybook@2.0.2(@preact/compat@17.1.2(preact@10.23.2))':
     dependencies:
       chromatic: 11.7.1
       filesize: 10.1.6
