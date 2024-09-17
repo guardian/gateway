@@ -382,7 +382,7 @@ export const setPasswordAndRedirect = async ({
 };
 
 // Type to extract all the remediation names from the challenge/answer response
-export type ChallengeAnswerRemediationNames = ExtractLiteralRemediationNames<
+type ChallengeAnswerRemediationNames = ExtractLiteralRemediationNames<
 	ChallengeAnswerResponse['remediation']['value'][number]
 >;
 
@@ -399,18 +399,6 @@ export const validateChallengeAnswerRemediation = validateRemediation<
 	ChallengeAnswerResponse,
 	ChallengeAnswerRemediationNames
 >;
-
-/**
- * @name isChallengeAnswerResponse
- * @description Type guard to check if the response is a challenge answer response
- *
- * @param {ChallengeAnswerResponse | CompleteLoginResponse} response - The challenge answer response
- * @returns {response is ChallengeAnswerResponse} - Whether the response is a challenge answer response
- */
-export const isChallengeAnswerResponse = (
-	response: ChallengeAnswerResponse | CompleteLoginResponse,
-): response is ChallengeAnswerResponse =>
-	challengeAnswerResponseSchema.safeParse(response).success;
 
 /**
  * @name isChallengeAnswerCompleteLoginResponse

@@ -58,7 +58,7 @@ export const enroll = (
 };
 
 // Type to extract all the remediation names from the enroll response
-export type EnrollRemediationNames = ExtractLiteralRemediationNames<
+type EnrollRemediationNames = ExtractLiteralRemediationNames<
 	EnrollResponse['remediation']['value'][number]
 >;
 
@@ -148,7 +148,7 @@ export const enrollNewWithEmail = (
 };
 
 // Type to extract all the remediation names from the enroll/new response
-export type EnrollNewRemediationNames = ExtractLiteralRemediationNames<
+type EnrollNewRemediationNames = ExtractLiteralRemediationNames<
 	EnrollNewResponse['remediation']['value'][number]
 >;
 
