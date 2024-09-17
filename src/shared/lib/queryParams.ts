@@ -37,6 +37,7 @@ export const getPersistableQueryParams = (
 	clientId: params.clientId,
 	ref: params.ref,
 	refViewId: params.refViewId,
+	listName: params.listName,
 	componentEventParams: params.componentEventParams,
 	fromURI: params.fromURI,
 	appClientId: params.appClientId,
