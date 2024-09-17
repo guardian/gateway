@@ -45,13 +45,10 @@ const config: KnipConfig = {
 	// ignore specific dependencies that we want to keep
 	// usually used by webpack, cdk, storybook etc. that knip can't resolve
 	ignoreDependencies: [
-		'@guardian/cdk/lib/constructs/core',
-		'@guardian/cdk/lib/constructs/root',
+		'@guardian/cdk',
 		'@storybook/addon-viewport',
 		'@swc/plugin-emotion',
 		'aws-cdk-lib',
-		'aws-cdk-lib/assertions',
-		'aws-cdk-lib/cloudformation-include',
 		'fork-ts-checker-notifier-webpack-plugin',
 		'fork-ts-checker-webpack-plugin',
 		'imagemin',
@@ -60,7 +57,7 @@ const config: KnipConfig = {
 		'preact-render-to-string',
 		'react-docgen-typescript-plugin',
 		'sharp',
-		'source-map-support/register',
+		'source-map-support',
 	],
 };
 
