@@ -337,7 +337,10 @@ export const setPasswordAndRedirect = async ({
 	// set the validation flags in Okta
 	const { id } = challengeAnswerResponse.user.value;
 	if (id) {
-		await validateEmailAndPasswordSetSecurely(id, ip);
+		await validateEmailAndPasswordSetSecurely({
+			id,
+			ip,
+		});
 	} else {
 		logger.error(
 			'Failed to set validation flags in Okta as there was no id',

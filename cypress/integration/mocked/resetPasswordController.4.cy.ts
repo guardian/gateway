@@ -7,6 +7,7 @@ import tokenResponse from '../../fixtures/okta-responses/success/token.json';
 import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
 import verifyRecoveryTokenReponse from '../../fixtures/okta-responses/success/verify-recovery-token.json';
 import authResetPasswordResponse from '../../fixtures/okta-responses/success/auth-reset-password.json';
+import updateUser from '../../fixtures/okta-responses/success/update-user.json';
 
 beforeEach(() => {
 	cy.mockPurge();
@@ -42,6 +43,8 @@ const setupMocksForSocialUserPasswordReset = () => {
 		authResetPasswordResponse.code,
 		authResetPasswordResponse.response,
 	);
+	// set email validated/password set securely flags to false
+	cy.mockNext(updateUser.code, updateUser.response);
 
 	// retry sending the email now that the user is "fixed"
 	// so we need to mock the same as for the non social user

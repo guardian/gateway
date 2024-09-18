@@ -11,6 +11,7 @@ import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-
 import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
 import idxEnrollNewSelectAuthenticatorResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
 import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
+import updateUser from '../../fixtures/okta-responses/success/update-user.json';
 
 beforeEach(() => {
 	cy.mockPurge();
@@ -110,6 +111,8 @@ userStatuses.forEach((status) => {
 							});
 							// authenticationResetPassword()
 							cy.mockNext(200, {});
+							// set email validated/password set securely flags to false
+							cy.mockNext(updateUser.code, updateUser.response);
 							// from sendEmailToUnvalidatedUser() --> forgotPassword()
 							cy.mockNext(200, {
 								resetPasswordUrl:
@@ -141,6 +144,8 @@ userStatuses.forEach((status) => {
 							});
 							// authenticationResetPassword()
 							cy.mockNext(200, {});
+							// set email validated/password set securely flags to false
+							cy.mockNext(updateUser.code, updateUser.response);
 							// from sendEmailToUnvalidatedUser() --> forgotPassword()
 							cy.mockNext(200, {
 								resetPasswordUrl:
@@ -183,6 +188,8 @@ userStatuses.forEach((status) => {
 							});
 							// authenticationResetPassword()
 							cy.mockNext(200, {});
+							// set email validated/password set securely flags to false
+							cy.mockNext(updateUser.code, updateUser.response);
 							// from sendEmailToUnvalidatedUser() --> forgotPassword()
 							cy.mockNext(200, {
 								resetPasswordUrl:

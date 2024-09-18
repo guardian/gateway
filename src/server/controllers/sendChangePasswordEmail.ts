@@ -52,6 +52,7 @@ import {
 	resetPassword,
 	validateRecoveryToken,
 } from '@/server/lib/okta/api/authentication';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 
 const { passcodesEnabled } = getConfiguration();
 
@@ -463,6 +464,13 @@ const changePasswordEmailIdx = async (
 						},
 						req.ip,
 					);
+
+					// Unset the emailValidated and passwordSetSecurely flags
+					await validateEmailAndPasswordSetSecurely({
+						id: user.id,
+						ip: req.ip,
+						flagStatus: false,
+					});
 
 					// now that the placeholder password has been set, the user will be in
 					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
