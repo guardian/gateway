@@ -1,6 +1,6 @@
 import React from 'react';
 import { record } from '@/client/lib/ophan';
-import { hydrate } from 'react-dom';
+import { hydrateRoot } from 'react-dom/client';
 import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
@@ -51,7 +51,8 @@ export const hydrateApp = ({ routingConfig }: Props) => {
 		getCurrentHub().bindClient(client);
 	}
 
-	hydrate(
+	hydrateRoot(
+		document.getElementById('app')!,
 		<ABProvider
 			arrayOfTestObjects={tests}
 			abTestSwitches={abSwitches}
@@ -65,6 +66,5 @@ export const hydrateApp = ({ routingConfig }: Props) => {
 		>
 			<App {...clientState} location={`${routingConfig.location}`} />
 		</ABProvider>,
-		document.getElementById('app'),
 	);
 };
