@@ -1,4 +1,7 @@
-import { randomPassword } from '../../support/commands/testUser';
+import {
+	randomMailosaurEmail,
+	randomPassword,
+} from '../../support/commands/testUser';
 
 describe('Password reset recovery flows - with Passcodes', () => {
 	context('ACTIVE user with password', () => {
@@ -340,6 +343,104 @@ describe('Password reset recovery flows - with Passcodes', () => {
 					},
 				);
 			});
+		});
+
+		it('ACTIVE user with only password authenticator - allow the user to change thier password and authenticate', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/register/email`);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(emailAddress);
+
+			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+
+					// make sure we don't use a passcode
+					// we instead reset their password using the classic flow to set a password
+					cy.visit('/reset-password');
+					const timeRequestWasMade = new Date();
+
+					cy.get('button[type="submit"]').click();
+
+					cy.contains('Check your inbox');
+					cy.contains(emailAddress);
+					cy.contains('send again');
+					cy.contains('try another address');
+
+					cy.checkForEmailAndGetDetails(
+						emailAddress,
+						timeRequestWasMade,
+						/\/set-password\/([^"]*)/,
+					).then(({ links, body }) => {
+						expect(body).to.have.string('Welcome back');
+
+						expect(body).to.have.string('Create password');
+						expect(links.length).to.eq(2);
+						const setPasswordLink = links.find((s) =>
+							s.text?.includes('Create password'),
+						);
+						cy.visit(setPasswordLink?.href as string);
+						cy.contains('Create password');
+						cy.contains(emailAddress);
+
+						cy.get('input[name=password]').type(randomPassword());
+
+						cy.get('[data-cy="main-form-submit-button"]')
+							.click()
+							.should('be.disabled');
+						cy.contains('Password created');
+						cy.contains(emailAddress.toLowerCase());
+
+						// once the password is set, we perform reset password for passcodes
+						cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+
+						const timeRequestWasMade = new Date();
+						cy.get('[data-cy="main-form-submit-button"]').click();
+
+						cy.contains('Enter your one-time code');
+						cy.contains(emailAddress);
+						cy.contains('send again');
+						cy.contains('try another address');
+
+						cy.checkForEmailAndGetDetails(
+							emailAddress,
+							timeRequestWasMade,
+						).then(({ body, codes }) => {
+							// email
+							expect(body).to.have.string('Your verification code');
+							expect(codes?.length).to.eq(1);
+							const code = codes?.[0].value;
+							expect(code).to.match(/^\d{6}$/);
+
+							// passcode page
+							cy.url().should('include', '/reset-password/email-sent');
+							cy.contains('Enter your one-time code');
+
+							cy.get('input[name=code]').clear().type(code!);
+							cy.contains('Submit one-time code').click();
+
+							cy.url().should('contain', '/set-password');
+
+							cy.get('input[name="password"]').type(randomPassword());
+							cy.get('button[type="submit"]').click();
+
+							cy.url().should('contain', '/set-password/complete');
+						});
+					});
+				},
+			);
 		});
 	});
 });
