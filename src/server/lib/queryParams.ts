@@ -71,7 +71,7 @@ export const parseExpressQueryParams = (
 			componentEventParams || bodyParams.componentEventParams,
 		encryptedEmail,
 		error,
-		listName: listName || bodyParams.listName,
+		listName: listName,
 		error_description,
 		fromURI: validateFromUri(fromURI),
 		appClientId,
