@@ -231,7 +231,7 @@ const changePasswordEmailIdx = async (
 						email: user.profile.email,
 						stateHandle: challengeEmailResponse.stateHandle,
 						stateHandleExpiresAt: challengeEmailResponse.expiresAt,
-						userState: 1,
+						userState: 'ACTIVE_EMAIL_PASSWORD',
 					});
 
 					// show the email sent page, with passcode instructions
@@ -353,7 +353,7 @@ const changePasswordEmailIdx = async (
 						email: user.profile.email,
 						stateHandle: challengeEmailResponse.stateHandle,
 						stateHandleExpiresAt: challengeEmailResponse.expiresAt,
-						userState: 2,
+						userState: 'ACTIVE_PASSWORD_ONLY',
 					});
 
 					// show the email sent page, with passcode instructions

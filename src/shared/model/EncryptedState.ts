@@ -1,3 +1,4 @@
+import { InternalOktaUserState } from '@/server/models/okta/User';
 import { PersistableQueryParams } from './QueryParams';
 
 export interface EncryptedState {
@@ -14,11 +15,5 @@ export interface EncryptedState {
 	// Okta IDX API - Flag to determine if the user has used a passcode
 	passcodeUsed?: boolean;
 	// Okta IDX API - State of the user in the Okta determines if we can send passcodes to the user when resetting the password
-	// 0 - user doesn't exist - not currently used in any code
-	// 1 - ACTIVE - user has email + password authenticator (okta idx email verified)
-	// 2 - ACTIVE - user has only password authenticator (okta idx email not verified)
-	// 3 - ACTIVE - user has only email authenticator (okta idx email verified) - not currently used in any code
-	// 4 - user not in ACTIVE state - not currently used in any code
-	// Only including states that we actually currently set on the EncryptedState cookie
-	userState?: 1 | 2;
+	userState?: InternalOktaUserState;
 }

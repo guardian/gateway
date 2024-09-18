@@ -153,9 +153,9 @@ router.post(
 					passcode: code,
 					stateHandle,
 					introspectRemediation:
-						// if the user is in the `2` state, then they are trying enroll the email authenticator
+						// if the user is in the `ACTIVE_PASSWORD_ONLY` state, then they are trying enroll the email authenticator
 						// otherwise they are trying to recover their password, see the comment below for more info
-						encryptedState.userState === 2
+						encryptedState.userState === 'ACTIVE_PASSWORD_ONLY'
 							? 'select-authenticator-enroll'
 							: 'challenge-authenticator',
 					ip: req.ip,
@@ -166,7 +166,7 @@ router.post(
 				// "2. ACTIVE users - has only password authenticator (okta idx email not verified)" state at the
 				// start of the reset password flow, but verify using the `userState` from encrypted state
 				if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
-					if (encryptedState.userState !== 2) {
+					if (encryptedState.userState !== 'ACTIVE_PASSWORD_ONLY') {
 						throw new OAuthError({
 							error: 'invalid_response',
 							error_description:
@@ -174,7 +174,7 @@ router.post(
 						});
 					}
 
-					// if the user was in the `2` state and they were trying to reset their password
+					// if the user was in the `ACTIVE_PASSWORD_ONLY` state and they were trying to reset their password
 					// since they've verified their email using the passcode, we can allow them to set a password
 					// rather than sending them down the reset password flow again to get another passcode
 					// we instead generate a recovery token for them and allow them to set a password right away
