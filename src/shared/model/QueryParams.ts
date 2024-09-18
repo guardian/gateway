@@ -25,6 +25,7 @@ export interface TrackingQueryParams {
 	// we URL encode the value of componentEventParams due to the number of keys available
 	// as well as getting confused with other parameters, so we thought it best to pass it as a URL encoded string, and then do the decoding once it gets to IDAPI
 	componentEventParams?: string;
+	listName?: string;
 }
 
 /**
@@ -37,8 +38,6 @@ export interface PersistableQueryParams
 	extends TrackingQueryParams,
 		StringifiableRecord {
 	returnUrl: string;
-
-	listName?: string;
 	clientId?: ValidClientId;
 	// This is the fromURI query parameter from Otka authorization code flow
 	// that we intercept in fastly. We can send a user back to this uri
