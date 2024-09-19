@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
@@ -47,6 +48,11 @@ import { recover } from '@/server/lib/okta/idx/recover';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 import { submitPassword } from '@/server/lib/okta/idx/shared/submitPasscode';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
+import {
+	resetPassword,
+	validateRecoveryToken,
+} from '@/server/lib/okta/api/authentication';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 
 const { passcodesEnabled } = getConfiguration();
 
@@ -87,13 +93,14 @@ const setEncryptedCookieOkta = (
  * @name changePasswordEmailIdx
  * @description Start the Okta IDX flow to change the user's password
  *
- * NB: This is a WIP and is not fully implemented yet, it should be used behind the `usePasscodesResetPassword` query param flag
+ * NB: This is currently in testing and is not fully implemented yet, it should be used behind the `usePasscodesResetPassword` query param flag
  * Current status:
  *   - [x] ACTIVE users
  * 	   - [x] With email + password authenticator
- *     - [ ] With only password authenticator
+ *     - [x] With only password authenticator
  *     - [x] With only email authenticator
- *   - [ ] Non-ACTIVE user states
+ *   - [x] Non-ACTIVE user states
+ *   - [ ] Non-Existent users
  *
  * @param {Request} req - Express request object
  * @param {ResponseWithRequestState} res - Express response object
@@ -393,10 +400,95 @@ const changePasswordEmailIdx = async (
 				}
 			}
 			// eslint-disable-next-line no-fallthrough -- allow fallthrough for time being for cases we haven't implemented yet
-			default:
-				throw new OktaError({
-					message: `Okta changePasswordEmailIdx failed with unaccepted Okta user status: ${user.status}`,
-				});
+			default: {
+				// For users in a non-ACTIVE state, we should first get them into one of the ACTIVE states
+				// The best way to do this is to first deactivate the user, which works on all user states and puts them into the DEPROVISIONED state
+				// Then we can activate the user, which will put them into the PROVISIONED state and return us a recovery token
+				// We then use the recovery token to set a placeholder password for the user, which transitions them into the ACTIVE state
+				// and then we can call this method again to send the user a passcode as they'll be in one of the ACTIVE states
+
+				// if a loop is detected, then throw early to prevent infinite loop
+				if (loopDetectionFlag) {
+					throw new OktaError({
+						message: `Okta changePasswordEmailIdx failed with loop detection flag under non-ACTIVE user state ${user.status}`,
+					});
+				}
+
+				// 1. deactivate the user
+				try {
+					await deactivateUser({
+						id: user.id,
+						ip: req.ip,
+					});
+					trackMetric('OktaDeactivateUser::Success');
+				} catch (error) {
+					trackMetric('OktaDeactivateUser::Failure');
+					logger.error(
+						'Okta user deactivation failed',
+						error instanceof OktaError ? error.message : error,
+					);
+					throw error;
+				}
+
+				// 2. activate the user
+				try {
+					const tokenResponse = await activateUser({
+						id: user.id,
+						ip: req.ip,
+					});
+					if (!tokenResponse?.token.length) {
+						throw new OktaError({
+							message: `Okta user activation failed: missing activation token`,
+						});
+					}
+
+					// 3. use the recovery token to set a placeholder password for the user
+					// Validate the token
+					const { stateToken } = await validateRecoveryToken({
+						recoveryToken: tokenResponse.token,
+						ip: req.ip,
+					});
+					// Check if state token is defined
+					if (!stateToken) {
+						throw new OktaError({
+							message:
+								'Okta set placeholder password failed: state token is undefined',
+						});
+					}
+					// Set the placeholder password as a cryptographically secure UUID
+					const placeholderPassword = crypto.randomUUID();
+					await resetPassword(
+						{
+							stateToken,
+							newPassword: placeholderPassword,
+						},
+						req.ip,
+					);
+
+					// Unset the emailValidated and passwordSetSecurely flags
+					await validateEmailAndPasswordSetSecurely({
+						id: user.id,
+						ip: req.ip,
+						flagStatus: false,
+					});
+
+					// now that the placeholder password has been set, the user will be in
+					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+					// or 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+					// so we can call this method again to send the user a passcode
+					// They can't be in the 3. ACTIVE users - has only email authenticator (SOCIAL users, no password)
+					// as we've just set a placeholder password for them
+					// but we first need to get the updated user object
+					const updatedUser = await getUser(user.id, req.ip);
+					return changePasswordEmailIdx(req, res, updatedUser, true);
+				} catch (error) {
+					logger.error(
+						'Okta user activation failed',
+						error instanceof OktaError ? error.message : error,
+					);
+					throw error;
+				}
+			}
 		}
 	} catch (error) {
 		trackMetric('OktaIDXResetPasswordSend::Failure');

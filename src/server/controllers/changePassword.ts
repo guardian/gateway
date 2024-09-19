@@ -194,7 +194,10 @@ export const setPasswordController = (
 
 				const { id } = _embedded?.user ?? {};
 				if (id) {
-					await validateEmailAndPasswordSetSecurely(id, req.ip);
+					await validateEmailAndPasswordSetSecurely({
+						id,
+						ip: req.ip,
+					});
 				} else {
 					logger.error(
 						'Failed to set validation flags in Okta as there was no id',

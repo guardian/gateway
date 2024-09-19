@@ -1,4 +1,5 @@
 import { UserResponse } from '@/server/models/okta/User';
+import updateUser from '../../fixtures/okta-responses/success/update-user.json';
 
 describe('Send password reset email in Okta', () => {
 	const email = 'mrtest@theguardian.com';
@@ -166,6 +167,7 @@ describe('Send password reset email in Okta', () => {
 					},
 				},
 			});
+			cy.mockNext(updateUser.code, updateUser.response);
 			cy.mockNext(200, mockUserActiveWithoutPassword);
 			cy.mockNext(200, {
 				resetPasswordUrl:

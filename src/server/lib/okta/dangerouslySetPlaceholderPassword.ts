@@ -3,6 +3,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { logger } from '@/server/lib/serverSideLogger';
 import { validateRecoveryToken, resetPassword } from './api/authentication';
 import { dangerouslyResetPassword } from './api/users';
+import { validateEmailAndPasswordSetSecurely } from './validateEmail';
 
 // Define the parameter object type
 interface PlaceholderPasswordParams {
@@ -61,6 +62,13 @@ async function dangerouslySetPlaceholderPassword({
 			},
 			ip,
 		);
+
+		// Unset the emailValidated and passwordSetSecurely flags
+		await validateEmailAndPasswordSetSecurely({
+			id,
+			ip,
+			flagStatus: false,
+		});
 
 		if (returnPlaceholderPassword) {
 			return placeholderPassword;
