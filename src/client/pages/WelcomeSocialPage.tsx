@@ -11,7 +11,7 @@ export const WelcomeSocialPage = ({
 	socialProvider,
 }: WelcomeSocialPageProps) => {
 	const clientState = useClientState();
-	const { pageData = {}, queryParams } = clientState;
+	const { pageData = {}, queryParams, shortRequestId } = clientState;
 	const { formError } = pageData;
 
 	return (
@@ -21,6 +21,7 @@ export const WelcomeSocialPage = ({
 			socialProvider={socialProvider}
 			geolocation={pageData.geolocation}
 			appName={pageData.appName}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

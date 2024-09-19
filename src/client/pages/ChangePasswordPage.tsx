@@ -55,6 +55,7 @@ export const ChangePasswordPage = () => {
 			email={email}
 			fieldErrors={fieldErrors}
 			browserName={browserName}
+			shortRequestId={clientState.shortRequestId}
 		/>
 	);
 };

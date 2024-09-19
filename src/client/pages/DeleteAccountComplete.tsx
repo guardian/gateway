@@ -6,11 +6,13 @@ import { primaryButtonStyles } from '@/client/styles/Shared';
 
 type Props = {
 	returnUrl: string;
+	shortRequestId?: string;
 };
 
-export const DeleteAccountComplete = ({ returnUrl }: Props) => {
+export const DeleteAccountComplete = ({ returnUrl, shortRequestId }: Props) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Account deleted"
 			leadText={
 				<MainBodyText>

@@ -10,6 +10,7 @@ export const ResendPasswordPage = () => {
 		pageData: { email = '', formError } = {},
 		queryParams,
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -39,6 +40,7 @@ export const ResendPasswordPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="reset-password-link-expired"
 			formError={formError}
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>This link has expired.</MainBodyText>
 			<MainBodyText>

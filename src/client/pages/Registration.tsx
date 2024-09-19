@@ -11,11 +11,14 @@ import { InformationBox } from '@/client/components/InformationBox';
 import ThemedLink from '@/client/components/ThemedLink';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
+import { GatewayError } from '@/shared/model/Errors';
+
 export type RegistrationProps = {
 	email?: string;
 	recaptchaSiteKey?: string;
 	queryParams: QueryParams;
-	formError?: string;
+	formError?: GatewayError;
+	shortRequestId?: string;
 };
 
 const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
@@ -25,7 +28,10 @@ const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
 	</InformationBox>
 );
 
-export const Registration = ({ queryParams }: RegistrationProps) => {
+export const Registration = ({
+	queryParams,
+	shortRequestId,
+}: RegistrationProps) => {
 	const formTrackingName = 'register';
 
 	const { clientId } = queryParams;
@@ -35,6 +41,7 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Create a free account"
 			leadText="One account to access all Guardian products."
 		>

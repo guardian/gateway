@@ -7,6 +7,7 @@ export const NewAccountNewslettersPage = () => {
 	const {
 		pageData: { newsletters = [], accountManagementUrl } = {},
 		queryParams,
+		shortRequestId,
 	} = clientState;
 
 	return (
@@ -14,6 +15,7 @@ export const NewAccountNewslettersPage = () => {
 			newsletters={newsletters}
 			queryParams={queryParams}
 			accountManagementUrl={accountManagementUrl}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

@@ -37,6 +37,7 @@ export const Error = () => (
 		continueLink="#"
 		signOutLink="#"
 		pageError={'Something went wrong'}
+		shortRequestId="123e4567"
 	/>
 );
 
@@ -47,5 +48,6 @@ export const LoginRequiredError = () => (
 		signOutLink="#"
 		pageError={SignInErrors.GENERIC}
 		queryParams={{ returnUrl: '#', error: 'login_required' }}
+		shortRequestId="123e4567"
 	/>
 );

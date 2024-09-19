@@ -53,6 +53,7 @@ export const SetPasswordPage = () => {
 			fieldErrors={fieldErrors}
 			formError={formError}
 			browserName={browserName}
+			shortRequestId={clientState.shortRequestId}
 		/>
 	);
 };

@@ -4,7 +4,12 @@ import { SignedInAs } from '@/client/pages/SignedInAs';
 
 export const SignedInAsPage = () => {
 	const clientState = useClientState();
-	const { pageData = {}, globalMessage = {}, queryParams } = clientState;
+	const {
+		pageData = {},
+		globalMessage = {},
+		queryParams,
+		shortRequestId,
+	} = clientState;
 	const { email = '', continueLink = '', signOutLink = '', appName } = pageData;
 	const { error: pageError } = globalMessage;
 
@@ -16,6 +21,7 @@ export const SignedInAsPage = () => {
 			appName={appName}
 			pageError={pageError}
 			queryParams={queryParams}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

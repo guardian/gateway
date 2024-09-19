@@ -4,7 +4,12 @@ import { RegisterWithEmail } from '@/client/pages/RegisterWithEmail';
 
 export const RegisterWithEmailPage = () => {
 	const clientState = useClientState();
-	const { pageData = {}, recaptchaConfig, queryParams } = clientState;
+	const {
+		pageData = {},
+		recaptchaConfig,
+		queryParams,
+		shortRequestId,
+	} = clientState;
 	const { email, formError } = pageData;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -16,6 +21,7 @@ export const RegisterWithEmailPage = () => {
 			queryParams={queryParams}
 			geolocation={pageData.geolocation}
 			appName={pageData.appName}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

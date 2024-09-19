@@ -68,6 +68,7 @@ SessionExpired.story = {
 
 export const RecaptchaError = () => (
 	<ResetPassword
+		shortRequestId="123e4567"
 		email="cleo@theguardian.com"
 		headerText="Forgot password"
 		buttonText="Reset password"

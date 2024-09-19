@@ -10,6 +10,7 @@ export const WelcomeResendPage = () => {
 		pageData: { email = '', formError } = {},
 		queryParams,
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -26,6 +27,7 @@ export const WelcomeResendPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="welcome-link-expired"
 			formError={formError}
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>This link has expired.</MainBodyText>
 			<MainBodyText>

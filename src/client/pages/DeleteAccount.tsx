@@ -14,12 +14,14 @@ import { divider } from '@/client/styles/Shared';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { textSans15, textSansBold15 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
+import { GatewayError } from '@/shared/model/Errors';
 
 interface Props {
 	queryParams: QueryParams;
 	fieldErrors?: FieldError[];
-	formError?: string;
+	formError?: GatewayError;
 	error?: string;
+	shortRequestId?: string;
 }
 
 const radioGroupStyles = css`
@@ -38,6 +40,7 @@ export const DeleteAccount = ({
 	fieldErrors = [],
 	formError,
 	error,
+	shortRequestId,
 }: Props) => {
 	const [passwordError] = useState<string | undefined>(
 		fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
@@ -45,6 +48,7 @@ export const DeleteAccount = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Delete your Guardian account"
 			errorOverride={error}
 			leadText={
@@ -176,6 +180,7 @@ export const DeleteAccount = ({
 				submitButtonText="Delete your account"
 				formErrorMessageFromParent={formError}
 				disableOnSubmit
+				shortRequestId={shortRequestId}
 			>
 				{/* reason select */}
 				<RadioGroup

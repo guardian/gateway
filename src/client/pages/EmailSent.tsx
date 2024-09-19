@@ -8,6 +8,8 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 
+import { GatewayError } from '@/shared/model/Errors';
+
 export type EmailSentProps = {
 	email?: string;
 	changeEmailPage?: string;
@@ -18,8 +20,9 @@ export type EmailSentProps = {
 	noAccountInfo?: boolean;
 	recaptchaSiteKey?: string;
 	formTrackingName?: string;
-	formError?: string;
+	formError?: GatewayError;
 	instructionContext?: string;
+	shortRequestId?: string;
 };
 
 export const EmailSent = ({
@@ -35,6 +38,7 @@ export const EmailSent = ({
 	children,
 	formError,
 	instructionContext,
+	shortRequestId,
 }: PropsWithChildren<EmailSentProps>) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -54,6 +58,7 @@ export const EmailSent = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Check your inbox"
 			successOverride={showSuccess ? 'Email sent' : undefined}
 			errorOverride={
@@ -95,6 +100,7 @@ export const EmailSent = ({
 				formTrackingName={formTrackingName}
 				formError={formError}
 				queryString={queryString}
+				shortRequestId={shortRequestId}
 			/>
 		</MinimalLayout>
 	);

@@ -4,6 +4,7 @@ import { LinkButton } from '@guardian/source/react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
 import {
+	errorContextLastTypeSpacing,
 	errorContextSpacing,
 	primaryButtonStyles,
 	secondaryButtonStyles,
@@ -12,7 +13,6 @@ import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import ThemedLink from '@/client/components/ThemedLink';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { remSpace } from '@guardian/source/foundations';
 
 interface Props {
 	email: string;
@@ -21,6 +21,7 @@ interface Props {
 	appName?: string;
 	pageError?: string;
 	queryParams?: QueryParams;
+	shortRequestId?: string;
 }
 
 const DetailedLoginRequiredError = ({
@@ -39,7 +40,7 @@ const DetailedLoginRequiredError = ({
 			</li>
 			<li>Clear browser cookies and cache</li>
 		</ul>
-		<p css={[errorContextSpacing, { marginBottom: `${remSpace[3]}` }]}>
+		<p css={[errorContextSpacing, errorContextLastTypeSpacing]}>
 			For further help please contact our customer service team at{' '}
 			<ThemedLink href={locations.SUPPORT_EMAIL_MAILTO}>
 				{SUPPORT_EMAIL}
@@ -55,6 +56,7 @@ export const SignedInAs = ({
 	appName,
 	pageError,
 	queryParams,
+	shortRequestId,
 }: Props) => {
 	const [errorContext, setErrorContext] = React.useState<
 		ReactNode | undefined
@@ -69,6 +71,7 @@ export const SignedInAs = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={`Sign in to the ${appName ? `${appName} app` : 'Guardian'}`}
 			errorOverride={pageError}
 			errorContext={errorContext}

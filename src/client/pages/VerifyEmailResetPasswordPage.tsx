@@ -9,6 +9,7 @@ export const VerifyEmailResetPasswordPage = () => {
 		pageData: { email = '', formError } = {},
 		queryParams,
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -22,6 +23,7 @@ export const VerifyEmailResetPasswordPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="forgot-password"
 			showHelpCentreMessage
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>
 				As a security measure, to verify your email, you will need to reset your

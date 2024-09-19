@@ -16,6 +16,7 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 		queryParams,
 		globalMessage = {},
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 	const { email } = pageData;
 	const { emailSentSuccess } = queryParams;
@@ -36,6 +37,7 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName={formTrackingName}
+			shortRequestId={shortRequestId}
 		>
 			<MainBodyText>
 				For security reasons we need you to change your password.

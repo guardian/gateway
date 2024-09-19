@@ -23,6 +23,7 @@ type EmailSentInformationBoxProps = Pick<
 	| 'recaptchaSiteKey'
 	| 'formTrackingName'
 	| 'formError'
+	| 'shortRequestId'
 > & {
 	setRecaptchaErrorContext: React.Dispatch<
 		React.SetStateAction<React.ReactNode>
@@ -45,6 +46,7 @@ export const EmailSentInformationBox = ({
 	setRecaptchaErrorContext,
 	setRecaptchaErrorMessage,
 	queryString,
+	shortRequestId,
 }: EmailSentInformationBoxProps) => (
 	<InformationBox>
 		<InformationBoxText>
@@ -64,6 +66,7 @@ export const EmailSentInformationBox = ({
 						displayInline
 						submitButtonLink
 						hideRecaptchaMessage
+						shortRequestId={shortRequestId}
 					>
 						<EmailInput defaultValue={email} hidden hideLabel />
 					</MainForm>

@@ -39,12 +39,14 @@ export interface NewAccountNewslettersProps {
 	newsletters?: NewsLetter[];
 	queryParams: QueryParams;
 	accountManagementUrl?: string;
+	shortRequestId?: string;
 }
 
 export const NewAccountNewsletters = ({
 	newsletters,
 	queryParams,
 	accountManagementUrl = 'https://manage.theguardian.com',
+	shortRequestId,
 }: NewAccountNewslettersProps) => {
 	const formTrackingName = 'new-account-newsletters';
 	usePageLoadOphanInteraction(formTrackingName);
@@ -64,6 +66,7 @@ export const NewAccountNewsletters = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="One last thing..."
 			wide={true}
 			leadText={
@@ -98,6 +101,7 @@ export const NewAccountNewsletters = ({
 					return undefined;
 				}}
 				formTrackingName={formTrackingName}
+				shortRequestId={shortRequestId}
 			>
 				{newsletters?.length ? (
 					<ToggleSwitchList columns={2}>

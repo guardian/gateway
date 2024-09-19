@@ -49,6 +49,7 @@ WithPasscode.story = {
 
 export const WithPasscodeError = () => (
 	<PasscodeEmailSent
+		shortRequestId="123e4567"
 		passcodeAction="#"
 		expiredPage="#"
 		changeEmailPage="#"
@@ -68,6 +69,7 @@ WithPasscodeError.story = {
 
 export const WithRecaptchaError = () => (
 	<PasscodeEmailSent
+		shortRequestId="123e4567"
 		passcodeAction="#"
 		expiredPage="#"
 		changeEmailPage="#"
@@ -88,6 +90,7 @@ WithSuccessMessage.story = {
 
 export const WithErrorMessage = () => (
 	<PasscodeEmailSent
+		shortRequestId="123e4567"
 		passcodeAction="#"
 		expiredPage="#"
 		errorMessage="•⩊• UwU"
@@ -142,6 +145,7 @@ WithPasscodeRegistration.story = {
 
 export const WithPasscodeErrorRegistration = () => (
 	<PasscodeEmailSent
+		shortRequestId="123e4567"
 		passcodeAction="#/register"
 		expiredPage="#"
 		changeEmailPage="#"
@@ -161,6 +165,7 @@ WithPasscodeErrorRegistration.story = {
 
 export const WithRecaptchaErrorRegistration = () => (
 	<PasscodeEmailSent
+		shortRequestId="123e4567"
 		passcodeAction="#/register"
 		expiredPage="#"
 		changeEmailPage="#"
@@ -185,6 +190,7 @@ WithSuccessMessageRegistration.story = {
 
 export const WithErrorMessageRegistration = () => (
 	<PasscodeEmailSent
+		shortRequestId="123e4567"
 		passcodeAction="#/register"
 		expiredPage="#"
 		errorMessage="•⩊• UwU"

@@ -16,6 +16,7 @@ export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
 		queryParams,
 		globalMessage = {},
 		recaptchaConfig,
+		shortRequestId,
 	} = clientState;
 	const { email, resendEmailAction, changeEmailPage, formError } = pageData;
 	const { emailSentSuccess } = queryParams;
@@ -38,6 +39,7 @@ export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
 			noAccountInfo={noAccountInfo}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName={formTrackingName}
+			shortRequestId={shortRequestId}
 		/>
 	);
 };

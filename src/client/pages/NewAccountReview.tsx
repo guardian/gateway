@@ -33,12 +33,14 @@ export interface NewAccountReviewProps {
 	profiling?: Consent;
 	advertising?: Consent;
 	queryParams: QueryParams;
+	shortRequestId?: string;
 }
 
 export const NewAccountReview = ({
 	profiling,
 	advertising,
 	queryParams,
+	shortRequestId,
 }: NewAccountReviewProps) => {
 	const formTrackingName = 'new-account-review';
 	usePageLoadOphanInteraction(formTrackingName);
@@ -46,10 +48,12 @@ export const NewAccountReview = ({
 	if (!profiling && !advertising) {
 		return (
 			<MinimalLayout
+				shortRequestId={shortRequestId}
 				pageHeader="You're signed in! Welcome to the Guardian."
 				imageId="welcome"
 			>
 				<MainForm
+					shortRequestId={shortRequestId}
 					formAction={buildUrlWithQueryParams(
 						'/welcome/review',
 						{},
@@ -62,6 +66,7 @@ export const NewAccountReview = ({
 	}
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="You're signed in! Welcome to the Guardian."
 			imageId="welcome"
 			leadText="
@@ -80,6 +85,7 @@ export const NewAccountReview = ({
 					return undefined;
 				}}
 				submitButtonText="Save and continue"
+				shortRequestId={shortRequestId}
 			>
 				<ToggleSwitchList>
 					{!!advertising && (

@@ -9,6 +9,7 @@ type ChangePasswordCompleteProps = {
 	email?: string;
 	returnUrl?: string;
 	action: 'created' | 'updated';
+	shortRequestId?: string;
 };
 
 export const ChangePasswordComplete = ({
@@ -16,9 +17,11 @@ export const ChangePasswordComplete = ({
 	email,
 	returnUrl = 'https://www.theguardian.com/uk',
 	action,
+	shortRequestId,
 }: ChangePasswordCompleteProps) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={headerText}
 			leadText={
 				<MainBodyText>

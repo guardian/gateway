@@ -20,6 +20,7 @@ type Props = {
 	isJobs?: boolean;
 	browserName?: string;
 	queryParams: QueryParams;
+	shortRequestId?: string;
 };
 
 const emailSpan = css`
@@ -43,6 +44,7 @@ export const Welcome = ({
 	isJobs = false,
 	browserName,
 	queryParams,
+	shortRequestId,
 }: Props) => {
 	const {
 		nameFieldError,
@@ -56,6 +58,7 @@ export const Welcome = ({
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={isJobs ? 'Complete your account' : 'Create your password'}
 			errorOverride={nameFieldError}
 			errorContext={nameFieldErrorContext}
@@ -92,6 +95,7 @@ export const Welcome = ({
 					formTrackingName="welcome"
 					onInvalid={() => setFormSubmitAttempted(true)}
 					browserName={browserName}
+					shortRequestId={shortRequestId}
 				>
 					{isJobs && <NameInputField onGroupError={setGroupError} />}
 				</PasswordForm>

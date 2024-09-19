@@ -9,9 +9,13 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
 interface Props {
 	contentAccess?: Partial<UserAttributesResponse['contentAccess']>;
+	shortRequestId?: string;
 }
 
-export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
+export const DeleteAccountBlocked = ({
+	contentAccess = {},
+	shortRequestId,
+}: Props) => {
 	const hasSubscription =
 		contentAccess.digitalPack ||
 		contentAccess.paperSubscriber ||
@@ -20,6 +24,7 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader="Delete your Guardian account"
 			leadText={
 				<>

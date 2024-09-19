@@ -16,7 +16,11 @@ import {
 	addQueryParamsToPath,
 	getPersistableQueryParamsWithoutOktaParams,
 } from '@/shared/lib/queryParams';
-import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
+import {
+	GatewayError,
+	GenericErrors,
+	RegistrationErrors,
+} from '@/shared/model/Errors';
 import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OAuthError, OktaError } from '@/server/models/okta/Error';
@@ -520,12 +524,15 @@ export const OktaRegistration = async (
 	} catch (error) {
 		logger.error('Okta Registration failure', error);
 
-		const errorMessage = () => {
+		const errorMessage = (): GatewayError => {
 			if (
 				error instanceof OktaError &&
 				causesInclude(error.causes, 'email: Does not match required pattern')
 			) {
-				return RegistrationErrors.EMAIL_INVALID;
+				return {
+					message: RegistrationErrors.EMAIL_INVALID,
+					severity: 'BAU',
+				};
 			} else {
 				return RegistrationErrors.GENERIC;
 			}

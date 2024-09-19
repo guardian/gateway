@@ -25,6 +25,7 @@ export type WelcomeSocialProps = RegistrationProps & {
 	socialProvider: SocialProvider;
 	geolocation?: GeoLocation;
 	appName?: AppName;
+	shortRequestId?: string;
 };
 
 export const WelcomeSocial = ({
@@ -33,6 +34,7 @@ export const WelcomeSocial = ({
 	socialProvider,
 	geolocation,
 	appName,
+	shortRequestId,
 }: WelcomeSocialProps) => {
 	const formTrackingName = 'register';
 
@@ -41,7 +43,10 @@ export const WelcomeSocial = ({
 	const isJobs = queryParams.clientId === 'jobs';
 
 	return (
-		<MinimalLayout pageHeader={headerMessage(socialProvider)}>
+		<MinimalLayout
+			pageHeader={headerMessage(socialProvider)}
+			shortRequestId={shortRequestId}
+		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/welcome/social', {}, queryParams)}
 				submitButtonText="Confirm"
@@ -54,6 +59,7 @@ export const WelcomeSocial = ({
 					return undefined;
 				}}
 				additionalTerms={newsletterAdditionalTerms}
+				shortRequestId={shortRequestId}
 			>
 				<RegistrationConsents
 					geolocation={geolocation}

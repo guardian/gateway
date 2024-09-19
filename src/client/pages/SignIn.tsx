@@ -1,5 +1,10 @@
 import React from 'react';
-import { RegistrationErrors, SignInErrors } from '@/shared/model/Errors';
+import {
+	extractMessage,
+	GatewayError,
+	RegistrationErrors,
+	SignInErrors,
+} from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -25,9 +30,10 @@ export type SignInProps = {
 	// An error to be displayed at the top of the page
 	pageError?: string;
 	// An error to be displayed at the top of the MainForm component
-	formError?: string;
+	formError?: GatewayError;
 	recaptchaSiteKey: string;
 	isReauthenticate?: boolean;
+	shortRequestId?: string;
 };
 
 const resetPassword = css`
@@ -117,6 +123,7 @@ export const SignIn = ({
 	queryParams,
 	recaptchaSiteKey,
 	isReauthenticate = false,
+	shortRequestId,
 }: SignInProps) => {
 	const formTrackingName = 'sign-in';
 
@@ -125,11 +132,12 @@ export const SignIn = ({
 
 	const { clientId } = queryParams;
 	const isJobs = clientId === 'jobs';
-
+	const formErrorMessage = extractMessage(formError);
 	usePageLoadOphanInteraction(formTrackingName);
 
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			errorOverride={pageError}
 			errorContext={getErrorContext(pageError, queryParams)}
 			pageHeader="Sign in"
@@ -138,8 +146,12 @@ export const SignIn = ({
 			{/* AuthProviderButtons component with show boolean */}
 			{showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
 			<MainForm
+				shortRequestId={shortRequestId}
 				formErrorMessageFromParent={formError}
-				formErrorContextFromParent={getErrorContext(formError, queryParams)}
+				formErrorContextFromParent={getErrorContext(
+					formErrorMessage,
+					queryParams,
+				)}
 				formAction={buildUrlWithQueryParams(
 					isReauthenticate ? '/reauthenticate' : '/signin',
 					{},

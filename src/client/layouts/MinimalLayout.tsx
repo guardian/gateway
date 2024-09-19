@@ -3,16 +3,13 @@ import { css } from '@emotion/react';
 import MinimalHeader from '@/client/components/MinimalHeader';
 import { from, headlineBold28, remSpace } from '@guardian/source/foundations';
 import useClientState from '@/client/lib/hooks/useClientState';
-import {
-	ErrorSummary,
-	SuccessSummary,
-} from '@guardian/source-development-kitchen/react-components';
+import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
+
 import locations from '@/shared/lib/locations';
 import { Theme } from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
-	errorMessageStyles,
 } from '@/client/styles/Shared';
 import { DecorativeImageId } from '@/client/assets/decorative';
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
@@ -22,6 +19,7 @@ import {
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
@@ -33,6 +31,7 @@ interface MinimalLayoutProps {
 	errorOverride?: string;
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
+	shortRequestId?: string;
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -64,6 +63,7 @@ export const MinimalLayout = ({
 	errorOverride,
 	errorContext,
 	showErrorReportUrl = false,
+	shortRequestId,
 }: MinimalLayoutProps) => {
 	const clientState = useClientState();
 	const { globalMessage: { error, success } = {} } = clientState;
@@ -89,13 +89,13 @@ export const MinimalLayout = ({
 				)}
 				<section css={mainSectionStyles}>
 					{errorMessage && (
-						<ErrorSummary
-							message={errorMessage}
+						<GatewayErrorSummary
+							gatewayError={errorMessage}
 							context={errorContext}
+							shortRequestId={shortRequestId}
 							errorReportUrl={
 								showErrorReportUrl ? locations.REPORT_ISSUE : undefined
 							}
-							cssOverrides={errorMessageStyles}
 						/>
 					)}
 					{successMessage && !errorMessage && (

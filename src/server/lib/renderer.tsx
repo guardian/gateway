@@ -65,6 +65,7 @@ const clientStateFromRequestStateLocals = ({
 	clientHosts,
 	recaptchaConfig,
 	sentryConfig,
+	requestId,
 }: RequestState): ClientState => {
 	const clientState: ClientState = {
 		csrf,
@@ -75,6 +76,7 @@ const clientStateFromRequestStateLocals = ({
 		recaptchaConfig,
 		queryParams,
 		sentryConfig,
+		shortRequestId: requestId?.split('-').at(0),
 	};
 
 	// checking if csrf error exists in query params, and attaching it to the
@@ -140,6 +142,7 @@ export const renderer: <P extends RoutePaths>(
 
 	return `
     <!DOCTYPE html>
+    <!-- Request ID: ${clientState.shortRequestId} -->
     <html lang="en">
       <head>
         <meta charset='utf-8' />

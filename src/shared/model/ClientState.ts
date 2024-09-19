@@ -7,6 +7,7 @@ import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import { Stage } from '@/shared/model/Configuration';
 import { AppName } from '@/shared/lib/appNameUtils';
+import { GatewayError } from '@/shared/model/Errors';
 
 export interface FieldError {
 	field: string;
@@ -32,7 +33,7 @@ export interface PageData {
 	signInPageUrl?: string;
 	geolocation?: GeoLocation;
 	fieldErrors?: FieldError[];
-	formError?: string;
+	formError?: GatewayError;
 	browserName?: string;
 	isNativeApp?: IsNativeApp;
 	accountManagementUrl?: string;
@@ -97,6 +98,8 @@ export interface ClientState {
 	clientHosts: ClientHosts;
 	recaptchaConfig: RecaptchaConfig;
 	sentryConfig: SentryConfig;
+	//just the first group of the request id UUID
+	shortRequestId?: string;
 }
 
 export type CsrfState = {

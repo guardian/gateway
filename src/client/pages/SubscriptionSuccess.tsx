@@ -11,15 +11,18 @@ type UnsubscribeSuccessProps = {
 	action: SubscriptionAction;
 	returnUrl?: string;
 	accountManagementUrl?: string;
+	shortRequestId?: string;
 };
 
 export const SubscriptionSuccess = ({
 	action,
 	returnUrl = 'https://www.theguardian.com',
 	accountManagementUrl = 'https://manage.theguardian.com',
+	shortRequestId,
 }: UnsubscribeSuccessProps) => {
 	return (
 		<MinimalLayout
+			shortRequestId={shortRequestId}
 			pageHeader={`${subscriptionActionName(action)} Confirmation`}
 			leadText={
 				<MainBodyText>

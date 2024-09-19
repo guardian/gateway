@@ -15,6 +15,8 @@ import NameInputField from '@/client/components/NameInputField';
 import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
+import { GatewayError } from '@/shared/model/Errors';
+
 const listBullets = css`
 	list-style: none;
 	padding-left: 0;
@@ -75,7 +77,8 @@ interface JobsTermsAcceptProps {
 	secondName?: string;
 	userBelongsToGRS?: boolean;
 	email?: string;
-	formError?: string;
+	formError?: GatewayError;
+	shortRequestId?: string;
 }
 
 export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
@@ -85,6 +88,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 	submitUrl,
 	email,
 	formError,
+	shortRequestId,
 }) => {
 	const {
 		nameFieldError,
@@ -103,6 +107,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 			pageHeader="Welcome to Guardian&nbsp;Jobs"
 			errorOverride={nameFieldError}
 			errorContext={nameFieldErrorContext}
+			shortRequestId={shortRequestId}
 		>
 			{showOnlyNameFields ? (
 				<>
@@ -126,6 +131,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 						onInvalid={() => setFormSubmitAttempted(true)}
 						disableOnSubmit
 						formErrorMessageFromParent={formError}
+						shortRequestId={shortRequestId}
 					>
 						<NameInputField
 							onGroupError={setGroupError}
@@ -163,6 +169,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 						onInvalid={() => setFormSubmitAttempted(true)}
 						disableOnSubmit
 						formErrorMessageFromParent={formError}
+						shortRequestId={shortRequestId}
 					>
 						<NameInputField
 							onGroupError={setGroupError}

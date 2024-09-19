@@ -3,6 +3,7 @@ import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { GatewayError } from '@/shared/model/Errors';
 
 type Props = {
 	headerText: string;
@@ -10,8 +11,9 @@ type Props = {
 	submitUrl: string;
 	email: string;
 	fieldErrors: FieldError[];
-	formError?: string;
+	formError?: GatewayError;
 	browserName?: string;
+	shortRequestId?: string;
 };
 
 export const ChangePassword = ({
@@ -22,8 +24,10 @@ export const ChangePassword = ({
 	fieldErrors,
 	formError,
 	browserName,
+	shortRequestId,
 }: Props) => (
 	<MinimalLayout
+		shortRequestId={shortRequestId}
 		pageHeader={headerText}
 		leadText={
 			<MainBodyText>
@@ -41,6 +45,7 @@ export const ChangePassword = ({
 			formError={formError}
 			browserName={browserName}
 			largeFormMarginTop
+			shortRequestId={shortRequestId}
 		/>
 	</MinimalLayout>
 );
