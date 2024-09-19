@@ -130,3 +130,19 @@ const sessionResponseSchema = z.object({
 	status: z.string(),
 });
 export type SessionResponse = z.infer<typeof sessionResponseSchema>;
+
+/**
+ *	@name InternalOktaUserState
+ *	@description Okta IDX API - State of the user in the Okta determines if we can send passcodes to the user when resetting the password
+ *	@values NON_EXISTENT - user doesn't exist - not currently used in any code
+ *	@values ACTIVE_EMAIL_PASSWORD - ACTIVE - user has email + password authenticator (okta idx email verified)
+ *	@values ACTIVE_PASSWORD_ONLY - ACTIVE - user has only password authenticator (okta idx email not verified)
+ *	@values ACTIVE_EMAIL_ONLY - ACTIVE - user has only email authenticator (okta idx email verified) - not currently used in any code
+ *	@values NOT_ACTIVE - user not in ACTIVE state - not currently used in any code
+ */
+export type InternalOktaUserState =
+	| 'NON_EXISTENT'
+	| 'ACTIVE_EMAIL_PASSWORD'
+	| 'ACTIVE_PASSWORD_ONLY'
+	| 'ACTIVE_EMAIL_ONLY'
+	| 'NOT_ACTIVE';

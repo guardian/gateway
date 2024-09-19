@@ -75,6 +75,7 @@ type UnconditionalMetrics =
 	| 'OktaIDX::UnexpectedVersion'
 	| 'OktaIDXSocialSignIn::Redirect'
 	| 'OktaIDXSocialSignIn::Failure'
+	| 'OktaIDXEmailVerificationDisabled'
 	| 'VerifyEmailPage::Accessed'
 	| `${RateLimitMetrics}GatewayRateLimitHit`
 	| `User-${'EmailValidated' | 'EmailNotValidated'}-${

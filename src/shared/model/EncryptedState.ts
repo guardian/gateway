@@ -1,3 +1,4 @@
+import { InternalOktaUserState } from '@/server/models/okta/User';
 import { PersistableQueryParams } from './QueryParams';
 
 export interface EncryptedState {
@@ -13,4 +14,6 @@ export interface EncryptedState {
 	stateHandleExpiresAt?: string;
 	// Okta IDX API - Flag to determine if the user has used a passcode
 	passcodeUsed?: boolean;
+	// Okta IDX API - State of the user in the Okta determines if we can send passcodes to the user when resetting the password
+	userState?: InternalOktaUserState;
 }
