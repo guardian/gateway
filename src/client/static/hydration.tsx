@@ -7,13 +7,14 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import {
 	BrowserClient,
-	Breadcrumbs,
-	Dedupe,
+	breadcrumbsIntegration,
+	dedupeIntegration,
 	defaultStackParser,
-	getCurrentHub,
-	GlobalHandlers,
+	globalHandlersIntegration,
 	makeFetchTransport,
-	HttpContext,
+	httpContextIntegration,
+	withIsolationScope,
+	setCurrentClient,
 } from '@sentry/browser';
 import { ABProvider } from '@/client/components/ABReact';
 
@@ -34,21 +35,20 @@ export const hydrateApp = ({ routingConfig }: Props) => {
 			dsn,
 			environment: stage,
 			release: `gateway@${build}`,
-			// If you want to log something all the time, wrap your call to
-			// Sentry in a new Transaction and set `sampled` to true.
-			// An example of this is in clientSideLogger.ts
-			sampleRate: 0.2,
 			transport: makeFetchTransport,
 			stackParser: defaultStackParser,
 			integrations: [
-				new Breadcrumbs(),
-				new GlobalHandlers(),
-				new Dedupe(),
-				new HttpContext(),
+				breadcrumbsIntegration(),
+				globalHandlersIntegration(),
+				dedupeIntegration(),
+				httpContextIntegration(),
 			],
 		});
 
-		getCurrentHub().bindClient(client);
+		withIsolationScope(() => {
+			setCurrentClient(client);
+			client.init();
+		});
 	}
 
 	hydrateRoot(
