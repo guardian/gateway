@@ -4,7 +4,7 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
 
-export type UnexpectedErrorProps = {
+type UnexpectedErrorProps = {
 	shortRequestId?: string;
 };
 
