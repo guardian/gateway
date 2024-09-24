@@ -3,7 +3,7 @@ import { LogLevel } from '@/shared/model/Logger';
 import {
 	captureException,
 	captureMessage,
-	startTransaction,
+	startInactiveSpan,
 	SeverityLevel,
 } from '@sentry/browser';
 
@@ -25,9 +25,9 @@ class ClientSideLogger extends BaseLogger {
 	log(level: LogLevel, message: string, error?: any, extra?: ExtraLogFields) {
 		// Wrap the log in a new Sentry transaction.
 		// Setting `sampled` to true ensures that it is logged every time.
-		const transaction = startTransaction({
+		const span = startInactiveSpan({
 			name: 'logger-event',
-			sampled: true,
+			forceTransaction: true,
 		});
 
 		if (
@@ -38,7 +38,7 @@ class ClientSideLogger extends BaseLogger {
 			typeof error.message === 'string'
 		) {
 			captureException(error, { extra });
-			return transaction?.finish();
+			return span?.end();
 		}
 
 		if (error) {
@@ -46,12 +46,12 @@ class ClientSideLogger extends BaseLogger {
 				level: getSentryLevel(level),
 				extra,
 			});
-			return transaction?.finish();
+			return span?.end();
 		}
 
 		// should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
 		captureMessage(message, { level: getSentryLevel(level), extra });
-		return transaction?.finish();
+		return span?.end();
 	}
 
 	// eslint-disable-next-line
