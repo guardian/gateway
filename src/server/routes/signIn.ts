@@ -48,7 +48,8 @@ import {
 	redirectIdpSchema,
 } from '@/server/lib/okta/idx/introspect';
 
-const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
+const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
+	getConfiguration();
 
 /**
  * Helper method to determine if a global error should show on the sign in page
@@ -320,6 +321,13 @@ const oktaSignInController = async ({
 	}
 
 	try {
+		// idx api flow
+		if (passcodesEnabled && res.locals.queryParams.useIdxSignIn) {
+			logger.warn(
+				'IDX API password authentication flow is not fully implemented yet',
+			);
+		}
+
 		// attempt to authenticate with okta
 		// if authentication fails, it will fall through to the catch
 		// the response contains a one time use sessionToken that we can exchange
