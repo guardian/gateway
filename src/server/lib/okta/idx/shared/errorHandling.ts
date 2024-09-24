@@ -48,7 +48,7 @@ export const handlePasscodeError = ({
 			const html = renderer(emailSentPage, {
 				requestState: mergeRequestState(state, {
 					queryParams: {
-						returnUrl: state.queryParams.returnUrl,
+						...state.queryParams,
 						emailSentSuccess: false,
 					},
 					pageData: {

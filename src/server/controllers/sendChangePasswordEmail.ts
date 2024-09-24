@@ -100,7 +100,7 @@ const setEncryptedCookieOkta = (
  *     - [x] With only password authenticator
  *     - [x] With only email authenticator
  *   - [x] Non-ACTIVE user states
- *   - [ ] Non-Existent users
+ *   - [x] Non-Existent users - In `sendEmailInOkta` method
  *
  * @param {Request} req - Express request object
  * @param {ResponseWithRequestState} res - Express response object
@@ -812,6 +812,31 @@ export const sendEmailInOkta = async (
 			error.status === 404 &&
 			error.code === 'E0000007'
 		) {
+			// if we're using passcodes, then show the email sent page with OTP input
+			// even if the user doesn't exist
+			if (passcodesEnabled && usePasscodesResetPassword) {
+				// set the encrypted state cookie to persist the email and stateHandle
+				// which we need to persist during the passcode reset flow
+				setEncryptedStateCookie(res, {
+					email,
+					stateHandle: `02.id.${crypto.randomBytes(30).toString('base64')}`, // generate a 40 character random string to use in the 46 character stateHandle
+					// 30 minutes in the future
+					stateHandleExpiresAt: new Date(
+						Date.now() + 30 * 60 * 1000,
+					).toISOString(),
+					userState: 'NON_EXISTENT', // set the user state to non-existent, so we can handle this case if the user attempts to submit the passcode
+				});
+
+				// show the email sent page, with passcode instructions
+				return res.redirect(
+					303,
+					addQueryParamsToPath(
+						'/reset-password/email-sent',
+						res.locals.queryParams,
+					),
+				);
+			}
+
 			setEncryptedCookieOkta(res, email);
 
 			return res.redirect(

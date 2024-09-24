@@ -756,4 +756,29 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			});
 		});
 	});
+
+	context('NON_EXISTENT user', () => {
+		it('shows the passcode page with no account info, and using passcode returns error', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+
+			cy.contains('Reset password');
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			// passcode page
+			cy.url().should('include', '/reset-password/email-sent');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			cy.get('input[name=code]').clear().type('123456');
+			cy.contains('Submit one-time code').click();
+
+			cy.url().should('include', '/reset-password/code');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			cy.contains('Incorrect code');
+		});
+	});
 });

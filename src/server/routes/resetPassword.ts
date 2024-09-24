@@ -25,6 +25,8 @@ import {
 import { OAuthError } from '@/server/models/okta/Error';
 import { forgotPassword } from '@/server/lib/okta/api/users';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
+import { logger } from '@/server/lib/serverSideLogger';
 
 // reset password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
@@ -145,9 +147,18 @@ router.post(
 
 		// make sure we have the encrypted state cookie and the code otherwise redirect to the reset page
 		if (encryptedState?.stateHandle && code) {
-			const { stateHandle } = encryptedState;
+			const { stateHandle, userState } = encryptedState;
 
 			try {
+				// check for non-existent user state
+				// in this case throw an error to show the user the passcode is invalid
+				if (userState === 'NON_EXISTENT') {
+					throw new OAuthError({
+						error: 'api.authn.error.PASSCODE_INVALID',
+						error_description: RegistrationErrors.PASSCODE_INVALID,
+					});
+				}
+
 				// submit the passcode to Okta
 				const challengeAnswerResponse = await submitPasscode({
 					passcode: code,
@@ -250,6 +261,32 @@ router.post(
 				if (res.headersSent) {
 					return;
 				}
+
+				// log the error
+				logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+				// handle any other error, show generic error message
+				const html = renderer('/reset-password/code', {
+					requestState: mergeRequestState(res.locals, {
+						queryParams: {
+							...res.locals.queryParams,
+							emailSentSuccess: false,
+						},
+						pageData: {
+							email: encryptedState?.email,
+							timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+								encryptedState?.stateHandleExpiresAt,
+							),
+							formError: {
+								message: GenericErrors.DEFAULT,
+								severity: 'UNEXPECTED',
+							},
+							token: code,
+						},
+					}),
+					pageTitle: 'Check Your Inbox',
+				});
+				return res.type('html').send(html);
 			}
 		}
 
