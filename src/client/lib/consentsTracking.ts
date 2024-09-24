@@ -88,11 +88,11 @@ export const registrationFormSubmitOphanTracking = (
 				case Newsletters.US_BUNDLE:
 					trackInputElementInteraction(elem, 'newsletter', 'us-bundle');
 					break;
-				case Consents.SIMILAR_GUARDIAN_PRODUCTS:
+				case Consents.GUARDIAN_PRODUCTS_SERVICES:
 					trackInputElementInteraction(
 						elem,
 						'consent',
-						'similar-guardian-products',
+						'guardian_products_services',
 					);
 					break;
 			}

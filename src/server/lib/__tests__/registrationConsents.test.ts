@@ -15,13 +15,13 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 describe('registrationConsents#bodyFormFieldsToRegistrationConsents', () => {
 	it('returns expected consents and newsletters for specific IDs', () => {
 		const body = {
-			similar_guardian_products: 'on',
+			guardian_products_services: 'on',
 			[Newsletters.SATURDAY_EDITION]: 'on',
 			[Newsletters.FEAST]: undefined,
 		};
 
 		const expected: RegistrationConsents = {
-			consents: [{ id: 'similar_guardian_products', consented: true }],
+			consents: [{ id: 'guardian_products_services', consented: true }],
 			newsletters: [{ id: Newsletters.SATURDAY_EDITION, subscribed: true }],
 		};
 
@@ -29,13 +29,13 @@ describe('registrationConsents#bodyFormFieldsToRegistrationConsents', () => {
 	});
 	it('returns expected consents and newsletters for bundle IDs', () => {
 		const body = {
-			similar_guardian_products: 'on',
+			guardian_products_services: 'on',
 			[Newsletters.AU_BUNDLE]: 'on',
 			[Newsletters.US_BUNDLE]: undefined,
 		};
 
 		const expected: RegistrationConsents = {
-			consents: [{ id: 'similar_guardian_products', consented: true }],
+			consents: [{ id: 'guardian_products_services', consented: true }],
 			newsletters: [
 				{
 					id: Newsletters.SATURDAY_EDITION,
@@ -56,7 +56,7 @@ describe('registrationConsents#minifyRegistrationConsents', () => {
 	it('minifies registration consents', () => {
 		const registrationConsents: RegistrationConsents = {
 			consents: [
-				{ id: 'similar_guardian_products', consented: true },
+				{ id: 'guardian_products_services', consented: true },
 				{ id: 'holidays', consented: false },
 			],
 			newsletters: [
@@ -66,7 +66,7 @@ describe('registrationConsents#minifyRegistrationConsents', () => {
 		};
 
 		const expected =
-			'similar_guardian_products=true,holidays=false|1234=true,4321=false';
+			'guardian_products_services=true,holidays=false|1234=true,4321=false';
 		expect(minifyRegistrationConsents(registrationConsents)).toEqual(expected);
 
 		expect(JSON.stringify(registrationConsents).length).toBeGreaterThan(
@@ -77,12 +77,12 @@ describe('registrationConsents#minifyRegistrationConsents', () => {
 	it('minifies only consents', () => {
 		const registrationConsents: RegistrationConsents = {
 			consents: [
-				{ id: 'similar_guardian_products', consented: true },
+				{ id: 'guardian_products_services', consented: true },
 				{ id: 'holidays', consented: false },
 			],
 		};
 
-		const expected = 'similar_guardian_products=true,holidays=false|';
+		const expected = 'guardian_products_services=true,holidays=false|';
 
 		expect(minifyRegistrationConsents(registrationConsents)).toEqual(expected);
 
@@ -124,11 +124,11 @@ describe('registrationConsents#minifyRegistrationConsents', () => {
 describe('registrationConsents#expandRegistrationConsents', () => {
 	it('expands registration consents', () => {
 		const input =
-			'similar_guardian_products=true,holidays=false|1234=true,4321=false';
+			'guardian_products_services=true,holidays=false|1234=true,4321=false';
 
 		const expected: RegistrationConsents = {
 			consents: [
-				{ id: 'similar_guardian_products', consented: true },
+				{ id: 'guardian_products_services', consented: true },
 				{ id: 'holidays', consented: false },
 			],
 			newsletters: [
@@ -141,11 +141,11 @@ describe('registrationConsents#expandRegistrationConsents', () => {
 	});
 
 	it('expands only consents', () => {
-		const input = 'similar_guardian_products=true,holidays=false|';
+		const input = 'guardian_products_services=true,holidays=false|';
 
 		const expected: RegistrationConsents = {
 			consents: [
-				{ id: 'similar_guardian_products', consented: true },
+				{ id: 'guardian_products_services', consented: true },
 				{ id: 'holidays', consented: false },
 			],
 			newsletters: [],

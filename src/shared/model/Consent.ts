@@ -10,7 +10,7 @@ export enum Consents {
 	// OPT OUT API CONSENTS (modeled as opt ins in Gateway)
 	PROFILING = 'profiling_optin',
 	// PRODUCT CONSENTS
-	SIMILAR_GUARDIAN_PRODUCTS = 'similar_guardian_products',
+	GUARDIAN_PRODUCTS_SERVICES = 'guardian_products_services',
 	JOBS = 'jobs',
 }
 
@@ -21,7 +21,7 @@ export const CONSENTS_DATA_PAGE: string[] = [
 
 export const RegistrationConsentsFormFields = {
 	similarGuardianProducts: {
-		id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
+		id: Consents.GUARDIAN_PRODUCTS_SERVICES,
 		label:
 			'Receive information on our products and ways to support and enjoy our journalism. Toggle to opt out.',
 	},
