@@ -472,6 +472,11 @@ const changePasswordEmailIdx = async (
 						flagStatus: false,
 					});
 
+					// track the success metrics
+					trackMetric(
+						`OktaIDXResetPasswordSend::${user.status as Status}::Success`,
+					);
+
 					// now that the placeholder password has been set, the user will be in
 					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
 					// or 2. ACTIVE users - has only password authenticator (okta idx email not verified)
@@ -494,6 +499,9 @@ const changePasswordEmailIdx = async (
 		trackMetric('OktaIDXResetPasswordSend::Failure');
 
 		logger.error('Okta changePasswordEmailIdx failed', error);
+
+		// track the failure metrics
+		trackMetric(`OktaIDXResetPasswordSend::${user.status as Status}::Failure`);
 
 		// don't throw the error, so we can fall back to okta classic flow
 	}
@@ -826,6 +834,9 @@ export const sendEmailInOkta = async (
 					).toISOString(),
 					userState: 'NON_EXISTENT', // set the user state to non-existent, so we can handle this case if the user attempts to submit the passcode
 				});
+
+				// track the success metrics
+				trackMetric(`OktaIDXResetPasswordSend::NON_EXISTENT::Success`);
 
 				// show the email sent page, with passcode instructions
 				return res.redirect(
