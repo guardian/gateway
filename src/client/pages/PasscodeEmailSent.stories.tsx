@@ -47,6 +47,20 @@ WithPasscode.story = {
 	name: 'with passcode',
 };
 
+export const WithNoAccountInfo = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		passcode="123456"
+		noAccountInfo
+	/>
+);
+WithNoAccountInfo.story = {
+	name: 'with no account info',
+};
+
 export const WithPasscodeError = () => (
 	<PasscodeEmailSent
 		shortRequestId="123e4567"

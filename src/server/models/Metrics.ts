@@ -38,6 +38,7 @@ type ConditionalMetrics =
 	| 'OktaIDXInteract'
 	| 'OktaIDXRegister'
 	| 'OktaIDXResetPasswordSend'
+	| `OktaIDXResetPasswordSend::NON_EXISTENT`
 	| `OktaIDXResetPasswordSend::${Status}`
 	| `OktaIDX::${IDXPath}`
 	| 'OktaRegistration'

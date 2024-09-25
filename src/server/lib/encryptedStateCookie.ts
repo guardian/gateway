@@ -21,11 +21,27 @@ export const setEncryptedStateCookie = (
 	res: Response,
 	state: EncryptedState,
 ) => {
+	// validate and modify any fields before encrypting
+	const validated: EncryptedState = {
+		...state,
+		// We only need the first part of the state handle before the delimiter
+		// which is also much shorter to reduce the size of the cookie, but everything
+		// continues to work as expected
+		stateHandle: state.stateHandle?.split('~')[0],
+	};
+
+	// remove any undefined values
+	const cleaned: EncryptedState = Object.fromEntries(
+		Object.entries(validated).filter(([, value]) => value !== undefined),
+	);
+
+	// encrypt the state
 	const encrypted = encrypt(
-		JSON.stringify(state),
+		JSON.stringify(cleaned),
 		getConfiguration().encryptionSecretKey, // prevent the key from lingering in memory by only calling when needed
 	);
 
+	// set the cookie
 	return res.cookie(
 		encryptedStateCookieName,
 		encrypted,

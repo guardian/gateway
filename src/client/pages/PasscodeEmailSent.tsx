@@ -15,6 +15,7 @@ type Props = {
 	passcode?: string;
 	recaptchaSiteKey?: string;
 	timeUntilTokenExpiry?: number;
+	noAccountInfo?: boolean;
 };
 
 type PasscodeEmailSentProps = EmailSentProps & Props;
@@ -68,6 +69,7 @@ export const PasscodeEmailSent = ({
 	timeUntilTokenExpiry,
 	expiredPage,
 	shortRequestId,
+	noAccountInfo,
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -147,6 +149,7 @@ export const PasscodeEmailSent = ({
 				formError={formError}
 				queryString={queryString}
 				shortRequestId={shortRequestId}
+				noAccountInfo={noAccountInfo}
 			/>
 		</MinimalLayout>
 	);
