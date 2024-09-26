@@ -18,7 +18,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
 				cy.visit(
-					`/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&usePasscodesResetPassword=true`,
+					`/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
 				);
 				const timeRequestWasMade = new Date();
 
@@ -104,7 +104,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
 				cy.visit(
-					`/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}&usePasscodesResetPassword=true`,
+					`/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
 				);
 				const timeRequestWasMade = new Date();
 
@@ -161,7 +161,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.createTestUser({
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
-				cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+				cy.visit(`/reset-password`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
@@ -209,7 +209,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.createTestUser({
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
-				cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+				cy.visit(`/reset-password`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
@@ -257,7 +257,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.createTestUser({
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
-				cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+				cy.visit(`/reset-password`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
@@ -317,7 +317,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.createTestUser({
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
-				cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+				cy.visit(`/reset-password`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
@@ -369,56 +369,15 @@ describe('Password reset recovery flows - with Passcodes', () => {
 					cy.url().should('include', '/register/email-sent');
 
 					// make sure we don't use a passcode
-					// we instead reset their password using the classic flow to set a password
+					// we instead reset their password using to set a password
 					cy.visit('/reset-password');
+
 					const timeRequestWasMade = new Date();
+					cy.get('input[name=email]').clear().type(emailAddress);
+					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.get('button[type="submit"]').click();
-
-					cy.contains('Check your inbox');
-					cy.contains(emailAddress);
-					cy.contains('send again');
-					cy.contains('try another address');
-
-					cy.checkForEmailAndGetDetails(
-						emailAddress,
-						timeRequestWasMade,
-						/\/set-password\/([^"]*)/,
-					).then(({ links, body }) => {
-						expect(body).to.have.string('Welcome back');
-
-						expect(body).to.have.string('Create password');
-						expect(links.length).to.eq(2);
-						const setPasswordLink = links.find((s) =>
-							s.text?.includes('Create password'),
-						);
-						cy.visit(setPasswordLink?.href as string);
-						cy.contains('Create password');
-						cy.contains(emailAddress);
-
-						cy.get('input[name=password]').type(randomPassword());
-
-						cy.get('[data-cy="main-form-submit-button"]')
-							.click()
-							.should('be.disabled');
-						cy.contains('Password created');
-						cy.contains(emailAddress.toLowerCase());
-
-						// once the password is set, we perform reset password for passcodes
-						cy.visit(`/reset-password?usePasscodesResetPassword=true`);
-
-						const timeRequestWasMade = new Date();
-						cy.get('[data-cy="main-form-submit-button"]').click();
-
-						cy.contains('Enter your one-time code');
-						cy.contains(emailAddress);
-						cy.contains('send again');
-						cy.contains('try another address');
-
-						cy.checkForEmailAndGetDetails(
-							emailAddress,
-							timeRequestWasMade,
-						).then(({ body, codes }) => {
+					cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+						({ body, codes }) => {
 							// email
 							expect(body).to.have.string('Your verification code');
 							expect(codes?.length).to.eq(1);
@@ -438,8 +397,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.get('button[type="submit"]').click();
 
 							cy.url().should('contain', '/set-password/complete');
-						});
-					});
+						},
+					);
 				},
 			);
 		});
@@ -472,7 +431,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 						expect(oktaUser.status).to.eq(Status.STAGED);
 						// make sure we don't use a passcode
 						// we instead reset their password using passcodes
-						cy.visit('/reset-password?usePasscodesResetPassword=true');
+						cy.visit('/reset-password');
 
 						const timeRequestWasMade = new Date();
 						cy.contains('Reset password');
@@ -538,7 +497,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 						expect(oktaUser.status).to.eq(Status.STAGED);
 
 						// redirect to reset password with passcodes
-						cy.visit('/reset-password?usePasscodesResetPassword=true');
+						cy.visit('/reset-password');
 
 						const timeRequestWasMade = new Date();
 						cy.contains('Reset password');
@@ -581,7 +540,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
 				cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 					expect(oktaUser.status).to.eq(Status.STAGED);
-					cy.visit('/reset-password?usePasscodesResetPassword=true');
+					cy.visit('/reset-password');
 
 					const timeRequestWasMade = new Date();
 					cy.get('input[name=email]').type(emailAddress);
@@ -625,7 +584,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 				cy.activateTestOktaUser(emailAddress).then(() => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.PROVISIONED);
-						cy.visit('/reset-password?usePasscodesResetPassword=true');
+						cy.visit('/reset-password');
 
 						const timeRequestWasMade = new Date();
 						cy.get('input[name=email]').type(emailAddress);
@@ -671,7 +630,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 				cy.resetOktaUserPassword(emailAddress).then(() => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.RECOVERY);
-						cy.visit('/reset-password?usePasscodesResetPassword=true');
+						cy.visit('/reset-password');
 
 						const timeRequestWasMade = new Date();
 						cy.get('input[name=email]').type(emailAddress);
@@ -717,7 +676,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 				cy.expireOktaUserPassword(emailAddress).then(() => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
-						cy.visit('/reset-password?usePasscodesResetPassword=true');
+						cy.visit('/reset-password');
 
 						const timeRequestWasMade = new Date();
 						cy.get('input[name=email]').type(emailAddress);
@@ -760,7 +719,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 	context('NON_EXISTENT user', () => {
 		it('shows the passcode page with no account info, and using passcode returns error', () => {
 			const emailAddress = randomMailosaurEmail();
-			cy.visit(`/reset-password?usePasscodesResetPassword=true`);
+			cy.visit(`/reset-password`);
 
 			cy.contains('Reset password');
 			cy.get('input[name=email]').type(emailAddress);
