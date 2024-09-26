@@ -93,15 +93,6 @@ const setEncryptedCookieOkta = (
  * @name changePasswordEmailIdx
  * @description Start the Okta IDX flow to change the user's password
  *
- * NB: This is currently in testing and is not fully implemented yet, it should be used behind the `usePasscodesResetPassword` query param flag
- * Current status:
- *   - [x] ACTIVE users
- * 	   - [x] With email + password authenticator
- *     - [x] With only password authenticator
- *     - [x] With only email authenticator
- *   - [x] Non-ACTIVE user states
- *   - [x] Non-Existent users - In `sendEmailInOkta` method
- *
  * @param {Request} req - Express request object
  * @param {ResponseWithRequestState} res - Express response object
  * @param {UserResponse} user - Okta user object
@@ -114,9 +105,6 @@ const changePasswordEmailIdx = async (
 	user: UserResponse,
 	loopDetectionFlag: boolean = false,
 ): Promise<void | ResponseWithRequestState> => {
-	// placeholder warning message
-	logger.warn('Passcode reset password flow is not fully implemented yet');
-
 	try {
 		// start the IDX flow by calling interact and introspect
 		const introspectResponse = await startIdxFlow({
@@ -516,14 +504,14 @@ export const sendEmailInOkta = async (
 	const { email = '' } = req.body;
 	const path = getPath(req);
 	const {
-		queryParams: { appClientId, ref, refViewId, usePasscodesResetPassword },
+		queryParams: { appClientId, ref, refViewId, useOktaClassic },
 	} = state;
 
 	try {
 		// get the user object to check user status
 		const user = await getUser(email, req.ip);
 
-		if (passcodesEnabled && usePasscodesResetPassword) {
+		if (passcodesEnabled && !useOktaClassic) {
 			// try to start the IDX flow to send the user a passcode for reset password
 			await changePasswordEmailIdx(req, res, user);
 			// if successful, the user will be redirected to the email sent page
@@ -822,7 +810,7 @@ export const sendEmailInOkta = async (
 		) {
 			// if we're using passcodes, then show the email sent page with OTP input
 			// even if the user doesn't exist
-			if (passcodesEnabled && usePasscodesResetPassword) {
+			if (passcodesEnabled && !useOktaClassic) {
 				// set the encrypted state cookie to persist the email and stateHandle
 				// which we need to persist during the passcode reset flow
 				setEncryptedStateCookie(res, {
