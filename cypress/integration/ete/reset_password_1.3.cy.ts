@@ -8,7 +8,7 @@ const breachCheck = () => {
 	}).as('breachCheck');
 };
 
-describe('Password reset flow in Okta', () => {
+describe('Password reset flow in Okta - useOktaClassic', () => {
 	context('Account exists', () => {
 		it("changes the reader's password", () => {
 			const encodedReturnUrl =
@@ -30,7 +30,7 @@ describe('Password reset flow in Okta', () => {
 				})
 				?.then(({ emailAddress }) => {
 					cy.visit(
-						`/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+						`/reset-password?useOktaClassic=true&returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
 					);
 					const timeRequestWasMade = new Date();
 
@@ -99,7 +99,7 @@ describe('Password reset flow in Okta', () => {
 				})
 				?.then(({ emailAddress }) => {
 					cy.visit(
-						`/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+						`/reset-password?useOktaClassic=true&returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
 					);
 					const timeRequestWasMade = new Date();
 
@@ -159,7 +159,9 @@ describe('Password reset flow in Okta', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress }) => {
-					cy.visit(`/reset-password?returnUrl=${encodedReturnUrl}`);
+					cy.visit(
+						`/reset-password?useOktaClassic=true&returnUrl=${encodedReturnUrl}`,
+					);
 					const timeRequestWasMade = new Date();
 
 					cy.contains('Reset password');
@@ -224,7 +226,7 @@ describe('Password reset flow in Okta', () => {
 				})
 				?.then(({ emailAddress }) => {
 					cy.visit(
-						`/reset-password?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
+						`/reset-password?useOktaClassic=true&returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
 					);
 					const timeRequestWasMade = new Date();
 
@@ -270,7 +272,7 @@ describe('Password reset flow in Okta', () => {
 				cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 					expect(oktaUser.status).to.eq(Status.STAGED);
 
-					cy.visit('/reset-password');
+					cy.visit('/reset-password?useOktaClassic=true');
 					const timeRequestWasMade = new Date();
 
 					cy.get('input[name=email]').type(emailAddress);
@@ -323,7 +325,7 @@ describe('Password reset flow in Okta', () => {
 					const fromURI = 'fromURI1';
 
 					cy.visit(
-						`/reset-password?appClientId=${appClientId}&fromURI=${fromURI}`,
+						`/reset-password?useOktaClassic=true&appClientId=${appClientId}&fromURI=${fromURI}`,
 					);
 					const timeRequestWasMade = new Date();
 
@@ -376,7 +378,7 @@ describe('Password reset flow in Okta', () => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.PROVISIONED);
 
-						cy.visit('/reset-password');
+						cy.visit('/reset-password?useOktaClassic=true');
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -429,7 +431,7 @@ describe('Password reset flow in Okta', () => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.RECOVERY);
 
-						cy.visit('/reset-password');
+						cy.visit('/reset-password?useOktaClassic=true');
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -481,7 +483,7 @@ describe('Password reset flow in Okta', () => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
-						cy.visit('/reset-password');
+						cy.visit('/reset-password?useOktaClassic=true');
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -540,7 +542,7 @@ describe('Password reset flow in Okta', () => {
 			);
 			cy.get('input[name=email]').type('test@email.com');
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your inbox');
+			cy.contains('Enter your one-time code');
 		});
 	});
 });

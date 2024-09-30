@@ -139,11 +139,7 @@ export const setPasswordController = (
 		// If the user is using the passcode flow for registration/reset password,
 		// we need to handle the password change/creation.
 		// If there are specific failures, we fall back to the legacy Okta change password flow.
-		if (
-			passcodesEnabled &&
-			!useOktaClassic &&
-			(path === '/welcome' || res.locals.queryParams.usePasscodesResetPassword)
-		) {
+		if (passcodesEnabled && !useOktaClassic) {
 			await oktaIdxApiPasswordHandler({
 				req,
 				res,

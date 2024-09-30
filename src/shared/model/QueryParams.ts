@@ -47,8 +47,6 @@ export interface PersistableQueryParams
 	appClientId?: string;
 	// fallback to Okta Classic if needed
 	useOktaClassic?: boolean;
-	// temporary flag to enable the use of passcodes for reset password flow
-	usePasscodesResetPassword?: boolean;
 }
 
 /**

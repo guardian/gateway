@@ -1,0 +1,229 @@
+{
+	"code": 200,
+	"response": {
+		"version": "1.0.0",
+		"stateHandle": "02.id.state~c.handle",
+		"expiresAt": "2099-12-31T23:59:59.000Z",
+		"intent": "LOGIN",
+		"remediation": {
+			"type": "array",
+			"value": [
+				{
+					"rel": ["create-form"],
+					"name": "challenge-authenticator",
+					"relatesTo": ["$.currentAuthenticatorEnrollment"],
+					"href": "https://profile.thegulocal.com/idp/idx/challenge/answer",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "credentials",
+							"type": "object",
+							"form": {
+								"value": [
+									{
+										"name": "passcode",
+										"label": "Enter code"
+									}
+								]
+							},
+							"required": true
+						},
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				{
+					"rel": ["create-form"],
+					"name": "select-authenticator-authenticate",
+					"href": "https://profile.thegulocal.com/idp/idx/challenge",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "authenticator",
+							"type": "object",
+							"options": [
+								{
+									"label": "Email",
+									"value": {
+										"form": {
+											"value": [
+												{
+													"name": "id",
+													"required": true,
+													"value": "emailId",
+													"mutable": false
+												},
+												{
+													"name": "methodType",
+													"required": false,
+													"value": "email",
+													"mutable": false
+												}
+											]
+										}
+									},
+									"relatesTo": "$.authenticatorEnrollments.value[0]"
+								}
+							]
+						},
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				}
+			]
+		},
+		"currentAuthenticatorEnrollment": {
+			"type": "object",
+			"value": {
+				"profile": {
+					"email": "test@example.com"
+				},
+				"resend": {
+					"rel": ["create-form"],
+					"name": "resend",
+					"href": "https://profile.thegulocal.com/idp/idx/challenge/resend",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				"contextualData": {
+					"useEmailMagicLink": false
+				},
+				"type": "email",
+				"key": "okta_email",
+				"id": "emailId",
+				"displayName": "Email",
+				"methods": [
+					{
+						"type": "email"
+					}
+				]
+			}
+		},
+		"authenticators": {
+			"type": "array",
+			"value": [
+				{
+					"type": "email",
+					"key": "okta_email",
+					"id": "emailId",
+					"displayName": "Email",
+					"methods": [
+						{
+							"type": "email"
+						}
+					],
+					"allowedFor": "any"
+				}
+			]
+		},
+		"authenticatorEnrollments": {
+			"type": "array",
+			"value": [
+				{
+					"profile": {
+						"email": "g***7@gmail.com"
+					},
+					"type": "email",
+					"key": "okta_email",
+					"id": "emailId",
+					"displayName": "Email",
+					"methods": [
+						{
+							"type": "email"
+						}
+					]
+				}
+			]
+		},
+		"recoveryAuthenticator": {
+			"type": "object",
+			"value": {
+				"type": "password",
+				"key": "okta_password",
+				"id": "passwordId",
+				"displayName": "Password",
+				"methods": [
+					{
+						"type": "password"
+					}
+				]
+			}
+		},
+		"user": {
+			"type": "object",
+			"value": {
+				"identifier": "test@example.com"
+			}
+		},
+		"cancel": {
+			"rel": ["create-form"],
+			"name": "cancel",
+			"href": "https://profile.thegulocal.com/idp/idx/cancel",
+			"method": "POST",
+			"produces": "application/ion+json; okta-version=1.0.0",
+			"value": [
+				{
+					"name": "stateHandle",
+					"required": true,
+					"value": "02.id.state~c.handle",
+					"visible": false,
+					"mutable": false
+				}
+			],
+			"accepts": "application/json; okta-version=1.0.0"
+		},
+		"app": {
+			"type": "object",
+			"value": {
+				"name": "oidc_client",
+				"label": "sample_application",
+				"id": "clientId"
+			}
+		},
+		"authentication": {
+			"type": "object",
+			"value": {
+				"protocol": "OAUTH2.0",
+				"issuer": {
+					"id": "issuerId",
+					"name": "Authorization Server",
+					"uri": "https://profile.thegulocal.com/oauth2/issuerId"
+				},
+				"request": {
+					"max_age": -1,
+					"scope": "openid",
+					"response_type": "code",
+					"redirect_uri": "localhost",
+					"state": "state",
+					"code_challenge_method": "S256",
+					"code_challenge": "test",
+					"response_mode": "query"
+				}
+			}
+		}
+	}
+}

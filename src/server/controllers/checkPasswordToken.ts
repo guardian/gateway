@@ -209,11 +209,7 @@ export const checkTokenInOkta = async (
 	// If the user is using the passcode flow for registration/reset password,
 	// we need to handle the password change/creation.
 	// If there are specific failures, we fall back to the legacy Okta change password flow.
-	if (
-		passcodesEnabled &&
-		!res.locals.queryParams.useOktaClassic &&
-		(path === '/welcome' || state.queryParams.usePasscodesResetPassword)
-	) {
+	if (passcodesEnabled && !res.locals.queryParams.useOktaClassic) {
 		await oktaIdxApiCheckHandler({
 			path,
 			pageTitle,
