@@ -52,6 +52,7 @@ interface OAuthError {
 interface CustomClaims extends IdTokenClaims {
 	user_groups?: string[];
 	email_validated?: boolean;
+	is_guardian_user?: boolean;
 }
 
 /**
@@ -118,7 +119,7 @@ const authenticationHandler = async (
 			return redirectForGenericError(req, res);
 		}
 
-		const { user_groups, email_validated, sub, email } =
+		const { user_groups, email_validated, sub, email, is_guardian_user } =
 			tokenSet.claims() as CustomClaims;
 
 		/** ========================================================================
@@ -205,7 +206,7 @@ const authenticationHandler = async (
 		}
 
 		/** ========================================================================
-		 *  NEW SOCIAL USER HANDLING
+		 *  NEW SOCIAL USER HANDLING & IS GUARDIAN USER FLAG HANDLING
 		 *  =========================================================================
 		 */
 
@@ -219,6 +220,12 @@ const authenticationHandler = async (
 			!email_validated &&
 			user_groups?.some((group) => group === 'GuardianUser-EmailValidated');
 
+		// There is also a case where the isGuardianUser flag is in a similar state to the emailValidated flag, so we
+		// need to check that too and potentially fix it.
+		const fixIsGuardianUserFlag =
+			!is_guardian_user &&
+			user_groups?.some((group) => group === 'GuardianUser-All');
+
 		// We're unable to set the user.emailValidated field in the Okta user profile
 		// for social users when they are created, but we are able to put them in the
 		// GuardianUser-EmailValidated group.
@@ -230,12 +237,35 @@ const authenticationHandler = async (
 		// So we can use this functionality to show the onboarding flow for new social users, as
 		// there is no other trivial way to do this.
 		if (tokenSet.id_token) {
-			if (isSocialRegistration) {
+			if (isSocialRegistration || fixIsGuardianUserFlag) {
 				// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 				// updated the user profile emailValidated to true
-				await updateUser(sub, { profile: { emailValidated: true } });
+				// the same goes for the isGuardianUser flag and the GuardianUser-All group
 
+				const profile = (() => {
+					// if only the emailValidated flag needs fixing
+					if (isSocialRegistration && !fixIsGuardianUserFlag) {
+						return { emailValidated: true };
+					}
+
+					// if only the isGuardianUser flag needs fixing
+					if (fixIsGuardianUserFlag && !isSocialRegistration) {
+						return { isGuardianUser: true };
+					}
+
+					// if both flags need fixing
+					if (isSocialRegistration && fixIsGuardianUserFlag) {
+						return { emailValidated: true, isGuardianUser: true };
+					}
+				})();
+
+				await updateUser(sub, {
+					profile,
+				});
+			}
+
+			if (isSocialRegistration) {
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
 				if (
