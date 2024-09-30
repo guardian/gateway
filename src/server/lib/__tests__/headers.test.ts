@@ -93,7 +93,7 @@ describe('Content Security Policy headers', () => {
 			// Is the STS header set?
 			expect(response.header).toHaveProperty('strict-transport-security');
 			expect(response.header['strict-transport-security']).toBe(
-				'max-age=15552000; includeSubDomains',
+				'max-age=31536000; includeSubDomains',
 			);
 		},
 	);
