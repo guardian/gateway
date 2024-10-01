@@ -12,14 +12,14 @@ export const Defaults = () => (
 	<PasscodeEmailSent passcodeAction="#" expiredPage="#" />
 );
 Defaults.story = {
-	name: 'with defaults',
+	name: 'with defaults - generic',
 };
 
 export const ChangeEmail = () => (
 	<PasscodeEmailSent passcodeAction="#" expiredPage="#" changeEmailPage="#" />
 );
 ChangeEmail.story = {
-	name: 'with changeEmailPage',
+	name: 'with changeEmailPage - generic',
 };
 
 export const WithEmail = () => (
@@ -31,7 +31,7 @@ export const WithEmail = () => (
 	/>
 );
 WithEmail.story = {
-	name: 'with email',
+	name: 'with email - generic',
 };
 
 export const WithPasscode = () => (
@@ -44,7 +44,7 @@ export const WithPasscode = () => (
 	/>
 );
 WithPasscode.story = {
-	name: 'with passcode',
+	name: 'with passcode - generic',
 };
 
 export const WithNoAccountInfo = () => (
@@ -58,7 +58,7 @@ export const WithNoAccountInfo = () => (
 	/>
 );
 WithNoAccountInfo.story = {
-	name: 'with no account info',
+	name: 'with no account info - generic',
 };
 
 export const WithPasscodeError = () => (
@@ -78,7 +78,7 @@ export const WithPasscodeError = () => (
 	/>
 );
 WithPasscodeError.story = {
-	name: 'with passcode error',
+	name: 'with passcode error - generic',
 };
 
 export const WithRecaptchaError = () => (
@@ -92,14 +92,14 @@ export const WithRecaptchaError = () => (
 	/>
 );
 WithRecaptchaError.story = {
-	name: 'with reCAPTCHA error',
+	name: 'with reCAPTCHA error - generic',
 };
 
 export const WithSuccessMessage = () => (
 	<PasscodeEmailSent passcodeAction="#" expiredPage="#" showSuccess={true} />
 );
 WithSuccessMessage.story = {
-	name: 'with success message',
+	name: 'with success message - generic',
 };
 
 export const WithErrorMessage = () => (
@@ -111,56 +111,63 @@ export const WithErrorMessage = () => (
 	/>
 );
 WithErrorMessage.story = {
-	name: 'with error message',
+	name: 'with error message - generic',
 };
 
-export const DefaultsRegistration = () => (
-	<PasscodeEmailSent passcodeAction="#/register" expiredPage="#" />
-);
-DefaultsRegistration.story = {
-	name: 'with defaults - create account',
-};
-
-export const ChangeEmailRegistration = () => (
+export const DefaultsVerification = () => (
 	<PasscodeEmailSent
-		passcodeAction="#/register"
+		passcodeAction="#"
 		expiredPage="#"
-		changeEmailPage="#"
+		textType="verification"
 	/>
 );
-ChangeEmailRegistration.story = {
-	name: 'with changeEmailPage - create account',
+DefaultsVerification.story = {
+	name: 'with defaults - verification',
 };
 
-export const WithEmailRegistration = () => (
+export const ChangeEmailVerification = () => (
 	<PasscodeEmailSent
-		passcodeAction="#register"
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		textType="verification"
+	/>
+);
+ChangeEmailVerification.story = {
+	name: 'with changeEmailPage - verification',
+};
+
+export const WithEmailVerification = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
 		expiredPage="#"
 		changeEmailPage="#"
 		email="example@theguardian.com"
+		textType="verification"
 	/>
 );
-WithEmailRegistration.story = {
-	name: 'with email - create account',
+WithEmailVerification.story = {
+	name: 'with email - verification',
 };
 
-export const WithPasscodeRegistration = () => (
+export const WithPasscodeVerification = () => (
 	<PasscodeEmailSent
-		passcodeAction="#/register"
+		passcodeAction="#"
 		expiredPage="#"
 		changeEmailPage="#"
 		email="example@theguardian.com"
 		passcode="123456"
+		textType="verification"
 	/>
 );
-WithPasscodeRegistration.story = {
-	name: 'with passcode - create account',
+WithPasscodeVerification.story = {
+	name: 'with passcode - verification',
 };
 
-export const WithPasscodeErrorRegistration = () => (
+export const WithPasscodeErrorVerification = () => (
 	<PasscodeEmailSent
 		shortRequestId="123e4567"
-		passcodeAction="#/register"
+		passcodeAction="#"
 		expiredPage="#"
 		changeEmailPage="#"
 		email="example@theguardian.com"
@@ -171,45 +178,156 @@ export const WithPasscodeErrorRegistration = () => (
 				message: 'Invalid code',
 			},
 		]}
+		textType="verification"
 	/>
 );
-WithPasscodeErrorRegistration.story = {
-	name: 'with passcode error - create account',
+WithPasscodeErrorVerification.story = {
+	name: 'with passcode error - verification',
 };
 
-export const WithRecaptchaErrorRegistration = () => (
+export const WithRecaptchaErrorVerification = () => (
 	<PasscodeEmailSent
 		shortRequestId="123e4567"
-		passcodeAction="#/register"
+		passcodeAction="#"
 		expiredPage="#"
 		changeEmailPage="#"
 		email="example@theguardian.com"
 		recaptchaSiteKey="invalid-key"
+		textType="verification"
 	/>
 );
-WithRecaptchaErrorRegistration.story = {
-	name: 'with reCAPTCHA error - create account',
+WithRecaptchaErrorVerification.story = {
+	name: 'with reCAPTCHA error - verification',
 };
 
-export const WithSuccessMessageRegistration = () => (
+export const WithSuccessMessageVerification = () => (
 	<PasscodeEmailSent
-		passcodeAction="#/register"
+		passcodeAction="#"
 		expiredPage="#"
 		showSuccess={true}
+		textType="verification"
 	/>
 );
-WithSuccessMessageRegistration.story = {
-	name: 'with success message - create account',
+WithSuccessMessageVerification.story = {
+	name: 'with success message - verification',
 };
 
-export const WithErrorMessageRegistration = () => (
+export const WithErrorMessageVerification = () => (
 	<PasscodeEmailSent
 		shortRequestId="123e4567"
-		passcodeAction="#/register"
+		passcodeAction="#"
 		expiredPage="#"
 		errorMessage="•⩊• UwU"
+		textType="verification"
 	/>
 );
-WithErrorMessageRegistration.story = {
-	name: 'with error message - create account',
+WithErrorMessageVerification.story = {
+	name: 'with error message - verification',
+};
+
+export const DefaultsSecurity = () => (
+	<PasscodeEmailSent passcodeAction="#" expiredPage="#" textType="security" />
+);
+DefaultsVerification.story = {
+	name: 'with defaults - security',
+};
+
+export const ChangeEmailSecurity = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		textType="security"
+	/>
+);
+ChangeEmailVerification.story = {
+	name: 'with changeEmailPage - security',
+};
+
+export const WithEmailSecurity = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		textType="security"
+	/>
+);
+WithEmailVerification.story = {
+	name: 'with email - security',
+};
+
+export const WithPasscodeSecurity = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		passcode="123456"
+		textType="security"
+	/>
+);
+WithPasscodeVerification.story = {
+	name: 'with passcode - security',
+};
+
+export const WithPasscodeErrorSecurity = () => (
+	<PasscodeEmailSent
+		shortRequestId="123e4567"
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		passcode="123456"
+		fieldErrors={[
+			{
+				field: 'code',
+				message: 'Invalid code',
+			},
+		]}
+		textType="security"
+	/>
+);
+WithPasscodeErrorVerification.story = {
+	name: 'with passcode error - security',
+};
+
+export const WithRecaptchaErrorSecurity = () => (
+	<PasscodeEmailSent
+		shortRequestId="123e4567"
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		recaptchaSiteKey="invalid-key"
+		textType="security"
+	/>
+);
+WithRecaptchaErrorVerification.story = {
+	name: 'with reCAPTCHA error - security',
+};
+
+export const WithSuccessMessageSecurity = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		showSuccess={true}
+		textType="security"
+	/>
+);
+WithSuccessMessageVerification.story = {
+	name: 'with success message - security',
+};
+
+export const WithErrorMessageSecurity = () => (
+	<PasscodeEmailSent
+		shortRequestId="123e4567"
+		passcodeAction="#"
+		expiredPage="#"
+		errorMessage="•⩊• UwU"
+		textType="security"
+	/>
+);
+WithErrorMessageVerification.story = {
+	name: 'with error message - security',
 };
