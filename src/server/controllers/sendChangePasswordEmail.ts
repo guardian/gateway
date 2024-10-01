@@ -28,7 +28,7 @@ import { Status, UserResponse } from '@/server/models/okta/User';
 import { OktaError } from '@/server/models/okta/Error';
 import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
-import { PasswordRoutePath } from '@/shared/model/Routes';
+import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
 import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
@@ -97,14 +97,25 @@ const setEncryptedCookieOkta = (
  * @param {ResponseWithRequestState} res - Express response object
  * @param {UserResponse} user - Okta user object
  * @param {boolean} loopDetectionFlag - Flag to prevent infinite loops
+ * @param {Extract<'/reset-password/email-sent' | '/signin/email-sent', RoutePaths>} emailSentPage - Email sent page path
  * @returns {Promise<void | ResponseWithRequestState>}
  */
-const changePasswordEmailIdx = async (
-	req: Request,
-	res: ResponseWithRequestState,
-	user: UserResponse,
-	loopDetectionFlag: boolean = false,
-): Promise<void | ResponseWithRequestState> => {
+export const changePasswordEmailIdx = async ({
+	req,
+	res,
+	user,
+	loopDetectionFlag = false,
+	emailSentPage = '/reset-password/email-sent',
+}: {
+	req: Request;
+	res: ResponseWithRequestState;
+	user: UserResponse;
+	loopDetectionFlag?: boolean;
+	emailSentPage?: Extract<
+		'/reset-password/email-sent' | '/signin/email-sent',
+		RoutePaths
+	>;
+}): Promise<void | ResponseWithRequestState> => {
 	try {
 		// start the IDX flow by calling interact and introspect
 		const introspectResponse = await startIdxFlow({
@@ -232,10 +243,7 @@ const changePasswordEmailIdx = async (
 					// show the email sent page, with passcode instructions
 					return res.redirect(
 						303,
-						addQueryParamsToPath(
-							'/reset-password/email-sent',
-							res.locals.queryParams,
-						),
+						addQueryParamsToPath(emailSentPage, res.locals.queryParams),
 					);
 				} else if (passwordAuthenticatorId && !emailAuthenticatorId) {
 					// user has only password authenticator so:
@@ -354,10 +362,7 @@ const changePasswordEmailIdx = async (
 					// show the email sent page, with passcode instructions
 					return res.redirect(
 						303,
-						addQueryParamsToPath(
-							'/reset-password/email-sent',
-							res.locals.queryParams,
-						),
+						addQueryParamsToPath(emailSentPage, res.locals.queryParams),
 					);
 				} else if (emailAuthenticatorId && !passwordAuthenticatorId) {
 					// user has only email authenticator so:
@@ -384,7 +389,13 @@ const changePasswordEmailIdx = async (
 					// now that the placeholder password has been set, the user will be in
 					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
 					// so we can call this method again to send the user a passcode
-					return changePasswordEmailIdx(req, res, user, true);
+					return changePasswordEmailIdx({
+						req,
+						res,
+						user,
+						loopDetectionFlag: true,
+						emailSentPage,
+					});
 				}
 			}
 			// eslint-disable-next-line no-fallthrough -- allow fallthrough for time being for cases we haven't implemented yet
@@ -473,7 +484,13 @@ const changePasswordEmailIdx = async (
 					// as we've just set a placeholder password for them
 					// but we first need to get the updated user object
 					const updatedUser = await getUser(user.id, req.ip);
-					return changePasswordEmailIdx(req, res, updatedUser, true);
+					return changePasswordEmailIdx({
+						req,
+						res,
+						user: updatedUser,
+						loopDetectionFlag: true,
+						emailSentPage,
+					});
 				} catch (error) {
 					logger.error(
 						'Okta user activation failed',
@@ -513,7 +530,11 @@ export const sendEmailInOkta = async (
 
 		if (passcodesEnabled && !useOktaClassic) {
 			// try to start the IDX flow to send the user a passcode for reset password
-			await changePasswordEmailIdx(req, res, user);
+			await changePasswordEmailIdx({
+				req,
+				res,
+				user,
+			});
 			// if successful, the user will be redirected to the email sent page
 			// so we need to check if the headers have been sent to prevent further processing
 			if (res.headersSent) {
