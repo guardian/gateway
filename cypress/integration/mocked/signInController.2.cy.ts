@@ -20,7 +20,7 @@ context('When I submit the form on /signin', () => {
 				authenticationFailedError.response,
 			);
 			cy.get('button[type=submit]').click();
-			cy.contains("Email and password don't match");
+			cy.contains('Email and password don’t match');
 		},
 	);
 	specify('if okta authentication succeeds then I should be signed in.', () => {
@@ -56,7 +56,7 @@ context('When I submit the form on /reauthenticate', () => {
 				authenticationFailedError.response,
 			);
 			cy.get('button[type=submit]').click();
-			cy.contains("Email and password don't match");
+			cy.contains('Email and password don’t match');
 		},
 	);
 
