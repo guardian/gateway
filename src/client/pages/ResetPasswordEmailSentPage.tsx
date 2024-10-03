@@ -43,6 +43,7 @@ export const ResetPasswordEmailSentPage = () => {
 				passcode={token}
 				expiredPage={buildUrl('/reset-password/expired')}
 				noAccountInfo
+				textType="generic"
 			/>
 		);
 	}

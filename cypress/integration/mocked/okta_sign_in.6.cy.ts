@@ -241,7 +241,7 @@ describe('Sign in flow', () => {
 				errorCauses: [],
 			});
 			cy.get('[data-cy=main-form-submit-button]').click();
-			cy.contains("Email and password don't match");
+			cy.contains('Email and password don’t match');
 		});
 
 		it('shows a generic error message when okta rate limited', function () {

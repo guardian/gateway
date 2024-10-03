@@ -22,7 +22,7 @@ export enum ResetPasswordErrors {
 
 export enum SignInErrors {
 	GENERIC = 'There was a problem signing in, please try again.',
-	AUTHENTICATION_FAILED = "Email and password don't match",
+	AUTHENTICATION_FAILED = 'Email and password don’t match',
 	SOCIAL_SIGNIN_ERROR = 'Social sign-in unsuccessful',
 }
 

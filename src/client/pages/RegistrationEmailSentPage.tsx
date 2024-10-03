@@ -50,6 +50,7 @@ export const RegistrationEmailSentPage = () => {
 				passcode={token}
 				shortRequestId={shortRequestId}
 				expiredPage={buildUrl('/welcome/expired')}
+				textType="verification"
 			/>
 		);
 	}

@@ -8,6 +8,8 @@ import { PasscodeInput } from '@/client/components/PasscodeInput';
 import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 import { EmailSentProps } from '@/client/pages/EmailSent';
 
+type TextType = 'verification' | 'security' | 'generic';
+
 type Props = {
 	passcodeAction: string;
 	expiredPage: string;
@@ -16,6 +18,7 @@ type Props = {
 	recaptchaSiteKey?: string;
 	timeUntilTokenExpiry?: number;
 	noAccountInfo?: boolean;
+	textType?: TextType;
 };
 
 type PasscodeEmailSentProps = EmailSentProps & Props;
@@ -29,29 +32,42 @@ type Text = {
 	submitButtonText: string;
 };
 
-const getText = (isRegistration = false): Text => {
-	if (isRegistration) {
-		return {
-			title: 'Enter your code',
-			successOverride: 'Email with verification code sent',
-			sentTextWithEmail: 'We’ve sent a temporary verification code to',
-			sentTextWithoutEmail:
-				'We’ve sent you a temporary verification code. Please check your inbox.',
-			securityText:
-				'For your security, the verification code will expire in 30 minutes.',
-			submitButtonText: 'Submit verification code',
-		};
+const getText = (textType: TextType): Text => {
+	switch (textType) {
+		case 'verification':
+			return {
+				title: 'Enter your code',
+				successOverride: 'Email with verification code sent',
+				sentTextWithEmail: 'We’ve sent a temporary verification code to',
+				sentTextWithoutEmail:
+					'We’ve sent you a temporary verification code. Please check your inbox.',
+				securityText:
+					'For your security, the verification code will expire in 30 minutes.',
+				submitButtonText: 'Submit verification code',
+			};
+		case 'security':
+			return {
+				title: 'Enter your verification code',
+				successOverride: 'Email with verification code sent',
+				sentTextWithEmail:
+					'For security reasons we need you to change your password. We’ve sent a 6-digit verification code to',
+				sentTextWithoutEmail:
+					'For security reasons we need you to change your password. We’ve sent you a 6-digit verification code. Please check your inbox.',
+				securityText: 'For your security, the code will expire in 30 minutes.',
+				submitButtonText: 'Submit verification code',
+			};
+		case 'generic':
+		default:
+			return {
+				title: 'Enter your one-time code',
+				successOverride: 'Email with one time code sent',
+				sentTextWithEmail: 'We’ve sent a 6-digit code to',
+				sentTextWithoutEmail:
+					'We’ve sent you a 6-digit code. Please check your inbox.',
+				securityText: 'For your security, the code will expire in 30 minutes.',
+				submitButtonText: 'Submit one-time code',
+			};
 	}
-
-	return {
-		title: 'Enter your one-time code',
-		successOverride: 'Email with one time code sent',
-		sentTextWithEmail: 'We’ve sent a 6-digit code to',
-		sentTextWithoutEmail:
-			'We’ve sent you a 6-digit code. Please check your inbox.',
-		securityText: 'For your security, the code will expire in 30 minutes.',
-		submitButtonText: 'Submit one-time code',
-	};
 };
 
 export const PasscodeEmailSent = ({
@@ -70,12 +86,13 @@ export const PasscodeEmailSent = ({
 	expiredPage,
 	shortRequestId,
 	noAccountInfo,
+	textType = 'generic',
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
 
-	const text = getText(passcodeAction.includes('/register'));
+	const text = getText(textType);
 
 	useEffect(() => {
 		// we only want this to run in the browser as window is not

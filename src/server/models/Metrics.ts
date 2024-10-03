@@ -48,6 +48,7 @@ type ConditionalMetrics =
 	| 'OktaIdxSetPassword'
 	| 'OktaSetPassword'
 	| 'OktaSignIn'
+	| 'OktaIdxSignIn'
 	| 'OktaSignOut'
 	| 'OktaSignOutGlobal'
 	| 'OktaUpdatePassword'
