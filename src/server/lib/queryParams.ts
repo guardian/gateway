@@ -52,7 +52,6 @@ export const parseExpressQueryParams = (
 		appClientId,
 		maxAge,
 		useOktaClassic,
-		useIdxSignIn,
 	}: Record<keyof QueryParams, string | undefined>, // parameters from req.query
 	// some parameters may be manually passed in req.body too,
 	// generally for tracking purposes
@@ -77,7 +76,6 @@ export const parseExpressQueryParams = (
 		appClientId,
 		maxAge: stringToNumber(maxAge),
 		useOktaClassic: isStringBoolean(useOktaClassic),
-		useIdxSignIn: isStringBoolean(useIdxSignIn),
 	};
 };
 
