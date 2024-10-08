@@ -229,8 +229,8 @@ describe('Sign in flow', () => {
 			cy.contains('Sign in with a different email');
 		});
 
-		it('shows an error message when okta authentication fails', function () {
-			cy.visit('/signin');
+		it('shows an error message when okta authentication fails - useOktaClassic', function () {
+			cy.visit('/signin?useOktaClassic=true');
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.get('input[name="password"]').type('password');
 			cy.mockNext(401, {
@@ -244,8 +244,8 @@ describe('Sign in flow', () => {
 			cy.contains('Email and password don’t match');
 		});
 
-		it('shows a generic error message when okta rate limited', function () {
-			cy.visit('/signin');
+		it('shows a generic error message when okta rate limited - useOktaClassic', function () {
+			cy.visit('/signin?useOktaClassic=true');
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.get('input[name="password"]').type('password');
 			cy.mockNext(429, {
@@ -259,8 +259,8 @@ describe('Sign in flow', () => {
 			cy.contains('There was a problem signing in, please try again.');
 		});
 
-		it('shows a generic error message when okta api response unknown', function () {
-			cy.visit('/signin');
+		it('shows a generic error message when okta api response unknown - useOktaClassic', function () {
+			cy.visit('/signin?useOktaClassic=true');
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.get('input[name="password"]').type('password');
 			cy.mockNext(403, {
@@ -274,8 +274,10 @@ describe('Sign in flow', () => {
 			cy.contains('There was a problem signing in, please try again.');
 		});
 
-		it('loads the redirectUrl upon successful authentication for validated user', function () {
-			cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+		it('loads the redirectUrl upon successful authentication for validated user - useOktaClassic', function () {
+			cy.visit(
+				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useOktaClassic=true',
+			);
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.get('input[name="password"]').type('password');
 			cy.mockNext(200, {
@@ -324,8 +326,8 @@ describe('Sign in flow', () => {
 			});
 		});
 
-		it('redirects to the default url if no redirectUrl given', function () {
-			cy.visit('/signin');
+		it('redirects to the default url if no redirectUrl given - useOktaClassic', function () {
+			cy.visit('/signin?useOktaClassic=true');
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.get('input[name="password"]').type('password');
 			cy.mockNext(200, {
