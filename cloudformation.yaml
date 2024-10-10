@@ -621,13 +621,27 @@ Resources:
       AlarmDescription: No one has successfully signed ins in the last 20 minutes.
       Metrics:
         - Id: totalSignInCount
-          Expression: oktaSignInCount
+          Expression: oktaSignInCount + oktaIdxSignInCount
           Label: 'Total sign-ins in Okta'
         - Id: oktaSignInCount
           MetricStat:
             Metric:
               Namespace: Gateway
               MetricName: 'OktaSignIn::Success'
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
+            Period: 1200
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+        - Id: oktaIdxSignInCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'OktaIDXSignIn::Success'
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'
