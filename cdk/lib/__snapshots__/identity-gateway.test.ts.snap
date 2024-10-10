@@ -1694,7 +1694,7 @@ systemctl start identity-gateway
                     "Value": "identity-gateway",
                   },
                 ],
-                "MetricName": "OktaIDXSignIn::Success",
+                "MetricName": "OktaIdxSignIn::Success",
                 "Namespace": "Gateway",
               },
               "Period": 1200,
