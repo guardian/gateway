@@ -319,12 +319,6 @@ const oktaIdxApiSignInController = async ({
 	req: Request;
 	res: ResponseWithRequestState;
 }) => {
-	// TODO: remove when the useIdxSignIn feature flag is removed
-	// placeholder warning message
-	logger.warn(
-		'IDX API password authentication flow is not fully implemented yet',
-	);
-
 	// get the email and password from the request body
 	const { email = '', password = '' } = req.body;
 
@@ -604,7 +598,7 @@ const oktaSignInController = async ({
 
 	try {
 		// idx api flow
-		if (passcodesEnabled && res.locals.queryParams.useIdxSignIn) {
+		if (passcodesEnabled && !res.locals.queryParams.useOktaClassic) {
 			// try to start the IDX flow to sign in the user with a password
 			await oktaIdxApiSignInController({
 				req,
