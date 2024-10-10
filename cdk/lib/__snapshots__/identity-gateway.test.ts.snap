@@ -1649,7 +1649,7 @@ systemctl start identity-gateway
         ],
         "Metrics": [
           {
-            "Expression": "oktaSignInCount",
+            "Expression": "oktaSignInCount + oktaIdxSignInCount",
             "Id": "totalSignInCount",
             "Label": "Total sign-ins in Okta",
           },
@@ -1670,6 +1670,31 @@ systemctl start identity-gateway
                   },
                 ],
                 "MetricName": "OktaSignIn::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 1200,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+          {
+            "Id": "oktaIdxSignInCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "Stage",
+                    "Value": {
+                      "Ref": "Stage",
+                    },
+                  },
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                ],
+                "MetricName": "OktaIDXSignIn::Success",
                 "Namespace": "Gateway",
               },
               "Period": 1200,
