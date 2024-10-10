@@ -641,7 +641,7 @@ Resources:
           MetricStat:
             Metric:
               Namespace: Gateway
-              MetricName: 'OktaIDXSignIn::Success'
+              MetricName: 'OktaIdxSignIn::Success'
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'
