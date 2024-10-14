@@ -1054,6 +1054,9 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
           "KeyName": {
             "Ref": "KeyName",
           },
+          "MetadataOptions": {
+            "HttpTokens": "required",
+          },
           "SecurityGroupIds": [
             {
               "Ref": "InstanceSecurityGroup",
