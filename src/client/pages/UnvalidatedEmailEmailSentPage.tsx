@@ -50,6 +50,7 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 				expiredPage={buildUrl('/reset-password/expired')}
 				noAccountInfo
 				textType="security"
+				shortRequestId={shortRequestId}
 			/>
 		);
 	}
