@@ -125,3 +125,51 @@ export const IsReauthenticate = (args: SignInProps) => (
 IsReauthenticate.story = {
 	name: 'showing /reauthenticate page',
 };
+
+export const WithPasscodeSelectedDefaultPassword = (args: SignInProps) => (
+	<SignIn {...{ ...args, defaultView: 'password', currentView: 'passcode' }} />
+);
+WithPasscodeSelectedDefaultPassword.story = {
+	name: 'with passcode checkbox checked',
+};
+
+export const WithPasscodeSelectedDefaultPasswordError = (args: SignInProps) => (
+	<SignIn
+		{...{
+			...args,
+			defaultView: 'password',
+			currentView: 'passcode',
+			pageError: SignInErrors.PASSCODE_EXPIRED,
+		}}
+	/>
+);
+WithPasscodeSelectedDefaultPassword.story = {
+	name: 'with passcode checkbox checked',
+};
+
+export const WithPasscodeSelectedDefaultPasscode = (args: SignInProps) => (
+	<SignIn {...{ ...args, defaultView: 'passcode' }} />
+);
+WithPasscodeSelectedDefaultPasscode.story = {
+	name: 'with passcode checkbox checked',
+};
+
+export const WithPasscodeSelectedDefaultPasscodeError = (args: SignInProps) => (
+	<SignIn
+		{...{
+			...args,
+			defaultView: 'passcode',
+			pageError: SignInErrors.PASSCODE_EXPIRED,
+		}}
+	/>
+);
+WithPasscodeSelectedDefaultPasscodeError.story = {
+	name: 'with passcode checkbox checked',
+};
+
+export const WithPasswordSelectedDefaultPasscode = (args: SignInProps) => (
+	<SignIn {...{ ...args, defaultView: 'passcode', currentView: 'password' }} />
+);
+WithPasswordSelectedDefaultPasscode.story = {
+	name: 'with password checkbox checked',
+};
