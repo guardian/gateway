@@ -18,7 +18,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { logger } from '@/server/lib/serverSideLogger';
-import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
+import { dangerouslySetPlaceholderPassword } from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';

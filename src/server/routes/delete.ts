@@ -23,7 +23,7 @@ import {
 } from '@/shared/lib/queryParams';
 import { GenericErrors } from '@/shared/model/Errors';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
-import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
+import { dangerouslySetPlaceholderPassword } from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { requestStateHasOAuthTokens } from '@/server/lib/middleware/requestState';
 
