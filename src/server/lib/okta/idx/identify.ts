@@ -35,7 +35,7 @@ const identifyResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type IdentifyResponse = z.infer<typeof identifyResponseSchema>;
+export type IdentifyResponse = z.infer<typeof identifyResponseSchema>;
 
 // Body type for the identify request
 type IdentifyBody = {
