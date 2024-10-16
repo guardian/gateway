@@ -48,8 +48,10 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import {
 	oktaIdxApiSignInController,
+	oktaIdxApiSubmitPasscodeController,
 	oktaSignInControllerErrorHandler,
 } from '@/server/controllers/signInControllers';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 
 const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
 	getConfiguration();
@@ -74,6 +76,11 @@ export const getErrorMessageFromQueryParams = (
 	if (error === RegistrationErrors.PROVISIONING_FAILURE) {
 		return error;
 	}
+
+	if (error === SignInErrors.PASSCODE_EXPIRED) {
+		return SignInErrors.PASSCODE_EXPIRED;
+	}
+
 	// TODO: we're propagating a generic error message for now until we know what we're doing with the error_description parameter
 	if (error_description) {
 		return SignInErrors.GENERIC;
@@ -246,6 +253,7 @@ router.post(
 router.post(
 	'/signin',
 	handleRecaptcha,
+	redirectIfLoggedIn,
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
 		const {
 			queryParams: { appClientId },
@@ -258,6 +266,61 @@ router.post(
 			appClientId,
 		});
 	}),
+);
+
+// Essentially the email-sent page, but for passcode sign in
+// we're not using /signin/email-sent as that route is used by the security/email validation flow
+router.get(
+	'/signin/code',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+
+		const encryptedState = readEncryptedStateCookie(req);
+
+		if (encryptedState?.email && encryptedState.stateHandle) {
+			try {
+				const html = renderer('/signin/code', {
+					requestState: mergeRequestState(state, {
+						pageData: {
+							email: readEncryptedStateCookie(req)?.email,
+							timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+								encryptedState.stateHandleExpiresAt,
+							),
+						},
+					}),
+					pageTitle: 'Check Your Inbox',
+				});
+				return res.type('html').send(html);
+			} catch (error) {
+				logger.error(`${req.method} ${req.originalUrl} Error`, error);
+			}
+		}
+
+		// on error, redirect to the sign in page
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/signin', state.queryParams),
+		);
+	},
+);
+
+router.post(
+	'/signin/code',
+	redirectIfLoggedIn,
+	oktaIdxApiSubmitPasscodeController,
+);
+
+router.get(
+	'/signin/code/expired',
+	(_: Request, res: ResponseWithRequestState) => {
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/signin', res.locals.queryParams, {
+				error: SignInErrors.PASSCODE_EXPIRED,
+			}),
+		);
+	},
 );
 
 const oktaSignInController = async ({

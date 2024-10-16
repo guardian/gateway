@@ -1,7 +1,12 @@
+import crypto from 'node:crypto';
 import { Request } from 'express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+	readEncryptedStateCookie,
+	setEncryptedStateCookie,
+	updateEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { isOktaError } from '@/server/lib/okta/api/errors';
 import { getUser, getUserGroups } from '@/server/lib/okta/api/users';
 import {
@@ -18,7 +23,10 @@ import {
 } from '@/server/lib/okta/idx/identify';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 import { getLoginRedirectUrl } from '@/server/lib/okta/idx/shared/idxFetch';
-import { submitPassword } from '@/server/lib/okta/idx/shared/submitPasscode';
+import {
+	submitPasscode,
+	submitPassword,
+} from '@/server/lib/okta/idx/shared/submitPasscode';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { renderer } from '@/server/lib/renderer';
@@ -28,8 +36,21 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { OAuthError, OktaError } from '@/server/models/okta/Error';
 import { changePasswordEmailIdx } from '@/server/controllers/sendChangePasswordEmail';
-import { GatewayError, SignInErrors } from '@/shared/model/Errors';
+import {
+	GatewayError,
+	GenericErrors,
+	RegistrationErrors,
+	SignInErrors,
+} from '@/shared/model/Errors';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
+import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { UserResponse } from '@/server/models/okta/User';
+import {
+	forceUserIntoActiveState,
+	sendVerifyEmailAuthenticatorIdx,
+} from '@/server/controllers/oktaIdxShared';
 
 /**
  * @name SignInError
@@ -149,6 +170,194 @@ const startIdxSignInFlow = async ({
 };
 
 /**
+ * @name oktaIdxApiSignInPasscodeController
+ * @description Use the Okta IDX API to attempt to send the user a passcode to sign in
+ * @param {Request} req - Express request object
+ * @param {ResponseWithRequestState} res - Express response object
+ * @returns {Promise<void>}
+ */
+const oktaIdxApiSignInPasscodeController = async ({
+	req,
+	res,
+	loopDetectionFlag = false,
+}: {
+	req: Request;
+	res: ResponseWithRequestState;
+	loopDetectionFlag?: boolean;
+}) => {
+	const { email = '' } = req.body;
+
+	try {
+		// start the IDX flow to sign the user in and get the identify response and user object
+		const [identifyResponse, user] = await startIdxSignInFlow({
+			email,
+			req,
+			res,
+		});
+
+		// determine the user status and what action to take
+		switch (user.status) {
+			case 'ACTIVE': {
+				/**
+				 *
+				 * If the user is ACTIVE, then they'll be in one of 3 states:
+				 * 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+				 * 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+				 * 3. ACTIVE users - has only email authenticator (SOCIAL users - no password, or passcode only users (not implemented yet))
+				 *
+				 * We can identify the users state by calling the IDX API /identify endpoint
+				 * and checking the authenticators available
+				 *
+				 * Depending on their state, we have to perform different steps to reset their password
+				 *
+				 * This only happens when the "Username enumeration protection" setting is disabled in Okta
+				 * under Security > General > User enumeration prevention
+				 *
+				 * When this is enabled, the IDX API will behave the same for every user,
+				 * regardless of their status
+				 *
+				 * When disabled, the IDX API will return different remediations based on the
+				 * user's status, which is helpful for us to determine the correct flow
+				 *
+				 */
+				// check for the "email" authenticator, we can authenticate with email (passcode)
+				// if this authenticator is present
+				const emailAuthenticatorId = findAuthenticatorId({
+					authenticator: 'email',
+					response: identifyResponse,
+					remediationName: 'select-authenticator-authenticate',
+				});
+
+				// we also check for the "password" authenticator, to identify the user state
+				const passwordAuthenticatorId = findAuthenticatorId({
+					authenticator: 'password',
+					response: identifyResponse,
+					remediationName: 'select-authenticator-authenticate',
+				});
+
+				// if the user has email authenticator, we can send them a passcode
+				if (emailAuthenticatorId) {
+					// user has email authenticator so:
+					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+					// 3. ACTIVE users - has only email authenticator (SOCIAL users, no password)
+					// these users can be sent a passcode to sign in
+
+					// call the "challenge" endpoint to start the email challenge process
+					// and send the user a passcode
+					const challengeEmailResponse = await challenge(
+						identifyResponse.stateHandle,
+						{
+							id: emailAuthenticatorId,
+							methodType: 'email',
+						},
+						req.ip,
+					);
+
+					// track send metric
+					trackMetric('OktaIdxSendPasscodeSignIn::Success');
+
+					// set the encrypted state cookie to persist the email and stateHandle
+					// which we need to persist during the passcode reset flow
+					setEncryptedStateCookie(res, {
+						email: user.profile.email,
+						stateHandle: challengeEmailResponse.stateHandle,
+						stateHandleExpiresAt: challengeEmailResponse.expiresAt,
+						userState: passwordAuthenticatorId
+							? 'ACTIVE_EMAIL_PASSWORD'
+							: 'ACTIVE_EMAIL_ONLY',
+					});
+
+					return res.redirect(
+						303,
+						addQueryParamsToPath('/signin/code', res.locals.queryParams),
+					);
+				}
+
+				if (passwordAuthenticatorId) {
+					// user has only password authenticator so they're in the
+					// 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+					// We need to send these users a verification email with passcode to verify their
+					// email before they can sign in.
+					// See the method documentation for additional context
+					await sendVerifyEmailAuthenticatorIdx({
+						user,
+						identifyResponse,
+						passwordAuthenticatorId,
+						req,
+						res,
+					});
+
+					// track send metric
+					trackMetric('OktaIdxSendPasscodeSignIn::Success');
+
+					return res.redirect(
+						303,
+						addQueryParamsToPath('/signin/code', res.locals.queryParams),
+					);
+				}
+
+				// if they don't have either authenticator, we cannot authenticate the user
+				// so throw an error
+				throw new OktaError({
+					code: 'E0000004',
+					message: 'User does not have email or password authenticator',
+				});
+			}
+			default: {
+				// if a loop is detected, then throw early to prevent infinite loop
+				if (loopDetectionFlag) {
+					throw new OktaError({
+						message: `Okta oktaIdxApiSignInPasscodeController failed with loop detection flag under non-ACTIVE user state ${user.status}`,
+					});
+				}
+
+				try {
+					// force the user into the ACTIVE state
+					// either
+					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)
+					// 2. ACTIVE users - has only password authenticator (okta idx email not verified)
+					await forceUserIntoActiveState({
+						req,
+						user,
+					});
+
+					// call this method again to send the user a passcode as they'll now be in one of the ACTIVE states
+					return oktaIdxApiSignInPasscodeController({
+						req,
+						res,
+						loopDetectionFlag: true,
+					});
+				} catch (error) {
+					logger.error(
+						'Okta force active user failed',
+						error instanceof OktaError ? error.message : error,
+					);
+					throw error;
+				}
+			}
+		}
+	} catch (error) {
+		logger.error('Okta oktaIdxApiSignInPasscodeController failed', error);
+
+		trackMetric('OktaIdxSendPasscodeSignIn::Failure');
+
+		// we always want to show the email sent page, even if an error has occurred
+		// to prevent user enumeration, so we mock the idx behaviour
+		setEncryptedStateCookie(res, {
+			email,
+			stateHandle: `02.id.${crypto.randomBytes(30).toString('base64')}`, // generate a 40 character random string to use in the 46 character stateHandle
+			stateHandleExpiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(), // 30 minutes in the future
+			userState: 'NON_EXISTENT', // set the user state to non-existent, so we can handle this case if the user attempts to submit the passcode
+		});
+
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/signin/code', res.locals.queryParams),
+		);
+	}
+};
+
+/**
  * @name oktaIdxApiSignInController
  * @description Start the Okta IDX flow to attempt to sign the user in with a password
  *
@@ -164,9 +373,19 @@ export const oktaIdxApiSignInController = async ({
 	res: ResponseWithRequestState;
 }) => {
 	// get the email and password from the request body
-	const { email = '', password = '' } = req.body;
+	const { email = '', password = '', passcode } = req.body;
 
 	try {
+		// `'on'` if checked, or `undefined` if not checked
+		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
+		// so check if it exists
+		const usePasscode = !!passcode;
+
+		// if we do, hand off to the oktaIdxApiSignInPasscodeController
+		if (usePasscode) {
+			return oktaIdxApiSignInPasscodeController({ req, res });
+		}
+
 		// start the IDX flow to sign the user in and get the identify response and user object
 		const [identifyResponse, user] = await startIdxSignInFlow({
 			email,
@@ -357,3 +576,154 @@ export const oktaIdxApiSignInController = async ({
 		return res.status(status).type('html').send(html);
 	}
 };
+
+/**
+ * @name oktaIdxApiSubmitPasscodeController
+ * @description Controller to handle the passcode submission from the passcode email sent page
+ *
+ * @param {Request} req - Express request object
+ * @param {ResponseWithRequestState} res - Express response object
+ * @returns {Promise<void>}
+ */
+export const oktaIdxApiSubmitPasscodeController = handleAsyncErrors(
+	async (req: Request, res: ResponseWithRequestState) => {
+		const { code } = req.body;
+
+		const encryptedState = readEncryptedStateCookie(req);
+
+		if (encryptedState?.stateHandle && code) {
+			const { stateHandle, userState } = encryptedState;
+
+			try {
+				// check for non-existent user state
+				// in this case throw an error to show the user the passcode is invalid
+				if (userState === 'NON_EXISTENT') {
+					throw new OAuthError({
+						error: 'api.authn.error.PASSCODE_INVALID',
+						error_description: RegistrationErrors.PASSCODE_INVALID,
+					});
+				}
+
+				// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
+				const challengeAnswerResponse = await submitPasscode({
+					passcode: code,
+					stateHandle,
+					introspectRemediation:
+						// if the user is in the `ACTIVE_PASSWORD_ONLY` state, then when they sign in with a passcode
+						// they will need the `select-authenticator-enroll` remediation to enroll in the email authenticator
+						// other users will have the `challenge-authenticator` remediation
+						userState === 'ACTIVE_PASSWORD_ONLY'
+							? 'select-authenticator-enroll'
+							: 'challenge-authenticator',
+					ip: req.ip,
+				});
+
+				// user should be authenticated by this point, so check if the response is a complete login response
+				// if not, we return an error
+				if (!isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+					throw new OAuthError({
+						error: 'invalid_response',
+						error_description:
+							'Invalid challenge/answer response - no complete login response',
+					});
+				}
+
+				// retrieve the user groups
+				const groups = await getUserGroups(
+					challengeAnswerResponse.user.value.id,
+					req.ip,
+				);
+
+				// check if the user has their email validated based on group membership
+				const emailValidated = groups.some(
+					(group) => group.profile.name === 'GuardianUser-EmailValidated',
+				);
+
+				// if the user is not in the GuardianUser-EmailValidated group, we should update the user's emailValidated flag
+				// as they've now validated their email
+				if (!emailValidated) {
+					await validateEmailAndPasswordSetSecurely({
+						id: challengeAnswerResponse.user.value.id,
+						ip: req.ip,
+						flagStatus: true,
+						updateEmail: true,
+						updatePassword: false,
+					});
+				}
+
+				// update the encrypted state cookie to show the passcode was used
+				// so that if the user clicks back to the email sent page, they will be shown a message
+				updateEncryptedStateCookie(req, res, {
+					passcodeUsed: true,
+					stateHandle: undefined,
+					stateHandleExpiresAt: undefined,
+					userState: undefined,
+				});
+
+				// continue allowing the user to log in
+				const loginRedirectUrl = getLoginRedirectUrl(challengeAnswerResponse);
+
+				// fire ophan component event if applicable
+				if (res.locals.queryParams.componentEventParams) {
+					void sendOphanComponentEventFromQueryParamsServer(
+						res.locals.queryParams.componentEventParams,
+						'SIGN_IN',
+						'web',
+						res.locals.ophanConfig.consentUUID,
+					);
+				}
+
+				// if the user has made it here, they've successfully authenticated
+				trackMetric('OktaIdxSignIn::Success');
+				trackMetric('OktaIdxPasscodeSignIn::Success');
+
+				// redirect the user to set a global session and then back to completing the authorization flow
+				return res.redirect(303, loginRedirectUrl);
+			} catch (error) {
+				// handle passcode specific error
+				handlePasscodeError({
+					error,
+					req,
+					res,
+					emailSentPage: '/signin/code',
+					expiredPage: '/signin/code/expired',
+				});
+
+				// if we redirected away during the handlePasscodeError function, we can't redirect again
+				if (res.headersSent) {
+					return;
+				}
+
+				// log the error
+				logger.error('Okta oktaIdxApiSignInPasscodeController failed', error);
+
+				// error metric
+				trackMetric('OktaIdxSignIn::Failure');
+				trackMetric('OktaIdxPasscodeSignIn::Failure');
+
+				// handle any other error, show generic error message
+				const html = renderer('/signin/code', {
+					requestState: mergeRequestState(res.locals, {
+						queryParams: {
+							...res.locals.queryParams,
+							emailSentSuccess: false,
+						},
+						pageData: {
+							email: encryptedState?.email,
+							timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+								encryptedState?.stateHandleExpiresAt,
+							),
+							formError: {
+								message: GenericErrors.DEFAULT,
+								severity: 'UNEXPECTED',
+							},
+							token: code,
+						},
+					}),
+					pageTitle: 'Check Your Inbox',
+				});
+				return res.type('html').send(html);
+			}
+		}
+	},
+);
