@@ -48,6 +48,7 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import {
 	oktaIdxApiSignInController,
+	oktaIdxApiSignInPasscodeController,
 	oktaIdxApiSubmitPasscodeController,
 	oktaSignInControllerErrorHandler,
 } from '@/server/controllers/signInControllers';
@@ -321,6 +322,17 @@ router.get(
 			}),
 		);
 	},
+);
+
+// route to resend the email for passcode sign in
+// Essentially the same as POST /signin, but call the correct controller
+router.post(
+	'/signin/code/resend',
+	redirectIfLoggedIn,
+	handleRecaptcha,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		await oktaIdxApiSignInPasscodeController({ req, res });
+	}),
 );
 
 const oktaSignInController = async ({
