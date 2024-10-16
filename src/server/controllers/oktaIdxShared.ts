@@ -1,6 +1,9 @@
 import { Request } from 'express';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
+import {
+	dangerouslySetPlaceholderPassword,
+	dangerouslySetPlaceholderPasswordUsingRecoveryToken,
+} from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import {
 	challenge,
 	validateChallengeRemediation,
@@ -15,12 +18,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { UserResponse } from '@/server/models/okta/User';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { IdentifyResponse } from '@/server/lib/okta/idx/identify';
-import {
-	resetPassword,
-	validateRecoveryToken,
-} from '@/server/lib/okta/api/authentication';
 import { deactivateUser, activateUser } from '@/server/lib/okta/api/users';
-import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { logger } from '@/server/lib/serverSideLogger';
 
 /**
@@ -218,34 +216,11 @@ export const forceUserIntoActiveState = async ({
 			});
 		}
 
-		// 3. use the recovery token to set a placeholder password for the user
-		// Validate the token
-		const { stateToken } = await validateRecoveryToken({
-			recoveryToken: tokenResponse.token,
-			ip: req.ip,
-		});
-		// Check if state token is defined
-		if (!stateToken) {
-			throw new OktaError({
-				message:
-					'Okta set placeholder password failed: state token is undefined',
-			});
-		}
-		// Set the placeholder password as a cryptographically secure UUID
-		const placeholderPassword = crypto.randomUUID();
-		await resetPassword(
-			{
-				stateToken,
-				newPassword: placeholderPassword,
-			},
-			req.ip,
-		);
-
-		// Unset the emailValidated and passwordSetSecurely flags
-		await validateEmailAndPasswordSetSecurely({
+		// set a placeholder password for the user
+		await dangerouslySetPlaceholderPasswordUsingRecoveryToken({
 			id: user.id,
 			ip: req.ip,
-			flagStatus: false,
+			recoveryToken: tokenResponse.token,
 		});
 	} catch (error) {
 		logger.error(

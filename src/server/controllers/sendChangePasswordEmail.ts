@@ -30,7 +30,7 @@ import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCr
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
-import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
+import { dangerouslySetPlaceholderPassword } from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
