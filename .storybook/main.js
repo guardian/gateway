@@ -68,7 +68,7 @@ const config = {
 		reactDocgen: 'react-docgen-typescript-plugin',
 	},
 	framework: {
-		name: '@storybook/react-webpack5',
+		name: '@storybook/preact-webpack5',
 		options: {},
 	},
 	docs: {
