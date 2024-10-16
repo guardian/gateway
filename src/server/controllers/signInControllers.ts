@@ -176,7 +176,7 @@ const startIdxSignInFlow = async ({
  * @param {ResponseWithRequestState} res - Express response object
  * @returns {Promise<void>}
  */
-const oktaIdxApiSignInPasscodeController = async ({
+export const oktaIdxApiSignInPasscodeController = async ({
 	req,
 	res,
 	loopDetectionFlag = false,
@@ -184,7 +184,7 @@ const oktaIdxApiSignInPasscodeController = async ({
 	req: Request;
 	res: ResponseWithRequestState;
 	loopDetectionFlag?: boolean;
-}) => {
+}): Promise<void> => {
 	const { email = '' } = req.body;
 
 	try {

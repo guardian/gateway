@@ -54,6 +54,7 @@ export const ValidRoutePathsArray = [
 	'/signed-in-as',
 	'/signin',
 	'/signin/code',
+	'/signin/code/resend',
 	'/signin/code/expired',
 	'/signin/refresh',
 	'/signin/:social',
