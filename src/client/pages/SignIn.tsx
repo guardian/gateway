@@ -150,7 +150,7 @@ const ViewSelectorCheckbox = ({
 	// Checkbox label - if the default view is passcode, the label should be to show password, and vice versa
 	const checkboxLabel =
 		defaultView === 'passcode'
-			? 'Use a password to sign in'
+			? 'Use a password to sign in instead'
 			: 'Request a one-time code to sign in';
 
 	return (
@@ -175,7 +175,7 @@ export const SignIn = ({
 	recaptchaSiteKey,
 	isReauthenticate = false,
 	shortRequestId,
-	defaultView = 'password',
+	defaultView = 'passcode',
 	currentView = defaultView,
 	usePasscodeSignIn = false,
 }: SignInProps) => {
