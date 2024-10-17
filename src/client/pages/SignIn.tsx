@@ -24,8 +24,7 @@ import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
 import { Checkbox } from '@guardian/source/react-components';
-
-type View = 'passcode' | 'password';
+import { SignInView } from '@/shared/model/ClientState';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -38,8 +37,10 @@ export type SignInProps = {
 	isReauthenticate?: boolean;
 	shortRequestId?: string;
 	// Determines whether passcode view or password view is shown by default
-	defaultView?: View;
-	currentView?: View;
+	defaultView?: SignInView;
+	currentView?: SignInView;
+	// temp flag to determine if the checkbox is visible
+	usePasscodeSignIn?: boolean;
 };
 
 const resetPassword = css`
@@ -142,8 +143,8 @@ const ViewSelectorCheckbox = ({
 	selectedView,
 	onChange,
 }: {
-	defaultView: View;
-	selectedView: View;
+	defaultView: SignInView;
+	selectedView: SignInView;
 	onChange: React.ChangeEventHandler<HTMLInputElement>;
 }) => {
 	// Checkbox label - if the default view is passcode, the label should be to show password, and vice versa
@@ -176,9 +177,13 @@ export const SignIn = ({
 	shortRequestId,
 	defaultView = 'password',
 	currentView = defaultView,
+	usePasscodeSignIn = false,
 }: SignInProps) => {
 	// status of the OTP checkbox
-	const [selectedView, setSelectedView] = React.useState(currentView);
+	const [selectedView, setSelectedView] = React.useState(
+		// if usePasscodeSignIn is not enabled, the view should always be password
+		usePasscodeSignIn ? currentView : 'password',
+	);
 
 	const formTrackingName = 'sign-in';
 
@@ -252,14 +257,19 @@ export const SignIn = ({
 				{
 					// Hidden input to determine whether passcode view is selected
 					selectedView === 'passcode' && (
-						<input type="hidden" name="passcode" value="true" />
+						<input type="hidden" name="passcode" value="passcode" />
 					)
 				}
-				<ViewSelectorCheckbox
-					defaultView={defaultView}
-					selectedView={selectedView}
-					onChange={selectorChange}
-				/>
+				{
+					// only show the checkbox if sign in with passcode is enabled
+					usePasscodeSignIn && (
+						<ViewSelectorCheckbox
+							defaultView={defaultView}
+							selectedView={selectedView}
+							onChange={selectorChange}
+						/>
+					)
+				}
 			</MainForm>
 			{!isReauthenticate && (
 				<>

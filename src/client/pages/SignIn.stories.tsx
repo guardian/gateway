@@ -127,7 +127,14 @@ IsReauthenticate.story = {
 };
 
 export const WithPasscodeSelectedDefaultPassword = (args: SignInProps) => (
-	<SignIn {...{ ...args, defaultView: 'password', currentView: 'passcode' }} />
+	<SignIn
+		{...{
+			...args,
+			defaultView: 'password',
+			currentView: 'passcode',
+			usePasscodeSignIn: true,
+		}}
+	/>
 );
 WithPasscodeSelectedDefaultPassword.story = {
 	name: 'with passcode checkbox checked',
@@ -139,6 +146,7 @@ export const WithPasscodeSelectedDefaultPasswordError = (args: SignInProps) => (
 			...args,
 			defaultView: 'password',
 			currentView: 'passcode',
+			usePasscodeSignIn: true,
 			pageError: SignInErrors.PASSCODE_EXPIRED,
 		}}
 	/>
@@ -148,7 +156,7 @@ WithPasscodeSelectedDefaultPassword.story = {
 };
 
 export const WithPasscodeSelectedDefaultPasscode = (args: SignInProps) => (
-	<SignIn {...{ ...args, defaultView: 'passcode' }} />
+	<SignIn {...{ ...args, defaultView: 'passcode', usePasscodeSignIn: true }} />
 );
 WithPasscodeSelectedDefaultPasscode.story = {
 	name: 'with passcode checkbox checked',
@@ -159,6 +167,7 @@ export const WithPasscodeSelectedDefaultPasscodeError = (args: SignInProps) => (
 		{...{
 			...args,
 			defaultView: 'passcode',
+			usePasscodeSignIn: true,
 			pageError: SignInErrors.PASSCODE_EXPIRED,
 		}}
 	/>
@@ -168,7 +177,14 @@ WithPasscodeSelectedDefaultPasscodeError.story = {
 };
 
 export const WithPasswordSelectedDefaultPasscode = (args: SignInProps) => (
-	<SignIn {...{ ...args, defaultView: 'passcode', currentView: 'password' }} />
+	<SignIn
+		{...{
+			...args,
+			defaultView: 'passcode',
+			currentView: 'password',
+			usePasscodeSignIn: true,
+		}}
+	/>
 );
 WithPasswordSelectedDefaultPasscode.story = {
 	name: 'with password checkbox checked',
