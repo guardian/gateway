@@ -94,26 +94,17 @@ export const oktaSignInControllerErrorHandler = (
 };
 
 /**
- * @name startIdxSignInFlow
- * @description Start the IDX flow to sign the user in, and return the identify response and user object. Shared between the password and passcode sign in controllers
+ * @name getUserForIdxSignIn
+ * @description A wrapper around the getUser function to handle errors and convert them to the correct error type
  * @param {string} email - The email address of the user
- * @param {Request} req - Express request object
- * @param {ResponseWithRequestState} res - Express response object
- * @returns {Promise<[IdentifyResponse, UserResponse]>} - The identify response and user object
+ * @param {string} ip - The IP address of the user
+ * @returns {Promise<UserResponse>} - The user object
  */
-const startIdxSignInFlow = async ({
-	email,
-	req,
-	res,
-}: {
-	email: string;
-	req: Request;
-	res: ResponseWithRequestState;
-}): Promise<[IdentifyResponse, UserResponse]> => {
-	// First we want to check the user status in Okta
-	// to see if they are in the ACTIVE state
-	// if they are not, we will not allow them to sign in
-	const user = await getUser(email, req.ip).catch((error) => {
+const getUserForIdxSignIn = async (
+	email: string,
+	ip?: string,
+): Promise<UserResponse> => {
+	const user = await getUser(email, ip).catch((error) => {
 		// handle any getUser errors here instead of the outer catch block
 		if (isOktaError(error)) {
 			// convert the user not found error to generic authentication error to outer catch block
@@ -135,14 +126,26 @@ const startIdxSignInFlow = async ({
 		throw error;
 	});
 
-	if (user.status !== 'ACTIVE') {
-		// throw authentication error if user is not in the ACTIVE state
-		throw new OktaError({
-			code: 'E0000004',
-			message: 'User is not in the ACTIVE state',
-		});
-	}
+	return user;
+};
 
+/**
+ * @name startIdxSignInFlow
+ * @description Start the IDX flow to sign the user in, and return the identify response and user object. Shared between the password and passcode sign in controllers
+ * @param {string} email - The email address of the user
+ * @param {Request} req - Express request object
+ * @param {ResponseWithRequestState} res - Express response object
+ * @returns {Promise<[IdentifyResponse, UserResponse]>} - The identify response and user object
+ */
+const startIdxSignInFlow = async ({
+	email,
+	req,
+	res,
+}: {
+	email: string;
+	req: Request;
+	res: ResponseWithRequestState;
+}): Promise<IdentifyResponse> => {
 	// at this point the user will be in the ACTIVE state
 	// start the IDX flow by calling interact and introspect
 	const introspectResponse = await startIdxFlow({
@@ -166,7 +169,7 @@ const startIdxSignInFlow = async ({
 	);
 
 	// return the response and user objects to the calling function
-	return [identifyResponse, user];
+	return identifyResponse;
 };
 
 /**
@@ -188,12 +191,10 @@ export const oktaIdxApiSignInPasscodeController = async ({
 	const { email = '' } = req.body;
 
 	try {
-		// start the IDX flow to sign the user in and get the identify response and user object
-		const [identifyResponse, user] = await startIdxSignInFlow({
-			email,
-			req,
-			res,
-		});
+		// First we want to check the user status in Okta
+		// to see if they are in the ACTIVE state
+		// if they are not, we will force them into the ACTIVE state
+		const user = await getUserForIdxSignIn(email, req.ip);
 
 		// determine the user status and what action to take
 		switch (user.status) {
@@ -220,6 +221,13 @@ export const oktaIdxApiSignInPasscodeController = async ({
 				 * user's status, which is helpful for us to determine the correct flow
 				 *
 				 */
+				// start the IDX flow to sign the user in and get the identify response and user object
+				const identifyResponse = await startIdxSignInFlow({
+					email,
+					req,
+					res,
+				});
+
 				// check for the "email" authenticator, we can authenticate with email (passcode)
 				// if this authenticator is present
 				const emailAuthenticatorId = findAuthenticatorId({
@@ -388,8 +396,20 @@ export const oktaIdxApiSignInController = async ({
 			}
 		}
 
+		// First we want to check the user status in Okta
+		// to see if they are in the ACTIVE state
+		// if they are not, we will not allow them to sign in
+		const user = await getUserForIdxSignIn(email, req.ip);
+		if (user.status !== 'ACTIVE') {
+			// throw authentication error if user is not in the ACTIVE state
+			throw new OktaError({
+				code: 'E0000004',
+				message: 'User is not in the ACTIVE state',
+			});
+		}
+
 		// start the IDX flow to sign the user in and get the identify response and user object
-		const [identifyResponse, user] = await startIdxSignInFlow({
+		const identifyResponse = await startIdxSignInFlow({
 			email,
 			req,
 			res,
