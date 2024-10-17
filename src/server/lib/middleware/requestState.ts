@@ -41,7 +41,7 @@ const getRequestState = async (
 	const [abTesting, abTestAPI] = getABTesting(req, tests);
 
 	// tracking parameters might be from body too
-	const { ref, refViewId } = req.body;
+	const { ref, refViewId, passcode } = req.body;
 
 	const queryParams = parseExpressQueryParams(
 		req.method,
@@ -53,6 +53,7 @@ const getRequestState = async (
 		{
 			ref,
 			refViewId,
+			signInCurrentView: passcode ? 'passcode' : undefined,
 		},
 	);
 

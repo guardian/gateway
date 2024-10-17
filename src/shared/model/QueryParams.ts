@@ -1,4 +1,5 @@
-import { ValidClientId } from '../lib/clientId';
+import { ValidClientId } from '@/shared/lib/clientId';
+import { SignInView } from '@/shared/model/ClientState';
 
 type Stringifiable = string | boolean | number | null | undefined;
 
@@ -26,6 +27,9 @@ export interface TrackingQueryParams {
 	// as well as getting confused with other parameters, so we thought it best to pass it as a URL encoded string, and then do the decoding once it gets to IDAPI
 	componentEventParams?: string;
 	listName?: string;
+	// tracks the view that the user had selected on the sign in page, i.e password or passcode, so that we can show the last selected view
+	// if the user navigated back to the sign in page
+	signInCurrentView?: SignInView;
 }
 
 /**
@@ -47,6 +51,8 @@ export interface PersistableQueryParams
 	appClientId?: string;
 	// fallback to Okta Classic if needed
 	useOktaClassic?: boolean;
+	// Flag to enable sign in with passcode
+	usePasscodeSignIn?: boolean;
 }
 
 /**
