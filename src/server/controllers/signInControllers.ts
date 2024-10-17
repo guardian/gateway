@@ -376,14 +376,16 @@ export const oktaIdxApiSignInController = async ({
 	const { email = '', password = '', passcode } = req.body;
 
 	try {
-		// `'on'` if checked, or `undefined` if not checked
-		// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
-		// so check if it exists
-		const usePasscode = !!passcode;
+		// only attempt to sign in with a passcode if the user currently has the query parameter set
+		// this should be removed when we're ready to enable this for all users
+		if (res.locals.queryParams.usePasscodeSignIn) {
+			// if the value exists, we're using passcodes
+			const usePasscode = !!passcode;
 
-		// if we do, hand off to the oktaIdxApiSignInPasscodeController
-		if (usePasscode) {
-			return oktaIdxApiSignInPasscodeController({ req, res });
+			// if we do, hand off to the oktaIdxApiSignInPasscodeController
+			if (usePasscode) {
+				return oktaIdxApiSignInPasscodeController({ req, res });
+			}
 		}
 
 		// start the IDX flow to sign the user in and get the identify response and user object
