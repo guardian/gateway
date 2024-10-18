@@ -23,6 +23,8 @@ import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
+import { Checkbox } from '@guardian/source/react-components';
+import { SignInView } from '@/shared/model/ClientState';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -34,6 +36,11 @@ export type SignInProps = {
 	recaptchaSiteKey: string;
 	isReauthenticate?: boolean;
 	shortRequestId?: string;
+	// Determines whether passcode view or password view is shown by default
+	defaultView?: SignInView;
+	currentView?: SignInView;
+	// temp flag to determine if the checkbox is visible
+	usePasscodeSignIn?: boolean;
 };
 
 const resetPassword = css`
@@ -90,6 +97,21 @@ const getErrorContext = (
 				<a href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</a>
 			</>
 		);
+	} else if (error === SignInErrors.PASSCODE_EXPIRED) {
+		return (
+			<>
+				<div>Please request a new one-time code to sign in.</div>
+				<br />
+				<div>
+					If you are still having trouble, please contact our customer service
+					team at{' '}
+					<ThemedLink href={locations.SUPPORT_EMAIL_MAILTO}>
+						{SUPPORT_EMAIL}
+					</ThemedLink>
+					.
+				</div>
+			</>
+		);
 	}
 };
 
@@ -116,6 +138,35 @@ const showAuthProviderButtons = (
 	}
 };
 
+const ViewSelectorCheckbox = ({
+	defaultView,
+	selectedView,
+	onChange,
+}: {
+	defaultView: SignInView;
+	selectedView: SignInView;
+	onChange: React.ChangeEventHandler<HTMLInputElement>;
+}) => {
+	// Checkbox label - if the default view is passcode, the label should be to show password, and vice versa
+	const checkboxLabel =
+		defaultView === 'passcode'
+			? 'Use a password to sign in instead'
+			: 'Request a one-time code to sign in';
+
+	return (
+		<Checkbox
+			label={checkboxLabel}
+			name="view-selector"
+			id="view-selector"
+			theme={{
+				textLabel: `var(--color-input-text)`,
+			}}
+			defaultChecked={defaultView !== selectedView}
+			onChange={onChange}
+		/>
+	);
+};
+
 export const SignIn = ({
 	email,
 	pageError,
@@ -124,7 +175,16 @@ export const SignIn = ({
 	recaptchaSiteKey,
 	isReauthenticate = false,
 	shortRequestId,
+	defaultView = 'passcode',
+	currentView = defaultView,
+	usePasscodeSignIn = false,
 }: SignInProps) => {
+	// status of the OTP checkbox
+	const [selectedView, setSelectedView] = React.useState(
+		// if usePasscodeSignIn is not enabled, the view should always be password
+		usePasscodeSignIn ? currentView : 'password',
+	);
+
 	const formTrackingName = 'sign-in';
 
 	// The page level error is equivalent to this enum if social signin has been blocked.
@@ -134,6 +194,20 @@ export const SignIn = ({
 	const isJobs = clientId === 'jobs';
 	const formErrorMessage = extractMessage(formError);
 	usePageLoadOphanInteraction(formTrackingName);
+
+	const selectorChange: React.ChangeEventHandler<HTMLInputElement> = (
+		event,
+	) => {
+		event.preventDefault();
+		// if the default view is passcode, the checkbox should show password, and vice versa
+		if (defaultView === 'passcode') {
+			setSelectedView(event.target.checked ? 'password' : 'passcode');
+		}
+		// if the default view is password, the checkbox should show passcode, and vice versa
+		if (defaultView === 'password') {
+			setSelectedView(event.target.checked ? 'passcode' : 'password');
+		}
+	};
 
 	return (
 		<MinimalLayout
@@ -157,7 +231,9 @@ export const SignIn = ({
 					{},
 					queryParams,
 				)}
-				submitButtonText="Sign in"
+				submitButtonText={
+					selectedView === 'passcode' ? 'Request one-time code' : 'Sign in'
+				}
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
@@ -167,13 +243,33 @@ export const SignIn = ({
 				hasJobsTerms={isJobs && socialSigninBlocked}
 			>
 				<EmailInput defaultValue={email} />
-				<PasswordInput label="Password" autoComplete="current-password" />
-				<ThemedLink
-					href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
-					cssOverrides={resetPassword}
-				>
-					Reset password
-				</ThemedLink>
+				{selectedView === 'password' && (
+					<>
+						<PasswordInput label="Password" autoComplete="current-password" />
+						<ThemedLink
+							href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
+							cssOverrides={resetPassword}
+						>
+							Reset password
+						</ThemedLink>
+					</>
+				)}
+				{
+					// Hidden input to determine whether passcode view is selected
+					selectedView === 'passcode' && (
+						<input type="hidden" name="passcode" value="passcode" />
+					)
+				}
+				{
+					// only show the checkbox if sign in with passcode is enabled
+					usePasscodeSignIn && (
+						<ViewSelectorCheckbox
+							defaultView={defaultView}
+							selectedView={selectedView}
+							onChange={selectorChange}
+						/>
+					)
+				}
 			</MainForm>
 			{!isReauthenticate && (
 				<>
