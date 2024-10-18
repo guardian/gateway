@@ -21,6 +21,7 @@ export const routeErrorHandler = (
 		// we attempt to redirect to res.locals.csrf.pageUrl provided by a hidden form field falling back to req.url
 		// we use res.locals.csrf.pageUrl since the URL might not be GET-able if the request was a POST
 		// we also have to manually build the query params object, as it may not be defined in an unexpected csrf error
+		logger.error('csrf error', err);
 		res.redirect(
 			303,
 			addQueryParamsToUntypedPath(
@@ -34,6 +35,7 @@ export const routeErrorHandler = (
 		return next(err);
 	} else if (err.code === 'EBADRECAPTCHA') {
 		trackMetric('RecaptchaMiddleware::Failure');
+		logger.error('recaptcha error', err);
 		res.redirect(
 			303,
 			addQueryParamsToUntypedPath(
