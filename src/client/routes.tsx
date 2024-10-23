@@ -41,6 +41,7 @@ import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
 import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
 import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
 import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
+import { SignInPasscodeEmailSentPage } from '@/client/pages/SignInPasscodeEmailSentPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -64,6 +65,10 @@ const routes: Array<{
 		element: (
 			<UnvalidatedEmailEmailSentPage formTrackingName="unvalidated-email-resend" />
 		),
+	},
+	{
+		path: '/signin/code',
+		element: <SignInPasscodeEmailSentPage />,
 	},
 	{
 		path: '/reauthenticate',

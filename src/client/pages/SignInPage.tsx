@@ -30,6 +30,8 @@ export const SignInPage = ({ isReauthenticate = false }: Props) => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			isReauthenticate={isReauthenticate}
 			shortRequestId={clientState.shortRequestId}
+			usePasscodeSignIn={queryParams.usePasscodeSignIn}
+			currentView={queryParams.signInCurrentView}
 		/>
 	);
 };
