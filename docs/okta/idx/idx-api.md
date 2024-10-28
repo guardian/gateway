@@ -127,7 +127,7 @@ Content-Type: application/json
 
 #### Description
 
-IThe introspect step lets us know what kind of authentication we can perform and what the next steps are, called a "remediation". It also returns the `stateHandle` which identifies the current state of the authentication process, and should be preserved and used in any subsequent requests in the flow.
+The introspect step lets us know what kind of authentication we can perform and what the next steps are, called a "remediation". It also returns the `stateHandle` which identifies the current state of the authentication process, and should be preserved and used in any subsequent requests in the flow.
 
 This is the second endpoint that should be called when authenticating a user using the Interaction Code flow (using an `interaction_handle` from the [`introspect`](#introspect) endpoint), or at any point in the flow to get the current state and remediation steps (using the `stateHandle` from any `/idp/idx/<endpoint>` call).
 
