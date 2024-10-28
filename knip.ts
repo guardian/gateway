@@ -30,6 +30,7 @@ const config: KnipConfig = {
 		'src/client/static/index.tsx',
 		'src/server/index.ts',
 		'webpack.{config|development}.js',
+		'util/mock-server.js',
 	],
 	// all possible file types we want to check
 	project: ['**/*.{js,ts,tsx}'],

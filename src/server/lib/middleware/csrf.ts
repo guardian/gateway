@@ -25,6 +25,6 @@ export const csrfMiddleware = (
 	if (SKIP_CSRF_ROUTE_PREFIXES.find((path) => req.path.startsWith(path))) {
 		next();
 	} else {
-		baseCsrfMiddleware(req, res, next);
+		return baseCsrfMiddleware(req, res, next);
 	}
 };

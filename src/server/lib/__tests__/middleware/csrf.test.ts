@@ -29,7 +29,7 @@ describe('csrfMiddleware', () => {
 		const res = {} as unknown as ResponseWithRequestState;
 		const next = jest.fn();
 
-		csrfMiddleware(req, res, next);
+		void csrfMiddleware(req, res, next);
 
 		expect(next).toHaveBeenCalled();
 		expect(csrfSpy).not.toHaveBeenCalled();
@@ -40,7 +40,7 @@ describe('csrfMiddleware', () => {
 		const res = {} as unknown as ResponseWithRequestState;
 		const next = jest.fn();
 
-		csrfMiddleware(req, res, next);
+		void csrfMiddleware(req, res, next);
 
 		expect(csrfSpy).toHaveBeenCalledTimes(1);
 	});
