@@ -82,7 +82,8 @@ export const getErrorMessageFromQueryParams = (
 		return SignInErrors.PASSCODE_EXPIRED;
 	}
 
-	// TODO: we're propagating a generic error message for now until we know what we're doing with the error_description parameter
+	// We propagate a generic error message when we don't know what the exact error is
+	// This error will also include a request id, so users can contact us with this information
 	if (error_description) {
 		return SignInErrors.GENERIC;
 	}

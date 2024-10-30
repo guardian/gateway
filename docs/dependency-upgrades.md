@@ -13,7 +13,25 @@
 > Antoine de Saint-Exupéry, _The Little Prince_
 
 We should, if possible, update our NPM packages weekly, for they too will decay
-and reveal security vulnerabilities. Here is a general workflow for so doing:
+and reveal security vulnerabilities.
+
+## Automatic dependency upgrades
+
+Every week on Monday at 08:30 UTC, Dependabot will create a number of PRs for
+updating our dependencies.
+
+These will need to be reviewed and merged.
+
+In some cases dependabot will not be able to upgrade a package due to tests
+failing. In this case, you'll will have to manually review, and potentially
+upgrade the dependencies manually. The instructions for this are below.
+
+## Manual dependency upgrades
+
+We usually have to do manual dependency upgrades when performing major version
+upgrades, or when dependabot is unable to upgrade a package due to failing tests.
+
+Here is a general workflow for so doing:
 
 1. Dependabot will add some PRs for necessary dependency upgrades to our PRs
    list. This is your call to action, your batsignal!

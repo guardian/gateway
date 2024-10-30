@@ -1,8 +1,10 @@
 # Flow diagrams for common Gateway routes
 
-These flow diagrams are a WIP, mostly used to help visualise some complex functions in Gateway for the purposes of mocking Okta flows in testing.
+**_Note: These diagrams are outdated and describe behaviour for the older Okta Classic API. For more up to date flows using the newer Okta IDX API, see the [IDX Documentation](./okta/idx/README.md)_**
 
 ## Sign in
+
+_Note: See [IDX Sign In](./okta/idx/sign-in-idx.md) for the most up to date flow_
 
 ```mermaid
 flowchart TD
@@ -10,7 +12,9 @@ flowchart TD
 
 ```
 
-## Register
+## Register / Create Account
+
+_Note: See [IDX Create Account](./okta/idx/create-account-idx.md) for the most up to date flow for new users_
 
 ```mermaid
 flowchart TD
@@ -30,7 +34,7 @@ flowchart TD
   redirectToEmailSent[302 /register/email-sent]
 ```
 
-## Resend registration email
+### Resend registration email
 
 ```mermaid
 flowchart TD
@@ -40,6 +44,8 @@ flowchart TD
 ```
 
 ## Reset password
+
+_Note: See [IDX Reset Password](./okta/idx/reset-password-idx.md) for the most up to date flow_
 
 ```mermaid
 flowchart TD

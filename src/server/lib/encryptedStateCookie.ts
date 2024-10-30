@@ -17,6 +17,13 @@ const encryptedStateCookieOptions: CookieOptions = {
 	sameSite: 'lax',
 };
 
+/**
+ * @name setEncryptedStateCookie
+ * @description Set the encrypted state cookie, overwriting any existing data in the cookie should it exist
+ * @param {Response} res - The express response object
+ * @param {EncryptedState} state - The state to encrypt and set in the cookie
+ * @returns {Response} The express response object with the cookie set, usually not needed
+ */
 export const setEncryptedStateCookie = (
 	res: Response,
 	state: EncryptedState,
@@ -50,6 +57,12 @@ export const setEncryptedStateCookie = (
 	);
 };
 
+/**
+ * @name getEncryptedStateCookie
+ * @description Get the encrypted state cookie from the express request by checking the correct cookie source
+ * @param {Request} req - The express request object
+ * @returns {string | undefined} The encrypted state cookie or undefined if it doesn't exist
+ */
 const getEncryptedStateCookie = (req: Request): string | undefined => {
 	// eslint-disable-next-line functional/no-let
 	let cookieSource: CookieSource;
@@ -68,6 +81,12 @@ const getEncryptedStateCookie = (req: Request): string | undefined => {
 	return req?.[cookieSource]?.[encryptedStateCookieName];
 };
 
+/**
+ * @name readEncryptedStateCookie
+ * @description Read the encrypted state cookie from the express request, decrypt it and parse it as JSON, and return it
+ * @param {Request} req - The express request object
+ * @returns {EncryptedState | undefined} The decrypted and parsed state or undefined if it doesn't exist
+ */
 export const readEncryptedStateCookie = (
 	req: Request,
 ): EncryptedState | undefined => {
@@ -89,6 +108,14 @@ export const readEncryptedStateCookie = (
 	}
 };
 
+/**
+ * @name updateEncryptedStateCookie
+ * @description Update the encrypted state cookie with the provided state, merging it with the existing state
+ * @param {Request} req - The express request object
+ * @param {Response} res - The express response object
+ * @param {EncryptedState} state - The state to merge with the existing state in the cookie
+ * @returns {void} Nothing, the cookie is set directly on the response
+ */
 export const updateEncryptedStateCookie = (
 	req: Request,
 	res: Response,
@@ -101,6 +128,12 @@ export const updateEncryptedStateCookie = (
 	});
 };
 
+/**
+ * @name clearEncryptedStateCookie
+ * @description Clear the encrypted state cookie from the express response
+ * @param {Response} res - The express response object
+ * @returns {void} Nothing, the cookie is cleared directly on the response
+ */
 export const clearEncryptedStateCookie = (res: Response) => {
 	// Web browsers and other compliant clients will only clear the cookie
 	// if the given options is identical to those given to res.cookie()

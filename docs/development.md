@@ -236,6 +236,16 @@ You can export multiple stories from each file, for example to show how the comp
 
 ## State Management
 
+Within Gateway state will take one of two forms.
+
+1. Managing some data/data between the server and client on a per request basis.
+   - See [Request State Locals and Client State](#request-state-locals-and-client-state) for more information.
+2. Managing some user data/data between requests.
+   - Use query parameters for simple data that needs to persist between requests.
+     - See [Query Params](#query-params) for more information.
+   - Use the encrypted state cookie for more complex data that needs to persist between requests.
+     - See [Encrypted State Cookie](#encrypted-state-cookie) for more information.
+
 ### Request State Locals and Client State
 
 Sometimes data is needed by the client to render a specific component, e.g. an error. Using SSR with additional client side hydration we
@@ -393,6 +403,10 @@ export const getPersistableQueryParams = (params: QueryParams): PersistableQuery
 
 This file also exposes an `addQueryParamsToPath` method which can be used to append query parameters to a given path/string with the correct divider (`?`|`&`). By default it filters out parameters that do not persist from the `QueryParams` object and then turns it into a query string. If you want to include an parameter that doesn't persist, you can manually opt into providing a value as the 3rd argument to the method.
 
+The `parseExpressQueryParams` method in [`src/server/lib/queryParams.ts`](../src/server/lib/queryParams.ts) will parse and validate the query parameters from a request. This will also need to be updated when adding new query parameters, to make sure we only allow the expected parameters are available to use.
+
+The query params for a given request will be available on the `RequestState` (`res.locals.queryParams`) on the [server](#server), and the `ClientState` on the [client](#client).
+
 #### Server
 
 You can access this server side on the `ResponseWithRequestState` object as `res.locals.queryParams`. For example you could get the `returnUrl` using:
@@ -467,24 +481,55 @@ const TestComponent = ({ queryString, clientId, error }: Props) => {
 
 ```
 
+### Encrypted State Cookie
+
+In some cases we need to preserve user data, or user state data between requests in order to be able to modify behaviour of a given request/page. This is done using the encrypted state cookie.
+
+The type is defined in [`EncryptedState`](../src/shared/model/EncryptedState.ts) interface. This is used to determine what data is stored in the cookie. The `EncryptedState` interface should only include properties that need to persist between requests, and should not include any properties that are only needed for a single request. The data should also be as small as possible, as the cookie has a maximum size limit.
+
+The data is encrypted and the cookie signed in order to prevent tampering with the data, and prevent it being readable by an actor. The cookie is also set to be HttpOnly, so it cannot be accessed by JavaScript, and Secure, so it can only be sent over HTTPS.
+
+To set/update the cookie, use the methods in [`src/server/lib/encryptedStateCookie.ts`](../src/server/lib/encryptedStateCookie.ts). The `setEncryptedStateCookie` method is used to set the cookie, and overwrite any existing cookie. The `updateEncryptedStateCookie` method is used to update the cookie, and merge the new data with the existing data. The `clearEncryptedStateCookie` method is used to clear the cookie. Use `readEncryptedStateCookie` to read the cookie and get the data.
+
+When using the cookie, make sure to remove data from the cookie when it is no longer needed, to avoid the cookie growing too large.
+
+Example of usage:
+
+```ts
+router.get('/some-route', (req: Request, res: Response) => {
+	const encryptedState = readEncryptedStateCookie(req);
+
+	// do something with the encrypted state
+	const email = encryptedState.email;
+
+	// update/set the encrypted state to remove the email, and add a new value
+	updateEncryptedStateCookie(res, {
+		email: undefined,
+		passcodeUsed: true,
+	});
+
+  ...
+});
+```
+
 ## Styling
 
 Styling is done in JS (or TSX in our case) using the [Emotion](https://emotion.sh) CSS-in-JS library, which allows for the definitions of styles at the component level, which means once rendered, the html sent to the client only contains the CSS required for that page.
 
-It's also used as [the Guardian Source Design System](https://theguardian.design/) components are built using Emotion too, allowing the use for those components in our project.
+It's also used as [the Guardian Source Design System](https://theguardian.design/) components are built using Emotion too, allowing the use for those components in our project, through the [`@guardian/source`](https://github.com/guardian/csnx/tree/main/libs/@guardian/source) and [`@guardian/source-development-kitchen`](https://github.com/guardian/csnx/tree/main/libs/%40guardian/source-development-kitchen) packages.
 
 Example of styling and adding it to a `p` tag using Emotion and Source:
 
 ```tsx
 import React from 'react';
 import { css } from '@emotion/react';
-import { textSans, neutral } from '@guardian/source/foundations';
+import { textSans15 } from '@guardian/source/foundations';
 
 // style the tag using the css string literal
 const p = css`
-	color: ${neutral[100]};
+	${textSans15};
+	color: var(--color-text);
 	margin: 0;
-	${textSans.small()};
 `;
 
 // example component with the css attribute to add the styling
@@ -494,6 +539,12 @@ export const Text = () => <p css={p}>Some styled text!</p>;
 Try to keep the styling as close to the component as possible to the component being styled as possible to avoid conflict, and making it easier to change styles on that component in the future.
 
 Shared styles used by multiple components can be added to and imported from the [src/client/styles/Shared.ts](../src/client/styles/Shared.ts) file.
+
+Gateway also supports theming, specifically a light and dark mode, which is done through the [`@media (prefers-color-scheme: dark)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query.
+
+The theme is set in the [src/client/styles/Theme.tsx](../src/client/styles/Theme.tsx), and uses CSS variables to define the colours for each theme. The theme is then applied using the [Global Styles](https://emotion.sh/docs/globals) from Emotion, to the [`MinimalLayout`](../src/client/layouts/MinimalLayout.tsx) component, that is used as the base layout for all pages.
+
+Therefore rather than defining colours directly, it is recommended to use the CSS variables defined in the theme, as shown in the example above.
 
 ## Environment Variables
 

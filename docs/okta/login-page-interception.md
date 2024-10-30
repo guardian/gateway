@@ -4,7 +4,7 @@ When performing the OAuth Authorization Code flow with Okta, while navigating to
 
 If they do, then the user will be redirected back to the client app with the `authorization_code` parameter, and the SDK will then exchange this for the OAuth tokens.
 
-If they don't then the user will be prompted to sign in/authenticate. However this is done by Okta showing their own hosted login page, which has a lack of customisation options, and it doesn't provide us full control over the user experience, or doesn't allow us to do specific things during the process.
+If they don't, or the `prompt=login` parameter is included in the request, then the user will be prompted to sign in/authenticate. However this is done by Okta showing their own hosted login page, which has a lack of customisation options, and it doesn't provide us full control over the user experience, or doesn't allow us to do specific things during the process.
 
 Examples of things we currently do that we can't do with the Okta hosted login page:
 
@@ -52,7 +52,7 @@ opt no existing session - interception happens here
   note over Browser: Load HTML, execute JS,<br>redirect to Gateway
   Browser->>Gateway: Request /signin?fromUri={fromUri}&clientId={clientId}&...
   Gateway->>Browser: Load /signin?fromUri={fromUri}&clientId={clientId}&...
-  note over Browser: User sign in with<br>email+password/social/set password<br>session set in browser<br>redirect to fromURI
+  note over Browser: User authenticates<br>i.e sign in, create account,<br>or reset password<br><br>Okta session set in browser<br><br>Perform redirect to fromURI
   Browser->>Okta: Request fromUri
 end
 Okta->>Browser: Redirect request to app with the `auth_code` parameter<br/>oauth redirect_uri

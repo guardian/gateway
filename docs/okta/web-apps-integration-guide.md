@@ -1,7 +1,5 @@
 # Web apps integration with Okta
 
-This is all subject to change following the outcomes of the spike work in web application migration.
-
 ## Context
 
 We're moving to use the [OAuth 2.0 Authorization Framework](https://www.rfc-editor.org/rfc/rfc6749) and the [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html) (OIDC) protocol for authentication and authorisation. This is a standardised way of authenticating readers and authorising them to access resources. It is used by many other companies, including Google, Facebook, Twitter, Microsoft, and Amazon.
@@ -27,14 +25,15 @@ In the integration guide we go over how to perform authentication in both cases 
 
 OAuth has multiple different ways of authenticating a reader, and for web applications we will only use the [Authorization Code Flow](https://www.rfc-editor.org/rfc/rfc6749#section-4.1), ideally with the [Proof Key for Code Exchange](https://tools.ietf.org/html/rfc7636) (PKCE) extension. This is the most secure way of authenticating a reader, and is the recommended way of authenticating a reader in a web application.
 
-Once the OAuth flow is completed, the application will get two tokens, an access token and an id token. The access token is used to authenticate the reader to an API, and the id token is used to retrieve the reader's profile information within the app. More information about tokens can be found in the [Tokens](tokens.md) document. But in general the following rules apply for each type:
+Once the OAuth flow is completed, the application will get two tokens, an access token and an id token. The access token is used to authenticate the reader to an API, and the id token is used to retrieve the reader's profile information within the app. More information about tokens can be found in the [tokens](./oauth.md#oauthoidc-tokens-claims-and-scopes) documentation. But in general the following rules apply for each type:
 
 - Access Token
 
   - Should only be used to authenticate the reader to an API, and should not be used to read reader profile information directly from the token.
   - An example of this would be to use the access token to call members-data-api to retrieve the reader's subscription status, or discussion-api to post a comment, etc.
 
-- Id Token
+- ID Token
+
   - Should only be used to read a reader profile information, and should not be used to authenticate the reader to an API.
   - An example of this would be to read the access token to read the readers email, name, etc. to display in the app.
 
@@ -72,18 +71,6 @@ Once the app is set up within Okta and this project. The Identity team will give
 
 #### Library Options
 
-~~Can’t use the Okta SDK directly as its super huge even when gzipped (72.7 kB minified + gzipped)~~
-
-~~https://bundlephobia.com/package/@okta/okta-auth-js@7.2.0~~
-
-~~We’ll have to use a smaller OAuth library, or implement our own with a subset of the functionality required. Also investigate if tree shaking is possible with the Okta SDK.~~
-
-~~https://bundlephobia.com/package/oidc-client-ts@2.2.1 (17 kB minified + gzipped)
-Open ID compliant, ESM + CommonJS + Browser. Also included is support for reader session and access token management.~~
-
-~~https://bundlephobia.com/package/oauth4webapi@2.0.6 (8.1 kB minified + gzipped)
-Open ID compliant, ESM only, uses Web APIs. No support for reader session/token management.~~
-
 In general a library should provide the following features:
 
 - “Sign in” the reader to the app
@@ -96,9 +83,9 @@ In general a library should provide the following features:
   - “isSignedIn” method
   - Reading user claims from ID token
 
-~~A compelling option is to create our own library, which would be a subset of the Okta SDK. This would be a good option if we want to minimise the size of the library, and also have more control over the OAuth flow. We could also make a wrapper around the Okta SDK, which would be a good option if we want to minimise the amount of work required to implement the OAuth flow, and only make available the features we need.~~
+We've created our own library which implements a sub-set of the features that the Okta library provides. It is available in [`@guardian/csnx`](https://github.com/guardian/csnx) repo, specifically the [`@guardian/identity-auth`](https://github.com/guardian/csnx/tree/main/libs/%40guardian/identity-auth) library ([npm](https://www.npmjs.com/package/@guardian/identity-auth)).
 
-We've now created our own library which implements a sub-set of the features that the Okta library provides. It is available in [`@guardian/csnx`](https://github.com/guardian/csnx) repo, specifically the [`@guardian/identity-auth`](https://github.com/guardian/csnx/tree/main/libs/%40guardian/identity-auth) library ([npm](https://www.npmjs.com/package/@guardian/identity-auth)). Our library only uses some of the same classes and methods as the official SDK, but the implementation of them is our own. Currently it only supports the `okta_post_message` `response_mode` parameter, which means that it only gets Access and ID tokens through performing the Authorization Code Flow from within an iframe on the page, this avoids any redirects.
+`@guardian/identity-auth` only uses some of the same classes and methods as the official SDK, but the implementation is our own. Currently it only supports the proprietary `okta_post_message` `response_mode` parameter, which means that it only gets Access and ID tokens through performing the Authorization Code Flow from within an iframe on the page, this avoids any redirects.
 
 #### OAuth Considerations
 
@@ -126,11 +113,25 @@ Expiry should be set to the minimum required, and refreshed when required, ideal
 
 On the server side we have options for multiple libraries and standards for authentication. Since we don’t have to worry about bundle sizes we can use any OAuth/OpenID Connect compliant library.
 
-In this project (Gateway) we already use https://github.com/panva/node-openid-client to generate oauth tokens, which are only used to authenticate with identity API to create the existing cookies for the readers.
+There are other options available https://openid.net/developers/certified/ and https://developer.okta.com/code/ if the following libraries don't suit your needs.
 
-There are other options available https://openid.net/developers/certified/ and https://developer.okta.com/code/
+##### Javascript/TypeScript
+
+In this project (Gateway), and [MMA (manage-frontend)](https://github.com/guardian/manage-frontend/blob/main/server/oauth.ts) we use https://github.com/panva/node-openid-client to perform the Authorization Code Flow to authroise the reader and get the access and id tokens.
 
 We also use [`@okta/jwt-verifier`](https://github.com/okta/okta-jwt-verifier-js) in order to verify the JWT access and id tokens on the server side.
+
+##### Scala
+
+We currently don't have a Scala library to perform the Authorization Code Flow, but an implementation is available in [support-frontend](https://github.com/guardian/support-frontend/blob/main/support-frontend/app/controllers/AuthCodeFlowController.scala#L30).
+
+The [`identity-auth-core`](https://github.com/guardian/identity/blob/main/identity-auth-core/src/main/scala/com/gu/identity/auth/OktaAuthService.scala#L24C7-L24C22) or [`identity-auth-play`](https://github.com/guardian/identity/blob/main/identity-auth-play/src/main/scala/com/gu/identity/play/OktaPlayAuthService.scala) libraries can be used to verify the JWT access and id tokens on the server side.
+
+```sbt
+"com.gu.identity" %% "identity-auth-core" % "4.12",
+// or
+"com.gu.identity" %% "identity-auth-play" % "4.12",
+```
 
 #### OAuth Considerations
 
@@ -160,9 +161,9 @@ Refresh should be attempted by going through the Authorization Code flow again, 
 flowchart TD
 
 A[Has access/id token and valid?]
-A -- Yes --> B[Has `GU_SO` cookie?]
-A -- No --> C[has `GU_U` cookie?]
-B -- Yes --> D[is `GU_SO` value > `iat` claim on access/id token?]
+A -- Yes --> B[Has GU_SO cookie?]
+A -- No --> C[has GU_U cookie?]
+B -- Yes --> D[is GU_SO value > iat claim on access/id token?]
 B -- No --> SI[isLoggedIn/maybeLoggedIn]
 C -- Yes --> SI
 C -- No --> SO[isSignedOut]
@@ -185,6 +186,8 @@ In general the following rules apply:
 4. If the reader has neither a valid access token and id token, nor a valid `GU_U` cookie, they are signed out.
 
 By using this `isLoggedIn`/`maybeLoggedIn` and `isSignedOut` states, we can avoid making unnecessary API calls to Okta to check if the reader is signed in, and not lower our security by making the global session cookie available to all Guardian domains.
+
+This logic has already been implemented within the [`@guardian/identity-auth`](https://github.com/guardian/csnx/tree/main/libs/%40guardian/identity-auth) library, but may have to be re-implemented in other applications.
 
 We already set a `GU_U` cookie which is valid across all Guardian domains, but is not used to take any actions on behalf of the reader (this is performed by the secure, httpOnly, `SC_GU_U` cookie). We can keep using this cookie to determine if the reader is `maybeLoggedIn`.
 
@@ -239,9 +242,7 @@ This gives us two options on how to do "sign in":
    - Or a link which generates and redirects to the `/authorize` url
    - This is what's currently happening in some other Guardian system, namely the [Jobs site](https://jobs.theguardian.com) and the [Native apps](native-apps-integration-guide.md). And is usually the approach taken by most things using OAuth.
 
-Our recommendation is to ideally implement both possibilities to cover all cases of sign in. This is because the 2nd option is most "OAuthy" and used by other systems and minimizes complication and redirects, but the 1st option will be required anyway in order to refresh tokens.
-
-This could be handled by an SDK.
+We allow both forms in order to authenticate. This is because the 2nd option is most "OAuthy" and used by other systems and minimizes complication and redirects, but the 1st option will be required anyway to match legacy behaviour.
 
 #### Option 1
 
@@ -307,13 +308,13 @@ note over SDK: the SDK manages the tokens, which can now be used to<br/>authenti
 
 ### How would I get a user’s details to display?
 
-The Id and access tokens hold "claims" about the user, essentially a key-value pair of fields which the token "claims" to have about the user, and is only validated through verifying the signature of the token.
+The ID and Access tokens hold "claims" about the user, essentially a key-value pair of fields which the token "claims" to have about the user, and is only validated through verifying the signature of the token.
 
 Once validated and decoded, the "claims" can be used within the application to read user information.
 
 The ID token is what a client should read from in order to read and display user information. The access token is used to make API calls to other services, and should not be used to read user information.
 
-Claims are customisable depending on the scopes and application. We want to keep the number of claims to a minimum so that we don’t give away any additional information about the user outside of what is required by the application. Which is unlike what is possible at the moment, where if a user has an `SC_GU_U` cookie, the application/api can read any/all information about the user.
+Claims are customisable depending on the scopes and application. We want to keep the number of claims to a minimum so that we don’t give away any additional information about the user outside of what is required by the application. Which is unlike what is possible at the moment, where if a user has the legacy `SC_GU_U` cookie, the application/api can read any/all information about the user.
 
 ### Where should we store the tokens?
 
@@ -321,7 +322,7 @@ As mentioned, hopefully an SDK should handle this, but the following applies.
 
 Client side applications: Local storage.
 
-Server side applications: HTTPOnly, Secure cookie, at least `SameSite=Lax`, you could also encrypt the cookie for extra security.
+Server side applications: `HTTPOnly`, `Secure` cookie, at least `SameSite=Lax`, you could also encrypt the cookie for extra security.
 
 ### How will sign out work?
 

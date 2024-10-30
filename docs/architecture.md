@@ -18,11 +18,13 @@ Many other client side applications at the Guardian now are React app based, whi
 
 Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [the Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Cypress](https://www.cypress.io/) for integration tests and E2E tests.
 
+We also heavily integrate with [Okta Customer Identity Solution](https://okta.com), who is our Identity backend and provider, and their APIs. For documentation on how we interact with Okta, see the [Okta Documentation](./okta) folder, and specific documentation on the new(er) [Okta IDX API](./okta/idx/README.md).
+
 ## Browser Support
 
 **Our core line in the sand is that core functionality and features must NOT require any client-side JavaScript.** To this end Gateway is set up as a completely SSR (Server-side Rendered) React application.
 
-This has the added benefit that since we're only serving HTML, we can target a wider range of browsers compared to doing client side hydration, pretty much any browser thats supports [TLS 1.2](https://caniuse.com/#feat=tls1-2) will get functional support. As far as styling/css go, we target the recommended browsers from [guardian/dotcom-rendering](https://github.com/guardian/dotcom-rendering/blob/master/docs/principles/browser-support.md#recommended-browsers).
+This has the added benefit that since we're only serving HTML, we can target a wider range of browsers compared to doing client side hydration, pretty much any browser thats supports [TLS 1.2](https://caniuse.com/#feat=tls1-2) will get functional support. As far as styling/css go, we target the recommended browsers from [guardian/dotcom-rendering](https://github.com/guardian/dotcom-rendering/blob/main/dotcom-rendering/docs/principles/browser-support.md#browser-support-principles).
 
 However there will be some JavaScript code that needs to run client side, such as for analytics, consent etc. And hydration can be used to enhance functionality for the user.
 
