@@ -1,5 +1,7 @@
 # Resetting passwords and generating password reset tokens in Okta
 
+**_Note: These diagrams are outdated and describe behaviour for the older Okta Classic API. For more up to date flows using the newer Okta IDX API, see the [IDX Documentation](./okta/idx/README.md) and the [IDX Reset Password](./idx/reset-password-idx.md) documentation specifically_**
+
 These are some notes which might be helpful, giving an overview of the ways we reset user passwords in Okta.
 
 All reset password operations are asynchronous and two-stage. First, we generate a reset password token within Okta. This is a short-lived token (60 minute expiry), and is emailed to the user. Then, the user posts their new password to the `/reset_password/:token` route, which will check if the token is valid and use the `resetPassword` function, which calls `/api/v1/authn/credentials/reset_password`, to complete the reset password operation.

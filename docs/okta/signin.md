@@ -1,5 +1,7 @@
 # Sign In with Okta
 
+**_Note: These diagrams are outdated and describe behaviour for the older Okta Classic API. For more up to date flows using the newer Okta IDX API, see the [IDX Documentation](./okta/idx/README.md) and the [IDX Sign In](./idx/sign-in-idx.md) documentation specifically_**
+
 This document describes how we've implemented the sign in flow with Okta in Gateway. There are two parts to this, sign in with email + password, and sign in with social.
 
 ## Email + Password
