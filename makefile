@@ -30,7 +30,7 @@ setup: clear
 	$(call log, "setting up development environment 🛠️")
 	$(call log, "enabling pnpm")
 	@corepack enable
-	@corepack prepare pnpm@latest --activate	
+	@corepack prepare --activate	
 
 dev: clean-build clear setup install
 	$(call banner, "gateway is starting")

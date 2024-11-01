@@ -67,7 +67,7 @@
 		"@types/jest": "^29.5.14",
 		"@types/mjml": "^4.7.4",
 		"@types/ms": "^0.7.34",
-		"@types/node": "^20.17.1",
+		"@types/node": "^22.8.6",
 		"@types/react": "^18.3.12",
 		"@types/react-dom": "^18.3.1",
 		"@types/serialize-javascript": "^5.0.4",
@@ -156,5 +156,6 @@
 		"tslib": "^2.8.0",
 		"winston": "^3.15.0",
 		"zod": "^3.23.8"
-	}
+	},
+	"packageManager": "pnpm@9.12.3+sha256.24235772cc4ac82a62627cd47f834c72667a2ce87799a846ec4e8e555e2d4b8b"
 }
