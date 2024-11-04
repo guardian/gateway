@@ -52,7 +52,7 @@
 		"@storybook/preact-webpack5": "^8.3.6",
 		"@storybook/react": "^8.3.6",
 		"@swc/core": "^1.7.40",
-		"@swc/plugin-emotion": "^4.0.3",
+		"@swc/plugin-emotion": "^6.0.0",
 		"@testing-library/cypress": "^10.0.2",
 		"@testing-library/jest-dom": "^6.6.2",
 		"@testing-library/preact": "^3.2.4",
