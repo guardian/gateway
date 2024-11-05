@@ -30,6 +30,7 @@ const config: KnipConfig = {
 		'src/client/static/index.tsx',
 		'src/server/index.ts',
 		'webpack.{config|development}.js',
+		'util/mock-server.js',
 	],
 	// all possible file types we want to check
 	project: ['**/*.{js,ts,tsx}'],
@@ -46,7 +47,6 @@ const config: KnipConfig = {
 	// usually used by webpack, cdk, storybook etc. that knip can't resolve
 	ignoreDependencies: [
 		'@guardian/cdk',
-		'@storybook/addon-viewport',
 		'@swc/plugin-emotion',
 		'aws-cdk-lib',
 		'fork-ts-checker-notifier-webpack-plugin',
