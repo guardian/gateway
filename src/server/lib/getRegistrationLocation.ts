@@ -22,26 +22,43 @@ export const getRegistrationLocation = (
 	 */
 	const maybeMockedCountryCode =
 		maybeGetCountryCodeFromCypressMockStateCookie(req);
-	if (maybeMockedCountryCode)
+	if (maybeMockedCountryCode) {
 		return countryCodeToRegistrationLocation(maybeMockedCountryCode);
+	}
 	/**
 	 * Cypress Test END
 	 */
 	const header = req.headers['x-gu-geolocation'];
-	if (!headerValueIsCountryCode(header)) return undefined;
+	if (!headerValueIsCountryCode(header)) {
+		return undefined;
+	}
 	return countryCodeToRegistrationLocation(header);
 };
 
 const countryCodeToRegistrationLocation = (
 	countryCode: CountryCode,
 ): RegistrationLocation | undefined => {
-	if (countryCode === 'GB') return 'United Kingdom';
-	if (Us.includes(countryCode)) return 'United States';
-	if (countryCode === 'AU') return 'Australia';
-	if (countryCode === 'NZ') return 'New Zealand';
-	if (countryCode === 'CA') return 'Canada';
-	if (Europe.includes(countryCode)) return 'Europe';
-	if (Row.includes(countryCode)) return 'Other';
+	if (countryCode === 'GB') {
+		return 'United Kingdom';
+	}
+	if (Us.includes(countryCode)) {
+		return 'United States';
+	}
+	if (countryCode === 'AU') {
+		return 'Australia';
+	}
+	if (countryCode === 'NZ') {
+		return 'New Zealand';
+	}
+	if (countryCode === 'CA') {
+		return 'Canada';
+	}
+	if (Europe.includes(countryCode)) {
+		return 'Europe';
+	}
+	if (Row.includes(countryCode)) {
+		return 'Other';
+	}
 
 	return undefined;
 };

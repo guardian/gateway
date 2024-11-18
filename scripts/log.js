@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 // BRANDED LOGGING
 
 const capitalize = (str) =>

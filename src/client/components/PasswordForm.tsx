@@ -264,7 +264,9 @@ export const PasswordForm = ({
 
 	useEffect(() => {
 		// Typing anything clears the big red error, falling back to the dynamic validation message
-		if (password.length > 0) setError(undefined);
+		if (password.length > 0) {
+			setError(undefined);
+		}
 		setIsTooShort(password.length < 8);
 		setIsTooLong(password.length > 72);
 

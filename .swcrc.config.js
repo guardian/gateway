@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 const mode =
 	process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
 

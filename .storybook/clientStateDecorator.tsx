@@ -1,12 +1,12 @@
 import React from 'react';
-import { DecoratorFn } from '@storybook/react';
+import type { Decorator } from '@storybook/react';
 
 import {
 	ClientStateProvider,
 	defaultClientState,
 } from '../src/client/components/ClientState';
 
-const clientStateDecorator: DecoratorFn = (StoryToDecorate, context) => (
+const clientStateDecorator: Decorator = (StoryToDecorate, context) => (
 	<ClientStateProvider
 		clientState={{
 			...defaultClientState,

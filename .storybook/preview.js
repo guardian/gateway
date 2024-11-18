@@ -47,7 +47,7 @@ const GlobalStyles = () => (
 /* Source provides a global utility that manages the appearance of focus styles. When enabled,
  * focus styles will be hidden while the user interacts using the mouse.
  * They will appear when the tab key is pressed to begin keyboard navigation. */
-const FocusManagerDecorator = (storyFn) => {
+const FocusManagerDecorator = (/** @type {() => any} */ storyFn) => {
 	React.useEffect(() => {
 		FocusStyleManager.onlyShowFocusOnTabs();
 	}, []);

@@ -1,4 +1,4 @@
-import axe = require('axe-core');
+import axe from 'axe-core';
 
 export const terminalLog = (violations: axe.Result[]) => {
 	cy.task(
