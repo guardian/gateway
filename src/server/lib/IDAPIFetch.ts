@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any -- unknown body shape, TODO: potential refactor opportunity here to use zod types for correct body shape */
 
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { joinUrl } from '@guardian/libs';
@@ -28,7 +28,7 @@ export interface IDAPIError {
 const handleResponseFailure = async (
 	response: Response,
 ): Promise<IDAPIError> => {
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- error parsing, sometimes idapi returns json, sometimes text for errors
 	let err;
 	const raw = await response.text();
 

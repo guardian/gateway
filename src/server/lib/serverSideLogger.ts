@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LogLevel } from '@/shared/model/Logger';
 import { createLogger, transports } from 'winston';
 import { formatWithOptions, InspectOptions } from 'util';
@@ -16,6 +15,7 @@ const loggingOptions: InspectOptions = {
 	compact: true,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for message
 const formatLogParam = (message?: any) =>
 	formatWithOptions(loggingOptions, message);
 
@@ -23,6 +23,7 @@ class ServerSideLogger extends BaseLogger {
 	log(
 		level: LogLevel,
 		message: string,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 		error?: any,
 		extraFields?: ExtraLogFields,
 	) {

@@ -10,7 +10,7 @@ export const requestIdMiddleware = (
 	_: Response,
 	next: NextFunction,
 ) => {
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- We have to assign the request ID to the headers object. This is the only place where this should be done.
 	req.headers['x-request-id'] = randomUUID();
 
 	next();

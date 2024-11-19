@@ -120,7 +120,7 @@ export const getUserConsentsForPage = async ({
 		.map((id) => allConsents.find((consent) => consent.id === id))
 		.map((consent) => {
 			if (consent) {
-				// eslint-disable-next-line functional/no-let
+				// eslint-disable-next-line functional/no-let -- mutation required to update consent with user consent data, TODO: potential for refactoring
 				let updated = consent;
 				const userConsent = userConsents.find((uc) => uc.id === consent.id);
 

@@ -143,7 +143,7 @@ const ValidationMessage = ({
 	isTooLong: boolean;
 	isChecking: boolean;
 }) => {
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- Conditional message, TODO: could refactor to avoid
 	let lengthMessage, complexityMessage;
 	if (!isDirty) {
 		return (
@@ -301,7 +301,7 @@ export const PasswordForm = ({
 			formAction={submitUrl}
 			submitButtonText={submitButtonText}
 			onSubmit={(e) => {
-				// eslint-disable-next-line functional/no-let
+				// eslint-disable-next-line functional/no-let -- Conditional boolean, TODO: could refactor to avoid
 				let errorOccurred = false;
 
 				if (isTooShort) {

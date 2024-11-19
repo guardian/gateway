@@ -140,12 +140,12 @@ const ProfileOpenIdClient = (ip?: string) => {
 
 	// Make sure we forward the IP address to Okta by adding it to the headers in the library calls
 	// https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- used to modify the client directly to add the IP address to the headers
 	client[custom.http_options] = (_, options) => {
 		// Add the IP address to the headers
 		const headers = options.headers || {};
 		if (ip) {
-			// eslint-disable-next-line functional/immutable-data
+			// eslint-disable-next-line functional/immutable-data -- add the IP address to the headers
 			headers['X-Forwarded-For'] = ip;
 		}
 
@@ -184,12 +184,12 @@ const DevProfileIdClient = (devIssuer: string, ip?: string) => {
 
 	// Make sure we forward the IP address to Okta by adding it to the headers in the library calls
 	// https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- used to modify the client directly to add the IP address to the headers
 	devClient[custom.http_options] = (_, options) => {
 		// Add the IP address to the headers
 		const headers = options.headers || {};
 		if (ip) {
-			// eslint-disable-next-line functional/immutable-data
+			// eslint-disable-next-line functional/immutable-data -- add the IP address to the headers
 			headers['X-Forwarded-For'] = ip;
 		}
 

@@ -19,7 +19,7 @@ export const removeEmptyKeysFromObjectAndConvertValuesToString = (
 	Object.keys(obj).forEach((key) => {
 		const asStr = obj[key]?.toString();
 		if (asStr) {
-			// eslint-disable-next-line functional/immutable-data
+			// eslint-disable-next-line functional/immutable-data -- we have to mutate the object to convert the values to strings
 			newObj[key] = asStr;
 		}
 	});
@@ -54,9 +54,9 @@ export const getPersistableQueryParamsWithoutOktaParams = (
 	params: QueryParams,
 ): PersistableQueryParams => {
 	const persistableQueryParams = getPersistableQueryParams(params);
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- we mutate the object to remove values
 	delete persistableQueryParams.appClientId;
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- we mutate the object to remove values
 	delete persistableQueryParams.fromURI;
 	return persistableQueryParams;
 };

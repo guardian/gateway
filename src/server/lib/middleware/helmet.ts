@@ -35,7 +35,7 @@ const scriptSrc = [
 ];
 
 if (stage === 'DEV') {
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- used only in dev
 	scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
 }
 

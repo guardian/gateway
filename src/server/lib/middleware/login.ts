@@ -121,7 +121,7 @@ export const loginMiddlewareOAuth = async (
 			trackMetric('LoginMiddlewareOAuth::OAuthTokensValid');
 
 			// store the oauth state in res.locals state
-			// eslint-disable-next-line functional/immutable-data
+			// eslint-disable-next-line functional/immutable-data -- We have to assign the oauthState to the locals object. This is the only place where this should be done.
 			res.locals.oauthState = {
 				accessToken,
 				idToken,

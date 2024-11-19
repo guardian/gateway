@@ -21,7 +21,7 @@ export type ExtractRouteParams<T> = string extends T
 		? { [k in Param | keyof ExtractRouteParams<Rest>]?: string }
 		: T extends `${infer _Start}:${infer Param}`
 			? { [k in Param]?: string }
-			: // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+			: // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- empty object type is needed for the base case
 				{};
 
 /**

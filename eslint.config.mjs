@@ -26,9 +26,7 @@ const config = tseslint.config(
 			...guardian.configs.storybook,
 			functional.configs.noMutations,
 			eslintPluginPrettierRecommended,
-			// TODO: consider enabling these
-			// ...guardian.configs.imports,
-			// ...guardian.configs.comments,
+			...guardian.configs.comments,
 		],
 
 		plugins: {
@@ -124,6 +122,7 @@ const config = tseslint.config(
 
 		rules: {
 			'@typescript-eslint/no-unused-vars': 'off',
+			'@eslint-community/eslint-comments/require-description': 'off',
 		},
 	},
 	{
@@ -131,6 +130,25 @@ const config = tseslint.config(
 
 		rules: {
 			'@typescript-eslint/no-unused-expressions': 'off',
+		},
+	},
+	{
+		files: [
+			'__mocks__/**/*',
+			'.storybook/**/*',
+			'cypress/**/*',
+			'scripts/**/*',
+			'util/**/*',
+			'.swcrc.config.js',
+			'babel.config.js',
+			'cypress.config.ts',
+			'jest.config.js',
+			'webpack.config.js',
+			'webpack.development.js',
+		],
+
+		rules: {
+			'@eslint-community/eslint-comments/require-description': 'off',
 		},
 	},
 );

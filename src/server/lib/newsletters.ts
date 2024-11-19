@@ -50,7 +50,7 @@ export const getUserNewsletterSubscriptions = async ({
 		.map((id) => allNewsletters.find((newsletter) => newsletter.id === id))
 		.map((newsletter) => {
 			if (newsletter) {
-				//eslint-disable-next-line functional/no-let
+				// eslint-disable-next-line functional/no-let -- mutation required to update newsletter with user newsletter data, TODO: potential for refactoring to avoid let
 				let updated = newsletter;
 				if (userNewsletterSubscriptions.includes(newsletter.id)) {
 					updated = {

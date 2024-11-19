@@ -122,31 +122,31 @@ router.get(
 
 						switch (cypressMockStateCookie) {
 							case 'digitalPack':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.digitalPack = true;
 								break;
 							case 'guardianWeeklySubscriber':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.guardianWeeklySubscriber = true;
 								break;
 							case 'member':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.member = true;
 								break;
 							case 'paidMember':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.paidMember = true;
 								break;
 							case 'paperSubscriber':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.paperSubscriber = true;
 								break;
 							case 'recurringContributor':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.recurringContributor = true;
 								break;
 							case 'feast':
-								// eslint-disable-next-line functional/immutable-data
+								// eslint-disable-next-line functional/immutable-data -- cypress test only
 								cypressContentAccess.feast = true;
 								break;
 							default:

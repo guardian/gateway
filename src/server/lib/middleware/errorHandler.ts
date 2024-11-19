@@ -10,8 +10,8 @@ import { trackMetric } from '@/server/lib/trackMetric';
 const { defaultReturnUri } = getConfiguration();
 
 export const routeErrorHandler = (
-	// eslint-disable-next-line
-	err: any, // ErrorRequestHandler uses type any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ErrorRequestHandler uses type any
+	err: any,
 	req: Request,
 	res: ResponseWithRequestState,
 	next: NextFunction,

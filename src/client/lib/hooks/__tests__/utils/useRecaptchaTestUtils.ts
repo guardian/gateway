@@ -34,7 +34,7 @@ export const setupRecaptchaScriptMutationObserver = (
  */
 export const setupRecaptchaObject = () => {
 	// Define grecpatcha on the window object so we can mock it.
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- used in tests
 	Object.defineProperty(global.window, 'grecaptcha', {
 		configurable: true,
 		get() {
