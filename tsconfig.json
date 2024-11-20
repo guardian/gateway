@@ -16,7 +16,21 @@
 			"react-dom": ["./node_modules/preact/compat/"]
 		},
 		"lib": ["ES2022", "DOM"],
-		"importHelpers": true
+		"importHelpers": true,
+		"allowJs": true
 	},
-	"include": ["src", "scripts/generate-rate-limit-schema.ts", "knip.ts"]
+	"include": [
+		"src",
+		".storybook/*",
+		"__mocks__/*",
+		"util/*",
+		"scripts/*.js",
+		"scripts/generate-rate-limit-schema.ts",
+		"knip.ts",
+		".swcrc.config.js",
+		"babel.config.js",
+		"jest.config.js",
+		"webpack.config.js",
+		"webpack.development.js"
+	]
 }

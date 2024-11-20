@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values -- allow duplicates in enums within this file e.g. for GU_API_DOMAIN */
 import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { Stage } from '@/shared/model/Configuration';
 

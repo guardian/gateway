@@ -79,7 +79,7 @@ export const trackMetric = (
 				}
 			} else {
 				logger.warn('Unknown error when attempting to record to cloudwatch.');
-				// eslint-disable-next-line no-console
+				// eslint-disable-next-line no-console -- logging error if it's not an instance of Error
 				console.warn(error);
 			}
 		});

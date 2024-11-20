@@ -169,7 +169,7 @@ export const getOAuthTokenCookie = (
 	req: Request,
 	name: OAuthCookieNames,
 ): string | undefined => {
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- used to determine the cookie source, TODO: potential for refactoring to remove let
 	let cookieSource: 'cookies' | 'signedCookies';
 	if (process.env.RUNNING_IN_CYPRESS === 'true') {
 		// If we're in testing, first try reading from signedCookies,

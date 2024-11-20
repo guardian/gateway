@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console -- this is an example file */
 import React from 'react';
 
 import { tests } from '@/shared/model/experiments/abTests';

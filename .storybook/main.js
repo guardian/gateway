@@ -1,3 +1,5 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const path = require('path');
 const { neutral } = require('@guardian/source/foundations');
 const deepmerge = require('deepmerge');
@@ -12,7 +14,7 @@ const config = {
 		'@storybook/addon-themes',
 		'@chromatic-com/storybook',
 	],
-	previewHead: (head) => `
+	previewHead: (/** @type {any} */ head) => `
     ${head}
     <style>
       body {
@@ -20,7 +22,9 @@ const config = {
       }
     </style>
   `,
-	webpackFinal: async (config) => {
+	webpackFinal: (
+		/** @type {{ resolve: { alias: any; }; module: { rules: any; }; }} */ config,
+	) => {
 		// Add the @client alias to prevent imports using it from failing
 		// Nb. __dirname is the current working directory, so .storybook in this case
 		config.resolve.alias = {
@@ -39,7 +43,7 @@ const config = {
 
 		// transpile certain modules so we can get them to work with ie11 storybook
 		const transpileModules = {
-			include: [/node_modules[\\\/]@guardian/],
+			include: [/node_modules[\\/]@guardian/],
 			test: /\.(m?)(j|t)s(x?)/,
 			use: [
 				deepmerge(sharedLoader, {

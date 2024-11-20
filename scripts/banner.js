@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const chalkRainbow = require('chalk-rainbow');
 
 const [, , messages] = process.argv;

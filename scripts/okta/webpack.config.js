@@ -1,5 +1,5 @@
 /* eslint-disable functional/immutable-data */
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const path = require('path');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('../../.swcrc.config');

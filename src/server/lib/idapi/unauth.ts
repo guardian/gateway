@@ -18,7 +18,7 @@ export const logoutFromIDAPI = async (
 	ip: string | undefined,
 ): Promise<IdapiCookies | undefined> => {
 	const options = APIAddClientAccessToken(APIPostOptions(), ip);
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- Mutating headers, TODO: potentially refactor to avoid
 	options.headers = {
 		...options.headers,
 		'X-GU-ID-FOWARDED-SC-GU-U': sc_gu_u,

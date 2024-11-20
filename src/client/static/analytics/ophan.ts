@@ -22,7 +22,6 @@ const addRefToOphanFollow = () => {
 
 addRefToOphanFollow();
 
-// eslint-disable-next-line import/first -- ophan-tracker-js has side effects and requires the above code to be run first
 import 'ophan-tracker-js';
 
 export const init = () => {

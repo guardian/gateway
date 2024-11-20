@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable no-console */
 /* eslint-disable functional/no-let */
@@ -6,7 +7,6 @@
 /* eslint-env node */
 const bodyParser = require('body-parser');
 const express = require('express');
-const { inspect } = require('util');
 const PORT = 9000;
 
 const DEFAULT_RESPONSE = {

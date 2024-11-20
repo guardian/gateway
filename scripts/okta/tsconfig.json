@@ -10,7 +10,8 @@
 		"lib": ["ES2022", "DOM"],
 		"skipLibCheck": true,
 		"noEmit": true,
-		"removeComments": true
+		"removeComments": true,
+		"allowJs": true
 	},
 	"include": ["**/*"],
 	"exclude": []

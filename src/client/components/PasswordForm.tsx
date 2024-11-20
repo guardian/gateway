@@ -143,7 +143,7 @@ const ValidationMessage = ({
 	isTooLong: boolean;
 	isChecking: boolean;
 }) => {
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- Conditional message, TODO: could refactor to avoid
 	let lengthMessage, complexityMessage;
 	if (!isDirty) {
 		return (
@@ -264,7 +264,9 @@ export const PasswordForm = ({
 
 	useEffect(() => {
 		// Typing anything clears the big red error, falling back to the dynamic validation message
-		if (password.length > 0) setError(undefined);
+		if (password.length > 0) {
+			setError(undefined);
+		}
 		setIsTooShort(password.length < 8);
 		setIsTooLong(password.length > 72);
 
@@ -299,7 +301,7 @@ export const PasswordForm = ({
 			formAction={submitUrl}
 			submitButtonText={submitButtonText}
 			onSubmit={(e) => {
-				// eslint-disable-next-line functional/no-let
+				// eslint-disable-next-line functional/no-let -- Conditional boolean, TODO: could refactor to avoid
 				let errorOccurred = false;
 
 				if (isTooShort) {

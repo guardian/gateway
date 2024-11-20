@@ -10,8 +10,9 @@ export const getGeolocationRegion = (req: Request): GeoLocation => {
 	 */
 	const maybeMockedCountryCode =
 		maybeGetCountryCodeFromCypressMockStateCookie(req);
-	if (maybeMockedCountryCode)
+	if (maybeMockedCountryCode) {
 		return countryCodeToRegion(maybeMockedCountryCode);
+	}
 	/**
 	 * Cypress Test END
 	 */
@@ -22,7 +23,9 @@ export const getGeolocationRegion = (req: Request): GeoLocation => {
 const countryCodeToRegion = (
 	countryCode: string | string[] | undefined,
 ): GeoLocation => {
-	if (Europe.includes(countryCode as CountryCode)) return 'EU';
+	if (Europe.includes(countryCode as CountryCode)) {
+		return 'EU';
+	}
 	switch (countryCode) {
 		case 'GB':
 		case 'US':

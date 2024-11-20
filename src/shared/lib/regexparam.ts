@@ -1,4 +1,5 @@
-/* eslint-disable functional/immutable-data */
+/* eslint-disable @typescript-eslint/no-unused-expressions -- based on library code */
+/* eslint-disable functional/immutable-data -- based on library code */
 
 /**
  * Modified from https://github.com/lukeed/regexparam
@@ -45,7 +46,7 @@
  * @returns `{ pattern }` object, where pattern is always a RegExp instance.
  */
 export function parse(str: string, loose?: boolean) {
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- based on library code
 	let tmp,
 		pattern = '';
 	const arr = str.split('/');

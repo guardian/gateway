@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any -- see comment below */
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import mjml2html from 'mjml';

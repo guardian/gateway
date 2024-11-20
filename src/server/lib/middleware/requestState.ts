@@ -59,13 +59,14 @@ const getRequestState = async (
 
 	const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
+	// TODO: potential for refactoring to no longer use let to assign isNativeApp and appName
 	// we also need to know if the flow was initiated by a native app, hence we get the app info from the api
 	// and determine this based on the label, whether it contains "android" or "ios"
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- need to assign value based on logic
 	let isNativeApp: IsNativeApp;
 
 	// it is also useful to know the app name
-	// eslint-disable-next-line functional/no-let
+	// eslint-disable-next-line functional/no-let -- need to assign value based on logic
 	let appName: AppName | undefined;
 
 	try {
@@ -136,8 +137,7 @@ export const requestStateMiddleware = async (
 	try {
 		const state = await getRequestState(req);
 
-		/* This is the only place mutation of res.locals should occur */
-		/* eslint-disable-next-line functional/immutable-data */
+		/* eslint-disable-next-line functional/immutable-data -- This is the only place mutation of res.locals should occur */
 		res.locals = state;
 
 		return next();

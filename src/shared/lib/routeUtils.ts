@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
 import { QueryParams } from '../model/QueryParams';
 import { AllRoutes } from '../model/Routes';
@@ -24,7 +21,8 @@ export type ExtractRouteParams<T> = string extends T
 		? { [k in Param | keyof ExtractRouteParams<Rest>]?: string }
 		: T extends `${infer _Start}:${infer Param}`
 			? { [k in Param]?: string }
-			: {};
+			: // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- empty object type is needed for the base case
+				{};
 
 /**
  * Object which has matching parameter keys for a path.

@@ -147,7 +147,7 @@ export const validateRemediation = <
 
 	if (!hasRemediation && useThrow) {
 		throw new Error(
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions -- remediationName is a string const, typescript doesn't seem to think so
 			`IDX response does not contain the expected remediation: ${remediationName}`,
 		);
 	}

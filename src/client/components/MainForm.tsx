@@ -183,7 +183,7 @@ export const MainForm = ({
 				registerFormElement?.submit();
 			}
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- required for recaptcha
 	}, [recaptchaEnabled, recaptchaState, recaptchaState?.token]);
 
 	useEffect(() => {

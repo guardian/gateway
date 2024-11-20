@@ -7,7 +7,7 @@
     "test": "jest",
     "test-update": "jest -u",
     "format": "prettier --write \"{lib,bin}/**/*.ts\"",
-    "lint": "eslint lib/** bin/** --ext .ts --no-error-on-unmatched-pattern",
+    "lint": "eslint lib/**/*.ts bin/**/*.ts --no-error-on-unmatched-pattern",
     "synth": "cdk synth --path-metadata false --version-reporting false",
     "diff": "cdk diff --path-metadata false --version-reporting false"
   },
@@ -21,7 +21,7 @@
     "aws-cdk": "2.167.1",
     "aws-cdk-lib": "2.167.1",
     "constructs": "10.4.2",
-    "eslint": "^8.57.1",
+    "eslint": "^9.15.0",
     "jest": "^29.7.0",
     "prettier": "^3.3.2",
     "source-map-support": "^0.5.20",

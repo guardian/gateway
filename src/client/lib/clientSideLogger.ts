@@ -21,7 +21,7 @@ const getSentryLevel = (level: LogLevel): SeverityLevel => {
 };
 
 class ClientSideLogger extends BaseLogger {
-	// eslint-disable-next-line
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 	log(level: LogLevel, message: string, error?: any, extra?: ExtraLogFields) {
 		// Wrap the log in a new Sentry transaction.
 		// Setting `sampled` to true ensures that it is logged every time.
@@ -54,17 +54,17 @@ class ClientSideLogger extends BaseLogger {
 		return span?.end();
 	}
 
-	// eslint-disable-next-line
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 	info(message: string, error?: any, extra?: ExtraLogFields) {
 		return this.log(LogLevel.INFO, message, error, extra);
 	}
 
-	// eslint-disable-next-line
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 	warn(message: string, error?: any, extra?: ExtraLogFields) {
 		return this.log(LogLevel.WARN, message, error, extra);
 	}
 
-	// eslint-disable-next-line
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 	error(message: string, error?: any, extra?: ExtraLogFields) {
 		return this.log(LogLevel.ERROR, message, error, extra);
 	}

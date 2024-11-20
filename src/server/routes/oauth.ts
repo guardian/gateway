@@ -250,11 +250,11 @@ const authenticationHandler = async (
 						authState.data?.socialProvider ||
 						(cypressMockStateCookie as SocialProvider);
 					// if there is a social provider in the response (which there should be), then show the social consents page
-					// eslint-disable-next-line functional/immutable-data
+					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/${path}`;
 				} else {
 					// otherwise fall back to the default consents review page
-					// eslint-disable-next-line functional/immutable-data
+					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = '/welcome/review';
 				}
 
@@ -424,7 +424,7 @@ const authenticationHandler = async (
 		if (authState.queryParams.fromURI) {
 			if (authState.data?.isEmailRegistration) {
 				// For email registration users, we want to show the new account review page, but in the app browser
-				// eslint-disable-next-line functional/immutable-data
+				// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 				authState.confirmationPage = '/welcome/review';
 			} else {
 				// In this case, they're signing in, rather than registering so take them straight back to the app
@@ -442,7 +442,7 @@ const authenticationHandler = async (
 			authState.data?.appPrefix &&
 			authState.confirmationPage === '/welcome/review'
 		) {
-			// eslint-disable-next-line functional/immutable-data
+			// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 			authState.confirmationPage =
 				`/welcome/${authState.data.appPrefix}/complete` as RoutePaths;
 		}

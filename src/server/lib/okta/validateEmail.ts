@@ -1,4 +1,4 @@
-/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/immutable-data -- modifying body in expected way */
 import { updateUser } from '@/server/lib/okta/api/users';
 import { UserResponse, UserUpdateRequest } from '@/server/models/okta/User';
 import { logger } from '@/server/lib/serverSideLogger';

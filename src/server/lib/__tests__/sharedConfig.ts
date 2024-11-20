@@ -52,7 +52,7 @@ const defaultEnv = {
 export const getServerInstance = async (
 	rateLimiterConfig: RateLimiterConfiguration = defaultRateLimiterConfiguration,
 ) => {
-	// eslint-disable-next-line functional/immutable-data
+	// eslint-disable-next-line functional/immutable-data -- used in tests
 	process.env = {
 		...defaultEnv,
 		RATE_LIMITER_CONFIG: JSON.stringify(rateLimiterConfig),
