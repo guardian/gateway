@@ -9,6 +9,7 @@ const noUnusedVarsPattern = '^_|React|req|res|next|error|idxPaths|Schema$';
 
 const config = tseslint.config(
 	{
+		// ignore files we don't want to lint
 		ignores: [
 			'**/cdk/',
 			'**/storybook-static/',
@@ -39,14 +40,15 @@ const config = tseslint.config(
 
 			parserOptions: {
 				projectService: {
+					// lint additional files that are not part of the tsconfig
 					allowDefaultProject: ['eslint.config.mjs', 'cypress.config.ts'],
 				},
-				// projectService: true,
 
 				ecmaFeatures: {
 					jsx: true,
 				},
 
+				// list of all tsconfig files that should be used for type checking
 				project: [
 					'./tsconfig.json',
 					'./cypress/tsconfig.json',
@@ -62,6 +64,7 @@ const config = tseslint.config(
 		},
 
 		rules: {
+			// fix no-unused-vars errors based on `noUnusedVarsPattern`
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{
@@ -75,22 +78,24 @@ const config = tseslint.config(
 				},
 			],
 
-			'@typescript-eslint/only-throw-error': 'off',
-
+			// override functional rules
 			'functional/immutable-data': [
 				'error',
 				{
 					ignoreImmediateMutation: true,
 				},
 			],
-
 			'functional/prefer-immutable-types': 'off',
 			'functional/type-declaration-immutability': 'off',
+
+			// eslint rules
 			'no-var': 'error',
 			'no-param-reassign': 'error',
 			'no-sequences': 'error',
 			'no-console': 'error',
 			'prefer-const': 'error',
+
+			// disabled @guardian/eslint-config rules, we should enable some of them later
 			'import/order': 'off',
 			'@typescript-eslint/consistent-type-imports': 'off',
 			'@typescript-eslint/no-unsafe-assignment': 'off',
@@ -108,9 +113,11 @@ const config = tseslint.config(
 			'@typescript-eslint/no-unsafe-enum-comparison': 'off',
 			'import/no-named-as-default-member': 'off',
 			'import/no-cycle': 'off',
+			'@typescript-eslint/only-throw-error': 'off',
 		},
 	},
 	{
+		// rules specific to storybook files
 		files: ['**/*.stories.tsx'],
 
 		rules: {
@@ -118,6 +125,7 @@ const config = tseslint.config(
 		},
 	},
 	{
+		// rules specific to test files
 		files: ['**/*.test.tsx', '**/*.test.ts'],
 
 		rules: {
@@ -126,6 +134,7 @@ const config = tseslint.config(
 		},
 	},
 	{
+		// rules specific to cypress test files
 		files: ['**/*.cy.ts'],
 
 		rules: {
@@ -133,6 +142,7 @@ const config = tseslint.config(
 		},
 	},
 	{
+		// rules specific to files that are not part of the main codebase
 		files: [
 			'__mocks__/**/*',
 			'.storybook/**/*',
