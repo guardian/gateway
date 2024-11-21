@@ -86,7 +86,10 @@ const clientStateFromRequestStateLocals = ({
 			...clientState,
 			pageData: {
 				...clientState.pageData,
-				formError: CsrfErrors.CSRF_ERROR,
+				formError: {
+					message: CsrfErrors.CSRF_ERROR,
+					severity: 'CSRF',
+				},
 			},
 		};
 	}

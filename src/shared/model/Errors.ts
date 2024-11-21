@@ -92,7 +92,7 @@ export enum SubscribeErrors {
 
 export interface StructuredGatewayError {
 	message: string;
-	severity: 'BAU' | 'UNEXPECTED';
+	severity: 'BAU' | 'CSRF' | 'UNEXPECTED';
 }
 
 export type GatewayError = StructuredGatewayError | string;

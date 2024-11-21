@@ -61,3 +61,20 @@ export const WithStructuredUnexpectedError = () => (
 		shortRequestId="123e4567"
 	></GatewayErrorSummary>
 );
+
+const CsrfError: StructuredGatewayError = {
+	message: 'An unexpected error happened unexpectedly',
+	severity: 'CSRF',
+};
+
+export const WithStructuredCSRFError = () => (
+	<GatewayErrorSummary
+		gatewayError={CsrfError}
+		context={
+			<p css={[errorContextSpacing, errorContextLastTypeSpacing]}>
+				Since this was a CSRF error we show cookie help details
+			</p>
+		}
+		shortRequestId="123e4567"
+	></GatewayErrorSummary>
+);
