@@ -39,7 +39,9 @@ const labelStyles = (hasFocus: boolean) => css`
 	border: ${switchVariables.border}px solid
 		var(--color-toggle-inactive-background);
 	display: grid;
-	grid-template-columns: calc(100% - ${switchComputedWidth}px) ${switchComputedWidth}px;
+	grid-template-columns:
+		calc(100% - ${switchComputedWidth}px)
+		${switchComputedWidth}px;
 
 	/*
 	 * FOCUS LOGIC
