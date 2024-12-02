@@ -19,10 +19,10 @@ importers:
         version: 3.699.0(@aws-sdk/client-sso-oidc@3.699.0(@aws-sdk/client-sts@3.699.0))
       '@emotion/react':
         specifier: ^11.13.5
-        version: 11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)
+        version: 11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)
       '@faire/mjml-react':
         specifier: ^3.4.0
-        version: 3.4.0(@preact/compat@18.3.1(preact@10.25.0))(@preact/compat@18.3.1(preact@10.25.0))(mjml@4.15.3)
+        version: 3.4.0(@preact/compat@18.3.1(preact@10.25.1))(@preact/compat@18.3.1(preact@10.25.1))(mjml@4.15.3)
       '@guardian/ab-core':
         specifier: 8.0.0
         version: 8.0.0(tslib@2.8.1)(typescript@5.7.2)
@@ -31,10 +31,10 @@ importers:
         version: 19.2.1(tslib@2.8.1)(typescript@5.7.2)
       '@guardian/source':
         specifier: ^8.0.0
-        version: 8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)
+        version: 8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)
       '@guardian/source-development-kitchen':
         specifier: ^13.1.0
-        version: 13.1.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@guardian/libs@19.2.1(tslib@2.8.1)(typescript@5.7.2))(@guardian/source@8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)
+        version: 13.1.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@guardian/libs@19.2.1(tslib@2.8.1)(typescript@5.7.2))(@guardian/source@8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)
       '@okta/jwt-verifier':
         specifier: ^4.0.1
         version: 4.0.1
@@ -90,17 +90,17 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       preact:
-        specifier: ^10.25.0
-        version: 10.25.0
+        specifier: ^10.25.1
+        version: 10.25.1
       preact-render-to-string:
         specifier: ^6.5.11
-        version: 6.5.11(preact@10.25.0)
+        version: 6.5.11(preact@10.25.1)
       react:
         specifier: npm:@preact/compat
-        version: '@preact/compat@18.3.1(preact@10.25.0)'
+        version: '@preact/compat@18.3.1(preact@10.25.1)'
       react-dom:
         specifier: npm:@preact/compat
-        version: '@preact/compat@18.3.1(preact@10.25.0)'
+        version: '@preact/compat@18.3.1(preact@10.25.1)'
       serialize-javascript:
         specifier: ^6.0.2
         version: 6.0.2
@@ -131,7 +131,7 @@ importers:
         version: 7.26.0(@babel/core@7.26.0)
       '@chromatic-com/storybook':
         specifier: ^3.2.2
-        version: 3.2.2(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))
+        version: 3.2.2(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))
       '@emotion/babel-preset-css-prop':
         specifier: ^11.12.0
         version: 11.12.0(@babel/core@7.26.0)
@@ -149,7 +149,7 @@ importers:
         version: 8.4.5(@types/react@18.3.12)(storybook@8.4.5(prettier@3.3.3))
       '@storybook/addon-links':
         specifier: ^8.4.5
-        version: 8.4.5(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))
+        version: 8.4.5(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))
       '@storybook/addon-styling-webpack':
         specifier: ^1.0.1
         version: 1.0.1(webpack@5.96.1)
@@ -164,10 +164,10 @@ importers:
         version: 3.0.3(webpack@5.96.1)
       '@storybook/preact-webpack5':
         specifier: ^8.4.5
-        version: 8.4.5(@swc/core@1.9.3)(esbuild@0.24.0)(preact@10.25.0)(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)(webpack-cli@5.1.4)
+        version: 8.4.5(@swc/core@1.9.3)(esbuild@0.24.0)(preact@10.25.1)(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)(webpack-cli@5.1.4)
       '@storybook/react':
         specifier: ^8.4.5
-        version: 8.4.5(@preact/compat@18.3.1(preact@10.25.0))(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)
+        version: 8.4.5(@preact/compat@18.3.1(preact@10.25.1))(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)
       '@swc/core':
         specifier: ^1.9.3
         version: 1.9.3
@@ -182,16 +182,16 @@ importers:
         version: 6.6.3
       '@testing-library/preact':
         specifier: ^3.2.4
-        version: 3.2.4(preact@10.25.0)
+        version: 3.2.4(preact@10.25.1)
       '@testing-library/preact-hooks':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/preact@3.2.4(preact@10.25.0))(preact@10.25.0)
+        version: 1.1.0(@testing-library/preact@3.2.4(preact@10.25.1))(preact@10.25.1)
       '@testing-library/react':
         specifier: npm:@testing-library/preact
-        version: '@testing-library/preact@3.2.4(preact@10.25.0)'
+        version: '@testing-library/preact@3.2.4(preact@10.25.1)'
       '@testing-library/react-hooks':
         specifier: npm:@testing-library/preact-hooks
-        version: '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.25.0))(preact@10.25.0)'
+        version: '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.25.1))(preact@10.25.1)'
       '@types/compression':
         specifier: ^1.7.5
         version: 1.7.5
@@ -5900,8 +5900,8 @@ packages:
     peerDependencies:
       preact: '>=10'
 
-  preact@10.25.0:
-    resolution: {integrity: sha512-6bYnzlLxXV3OSpUxLdaxBmE7PMOu0aR3pG6lryK/0jmvcDFPlcXGQAt5DpK3RITWiDrfYZRI0druyaK/S9kYLg==}
+  preact@10.25.1:
+    resolution: {integrity: sha512-frxeZV2vhQSohQwJ7FvlqC40ze89+8friponWUFeVEkaCfhC6Eu4V0iND5C9CXz8JLndV07QRDeXzH1+Anz5Og==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -8548,12 +8548,12 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@chromatic-com/storybook@3.2.2(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))':
+  '@chromatic-com/storybook@3.2.2(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
       chromatic: 11.16.3
       filesize: 10.1.6
       jsonfile: 6.1.0
-      react-confetti: 6.1.0(@preact/compat@18.3.1(preact@10.25.0))
+      react-confetti: 6.1.0(@preact/compat@18.3.1(preact@10.25.1))
       storybook: 8.4.5(prettier@3.3.3)
       strip-ansi: 7.1.0
     transitivePeerDependencies:
@@ -8670,17 +8670,17 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)':
+  '@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/babel-plugin': 11.13.5
       '@emotion/cache': 11.13.5
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(@preact/compat@18.3.1(preact@10.25.0))
+      '@emotion/use-insertion-effect-with-fallbacks': 1.1.0(@preact/compat@18.3.1(preact@10.25.1))
       '@emotion/utils': 1.4.2
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
     optionalDependencies:
       '@types/react': 18.3.12
     transitivePeerDependencies:
@@ -8706,9 +8706,9 @@ snapshots:
 
   '@emotion/unitless@0.10.0': {}
 
-  '@emotion/use-insertion-effect-with-fallbacks@1.1.0(@preact/compat@18.3.1(preact@10.25.0))':
+  '@emotion/use-insertion-effect-with-fallbacks@1.1.0(@preact/compat@18.3.1(preact@10.25.1))':
     dependencies:
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
 
   '@emotion/utils@1.4.0': {}
 
@@ -8835,12 +8835,12 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@faire/mjml-react@3.4.0(@preact/compat@18.3.1(preact@10.25.0))(@preact/compat@18.3.1(preact@10.25.0))(mjml@4.15.3)':
+  '@faire/mjml-react@3.4.0(@preact/compat@18.3.1(preact@10.25.1))(@preact/compat@18.3.1(preact@10.25.1))(mjml@4.15.3)':
     dependencies:
       lodash.kebabcase: 4.1.1
       mjml: 4.15.3
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
-      react-dom: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
+      react-dom: '@preact/compat@18.3.1(preact@10.25.1)'
 
   '@guardian/ab-core@8.0.0(tslib@2.8.1)(typescript@5.7.2)':
     dependencies:
@@ -8883,25 +8883,25 @@ snapshots:
       prettier: 3.3.3
       tslib: 2.8.1
 
-  '@guardian/source-development-kitchen@13.1.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@guardian/libs@19.2.1(tslib@2.8.1)(typescript@5.7.2))(@guardian/source@8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)':
+  '@guardian/source-development-kitchen@13.1.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@guardian/libs@19.2.1(tslib@2.8.1)(typescript@5.7.2))(@guardian/source@8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)':
     dependencies:
       '@guardian/libs': 19.2.1(tslib@2.8.1)(typescript@5.7.2)
-      '@guardian/source': 8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)
+      '@guardian/source': 8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)
       tslib: 2.8.1
     optionalDependencies:
-      '@emotion/react': 11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)
+      '@emotion/react': 11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)
       '@types/react': 18.3.12
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
       typescript: 5.7.2
 
-  '@guardian/source@8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)':
+  '@guardian/source@8.0.0(@emotion/react@11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.2)':
     dependencies:
       mini-svg-data-uri: 1.4.4
       tslib: 2.8.1
     optionalDependencies:
-      '@emotion/react': 11.13.5(@preact/compat@18.3.1(preact@10.25.0))(@types/react@18.3.12)
+      '@emotion/react': 11.13.5(@preact/compat@18.3.1(preact@10.25.1))(@types/react@18.3.12)
       '@types/react': 18.3.12
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
       typescript: 5.7.2
 
   '@hapi/hoek@9.3.0': {}
@@ -9252,9 +9252,9 @@ snapshots:
 
   '@polka/url@1.0.0-next.25': {}
 
-  '@preact/compat@18.3.1(preact@10.25.0)':
+  '@preact/compat@18.3.1(preact@10.25.1)':
     dependencies:
-      preact: 10.25.0
+      preact: 10.25.1
 
   '@sentry-internal/browser-utils@8.40.0':
     dependencies:
@@ -9664,14 +9664,14 @@ snapshots:
       '@storybook/global': 5.0.0
       storybook: 8.4.5(prettier@3.3.3)
 
-  '@storybook/addon-links@8.4.5(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))':
+  '@storybook/addon-links@8.4.5(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       storybook: 8.4.5(prettier@3.3.3)
       ts-dedent: 2.2.0
     optionalDependencies:
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
 
   '@storybook/addon-measure@8.4.5(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
@@ -9811,13 +9811,13 @@ snapshots:
 
   '@storybook/node-logger@8.1.11': {}
 
-  '@storybook/preact-webpack5@8.4.5(@swc/core@1.9.3)(esbuild@0.24.0)(preact@10.25.0)(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)(webpack-cli@5.1.4)':
+  '@storybook/preact-webpack5@8.4.5(@swc/core@1.9.3)(esbuild@0.24.0)(preact@10.25.1)(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)(webpack-cli@5.1.4)':
     dependencies:
       '@storybook/builder-webpack5': 8.4.5(@swc/core@1.9.3)(esbuild@0.24.0)(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)(webpack-cli@5.1.4)
-      '@storybook/preact': 8.4.5(preact@10.25.0)(storybook@8.4.5(prettier@3.3.3))
-      '@storybook/preset-preact-webpack': 8.4.5(preact@10.25.0)(storybook@8.4.5(prettier@3.3.3))
+      '@storybook/preact': 8.4.5(preact@10.25.1)(storybook@8.4.5(prettier@3.3.3))
+      '@storybook/preset-preact-webpack': 8.4.5(preact@10.25.1)(storybook@8.4.5(prettier@3.3.3))
       '@types/node': 22.9.3
-      preact: 10.25.0
+      preact: 10.25.1
       storybook: 8.4.5(prettier@3.3.3)
     transitivePeerDependencies:
       - '@rspack/core'
@@ -9827,32 +9827,32 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@storybook/preact@8.4.5(preact@10.25.0)(storybook@8.4.5(prettier@3.3.3))':
+  '@storybook/preact@8.4.5(preact@10.25.1)(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
       '@storybook/components': 8.4.5(storybook@8.4.5(prettier@3.3.3))
       '@storybook/global': 5.0.0
       '@storybook/manager-api': 8.4.5(storybook@8.4.5(prettier@3.3.3))
       '@storybook/preview-api': 8.4.5(storybook@8.4.5(prettier@3.3.3))
       '@storybook/theming': 8.4.5(storybook@8.4.5(prettier@3.3.3))
-      preact: 10.25.0
+      preact: 10.25.1
       storybook: 8.4.5(prettier@3.3.3)
       ts-dedent: 2.2.0
 
-  '@storybook/preset-preact-webpack@8.4.5(preact@10.25.0)(storybook@8.4.5(prettier@3.3.3))':
+  '@storybook/preset-preact-webpack@8.4.5(preact@10.25.1)(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
       '@storybook/core-webpack': 8.4.5(storybook@8.4.5(prettier@3.3.3))
       '@types/node': 22.9.3
-      preact: 10.25.0
+      preact: 10.25.1
       storybook: 8.4.5(prettier@3.3.3)
 
   '@storybook/preview-api@8.4.5(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
       storybook: 8.4.5(prettier@3.3.3)
 
-  '@storybook/react-dom-shim@8.4.5(@preact/compat@18.3.1(preact@10.25.0))(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))':
+  '@storybook/react-dom-shim@8.4.5(@preact/compat@18.3.1(preact@10.25.1))(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))':
     dependencies:
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
-      react-dom: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
+      react-dom: '@preact/compat@18.3.1(preact@10.25.1)'
       storybook: 8.4.5(prettier@3.3.3)
 
   '@storybook/react-dom-shim@8.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.5(prettier@3.3.3))':
@@ -9861,16 +9861,16 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       storybook: 8.4.5(prettier@3.3.3)
 
-  '@storybook/react@8.4.5(@preact/compat@18.3.1(preact@10.25.0))(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)':
+  '@storybook/react@8.4.5(@preact/compat@18.3.1(preact@10.25.1))(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))(typescript@5.7.2)':
     dependencies:
       '@storybook/components': 8.4.5(storybook@8.4.5(prettier@3.3.3))
       '@storybook/global': 5.0.0
       '@storybook/manager-api': 8.4.5(storybook@8.4.5(prettier@3.3.3))
       '@storybook/preview-api': 8.4.5(storybook@8.4.5(prettier@3.3.3))
-      '@storybook/react-dom-shim': 8.4.5(@preact/compat@18.3.1(preact@10.25.0))(@preact/compat@18.3.1(preact@10.25.0))(storybook@8.4.5(prettier@3.3.3))
+      '@storybook/react-dom-shim': 8.4.5(@preact/compat@18.3.1(preact@10.25.1))(@preact/compat@18.3.1(preact@10.25.1))(storybook@8.4.5(prettier@3.3.3))
       '@storybook/theming': 8.4.5(storybook@8.4.5(prettier@3.3.3))
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
-      react-dom: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
+      react-dom: '@preact/compat@18.3.1(preact@10.25.1)'
       storybook: 8.4.5(prettier@3.3.3)
     optionalDependencies:
       typescript: 5.7.2
@@ -9985,15 +9985,15 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.25.0))(preact@10.25.0)':
+  '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.25.1))(preact@10.25.1)':
     dependencies:
-      '@testing-library/preact': 3.2.4(preact@10.25.0)
-      preact: 10.25.0
+      '@testing-library/preact': 3.2.4(preact@10.25.1)
+      preact: 10.25.1
 
-  '@testing-library/preact@3.2.4(preact@10.25.0)':
+  '@testing-library/preact@3.2.4(preact@10.25.1)':
     dependencies:
       '@testing-library/dom': 8.20.1
-      preact: 10.25.0
+      preact: 10.25.1
 
   '@tokenizer/token@0.3.0': {}
 
@@ -14386,11 +14386,11 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact-render-to-string@6.5.11(preact@10.25.0):
+  preact-render-to-string@6.5.11(preact@10.25.1):
     dependencies:
-      preact: 10.25.0
+      preact: 10.25.1
 
-  preact@10.25.0: {}
+  preact@10.25.1: {}
 
   prelude-ls@1.2.1: {}
 
@@ -14493,9 +14493,9 @@ snapshots:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
-  react-confetti@6.1.0(@preact/compat@18.3.1(preact@10.25.0)):
+  react-confetti@6.1.0(@preact/compat@18.3.1(preact@10.25.1)):
     dependencies:
-      react: '@preact/compat@18.3.1(preact@10.25.0)'
+      react: '@preact/compat@18.3.1(preact@10.25.1)'
       tween-functions: 1.2.0
 
   react-docgen-typescript-plugin@1.0.8(typescript@5.7.2)(webpack@5.96.1):
