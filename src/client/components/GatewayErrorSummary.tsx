@@ -18,10 +18,24 @@ interface GateWayErrorSummaryProps
 
 export const GatewayErrorSummary = (props: GateWayErrorSummaryProps) => {
 	const structuredError = asStructuredError(props.gatewayError);
-	const fullContext =
-		props.shortRequestId && structuredError?.severity !== 'BAU'
+	const fullContext = [
+		props.context,
+		// A CSRF error is likely to be the first error a user sees if they have cookies disabled
+		// so enrich it with some extra details about how to enable cookies.
+		...(structuredError?.severity === 'CSRF'
 			? [
-					props.context,
+					<p>
+						If the problem persists please check if your browser has cookies
+						enabled. You can find details on how to enable cookies in our{' '}
+						<a href="https://www.theguardian.com/info/cookies#how-to-manage-cookies-at-the-guardian">
+							Cookies FAQ
+						</a>
+						.
+					</p>,
+				]
+			: []),
+		...(props.shortRequestId && structuredError?.severity !== 'BAU'
+			? [
 					<p
 						css={[errorContextSpacing, errorContextLastTypeSpacing]}
 						key={'requestId'}
@@ -29,7 +43,8 @@ export const GatewayErrorSummary = (props: GateWayErrorSummaryProps) => {
 						Request ID: {props.shortRequestId}
 					</p>,
 				]
-			: props.context;
+			: []),
+	];
 
 	return (
 		<ErrorSummary
