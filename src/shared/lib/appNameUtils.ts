@@ -1,4 +1,6 @@
 import { isOneOf } from '@guardian/libs';
+import Bowser from 'bowser';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 /**
  * list of app prefixes and labels that is used by native apps to determine
@@ -22,6 +24,7 @@ export const apps = [
 	['ios_live_app', 'il_'],
 	['android_feast_app', 'af_'],
 	['ios_feast_app', 'if_'],
+	['editions_pressreader', 'ed_'],
 ] as const;
 
 type AppLabel = (typeof apps)[number][0];
@@ -34,7 +37,7 @@ export const isAppPrefix = isOneOf(appPrefixes);
 const appLabels = apps.map(([label]) => label);
 export const isAppLabel = isOneOf(appLabels);
 
-export type AppName = 'Guardian' | 'Feast';
+export type AppName = 'Guardian' | 'Feast' | 'Editions';
 
 /**
  * @name getAppPrefix
@@ -46,6 +49,12 @@ export type AppName = 'Guardian' | 'Feast';
 export const getAppPrefix = (token: string): AppPrefix | undefined =>
 	appPrefixes.find((prefix) => token.startsWith(prefix));
 
+/**
+ * @name getAppName
+ * @description To get the name of the application from the prefix or label.
+ * @param labelOrPrefix - AppLabel or AppPrefix
+ * @returns {AppName} - 'Guardian', 'Feast', 'Editions' or undefined
+ */
 export const getAppName = (
 	labelOrPrefix: AppLabel | AppPrefix,
 ): AppName | undefined => {
@@ -60,5 +69,28 @@ export const getAppName = (
 		case 'if_':
 		case 'ios_feast_app':
 			return 'Feast';
+		case 'ed_':
+		case 'editions_pressreader':
+			return 'Editions';
+	}
+};
+
+/**
+ * @name getIsNativeAppFromBowser
+ * @description Use a Bowser instance to determine if the browser is a native os.
+ * @param browser - Bowser instance
+ * @returns {IsNativeApp} - 'android' or 'ios' if the browser matches Android or iOS, otherwise undefined
+ */
+export const getIsNativeAppFromBowser = (
+	browser: Bowser.Parser.Parser,
+): IsNativeApp | undefined => {
+	const os = browser.getOSName();
+
+	if (os === 'Android') {
+		return 'android';
+	}
+
+	if (os === 'iOS') {
+		return 'ios';
 	}
 };
