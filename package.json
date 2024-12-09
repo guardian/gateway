@@ -121,7 +121,7 @@
 		"@aws-sdk/client-cloudwatch": "^3.705.0",
 		"@aws-sdk/client-sesv2": "^3.699.0",
 		"@aws-sdk/credential-providers": "^3.699.0",
-		"@emotion/react": "^11.13.5",
+		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.4.0",
 		"@guardian/ab-core": "8.0.1",
 		"@guardian/libs": "^19.2.2",
