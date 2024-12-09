@@ -16,7 +16,12 @@ import Bowser from 'bowser';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { IsNativeApp } from '@/shared/model/ClientState';
-import { AppName, getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
+import {
+	AppName,
+	getAppName,
+	getIsNativeAppFromBowser,
+	isAppLabel,
+} from '@/shared/lib/appNameUtils';
 import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 
 const {
@@ -79,6 +84,10 @@ const getRequestState = async (
 					isNativeApp = 'android';
 				} else if (label.startsWith('ios_')) {
 					isNativeApp = 'ios';
+				} else {
+					// if we can't determine the os from the label, use bowser
+					// e.g. for the editions app
+					isNativeApp = getIsNativeAppFromBowser(browser);
 				}
 
 				appName = getAppName(label);
