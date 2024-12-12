@@ -8,15 +8,20 @@ deployments:
     app: identity-gateway
     parameters:
       cloudFormationStackName: gateway
-      amiTags:
-        Recipe: gateway-arm64
-        AmigoStage: PROD
+      amiParametersToTags:
+        AMIIdentitygateway:
+          Recipe: gateway-arm64
+          AmigoStage: PROD
       templateStagePaths:
         CODE: IdentityGateway-euwest-1-CODE.template.json
         PROD: IdentityGateway-euwest-1-PROD.template.json
       amiEncrypted: true
-    dependencies:
-      - update-ami
+      templateParameters:
+        # This seems to be a slight bug in Cloudformation/RiffRaff.
+        # Whenever an existing String parameter is converted into an SSM String parameter the deployment fails,
+        # this is because RiffRaffs default behaviour is to copy the previous value, which doesn't work because the parameter type has changed.
+        # This workaround can be removed once the Parameter type change has been applied to production.
+        VpcId: /account/vpc/primary/id
   identity-gateway:
     type: autoscaling
     dependencies:
@@ -25,13 +30,3 @@ deployments:
       bucketSsmLookup: true
       bucketSsmKey: /account/services/identity.artifact.bucket
       prefixStack: false
-  update-ami:
-    type: ami-cloudformation-parameter
-    parameters:
-      cloudFormationStackByTags: false
-      cloudFormationStackName: gateway
-      amiParametersToTags:
-        AMI:
-          Recipe: gateway-arm64
-          AmigoStage: PROD
-      amiEncrypted: true
