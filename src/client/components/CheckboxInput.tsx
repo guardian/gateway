@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/dist/declarations/src/jsx-namespace';
 import { Checkbox } from '@guardian/source/react-components';
 import { SerializedStyles, css } from '@emotion/react';
 import {
