@@ -1,5 +1,5 @@
 import React, { useId, useState } from 'react';
-import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/dist/declarations/src/jsx-namespace';
 import { css } from '@emotion/react';
 import {
 	textSans15,

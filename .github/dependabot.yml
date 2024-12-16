@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: 'weekly'
       day: monday
-      time: '08:00'
+      time: '07:00'
     labels:
       - 'dependencies'
     groups:
@@ -20,7 +20,7 @@ updates:
     schedule:
       interval: 'weekly'
       day: monday
-      time: '08:00'
+      time: '07:30'
     labels:
       - 'dependencies'
     groups:
