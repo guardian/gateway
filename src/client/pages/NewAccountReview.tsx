@@ -120,13 +120,10 @@ export const NewAccountReview = ({
 					What we mean by signed-in data
 				</MainBodyText>
 				<MainBodyText>
+					Information you provide when you register with us e.g.
 					<ul css={listStyles}>
-						<li>Information you provide e.g. email address</li>
-						<li>Products or services you buy from us</li>
-						<li>
-							Pages you view on theguardian.com or other Guardian websites when
-							signed in
-						</li>
+						<li>First name and last name</li>
+						<li>Email address</li>
 					</ul>
 				</MainBodyText>
 				<InformationBox>
