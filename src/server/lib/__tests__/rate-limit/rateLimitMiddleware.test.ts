@@ -1,9 +1,12 @@
 import Redis from 'ioredis-mock';
 import request from 'supertest';
-import { Request, RequestHandler } from 'express';
+import { NextFunction, Request } from 'express';
 import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { getServerInstance } from '../sharedConfig';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+	RequestWithCsrf,
+	ResponseWithRequestState,
+} from '@/server/models/Express';
 
 // Override the default 5s max timeout for these tests because Supertest takes some time to run.
 jest.setTimeout(20000);
@@ -44,14 +47,17 @@ describe('rate limiter middleware', () => {
 				res.redirect(303, '/reset-password/email-sent'),
 		}));
 
-		jest.mock(
-			'csurf',
-			() => (): RequestHandler => (req, res, next) => {
+		jest.mock('@/server/lib/middleware/csrf', () => ({
+			csrfMiddleware: (
+				req: RequestWithCsrf,
+				res: ResponseWithRequestState,
+				next: NextFunction,
+			) => {
 				// eslint-disable-next-line functional/immutable-data
-				req.csrfToken = jest.fn().mockReturnValue('');
+				req.csrfToken = () => 'mocked-csrf-token';
 				next();
 			},
-		);
+		}));
 
 		jest.mock('@/server/lib/recaptcha', () =>
 			jest.fn((req, res, next) => {

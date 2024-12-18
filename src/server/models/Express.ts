@@ -49,6 +49,10 @@ export interface RequestState {
 
 export type ResponseWithRequestState = Response<unknown, RequestState>;
 
-export interface RequestWithTypedQuery extends Request {
+export interface RequestWithCsrf extends Request {
+	csrfToken?(): string;
+}
+
+export interface RequestWithTypedQuery extends RequestWithCsrf {
 	query: Record<keyof QueryParams, string | undefined>;
 }

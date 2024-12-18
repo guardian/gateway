@@ -1,30 +1,6 @@
-import csrf from 'csurf';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import type { ResponseWithRequestState } from '@/server/models/Express';
-import type { NextFunction, Request } from 'express';
+import { csrf } from '@/server/lib/csrf';
 
-const { isHttps } = getConfiguration();
-
-const baseCsrfMiddleware = csrf({
-	cookie: {
-		key: '_csrf',
-		sameSite: true,
-		secure: isHttps,
-		httpOnly: true,
-		signed: true,
-	},
+// Setup the CSRF middleware
+export const csrfMiddleware = csrf({
+	ignoredRoutes: ['/unsubscribe-all/'],
 });
-
-const SKIP_CSRF_ROUTE_PREFIXES = ['/unsubscribe-all/'];
-
-export const csrfMiddleware = (
-	req: Request,
-	res: ResponseWithRequestState,
-	next: NextFunction,
-) => {
-	if (SKIP_CSRF_ROUTE_PREFIXES.find((path) => req.path.startsWith(path))) {
-		next();
-	} else {
-		baseCsrfMiddleware(req, res, next);
-	}
-};

@@ -122,7 +122,7 @@ userStatuses.forEach((status) => {
 							verifyInRegularEmailSentPage();
 						},
 					);
-					specify.only(
+					specify(
 						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							baseIdxPasscodeRegistrationMocks();
