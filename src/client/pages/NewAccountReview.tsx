@@ -120,7 +120,7 @@ export const NewAccountReview = ({
 					What we mean by signed-in data
 				</MainBodyText>
 				<MainBodyText>
-					Information you provide when you register with us e.g.
+					Information you provide when you create an account with us e.g.
 					<ul css={listStyles}>
 						<li>First name and last name</li>
 						<li>Email address</li>
