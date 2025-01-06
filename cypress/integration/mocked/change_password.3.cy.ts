@@ -85,7 +85,7 @@ describe('Password change flow', () => {
 				url: 'https://api.pwnedpasswords.com/range/*',
 			}).as('breachCheck');
 			cy.visit(`/reset-password/fake_token`);
-			cy.clearCookie('_csrf');
+			cy.clearCookie('__Host-_csrf');
 			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
 			cy.wait('@breachCheck');
 			cy.get('button[type="submit"]').click();
