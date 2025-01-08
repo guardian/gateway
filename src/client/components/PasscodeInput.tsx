@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import ThemedTextInput from '@/client/components/ThemedTextInput';
 import { remSpace } from '@guardian/source/foundations';
 
-interface PasscodeInputProps extends Omit<TextInputProps, 'label'> {
+interface PasscodeInputProps extends TextInputProps {
 	passcode?: string;
 	fieldErrors?: FieldError[];
 }
@@ -16,6 +16,7 @@ const passcodeInputStyles = css`
 `;
 
 export const PasscodeInput = ({
+	label,
 	passcode = '',
 	fieldErrors,
 }: PasscodeInputProps) => {
@@ -57,7 +58,7 @@ export const PasscodeInput = ({
 	return (
 		<div>
 			<ThemedTextInput
-				label="Verification code"
+				label={label}
 				type="text"
 				pattern="\d{6}"
 				name="code"

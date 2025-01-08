@@ -42,8 +42,9 @@ export const SignInPasscodeEmailSentPage = () => {
 			passcode={token}
 			expiredPage={buildUrl('/signin/code/expired')}
 			noAccountInfo
-			textType="generic"
+			textType="signin"
 			shortRequestId={shortRequestId}
+			showSignInWithPasswordOption
 		/>
 	);
 };

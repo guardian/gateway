@@ -7,8 +7,10 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { PasscodeInput } from '@/client/components/PasscodeInput';
 import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 import { EmailSentProps } from '@/client/pages/EmailSent';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import ThemedLink from '@/client/components/ThemedLink';
 
-type TextType = 'verification' | 'security' | 'generic';
+type TextType = 'verification' | 'security' | 'generic' | 'signin';
 
 type Props = {
 	passcodeAction: string;
@@ -19,6 +21,7 @@ type Props = {
 	timeUntilTokenExpiry?: number;
 	noAccountInfo?: boolean;
 	textType?: TextType;
+	showSignInWithPasswordOption?: boolean;
 };
 
 type PasscodeEmailSentProps = EmailSentProps & Props;
@@ -29,6 +32,7 @@ type Text = {
 	sentTextWithEmail: string;
 	sentTextWithoutEmail: string;
 	securityText: string;
+	passcodeInputLabel: string;
 	submitButtonText: string;
 };
 
@@ -43,6 +47,7 @@ const getText = (textType: TextType): Text => {
 					'We’ve sent you a temporary verification code. Please check your inbox.',
 				securityText:
 					'For your security, the verification code will expire in 30 minutes.',
+				passcodeInputLabel: 'Verification code',
 				submitButtonText: 'Submit verification code',
 			};
 		case 'security':
@@ -54,7 +59,19 @@ const getText = (textType: TextType): Text => {
 				sentTextWithoutEmail:
 					'For security reasons we need you to change your password. We’ve sent you a 6-digit verification code. Please check your inbox.',
 				securityText: 'For your security, the code will expire in 30 minutes.',
+				passcodeInputLabel: 'Verification code',
 				submitButtonText: 'Submit verification code',
+			};
+		case 'signin':
+			return {
+				title: 'Enter your one-time code to sign in',
+				successOverride: 'Email with one time code sent',
+				sentTextWithEmail: 'We’ve sent a 6-digit code to',
+				sentTextWithoutEmail:
+					'We’ve sent you a 6-digit code. Please check your inbox.',
+				securityText: 'For your security, the code will expire in 30 minutes.',
+				passcodeInputLabel: 'One-time code',
+				submitButtonText: 'Sign in',
 			};
 		case 'generic':
 		default:
@@ -65,6 +82,7 @@ const getText = (textType: TextType): Text => {
 				sentTextWithoutEmail:
 					'We’ve sent you a 6-digit code. Please check your inbox.',
 				securityText: 'For your security, the code will expire in 30 minutes.',
+				passcodeInputLabel: 'One-time code',
 				submitButtonText: 'Submit one-time code',
 			};
 	}
@@ -87,6 +105,7 @@ export const PasscodeEmailSent = ({
 	shortRequestId,
 	noAccountInfo,
 	textType = 'generic',
+	showSignInWithPasswordOption,
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -153,8 +172,19 @@ export const PasscodeEmailSent = ({
 				disableOnSubmit
 				shortRequestId={shortRequestId}
 			>
-				<PasscodeInput passcode={passcode} fieldErrors={fieldErrors} />
+				<PasscodeInput
+					passcode={passcode}
+					fieldErrors={fieldErrors}
+					label={text.passcodeInputLabel}
+				/>
 			</MainForm>
+			{showSignInWithPasswordOption && (
+				<MainBodyText>
+					<ThemedLink href={`${buildUrl('/signin/password')}${queryString}`}>
+						Sign in with password instead
+					</ThemedLink>
+				</MainBodyText>
+			)}
 			<EmailSentInformationBox
 				setRecaptchaErrorContext={setRecaptchaErrorContext}
 				setRecaptchaErrorMessage={setRecaptchaErrorMessage}

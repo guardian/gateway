@@ -71,6 +71,10 @@ const routes: Array<{
 		element: <SignInPasscodeEmailSentPage />,
 	},
 	{
+		path: '/signin/password',
+		element: <SignInPage hideSocialButtons forcePasswordPage />,
+	},
+	{
 		path: '/reauthenticate',
 		element: <SignInPage isReauthenticate />,
 	},

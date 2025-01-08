@@ -26,9 +26,6 @@ interface GlobalMessage {
 
 export type IsNativeApp = 'android' | 'ios' | undefined;
 
-// determine what the sign in page view should be
-export type SignInView = 'passcode' | 'password';
-
 export interface PageData {
 	// general page data
 	returnUrl?: string;

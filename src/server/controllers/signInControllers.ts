@@ -51,6 +51,7 @@ import {
 	forceUserIntoActiveState,
 	sendVerifyEmailAuthenticatorIdx,
 } from '@/server/controllers/oktaIdxShared';
+import { RoutePaths } from '@/shared/model/Routes';
 
 /**
  * @name SignInError
@@ -585,7 +586,13 @@ export const oktaIdxApiSignInController = async ({
 
 		const { status, gatewayError } = oktaSignInControllerErrorHandler(error);
 
-		const html = renderer('/signin', {
+		// if we're using passcodes, and the user is attempting to sign in with a password
+		// on error show the password sign in page
+		const errorPage: RoutePaths = res.locals.queryParams.usePasscodeSignIn
+			? '/signin/password'
+			: '/signin';
+
+		const html = renderer(errorPage, {
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					email,

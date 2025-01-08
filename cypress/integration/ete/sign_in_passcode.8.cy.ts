@@ -60,7 +60,7 @@ describe('Sign In flow, with passcode', () => {
 								expect(code).to.match(/^\d{6}$/);
 
 								cy.get('input[name=code]').type(code!);
-								cy.contains('Submit one-time code').click();
+								cy.contains('Sign in').click();
 
 								cy.url().should('include', expectedReturnUrl);
 
@@ -79,14 +79,14 @@ describe('Sign In flow, with passcode', () => {
 					case 'passcode-incorrect':
 						cy.get('input[name=code]').type(`${+code! + 1}`);
 
-						cy.contains('Submit one-time code').click();
+						cy.contains('Sign in').click();
 
 						cy.url().should('include', '/signin/code');
 
 						cy.contains('Incorrect code');
 						cy.get('input[name=code]').clear().type(code!);
 
-						cy.contains('Submit one-time code').click();
+						cy.contains('Sign in').click();
 
 						cy.url().should('include', expectedReturnUrl);
 
@@ -97,7 +97,7 @@ describe('Sign In flow, with passcode', () => {
 						break;
 					default: {
 						cy.get('input[name=code]').type(code!);
-						cy.contains('Submit one-time code').click();
+						cy.contains('Sign in').click();
 
 						cy.url().should('include', expectedReturnUrl);
 
@@ -178,7 +178,15 @@ describe('Sign In flow, with passcode', () => {
 				?.then(({ emailAddress, finalPassword }) => {
 					cy.visit(`/signin?usePasscodeSignIn=true`);
 					cy.get('input[name=email]').type(emailAddress);
-					cy.contains('Use a password to sign in instead').click();
+					cy.get('[data-cy="main-form-submit-button"]').click();
+
+					// passcode page
+					cy.url().should('include', '/signin/code');
+					cy.contains('Enter your one-time code');
+					cy.contains('Sign in with password instead').click();
+
+					cy.url().should('include', '/signin/password');
+					cy.get('input[name=email]').should('have.value', emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
@@ -361,7 +369,7 @@ describe('Sign In flow, with passcode', () => {
 			cy.contains('Don’t have an account?');
 
 			cy.get('input[name=code]').clear().type('123456');
-			cy.contains('Submit one-time code').click();
+			cy.contains('Sign in').click();
 
 			cy.url().should('include', '/signin/code');
 			cy.contains('Enter your one-time code');

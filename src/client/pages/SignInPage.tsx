@@ -5,9 +5,15 @@ import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryp
 
 interface Props {
 	isReauthenticate?: boolean;
+	hideSocialButtons?: boolean;
+	forcePasswordPage?: boolean;
 }
 
-export const SignInPage = ({ isReauthenticate = false }: Props) => {
+export const SignInPage = ({
+	isReauthenticate = false,
+	hideSocialButtons = false,
+	forcePasswordPage = false,
+}: Props) => {
 	const clientState = useClientState();
 	const {
 		pageData = {},
@@ -30,8 +36,10 @@ export const SignInPage = ({ isReauthenticate = false }: Props) => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			isReauthenticate={isReauthenticate}
 			shortRequestId={clientState.shortRequestId}
-			usePasscodeSignIn={queryParams.usePasscodeSignIn}
-			currentView={queryParams.signInCurrentView}
+			usePasscodeSignIn={
+				forcePasswordPage ? false : queryParams.usePasscodeSignIn
+			}
+			hideSocialButtons={hideSocialButtons}
 		/>
 	);
 };
