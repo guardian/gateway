@@ -85,7 +85,8 @@ type UnconditionalMetrics =
 	| `User-${'EmailValidated' | 'EmailNotValidated'}-${
 			| 'WeakPassword'
 			| 'StrongPassword'}`
-	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`;
+	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`
+	| `ExistingUserInCreateAccountFlow`;
 
 // Combine all the metrics above together into a type
 export type Metrics =

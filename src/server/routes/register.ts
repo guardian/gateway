@@ -446,6 +446,7 @@ const oktaIdxCreateAccount = async (
 			if (error.name === 'registration.error.notUniqueWithinOrg') {
 				// case for user already exists
 				// will implement when full passwordless is implemented
+				trackMetric('ExistingUserInCreateAccountFlow');
 			}
 		}
 
