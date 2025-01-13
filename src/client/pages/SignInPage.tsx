@@ -2,6 +2,7 @@ import React from 'react';
 import { SignIn } from '@/client/pages/SignIn';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
+import { useAB } from '@/client/components/ABReact';
 
 interface Props {
 	isReauthenticate?: boolean;
@@ -14,6 +15,7 @@ export const SignInPage = ({
 	hideSocialButtons = false,
 	forcePasswordPage = false,
 }: Props) => {
+	const ABTestAPI = useAB();
 	const clientState = useClientState();
 	const {
 		pageData = {},
@@ -27,6 +29,19 @@ export const SignInPage = ({
 
 	// we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
 	useRemoveEncryptedEmailParam();
+
+	const usePasscodeSignIn: boolean = (() => {
+		if (forcePasswordPage) {
+			return false;
+		}
+
+		if (ABTestAPI.isUserInVariant('PasscodeSignInTest', 'variant')) {
+			return true;
+		}
+
+		return !!queryParams.usePasscodeSignIn;
+	})();
+
 	return (
 		<SignIn
 			email={email}
@@ -36,9 +51,7 @@ export const SignInPage = ({
 			recaptchaSiteKey={recaptchaSiteKey}
 			isReauthenticate={isReauthenticate}
 			shortRequestId={clientState.shortRequestId}
-			usePasscodeSignIn={
-				forcePasswordPage ? false : queryParams.usePasscodeSignIn
-			}
+			usePasscodeSignIn={usePasscodeSignIn}
 			hideSocialButtons={hideSocialButtons}
 		/>
 	);
