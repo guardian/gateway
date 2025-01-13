@@ -105,7 +105,13 @@ reinstall: clear clean-deps install
 
 upgrade: clear
 	$(call log, "upgrading dependencies 🚀")
+	$(call log, "1. Updating pnpm using corepack")
+	@corepack up
+	$(call log, "2. Updating dependencies using pnpm")
 	@pnpm update -L -i
+	$(call log, "3. Updating cdk directory dependencies using pnpm")
+	@cd cdk && pnpm update -L -i
+
 
 clear: # private
 	@clear
