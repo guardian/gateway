@@ -49,8 +49,6 @@ const config: KnipConfig = {
 		'@guardian/cdk',
 		'@swc/plugin-emotion',
 		'aws-cdk-lib',
-		'fork-ts-checker-notifier-webpack-plugin',
-		'fork-ts-checker-webpack-plugin',
 		'imagemin',
 		'jest-environment-jsdom',
 		'mjml-browser',
