@@ -3,7 +3,6 @@ import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { isStringBoolean } from './isStringBoolean';
 import { validateFromUri } from './validateFromUri';
-import { SignInView } from '@/shared/model/ClientState';
 
 const validateGetOnlyError = (
 	method: string,
@@ -14,18 +13,6 @@ const validateGetOnlyError = (
 	// On POST with the error, we redirect to the GET URL of the form with the error parameter
 	if (method === 'GET' && error === 'true') {
 		return true;
-	}
-};
-
-const validateSignInView = (
-	signInCurrentView?: string,
-): SignInView | undefined => {
-	if (signInCurrentView === 'password') {
-		return 'password';
-	}
-
-	if (signInCurrentView === 'passcode') {
-		return 'passcode';
 	}
 };
 
@@ -66,7 +53,6 @@ export const parseExpressQueryParams = (
 		maxAge,
 		useOktaClassic,
 		usePasscodeSignIn,
-		signInCurrentView,
 	}: Record<keyof QueryParams, string | undefined>, // parameters from req.query
 	// some parameters may be manually passed in req.body too,
 	// generally for tracking purposes
@@ -92,9 +78,6 @@ export const parseExpressQueryParams = (
 		maxAge: stringToNumber(maxAge),
 		useOktaClassic: isStringBoolean(useOktaClassic),
 		usePasscodeSignIn: isStringBoolean(usePasscodeSignIn),
-		signInCurrentView: validateSignInView(
-			bodyParams.signInCurrentView || signInCurrentView,
-		),
 	};
 };
 

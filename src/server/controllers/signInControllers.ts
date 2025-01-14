@@ -51,6 +51,7 @@ import {
 	forceUserIntoActiveState,
 	sendVerifyEmailAuthenticatorIdx,
 } from '@/server/controllers/oktaIdxShared';
+import { RoutePaths } from '@/shared/model/Routes';
 
 /**
  * @name SignInError
@@ -383,10 +384,14 @@ export const oktaIdxApiSignInController = async ({
 	// get the email and password from the request body
 	const { email = '', password = '', passcode } = req.body;
 
+	const usePasscodeSignInFlag =
+		res.locals.queryParams.usePasscodeSignIn ||
+		res.locals.abTestAPI.isUserInVariant('PasscodeSignInTest', 'variant');
+
 	try {
 		// only attempt to sign in with a passcode if the user currently has the query parameter set
 		// this should be removed when we're ready to enable this for all users
-		if (res.locals.queryParams.usePasscodeSignIn) {
+		if (usePasscodeSignInFlag) {
 			// if the value exists, we're using passcodes
 			const usePasscode = !!passcode;
 
@@ -585,7 +590,13 @@ export const oktaIdxApiSignInController = async ({
 
 		const { status, gatewayError } = oktaSignInControllerErrorHandler(error);
 
-		const html = renderer('/signin', {
+		// if we're using passcodes, and the user is attempting to sign in with a password
+		// on error show the password sign in page
+		const errorPage: RoutePaths = usePasscodeSignInFlag
+			? '/signin/password'
+			: '/signin';
+
+		const html = renderer(errorPage, {
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					email,

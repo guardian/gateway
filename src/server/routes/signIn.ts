@@ -546,6 +546,22 @@ router.get(
 );
 
 router.get(
+	'/signin/password',
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const html = renderer('/signin/password', {
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email: readEncryptedStateCookie(req)?.email,
+				},
+			}),
+			pageTitle: 'Sign in',
+		});
+		return res.type('html').send(html);
+	},
+);
+
+router.get(
 	'/signin/:social',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const socialIdp = req.params.social as SocialProvider;

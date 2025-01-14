@@ -331,3 +331,125 @@ export const WithErrorMessageSecurity = () => (
 WithErrorMessageVerification.story = {
 	name: 'with error message - security',
 };
+
+export const DefaultsSignIn = () => (
+	<PasscodeEmailSent passcodeAction="#" expiredPage="#" textType="signin" />
+);
+DefaultsVerification.story = {
+	name: 'with defaults - signin',
+};
+
+export const ChangeEmailSignIn = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		textType="signin"
+	/>
+);
+ChangeEmailVerification.story = {
+	name: 'with changeEmailPage - signin',
+};
+
+export const WithEmailSignIn = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		textType="signin"
+	/>
+);
+WithEmailVerification.story = {
+	name: 'with email - signin',
+};
+
+export const WithPasscodeSignIn = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		passcode="123456"
+		textType="signin"
+	/>
+);
+WithPasscodeVerification.story = {
+	name: 'with passcode - signin',
+};
+
+export const WithPasscodeErrorSignIn = () => (
+	<PasscodeEmailSent
+		shortRequestId="123e4567"
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		passcode="123456"
+		fieldErrors={[
+			{
+				field: 'code',
+				message: 'Invalid code',
+			},
+		]}
+		textType="signin"
+	/>
+);
+WithPasscodeErrorVerification.story = {
+	name: 'with passcode error - signin',
+};
+
+export const WithRecaptchaErrorSignIn = () => (
+	<PasscodeEmailSent
+		shortRequestId="123e4567"
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		recaptchaSiteKey="invalid-key"
+		textType="signin"
+	/>
+);
+WithRecaptchaErrorVerification.story = {
+	name: 'with reCAPTCHA error - signin',
+};
+
+export const WithSuccessMessageSignIn = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		showSuccess={true}
+		textType="signin"
+	/>
+);
+WithSuccessMessageVerification.story = {
+	name: 'with success message - signin',
+};
+
+export const WithErrorMessageSignIn = () => (
+	<PasscodeEmailSent
+		shortRequestId="123e4567"
+		passcodeAction="#"
+		expiredPage="#"
+		errorMessage="•⩊• UwU"
+		textType="signin"
+	/>
+);
+WithErrorMessageVerification.story = {
+	name: 'with error message - signin',
+};
+
+export const WithSignInWithPasswordOption = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		noAccountInfo
+		showSignInWithPasswordOption
+		textType="signin"
+	/>
+);
+WithSignInWithPasswordOption.story = {
+	name: 'with sign in with password option - signin',
+};

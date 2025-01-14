@@ -126,66 +126,38 @@ IsReauthenticate.story = {
 	name: 'showing /reauthenticate page',
 };
 
-export const WithPasscodeSelectedDefaultPassword = (args: SignInProps) => (
-	<SignIn
-		{...{
-			...args,
-			defaultView: 'password',
-			currentView: 'passcode',
-			usePasscodeSignIn: true,
-		}}
-	/>
+export const SignInWithPasscode = (args: SignInProps) => (
+	<SignIn {...{ ...args, usePasscodeSignIn: true }} />
 );
-WithPasscodeSelectedDefaultPassword.story = {
-	name: 'with passcode checkbox checked',
+SignInWithPasscode.story = {
+	name: 'sign in with passcode',
 };
 
-export const WithPasscodeSelectedDefaultPasswordError = (args: SignInProps) => (
+export const SignInWithPasscodeError = (args: SignInProps) => (
 	<SignIn
 		{...{
 			...args,
-			defaultView: 'password',
-			currentView: 'passcode',
 			usePasscodeSignIn: true,
 			pageError: SignInErrors.PASSCODE_EXPIRED,
 		}}
 	/>
 );
-WithPasscodeSelectedDefaultPassword.story = {
-	name: 'with passcode checkbox checked',
+SignInWithPasscodeError.story = {
+	name: 'sign in with passcode error',
 };
 
-export const WithPasscodeSelectedDefaultPasscode = (args: SignInProps) => (
-	<SignIn {...{ ...args, defaultView: 'passcode', usePasscodeSignIn: true }} />
+export const NoSocialButtons = (args: SignInProps) => (
+	<SignIn {...{ ...args, hideSocialButtons: true }} />
 );
-WithPasscodeSelectedDefaultPasscode.story = {
-	name: 'with passcode checkbox checked',
+NoSocialButtons.story = {
+	name: 'no social buttons',
 };
 
-export const WithPasscodeSelectedDefaultPasscodeError = (args: SignInProps) => (
+export const NoSocialButtonsEmail = (args: SignInProps) => (
 	<SignIn
-		{...{
-			...args,
-			defaultView: 'passcode',
-			usePasscodeSignIn: true,
-			pageError: SignInErrors.PASSCODE_EXPIRED,
-		}}
+		{...{ ...args, hideSocialButtons: true, email: 'test@example.com' }}
 	/>
 );
-WithPasscodeSelectedDefaultPasscodeError.story = {
-	name: 'with passcode checkbox checked',
-};
-
-export const WithPasswordSelectedDefaultPasscode = (args: SignInProps) => (
-	<SignIn
-		{...{
-			...args,
-			defaultView: 'passcode',
-			currentView: 'password',
-			usePasscodeSignIn: true,
-		}}
-	/>
-);
-WithPasswordSelectedDefaultPasscode.story = {
-	name: 'with password checkbox checked',
+NoSocialButtonsEmail.story = {
+	name: 'no social buttons with email',
 };
