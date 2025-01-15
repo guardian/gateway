@@ -7,7 +7,7 @@ export const passcodeSignInTest: ABTest = {
 	author: 'mahesh.makani@theguardian.com',
 	description:
 		'Testing the release of one time passcodes as the default sign in option',
-	audience: 0.1, // 10% (1 is 100%)
+	audience: 0.2, // 20% (1 is 100%)
 	audienceOffset: 0, // 0% (1 is 100%). Prevent overlapping with other tests.
 	successMeasure: 'Users sign in successfully with passcodes',
 	audienceCriteria: 'Everyone',
