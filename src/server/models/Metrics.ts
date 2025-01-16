@@ -51,6 +51,7 @@ type ConditionalMetrics =
 	| 'OktaIdxSignIn'
 	| 'OktaIdxPasscodeSignIn'
 	| 'OktaIdxSendPasscodeSignIn'
+	| 'OktaPasswordSignInFlow'
 	| 'OktaSignOut'
 	| 'OktaSignOutGlobal'
 	| 'OktaUpdatePassword'
