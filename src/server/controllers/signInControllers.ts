@@ -466,6 +466,10 @@ export const oktaIdxApiSignInController = async ({
 		// if the user has made it here, they've successfully authenticated
 		trackMetric('OktaIdxSignIn::Success');
 
+		if (usePasscodeSignInFlag) {
+			trackMetric('OktaPasswordSignInFlow::Success');
+		}
+
 		// check the response from the challenge/answer endpoint
 		// if not a "CompleteLoginResponse" then Okta is in the state
 		// where the user needs to enroll in the "email" authenticator
@@ -587,6 +591,10 @@ export const oktaIdxApiSignInController = async ({
 		logger.error('Okta oktaIdxApiSignInController failed', error);
 
 		trackMetric('OktaIdxSignIn::Failure');
+
+		if (usePasscodeSignInFlag) {
+			trackMetric('OktaPasswordSignInFlow::Failure');
+		}
 
 		const { status, gatewayError } = oktaSignInControllerErrorHandler(error);
 
