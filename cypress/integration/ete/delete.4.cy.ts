@@ -4,7 +4,7 @@ describe('Delete my account flow in Okta', () => {
 		cy.visit(
 			`/signin?returnUrl=${encodeURIComponent(
 				`https://${Cypress.env('BASE_URI')}/welcome/review`,
-			)}`,
+			)}&usePasswordSignIn=true`,
 		);
 		cy.get('input[name=email]').type(email);
 		cy.get('input[name=password]').type(password);

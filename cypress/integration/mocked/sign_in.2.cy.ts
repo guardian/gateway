@@ -7,12 +7,12 @@ describe('Sign in flow', () => {
 
 	context('A11y checks', () => {
 		it('Has no detectable a11y violations on sign in page', () => {
-			cy.visit('/signin');
+			cy.visit('/signin?usePasswordSignIn=true');
 			injectAndCheckAxe();
 		});
 
 		it('Has no detectable a11y violations on sign in page with error', () => {
-			cy.visit('/signin');
+			cy.visit('/signin?usePasswordSignIn=true');
 			cy.get('input[name="email"]').type('Invalid email');
 			cy.get('input[name="password"]').type('Invalid password');
 			cy.mockNext(500);
@@ -40,7 +40,9 @@ describe('Sign in flow', () => {
 					statusCode: 200,
 				},
 			);
-			cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+			cy.visit(
+				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&usePasswordSignIn=true',
+			);
 			cy.get('input[name="email"]').type('placeholder@example.com');
 			cy.get('input[name="password"]').type('definitelynotarealpassword');
 			cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
@@ -55,7 +57,9 @@ describe('Sign in flow', () => {
 	context('General IDAPI failure', () => {
 		it('displays a generic error message', function () {
 			cy.mockNext(500);
-			cy.visit('/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin');
+			cy.visit(
+				'/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin&usePasswordSignIn=true',
+			);
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.get('input[name="password"]').type('password');
 			cy.get('[data-cy=main-form-submit-button]').click();

@@ -610,7 +610,7 @@ describe('Registration flow - Split 2/2', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);

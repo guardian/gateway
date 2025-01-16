@@ -397,17 +397,22 @@ export const oktaIdxApiSignInController = async ({
 	req: Request;
 	res: ResponseWithRequestState;
 }) => {
-	// get the email and password from the request body
+	// get the email and password from the request body if using passwords
+	// or the "passcode" parameter is a hidden input, which is to determine if the
+	// user is signing in with a passcode and not an actual passcode value
 	const { email = '', password = '', passcode } = req.body;
 
-	const usePasscodeSignInFlag =
-		res.locals.queryParams.usePasscodeSignIn ||
-		res.locals.abTestAPI.isUserInVariant('PasscodeSignInTest', 'variant');
+	// determines the flow to sign in with, namely passcodes or passwords
+	// usePasscode is determined by the existence of the passcode parameter in the request body
+	// or the "usePasswordSignIn" flag in the query parameters
+	// if the value exists, we're using passcodes
+	// if the value does not exist, we're using passwords
+	const usePasscode = passcode && !res.locals.queryParams.usePasswordSignIn;
 
 	try {
-		// only attempt to sign in with a passcode if the user currently has the query parameter set
-		// this should be removed when we're ready to enable this for all users
-		if (usePasscodeSignInFlag) {
+		// only attempt to sign in with a passcode if the usePasscode flag is set
+		// depending on the situations outlined above
+		if (usePasscode) {
 			// if the value exists, we're using passcodes
 			const usePasscode = !!passcode;
 
@@ -416,6 +421,8 @@ export const oktaIdxApiSignInController = async ({
 				return oktaIdxApiSignInPasscodeController({ req, res });
 			}
 		}
+
+		// Otherwise use password sign in
 
 		// First we want to check the user status in Okta
 		// to see if they are in the ACTIVE state
@@ -482,7 +489,9 @@ export const oktaIdxApiSignInController = async ({
 		// if the user has made it here, they've successfully authenticated
 		trackMetric('OktaIdxSignIn::Success');
 
-		if (usePasscodeSignInFlag) {
+		// if the usePasscodeSignInFlag is set, but we're at this point, then the user has signed in with a password instead
+		// so we want to track that case user's take that action
+		if (usePasscode) {
 			trackMetric('OktaPasswordSignInFlow::Success');
 		}
 
@@ -608,7 +617,9 @@ export const oktaIdxApiSignInController = async ({
 
 		trackMetric('OktaIdxSignIn::Failure');
 
-		if (usePasscodeSignInFlag) {
+		// if the usePasscode is set, but we're at this point, then the we've failed to send the user a passcode
+		// so we want to track that case
+		if (usePasscode) {
 			trackMetric('OktaPasswordSignInFlow::Failure');
 		}
 
@@ -616,9 +627,7 @@ export const oktaIdxApiSignInController = async ({
 
 		// if we're using passcodes, and the user is attempting to sign in with a password
 		// on error show the password sign in page
-		const errorPage: RoutePaths = usePasscodeSignInFlag
-			? '/signin/password'
-			: '/signin';
+		const errorPage: RoutePaths = usePasscode ? '/signin/password' : '/signin';
 
 		const html = renderer(errorPage, {
 			requestState: mergeRequestState(res.locals, {

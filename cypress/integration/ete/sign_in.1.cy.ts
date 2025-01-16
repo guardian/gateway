@@ -85,7 +85,7 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
 		});
 		it('navigates to reset password', () => {
-			cy.visit('/signin');
+			cy.visit('/signin?usePasswordSignIn=true');
 			cy.contains('Reset password').click();
 			cy.contains('Reset password');
 		});
@@ -120,7 +120,7 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.url().should('contain', 'clientId=jobs');
 		});
 		it('applies form validation to email and password input fields', () => {
-			cy.visit('/signin');
+			cy.visit('/signin?usePasswordSignIn=true');
 
 			cy.get('form').within(() => {
 				cy.get('input:invalid').should('have.length', 2);
@@ -292,7 +292,7 @@ describe('Sign in flow, Okta enabled', () => {
 							cy.visit(
 								`/signin?returnUrl=${encodeURIComponent(
 									`https://${Cypress.env('BASE_URI')}/welcome/review`,
-								)}`,
+								)}&usePasswordSignIn=true`,
 							);
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('input[name=password]').type(finalPassword);
@@ -317,7 +317,7 @@ describe('Sign in flow, Okta enabled', () => {
 		});
 	});
 
-	context('Okta IDX API Sign In', () => {
+	context('Okta IDX API Sign In with Password', () => {
 		it('ACTIVE user - email + password authenticators - successfully sign in', () => {
 			// Intercept the external redirect page.
 			// We just want to check that the redirect happens, not that the page loads.
@@ -329,7 +329,7 @@ describe('Sign in flow, Okta enabled', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin');
+					cy.visit('/signin?usePasswordSignIn=true');
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -348,7 +348,9 @@ describe('Sign in flow, Okta enabled', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+					cy.visit(
+						`/signin?returnUrl=${encodeURIComponent(returnUrl)}&usePasswordSignIn=true`,
+					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -376,9 +378,11 @@ describe('Sign in flow, Okta enabled', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
 					cy.visit(
-						`/signin?returnUrl=${encodedReturnUrl}&appClientId=${appClientId}&fromURI=${fromURI}`,
+						`/signin?returnUrl=${encodeURIComponent(returnUrl)}&usePasswordSignIn=true`,
+					);
+					cy.visit(
+						`/signin?returnUrl=${encodedReturnUrl}&appClientId=${appClientId}&fromURI=${fromURI}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -444,7 +448,7 @@ describe('Sign in flow, Okta enabled', () => {
 						cy.contains(emailAddress.toLowerCase());
 
 						// setup complete, now sign in
-						cy.visit('/signin');
+						cy.visit('/signin?usePasswordSignIn=true');
 						cy.contains('Sign in with a different email').click();
 						cy.get('input[name=email]').clear().type(emailAddress);
 						cy.get('input[name=password]').type(password);
@@ -494,7 +498,7 @@ describe('Sign in flow, Okta enabled', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin');
+					cy.visit('/signin?usePasswordSignIn=true');
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(`${finalPassword}!`);
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -503,7 +507,7 @@ describe('Sign in flow, Okta enabled', () => {
 		});
 
 		it('NON-EXISTENT user - shows authentication error in all scenarios', () => {
-			cy.visit('/signin');
+			cy.visit('/signin?usePasswordSignIn=true');
 			cy.get('input[name=email]').type('invalid@doesnotexist.com');
 			cy.get('input[name=password]').type('password');
 			cy.get('[data-cy="main-form-submit-button"]').click();
@@ -519,7 +523,7 @@ describe('Sign in flow, Okta enabled', () => {
 			cy
 				.createTestUser({ isGuestUser: true })
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin');
+					cy.visit('/signin?usePasswordSignIn=true');
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(`${finalPassword}`);
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -562,7 +566,7 @@ describe('Sign in flow, Okta enabled', () => {
 							cy.visit(
 								`/signin?returnUrl=${encodeURIComponent(
 									`https://${Cypress.env('BASE_URI')}/welcome/review`,
-								)}`,
+								)}&usePasswordSignIn=true`,
 							);
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('input[name=password]').type(finalPassword);
@@ -597,7 +601,7 @@ describe('Sign in flow, Okta enabled', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin');
+					cy.visit('/signin?usePasswordSignIn=true');
 
 					cy.interceptRecaptcha();
 
@@ -656,7 +660,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -702,7 +706,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -748,7 +752,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -780,7 +784,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -851,7 +855,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -912,7 +916,7 @@ describe('Sign in flow, Okta enabled', () => {
 								)}/welcome/review`;
 								const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 									postSignInReturnUrl,
-								)}`;
+								)}&usePasswordSignIn=true`;
 								cy.visit(visitUrl);
 								cy.get('input[name=email]').type(emailAddress);
 								cy.get('input[name=password]').type(finalPassword);

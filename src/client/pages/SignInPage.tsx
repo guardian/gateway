@@ -2,7 +2,6 @@ import React from 'react';
 import { SignIn } from '@/client/pages/SignIn';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
-import { useAB } from '@/client/components/ABReact';
 
 interface Props {
 	isReauthenticate?: boolean;
@@ -15,7 +14,6 @@ export const SignInPage = ({
 	hideSocialButtons = false,
 	forcePasswordPage = false,
 }: Props) => {
-	const ABTestAPI = useAB();
 	const clientState = useClientState();
 	const {
 		pageData = {},
@@ -44,17 +42,13 @@ export const SignInPage = ({
 			return false;
 		}
 
-		// if the user is in the PasscodeSignInTest variant, we should show the passcode view
-		// to test the new sign in flow
-		// eventually this will be removed and the passcode view will be shown by default
-		if (ABTestAPI.isUserInVariant('PasscodeSignInTest', 'variant')) {
-			return true;
+		// if the user has the usePasswordSignIn flag set, we should always show the password view
+		if (queryParams.usePasswordSignIn) {
+			return false;
 		}
 
-		// if the usePasscodeSignIn query param is set, we should show the passcode view
-		// this is used for testing the new sign in flow
-		// eventually this will be removed and the passcode view will be shown by default
-		return !!queryParams.usePasscodeSignIn;
+		// show the sign in with passcode view by default
+		return true;
 	})();
 
 	return (
