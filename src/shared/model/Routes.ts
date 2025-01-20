@@ -76,6 +76,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/:app/complete',
 	'/welcome/complete',
 	'/welcome/email-sent',
+	'/welcome/existing',
 	'/welcome/expired',
 	'/welcome/resend',
 	'/welcome/google',
