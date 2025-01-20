@@ -19,7 +19,7 @@ importers:
         version: 3.726.1(@aws-sdk/client-sso-oidc@3.726.0(@aws-sdk/client-sts@3.726.1))
       '@emotion/react':
         specifier: ^11.14.0
-        version: 11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)
+        version: 11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)
       '@faire/mjml-react':
         specifier: ^3.4.0
         version: 3.4.0(@preact/compat@18.3.1(preact@10.25.4))(@preact/compat@18.3.1(preact@10.25.4))(mjml@4.15.3)
@@ -31,10 +31,10 @@ importers:
         version: 19.2.2(tslib@2.8.1)(typescript@5.7.3)
       '@guardian/source':
         specifier: ^8.0.1
-        version: 8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3)
+        version: 8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3)
       '@guardian/source-development-kitchen':
         specifier: ^13.2.0
-        version: 13.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@guardian/libs@19.2.2(tslib@2.8.1)(typescript@5.7.3))(@guardian/source@8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3)
+        version: 13.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@guardian/libs@19.2.2(tslib@2.8.1)(typescript@5.7.3))(@guardian/source@8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3)
       '@okta/jwt-verifier':
         specifier: ^4.0.1
         version: 4.0.1
@@ -146,7 +146,7 @@ importers:
         version: 8.0.1(prettier@3.4.2)(tslib@2.8.1)
       '@storybook/addon-essentials':
         specifier: ^8.4.7
-        version: 8.4.7(@types/react@18.3.12)(storybook@8.4.7(prettier@3.4.2))
+        version: 8.4.7(@types/react@19.0.7)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-links':
         specifier: ^8.4.7
         version: 8.4.7(@preact/compat@18.3.1(preact@10.25.4))(storybook@8.4.7(prettier@3.4.2))
@@ -223,8 +223,8 @@ importers:
         specifier: ^22.10.5
         version: 22.10.5
       '@types/react':
-        specifier: ^18.3.12
-        version: 18.3.12
+        specifier: ^19.0.7
+        version: 19.0.7
       '@types/react-dom':
         specifier: ^18.3.1
         version: 18.3.1
@@ -2503,9 +2503,6 @@ packages:
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
-  '@types/prop-types@15.7.13':
-    resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
-
   '@types/qs@6.9.15':
     resolution: {integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==}
 
@@ -2515,8 +2512,8 @@ packages:
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
 
-  '@types/react@18.3.12':
-    resolution: {integrity: sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==}
+  '@types/react@19.0.7':
+    resolution: {integrity: sha512-MoFsEJKkAtZCrC1r6CM8U22GzhG7u2Wir8ons/aCKH6MBdD1ibV24zOSSkdZVUKqN5i396zG5VKLYZ3yaUZdLA==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -3927,6 +3924,10 @@ packages:
 
   es-object-atoms@1.0.0:
     resolution: {integrity: sha512-MZ4iQ6JwHOBQjahnjwaC1ZtIBH+2ohjamzAO3oaHcXYup7qxjF2fixyH+Q71voWHeOkI2q/TnJao/KfXYIZWbw==}
+    engines: {node: '>= 0.4'}
+
+  es-object-atoms@1.1.1:
+    resolution: {integrity: sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==}
     engines: {node: '>= 0.4'}
 
   es-set-tostringtag@2.0.3:
@@ -8974,7 +8975,7 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)':
+  '@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/babel-plugin': 11.13.5
@@ -8986,7 +8987,7 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       react: '@preact/compat@18.3.1(preact@10.25.4)'
     optionalDependencies:
-      '@types/react': 18.3.12
+      '@types/react': 19.0.7
     transitivePeerDependencies:
       - supports-color
 
@@ -9190,24 +9191,24 @@ snapshots:
       prettier: 3.4.2
       tslib: 2.8.1
 
-  '@guardian/source-development-kitchen@13.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@guardian/libs@19.2.2(tslib@2.8.1)(typescript@5.7.3))(@guardian/source@8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3)':
+  '@guardian/source-development-kitchen@13.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@guardian/libs@19.2.2(tslib@2.8.1)(typescript@5.7.3))(@guardian/source@8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3)':
     dependencies:
       '@guardian/libs': 19.2.2(tslib@2.8.1)(typescript@5.7.3)
-      '@guardian/source': 8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3)
+      '@guardian/source': 8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3)
       tslib: 2.8.1
     optionalDependencies:
-      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)
-      '@types/react': 18.3.12
+      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)
+      '@types/react': 19.0.7
       react: '@preact/compat@18.3.1(preact@10.25.4)'
       typescript: 5.7.3
 
-  '@guardian/source@8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)(tslib@2.8.1)(typescript@5.7.3)':
+  '@guardian/source@8.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7))(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)(tslib@2.8.1)(typescript@5.7.3)':
     dependencies:
       mini-svg-data-uri: 1.4.4
       tslib: 2.8.1
     optionalDependencies:
-      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@18.3.12)
-      '@types/react': 18.3.12
+      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.25.4))(@types/react@19.0.7)
+      '@types/react': 19.0.7
       react: '@preact/compat@18.3.1(preact@10.25.4)'
       typescript: 5.7.3
 
@@ -9529,10 +9530,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  '@mdx-js/react@3.1.0(@types/react@18.3.12)(react@18.3.1)':
+  '@mdx-js/react@3.1.0(@types/react@19.0.7)(react@18.3.1)':
     dependencies:
       '@types/mdx': 2.0.13
-      '@types/react': 18.3.12
+      '@types/react': 19.0.7
       react: 18.3.1
 
   '@nodelib/fs.scandir@2.1.5':
@@ -9946,9 +9947,9 @@ snapshots:
       storybook: 8.4.7(prettier@3.4.2)
       ts-dedent: 2.2.0
 
-  '@storybook/addon-docs@8.4.7(@types/react@18.3.12)(storybook@8.4.7(prettier@3.4.2))':
+  '@storybook/addon-docs@8.4.7(@types/react@19.0.7)(storybook@8.4.7(prettier@3.4.2))':
     dependencies:
-      '@mdx-js/react': 3.1.0(@types/react@18.3.12)(react@18.3.1)
+      '@mdx-js/react': 3.1.0(@types/react@19.0.7)(react@18.3.1)
       '@storybook/blocks': 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/csf-plugin': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/react-dom-shim': 8.4.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.4.7(prettier@3.4.2))
@@ -9959,12 +9960,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@storybook/addon-essentials@8.4.7(@types/react@18.3.12)(storybook@8.4.7(prettier@3.4.2))':
+  '@storybook/addon-essentials@8.4.7(@types/react@19.0.7)(storybook@8.4.7(prettier@3.4.2))':
     dependencies:
       '@storybook/addon-actions': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-backgrounds': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-controls': 8.4.7(storybook@8.4.7(prettier@3.4.2))
-      '@storybook/addon-docs': 8.4.7(@types/react@18.3.12)(storybook@8.4.7(prettier@3.4.2))
+      '@storybook/addon-docs': 8.4.7(@types/react@19.0.7)(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-highlight': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-measure': 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-outline': 8.4.7(storybook@8.4.7(prettier@3.4.2))
@@ -10466,19 +10467,16 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/prop-types@15.7.13': {}
-
   '@types/qs@6.9.15': {}
 
   '@types/range-parser@1.2.7': {}
 
   '@types/react-dom@18.3.1':
     dependencies:
-      '@types/react': 18.3.12
+      '@types/react': 19.0.7
 
-  '@types/react@18.3.12':
+  '@types/react@19.0.7':
     dependencies:
-      '@types/prop-types': 15.7.13
       csstype: 3.1.3
 
   '@types/semver@7.5.8': {}
@@ -10986,7 +10984,7 @@ snapshots:
       define-properties: 1.2.1
       es-abstract: 1.23.9
       es-errors: 1.3.0
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
       es-shim-unscopables: 1.0.2
     optional: true
 
@@ -12117,7 +12115,7 @@ snapshots:
       data-view-byte-offset: 1.0.1
       es-define-property: 1.0.1
       es-errors: 1.3.0
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
       es-set-tostringtag: 2.1.0
       es-to-primitive: 1.3.0
       function.prototype.name: 1.1.8
@@ -12203,6 +12201,11 @@ snapshots:
   es-object-atoms@1.0.0:
     dependencies:
       es-errors: 1.3.0
+
+  es-object-atoms@1.1.1:
+    dependencies:
+      es-errors: 1.3.0
+    optional: true
 
   es-set-tostringtag@2.0.3:
     dependencies:
@@ -14779,7 +14782,7 @@ snapshots:
       call-bind: 1.0.8
       call-bound: 1.0.3
       define-properties: 1.2.1
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
       has-symbols: 1.1.0
       object-keys: 1.1.1
     optional: true
@@ -14815,7 +14818,7 @@ snapshots:
       call-bind: 1.0.8
       call-bound: 1.0.3
       define-properties: 1.2.1
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
     optional: true
 
   oidc-token-hash@5.0.3: {}
@@ -15253,7 +15256,7 @@ snapshots:
       define-properties: 1.2.1
       es-abstract: 1.23.9
       es-errors: 1.3.0
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
       get-intrinsic: 1.2.7
       get-proto: 1.0.1
       which-builtin-type: 1.2.1
@@ -15513,7 +15516,7 @@ snapshots:
     dependencies:
       dunder-proto: 1.0.1
       es-errors: 1.3.0
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
     optional: true
 
   setprototypeof@1.2.0: {}
@@ -15753,7 +15756,7 @@ snapshots:
       define-data-property: 1.1.4
       define-properties: 1.2.1
       es-abstract: 1.23.9
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
       has-property-descriptors: 1.0.2
     optional: true
 
@@ -15775,7 +15778,7 @@ snapshots:
       call-bind: 1.0.8
       call-bound: 1.0.3
       define-properties: 1.2.1
-      es-object-atoms: 1.0.0
+      es-object-atoms: 1.1.1
     optional: true
 
   string.prototype.trimstart@1.0.8:
