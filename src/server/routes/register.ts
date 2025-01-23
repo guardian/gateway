@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { NextFunction, Request } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import {
 	readEncryptedStateCookie,
@@ -54,6 +54,10 @@ import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/c
 import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
+import {
+	oktaIdxApiSignInPasscodeController,
+	oktaIdxApiSubmitPasscodeController,
+} from '@/server/controllers/signInControllers';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -144,101 +148,115 @@ router.get('/register/code', (req: Request, res: ResponseWithRequestState) => {
 router.post(
 	'/register/code',
 	redirectIfLoggedIn,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { code } = req.body;
+	handleAsyncErrors(
+		async (req: Request, res: ResponseWithRequestState, next: NextFunction) => {
+			const { code } = req.body;
 
-		const encryptedState = readEncryptedStateCookie(req);
+			const encryptedState = readEncryptedStateCookie(req);
 
-		// make sure we have the encrypted state cookie and the code otherwise redirect to the email registration page
-		if (encryptedState?.stateHandle && code) {
-			const { stateHandle } = encryptedState;
+			// make sure we have the encrypted state cookie and the code otherwise redirect to the email registration page
+			if (encryptedState?.stateHandle && code) {
+				const { stateHandle, userState } = encryptedState;
 
-			try {
-				// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
-				const challengeAnswerResponse = await submitPasscode({
-					passcode: code,
-					stateHandle,
-					introspectRemediation: 'enroll-authenticator',
-					ip: req.ip,
-				});
+				try {
+					// if the user is not in the NON_ACTIVE state, we know they're an existing user
+					// going through the create account flow, so we use the oktaIdxApiSubmitPasscodeController
+					// instead of the flow for new users
+					if (userState && userState !== 'NOT_ACTIVE') {
+						return oktaIdxApiSubmitPasscodeController({
+							req,
+							res,
+							emailSentPage: '/register/email-sent',
+							expiredPage: '/register/email',
+						});
+					}
 
-				if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
-					throw new OAuthError({
-						error: 'invalid_response',
-						error_description:
-							'Invalid challenge/answer response - got a complete login response',
+					// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
+					const challengeAnswerResponse = await submitPasscode({
+						passcode: code,
+						stateHandle,
+						introspectRemediation: 'enroll-authenticator',
+						ip: req.ip,
 					});
-				}
 
-				// check if the remediation array contains the correct remediation object supplied
-				// if it does, then we know that we're in the correct state and the passcode was correct
-				validateChallengeAnswerRemediation(
-					challengeAnswerResponse,
-					'select-authenticator-enroll',
-				);
+					if (isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+						throw new OAuthError({
+							error: 'invalid_response',
+							error_description:
+								'Invalid challenge/answer response - got a complete login response',
+						});
+					}
 
-				// if passcode challenge is successful, we can proceed to the next step
-				// which is to enroll a password authenticator, as we still need users to set a password for the time being
-				// we first look for the password authenticator id deep in the response
-				const passwordAuthenticatorId = findAuthenticatorId({
-					response: challengeAnswerResponse,
-					remediationName: 'select-authenticator-enroll',
-					authenticator: 'password',
-				});
-
-				if (!passwordAuthenticatorId) {
-					throw new OAuthError(
-						{
-							error: 'idx_error',
-							error_description: 'Password authenticator id not found',
-						},
-						400,
+					// check if the remediation array contains the correct remediation object supplied
+					// if it does, then we know that we're in the correct state and the passcode was correct
+					validateChallengeAnswerRemediation(
+						challengeAnswerResponse,
+						'select-authenticator-enroll',
 					);
+
+					// if passcode challenge is successful, we can proceed to the next step
+					// which is to enroll a password authenticator, as we still need users to set a password for the time being
+					// we first look for the password authenticator id deep in the response
+					const passwordAuthenticatorId = findAuthenticatorId({
+						response: challengeAnswerResponse,
+						remediationName: 'select-authenticator-enroll',
+						authenticator: 'password',
+					});
+
+					if (!passwordAuthenticatorId) {
+						throw new OAuthError(
+							{
+								error: 'idx_error',
+								error_description: 'Password authenticator id not found',
+							},
+							400,
+						);
+					}
+
+					// start the credential enroll flow
+					await credentialEnroll(
+						stateHandle,
+						{ id: passwordAuthenticatorId, methodType: 'password' },
+						req.ip,
+					);
+
+					updateEncryptedStateCookie(req, res, {
+						passcodeUsed: true,
+					});
+
+					// redirect to the password page to set a password
+					return res.redirect(
+						303,
+						addQueryParamsToPath('/welcome/password', res.locals.queryParams),
+					);
+				} catch (error) {
+					// track and log the failure
+					logger.error(`IDX API - ${req.path} error:`, error);
+
+					handlePasscodeError({
+						error,
+						req,
+						res,
+						emailSentPage: '/register/email-sent',
+						expiredPage: '/welcome/expired',
+					});
+
+					// if we redirected away during the handlePasscodeError function, we can't redirect again
+					if (res.headersSent) {
+						return;
+					}
+
+					// at this point fall back to the legacy Okta registration flow
 				}
-
-				// start the credential enroll flow
-				await credentialEnroll(
-					stateHandle,
-					{ id: passwordAuthenticatorId, methodType: 'password' },
-					req.ip,
-				);
-
-				updateEncryptedStateCookie(req, res, {
-					passcodeUsed: true,
-				});
-
-				// redirect to the password page to set a password
-				return res.redirect(
-					303,
-					addQueryParamsToPath('/welcome/password', res.locals.queryParams),
-				);
-			} catch (error) {
-				// track and log the failure
-				logger.error(`IDX API - ${req.path} error:`, error);
-
-				handlePasscodeError({
-					error,
-					req,
-					res,
-					emailSentPage: '/register/email-sent',
-					expiredPage: '/welcome/expired',
-				});
-
-				// if we redirected away during the handlePasscodeError function, we can't redirect again
-				if (res.headersSent) {
-					return;
-				}
-
-				// at this point fall back to the legacy Okta registration flow
 			}
-		}
 
-		// if we reach this point, redirect back to the email registration page, as something has gone wrong
-		return res.redirect(
-			303,
-			addQueryParamsToPath('/register/email', res.locals.queryParams),
-		);
-	}),
+			// if we reach this point, redirect back to the email registration page, as something has gone wrong
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/register/email', res.locals.queryParams),
+			);
+		},
+	),
 );
 
 // Route to resend the email for passcode registration
@@ -251,7 +269,19 @@ router.post(
 
 		// make sure we have the state handle
 		if (encryptedState?.stateHandle) {
-			const { stateHandle } = encryptedState;
+			const { stateHandle, userState } = encryptedState;
+
+			// if the user is not in the NON_ACTIVE state, we know they're an existing user
+			// going through the create account flow, so we use the oktaIdxApiSignInPasscodeController
+			// instead of the flow for new users
+			if (userState && userState !== 'NOT_ACTIVE') {
+				return oktaIdxApiSignInPasscodeController({
+					req,
+					res,
+					emailSentPage: '/register/email-sent',
+					confirmationPagePath: '/welcome/existing',
+				});
+			}
 
 			try {
 				// check the state handle is valid
@@ -422,6 +452,7 @@ const oktaIdxCreateAccount = async (
 			email,
 			stateHandle: enrollNewWithEmailResponse.stateHandle,
 			stateHandleExpiresAt: enrollNewWithEmailResponse.expiresAt,
+			userState: 'NOT_ACTIVE', // lets us know that the user is a new user
 		});
 
 		// fire ophan component event if applicable
@@ -447,6 +478,14 @@ const oktaIdxCreateAccount = async (
 				// case for user already exists
 				// will implement when full passwordless is implemented
 				trackMetric('ExistingUserInCreateAccountFlow');
+
+				// instead we use the passcode sign in controller, and redirect to /welcome/existing at the end
+				return oktaIdxApiSignInPasscodeController({
+					req,
+					res,
+					emailSentPage: '/register/email-sent',
+					confirmationPagePath: '/welcome/existing',
+				});
 			}
 		}
 
