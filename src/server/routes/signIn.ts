@@ -310,7 +310,9 @@ router.get(
 router.post(
 	'/signin/code',
 	redirectIfLoggedIn,
-	oktaIdxApiSubmitPasscodeController,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		return await oktaIdxApiSubmitPasscodeController({ req, res });
+	}),
 );
 
 router.get(
