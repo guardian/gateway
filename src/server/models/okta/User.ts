@@ -138,7 +138,7 @@ export type SessionResponse = z.infer<typeof sessionResponseSchema>;
  *	@values ACTIVE_EMAIL_PASSWORD - ACTIVE - user has email + password authenticator (okta idx email verified)
  *	@values ACTIVE_PASSWORD_ONLY - ACTIVE - user has only password authenticator (okta idx email not verified)
  *	@values ACTIVE_EMAIL_ONLY - ACTIVE - user has only email authenticator (okta idx email verified) - not currently used in any code
- *	@values NOT_ACTIVE - user not in ACTIVE state - not currently used in any code
+ *	@values NOT_ACTIVE - user not in ACTIVE state - likely a new user
  */
 export type InternalOktaUserState =
 	| 'NON_EXISTENT'

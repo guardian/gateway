@@ -13,7 +13,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { PerformAuthorizationCodeFlowOptions } from '@/server/lib/okta/oauth';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
-type StartIdxFlowParams = {
+export type StartIdxFlowParams = {
 	req: Request;
 	res: ResponseWithRequestState;
 	authorizationCodeFlowOptions: Pick<

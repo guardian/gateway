@@ -35,7 +35,8 @@ export type PageTitle =
 	| 'Account Deletion'
 	| 'Account Deletion Complete'
 	| 'Account Deletion Blocked'
-	| 'Choose Newsletters';
+	| 'Choose Newsletters'
+	| 'Welcome back';
 
 export type PasswordPageTitle = Extract<
 	'Welcome' | 'Create Password' | 'Change Password',

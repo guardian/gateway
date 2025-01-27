@@ -42,6 +42,7 @@ import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersP
 import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
 import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
 import { SignInPasscodeEmailSentPage } from '@/client/pages/SignInPasscodeEmailSentPage';
+import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -137,6 +138,10 @@ const routes: Array<{
 	{
 		path: '/welcome/resend',
 		element: <WelcomeResendPage />,
+	},
+	{
+		path: '/welcome/existing',
+		element: <WelcomeExistingPage />,
 	},
 	{
 		path: '/welcome/expired',

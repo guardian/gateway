@@ -451,6 +451,22 @@ router.post(
 	},
 );
 
+// existing user using create account flow page
+router.get(
+	'/welcome/existing',
+	(req: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/welcome/existing', {
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					email: readEmailCookie(req),
+				},
+			}),
+			pageTitle: 'Welcome back',
+		});
+		return res.type('html').send(html);
+	},
+);
+
 // welcome page, check token and display set password page
 router.get(
 	'/welcome/:token',

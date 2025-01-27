@@ -11,6 +11,119 @@ const breachCheck = () => {
 	}).as('breachCheck');
 };
 
+const existingUserSendEmailAndValidatePasscode = ({
+	emailAddress,
+	expectedReturnUrl = 'https://m.code.dev-theguardian.com/',
+	params = '',
+	expectedEmailBody = 'Your one-time passcode',
+	additionalTests,
+}: {
+	emailAddress: string;
+	expectedReturnUrl?: string;
+	params?: string;
+	expectedEmailBody?: 'Your one-time passcode' | 'Your verification code';
+	additionalTests?: 'passcode-incorrect' | 'resend-email' | 'change-email';
+}) => {
+	cy.visit(`/register/email?${params}`);
+	cy.get('input[name=email]').clear().type(emailAddress);
+
+	const timeRequestWasMade = new Date();
+	cy.get('[data-cy="main-form-submit-button"]').click();
+
+	cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+		({ body, codes }) => {
+			// email
+			expect(body).to.have.string(expectedEmailBody);
+			expect(codes?.length).to.eq(1);
+			const code = codes?.[0].value;
+			expect(code).to.match(/^\d{6}$/);
+
+			// passcode page
+			cy.url().should('include', '/register/email-sent');
+			cy.contains('Enter your code');
+
+			switch (additionalTests) {
+				case 'resend-email':
+					{
+						const timeRequestWasMade2 = new Date();
+						cy.contains('send again').click();
+
+						cy.checkForEmailAndGetDetails(
+							emailAddress,
+							timeRequestWasMade2,
+						).then(({ body, codes }) => {
+							// email
+							expect(body).to.have.string(expectedEmailBody);
+							expect(codes?.length).to.eq(1);
+							const code = codes?.[0].value;
+							expect(code).to.match(/^\d{6}$/);
+
+							cy.get('input[name=code]').type(code!);
+							cy.contains('Submit verification code').click();
+
+							cy.contains('Return to the Guardian')
+								.should('have.attr', 'href')
+								.and('include', expectedReturnUrl);
+
+							cy.getTestOktaUser(emailAddress).then((user) => {
+								expect(user.status).to.eq('ACTIVE');
+								expect(user.profile.emailValidated).to.eq(true);
+							});
+						});
+					}
+					break;
+				case 'change-email': {
+					cy.contains('try another address').click();
+					cy.url().should('include', '/register/email');
+					break;
+				}
+				case 'passcode-incorrect':
+					{
+						cy.get('input[name=code]').type(`123456`);
+
+						cy.contains('Submit verification code').click();
+
+						cy.url().should('include', '/register/code');
+
+						cy.contains('Incorrect code');
+						cy.get('input[name=code]').clear().type(code!);
+
+						cy.contains('Submit verification code').click();
+
+						cy.url().should('include', '/welcome/existing');
+						cy.contains('Return to the Guardian')
+							.should('have.attr', 'href')
+							.and('include', expectedReturnUrl);
+
+						cy.getTestOktaUser(emailAddress).then((user) => {
+							expect(user.status).to.eq('ACTIVE');
+							expect(user.profile.emailValidated).to.eq(true);
+						});
+					}
+					break;
+				default: {
+					cy.get('input[name=code]').type(code!);
+					cy.contains('Submit verification code').click();
+
+					if (params?.includes('fromURI')) {
+						cy.url().should('include', expectedReturnUrl);
+					} else {
+						cy.url().should('include', '/welcome/existing');
+						cy.contains('Return to the Guardian')
+							.should('have.attr', 'href')
+							.and('include', expectedReturnUrl);
+
+						cy.getTestOktaUser(emailAddress).then((user) => {
+							expect(user.status).to.eq('ACTIVE');
+							expect(user.profile.emailValidated).to.eq(true);
+						});
+					}
+				}
+			}
+		},
+	);
+};
+
 describe('Registration flow - Split 1/2', () => {
 	context('Registering with Okta', () => {
 		it('successfully registers using an email with no existing account using a passcode', () => {
@@ -396,409 +509,222 @@ describe('Registration flow - Split 1/2', () => {
 		});
 	});
 
-	context('Existing users attempting to register with Okta', () => {
-		it('should send a STAGED user a set password email with an Okta activation token', () => {
-			// Test users created via IDAPI-with-Okta do not have the activation
-			// lifecycle run at creation, so they don't transition immediately from
-			// STAGED to PROVISIONED (c.f.
-			// https://developer.okta.com/docs/reference/api/users/#create-user) .
-			// This is useful for us as we can test STAGED users first, then test
-			// PROVISIONED users in the next test by activating a STAGED user. Users
-			// created through Gateway-with-Okta do have this lifecycle run, so if we
-			// rebuild these tests to not use IDAPI at all, we need to figure out a
-			// way to test STAGED and PROVISIONED users (probably by just passing an
-			// optional `activate` prop to a createUser function).
-			cy
-				.createTestUser({
-					isGuestUser: true,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
-						expect(oktaUser.status).to.eq(Status.STAGED);
+	context('existing user going through registration flow', () => {
+		// set up useful variables
+		const returnUrl =
+			'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
+		const encodedReturnUrl = encodeURIComponent(returnUrl);
+		const appClientId = 'appClientId1';
+		const fromURI = '/oauth2/v1/authorize';
 
-						cy.visit('/register/email');
+		context('ACTIVE user - with email authenticator', () => {
+			it('Should sign in with passcode', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						existingUserSendEmailAndValidatePasscode({
+							emailAddress,
+						});
+					});
+			});
+
+			it('should sign in with passocde - preserve returnUrl', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						existingUserSendEmailAndValidatePasscode({
+							emailAddress,
+							expectedReturnUrl: returnUrl,
+							params: `returnUrl=${encodedReturnUrl}`,
+						});
+					});
+			});
+
+			it('should sign in with passcode - preserve fromURI', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						existingUserSendEmailAndValidatePasscode({
+							emailAddress,
+							expectedReturnUrl: fromURI,
+							params: `fromURI=${fromURI}&appClientId=${appClientId}`,
+						});
+					});
+			});
+
+			it('should sign in with passcode - resend email', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						existingUserSendEmailAndValidatePasscode({
+							emailAddress,
+							additionalTests: 'resend-email',
+						});
+					});
+			});
+
+			it('should sign in with passcode - change email', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						existingUserSendEmailAndValidatePasscode({
+							emailAddress,
+							additionalTests: 'change-email',
+						});
+					});
+			});
+
+			it('should sign in with passcode - passcode incorrect', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						existingUserSendEmailAndValidatePasscode({
+							emailAddress,
+							additionalTests: 'passcode-incorrect',
+						});
+					});
+			});
+		});
+
+		context('ACTIVE user - with only password authenticator', () => {
+			it('should sign in with passcode', () => {
+				/**
+				 * START - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR
+				 */
+				const emailAddress = randomMailosaurEmail();
+				cy.visit(`/register/email`);
+
+				const timeRequestWasMade = new Date();
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+
+				cy.contains('Enter your code');
+				cy.contains(emailAddress);
+
+				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+					({ body, codes }) => {
+						// email
+						expect(body).to.have.string('Your verification code');
+						expect(codes?.length).to.eq(1);
+						const code = codes?.[0].value;
+						expect(code).to.match(/^\d{6}$/);
+
+						// passcode page
+						cy.url().should('include', '/register/email-sent');
+
+						// make sure we don't use a passcode
+						// we instead reset their password using classic flow to set a password
+						cy.visit('/reset-password?useOktaClassic=true');
+
 						const timeRequestWasMade = new Date();
-
-						cy.get('input[name=email]').type(emailAddress);
+						cy.get('input[name=email]').clear().type(emailAddress);
 						cy.get('[data-cy="main-form-submit-button"]').click();
-
-						cy.contains('Check your inbox');
-						cy.contains(emailAddress);
-						cy.contains('send again');
-						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
 							timeRequestWasMade,
 							/\/set-password\/([^"]*)/,
 						).then(({ links, body }) => {
-							expect(body).to.have.string('This account already exists');
+							expect(body).to.have.string('Welcome back');
 
 							expect(body).to.have.string('Create password');
 							expect(links.length).to.eq(2);
 							const setPasswordLink = links.find((s) =>
 								s.text?.includes('Create password'),
 							);
-							expect(setPasswordLink?.href).not.to.have.string('useOkta=true');
+
 							cy.visit(setPasswordLink?.href as string);
-							cy.contains('Create password');
-							cy.contains(emailAddress);
+
+							const password = randomPassword();
+							cy.get('input[name=password]').type(password);
+
+							cy.get('[data-cy="main-form-submit-button"]')
+								.click()
+								.should('be.disabled');
+							cy.contains('Password created');
+							cy.contains(emailAddress.toLowerCase());
+
+							/**
+							 * END - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR
+							 */
+							cy.visit('/signin?usePasscodeSignIn=true');
+							cy.contains('Sign in with a different email').click();
+							existingUserSendEmailAndValidatePasscode({
+								emailAddress,
+								expectedEmailBody: 'Your verification code',
+							});
 						});
-					});
-				});
+					},
+				);
+			});
 		});
 
-		it('should send a STAGED user a set password email with an Okta activation token, and has a prefixed activation token when using a native app', () => {
-			// Test users created via IDAPI-with-Okta do not have the activation
-			// lifecycle run at creation, so they don't transition immediately from
-			// STAGED to PROVISIONED (c.f.
-			// https://developer.okta.com/docs/reference/api/users/#create-user) .
-			// This is useful for us as we can test STAGED users first, then test
-			// PROVISIONED users in the next test by activating a STAGED user. Users
-			// created through Gateway-with-Okta do have this lifecycle run, so if we
-			// rebuild these tests to not use IDAPI at all, we need to figure out a
-			// way to test STAGED and PROVISIONED users (probably by just passing an
-			// optional `activate` prop to a createUser function).
-			cy
-				.createTestUser({
-					isGuestUser: true,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
+		context('non-ACTIVE user', () => {
+			it('STAGED user - should sign in with passcode', () => {
+				cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.STAGED);
 
-						const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
-						const fromURI = 'fromURI1';
-
-						cy.visit(
-							`/register/email?appClientId=${appClientId}&fromURI=${fromURI}`,
-						);
-						const timeRequestWasMade = new Date();
-
-						cy.get('input[name=email]').type(emailAddress);
-						cy.get('[data-cy="main-form-submit-button"]').click();
-
-						cy.contains('Check your inbox');
-						cy.contains(emailAddress);
-						cy.contains('send again');
-						cy.contains('try another address');
-
-						cy.checkForEmailAndGetDetails(
+						existingUserSendEmailAndValidatePasscode({
 							emailAddress,
-							timeRequestWasMade,
-							/\/set-password\/([^"]*)/,
-						).then(({ links, body }) => {
-							expect(body).to.have.string('This account already exists');
-
-							expect(body).to.have.string('Create password');
-							expect(links.length).to.eq(2);
-							const setPasswordLink = links.find((s) =>
-								s.text?.includes('Create password'),
-							);
-							expect(setPasswordLink?.href ?? '')
-								.to.have.string('al_')
-								.and.not.to.have.string('useOkta=true');
-							cy.visit(setPasswordLink?.href as string);
-							cy.contains('Create password');
-							cy.contains(emailAddress);
 						});
 					});
 				});
-		});
+			});
 
-		it('should send a PROVISIONED user a set password email with an Okta activation token', () => {
-			cy
-				.createTestUser({
-					isGuestUser: true,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
+			it('PROVISIONED user - should sign in with passcode', () => {
+				cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
 					cy.activateTestOktaUser(emailAddress).then(() => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.PROVISIONED);
 
-							cy.visit('/register/email');
-							const timeRequestWasMade = new Date();
-
-							cy.get('input[name=email]').type(emailAddress);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-
-							cy.contains('Check your inbox');
-							cy.contains(emailAddress);
-							cy.contains('send again');
-							cy.contains('try another address');
-
-							cy.checkForEmailAndGetDetails(
-								emailAddress,
-								timeRequestWasMade,
-								/\/set-password\/([^"]*)/,
-							).then(({ links, body }) => {
-								expect(body).to.have.string('This account already exists');
-								expect(body).to.have.string('Create password');
-								expect(links.length).to.eq(2);
-								const setPasswordLink = links.find((s) =>
-									s.text?.includes('Create password'),
-								);
-								expect(setPasswordLink?.href).not.to.have.string(
-									'useOkta=true',
-								);
-								cy.visit(setPasswordLink?.href as string);
-								cy.contains('Create password');
-								cy.contains(emailAddress);
-							});
+							existingUserSendEmailAndValidatePasscode({ emailAddress });
 						});
 					});
 				});
-		});
-		it('should send an ACTIVE UNvalidated user with a password a security email with activation token', () => {
-			cy
-				.createTestUser({
-					isGuestUser: false,
-					isUserEmailValidated: false,
-				})
-				?.then(({ emailAddress }) => {
-					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
-						expect(oktaUser.status).to.eq(Status.ACTIVE);
+			});
 
-						cy.visit('/register/email');
-						const timeRequestWasMade = new Date();
-
-						cy.get('input[name=email]').type(emailAddress);
-						cy.get('[data-cy="main-form-submit-button"]').click();
-
-						// Make sure that we don't get sent to the 'security reasons' page
-						cy.url().should('include', '/register/email-sent');
-						cy.contains(
-							'For security reasons we need you to change your password.',
-						).should('not.exist');
-						cy.contains(emailAddress);
-						cy.contains('send again');
-						cy.contains('try another address');
-
-						cy.checkForEmailAndGetDetails(
-							emailAddress,
-							timeRequestWasMade,
-							/reset-password\/([^"]*)/,
-						).then(({ links, body }) => {
-							expect(body).to.have.string(
-								'Because your security is extremely important to us, we have changed our password policy.',
-							);
-							expect(body).to.have.string('Reset password');
-							expect(links.length).to.eq(2);
-							const resetPasswordLink = links.find((s) =>
-								s.text?.includes('Reset password'),
-							);
-							cy.visit(resetPasswordLink?.href as string);
-							cy.contains(emailAddress);
-							cy.contains('Create new password');
-						});
-					});
-				});
-		});
-		it('should send an ACTIVE validated user WITH a password a reset password email with an activation token', () => {
-			cy
-				.createTestUser({
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
-						expect(oktaUser.status).to.eq(Status.ACTIVE);
-
-						cy.visit('/register/email');
-						const timeRequestWasMade = new Date();
-
-						cy.get('input[name=email]').type(emailAddress);
-						cy.get('[data-cy="main-form-submit-button"]').click();
-
-						cy.contains('Check your inbox');
-						cy.contains(emailAddress);
-						cy.contains('send again');
-						cy.contains('try another address');
-
-						cy.checkForEmailAndGetDetails(
-							emailAddress,
-							timeRequestWasMade,
-							/reset-password\/([^"]*)/,
-						).then(({ links, body }) => {
-							expect(body).to.have.string('This account already exists');
-							expect(body).to.have.string('Sign in');
-							expect(body).to.have.string('Reset password');
-							expect(links.length).to.eq(3);
-							const resetPasswordLink = links.find((s) =>
-								s.text?.includes('Reset password'),
-							);
-							expect(resetPasswordLink?.href ?? '').not.to.have.string(
-								'useOkta=true',
-							);
-							cy.visit(resetPasswordLink?.href as string);
-							cy.contains(emailAddress);
-							cy.contains('Create new password');
-						});
-					});
-				});
-		});
-		it('should send an ACTIVE validated user WITH a password a reset password email with an activation token, and prefixed activation token if using native app', () => {
-			cy
-				.createTestUser({
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
-						expect(oktaUser.status).to.eq(Status.ACTIVE);
-
-						const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
-						const fromURI = 'fromURI1';
-
-						cy.visit(
-							`/register/email?appClientId=${appClientId}&fromURI=${fromURI}`,
-						);
-						const timeRequestWasMade = new Date();
-
-						cy.get('input[name=email]').type(emailAddress);
-						cy.get('[data-cy="main-form-submit-button"]').click();
-
-						cy.contains('Check your inbox');
-						cy.contains(emailAddress);
-						cy.contains('send again');
-						cy.contains('try another address');
-
-						cy.checkForEmailAndGetDetails(
-							emailAddress,
-							timeRequestWasMade,
-							/reset-password\/([^"]*)/,
-						).then(({ links, body }) => {
-							expect(body).to.have.string('This account already exists');
-							expect(body).to.have.string('Sign in');
-							expect(body).to.have.string('Reset password');
-							expect(links.length).to.eq(3);
-							const resetPasswordLink = links.find((s) =>
-								s.text?.includes('Reset password'),
-							);
-							expect(resetPasswordLink?.href ?? '')
-								.to.have.string('al_')
-								.and.not.to.have.string('useOkta=true');
-							cy.visit(resetPasswordLink?.href as string);
-							cy.contains(emailAddress);
-							cy.contains('Create new password');
-						});
-					});
-				});
-		});
-		it('should send a RECOVERY user a reset password email with an Okta activation token', () => {
-			cy
-				.createTestUser({
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
+			it('RECOVERY user - should sign in with passcode', () => {
+				cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
 					cy.resetOktaUserPassword(emailAddress).then(() => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.RECOVERY);
 
-							cy.visit('/register/email');
-							const timeRequestWasMade = new Date();
-
-							cy.get('input[name=email]').type(emailAddress);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-
-							cy.contains('Check your inbox');
-							cy.contains(emailAddress);
-							cy.contains('send again');
-							cy.contains('try another address');
-
-							cy.checkForEmailAndGetDetails(
-								emailAddress,
-								timeRequestWasMade,
-								/reset-password\/([^"]*)/,
-							).then(({ links, body }) => {
-								expect(body).to.have.string('Password reset');
-								expect(body).to.have.string('Reset password');
-								expect(links.length).to.eq(3);
-								const resetPasswordLink = links.find((s) =>
-									s.text?.includes('Reset password'),
-								);
-								expect(resetPasswordLink?.href ?? '').not.to.have.string(
-									'useOkta=true',
-								);
-								cy.visit(resetPasswordLink?.href as string);
-								cy.contains('Create new password');
-								cy.contains(emailAddress);
-							});
+							existingUserSendEmailAndValidatePasscode({ emailAddress });
 						});
 					});
 				});
-		});
-		it('should send a PASSWORD_EXPIRED user a reset password email with an Okta activation token', () => {
-			cy
-				.createTestUser({
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
+			});
+
+			it('PASSWORD_EXPIRED user - should sign in with passcode', () => {
+				cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
 					cy.expireOktaUserPassword(emailAddress).then(() => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
-							cy.visit('/register/email');
-							const timeRequestWasMade = new Date();
-
-							cy.get('input[name=email]').type(emailAddress);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-
-							cy.contains('Check your inbox');
-							cy.contains(emailAddress);
-							cy.contains('send again');
-							cy.contains('try another address');
-
-							cy.checkForEmailAndGetDetails(
-								emailAddress,
-								timeRequestWasMade,
-								/reset-password\/([^"]*)/,
-							).then(({ links, body }) => {
-								expect(body).to.have.string('Password reset');
-								expect(body).to.have.string('Reset password');
-								expect(links.length).to.eq(3);
-								const resetPasswordLink = links.find((s) =>
-									s.text?.includes('Reset password'),
-								);
-								expect(resetPasswordLink?.href ?? '').not.to.have.string(
-									'useOkta=true',
-								);
-								cy.visit(resetPasswordLink?.href as string);
-								cy.contains('Create new password');
-								cy.contains(emailAddress);
-							});
+							existingUserSendEmailAndValidatePasscode({ emailAddress });
 						});
 					});
 				});
-		});
-		it('should display an error if a SUSPENDED user attempts to register', () => {
-			cy
-				.createTestUser({
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					cy.suspendOktaUser(emailAddress).then(() => {
-						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
-							expect(oktaUser.status).to.eq(Status.SUSPENDED);
-
-							cy.visit('/register/email');
-
-							cy.get('input[name=email]').type(emailAddress);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-
-							cy.contains('There was a problem registering, please try again.');
-						});
-					});
-				});
+			});
 		});
 	});
 
+	// after launching passcodes for all users, these users should no longer be generated, as using passcodes
+	// will automatically transition them to ACTIVE
+	// this test is kept for posterity
 	context(
 		'Passcode limbo state - user does not set password after using passcode',
 		() => {
@@ -833,8 +759,8 @@ describe('Registration flow - Split 1/2', () => {
 						cy.url().should('include', '/welcome/password');
 
 						// user now in limbo state where they have not set a password
-						// recover by going through reset password flow
-						cy.visit('/register/email');
+						// recover by going through classic flow
+						cy.visit('/register/email?useOktaClassic=true');
 
 						const timeRequestWasMade = new Date();
 						cy.get('input[name=email]').clear().type(emailAddress);
@@ -906,8 +832,8 @@ describe('Registration flow - Split 1/2', () => {
 						// transition user to PROVISIONED state
 						cy.activateTestOktaUser(emailAddress).then(() => {
 							// user now in limbo state where they have not set a password
-							// recover by going through reset password flow
-							cy.visit('/register/email');
+							// recover by going through classic flow
+							cy.visit('/register/email?useOktaClassic=true');
 
 							const timeRequestWasMade = new Date();
 							cy.get('input[name=email]').clear().type(emailAddress);

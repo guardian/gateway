@@ -11,7 +11,10 @@ import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-
 import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
 import idxEnrollNewSelectAuthenticatorResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
 import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
-import updateUser from '../../fixtures/okta-responses/success/update-user.json';
+import { identifyResponse } from '../../fixtures/okta-responses/success/idx-identify-response';
+import { idxPasscodeExistingUserMocks } from './registerController.1.cy';
+import idxChallengeResponseEmail from '../../fixtures/okta-responses/success/idx-challenge-response-email.json';
+import { dangerouslySetPlaceholderPasswordMocks } from './resetPasswordController.4.cy';
 
 beforeEach(() => {
 	cy.mockPurge();
@@ -300,7 +303,7 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify("Then I should be shown the 'Check your inbox' page", () => {
+					specify("Then I should be shown the 'Enter your code' page", () => {
 						baseIdxPasscodeRegistrationMocks();
 						cy.mockNext(
 							idxEnrollNewSelectAuthenticatorResponse.code,
@@ -315,7 +318,7 @@ userStatuses.forEach((status) => {
 					});
 					break;
 				case 'ACTIVE':
-					specify("Then I should be shown the 'Check your inbox' page", () => {
+					specify("Then I should be shown the 'Enter your code' page", () => {
 						baseIdxPasscodeRegistrationMocks();
 						cy.mockNext(
 							idxEnrollNewExistingUserResponse.code,
@@ -330,48 +333,22 @@ userStatuses.forEach((status) => {
 								password: {},
 							},
 						};
-						cy.mockNext(userExistsError.code, userExistsError.response);
 						cy.mockNext(userResponse.code, responseWithPassword);
-						cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+						idxPasscodeExistingUserMocks();
+						cy.mockNext(200, identifyResponse(true, true));
+						cy.mockNext(
+							idxChallengeResponseEmail.code,
+							idxChallengeResponseEmail.response,
+						);
+
 						cy.get('[data-cy="main-form-submit-button"]').click();
-						verifyInRegularEmailSentPage();
+						verifyInPasscodeEmailSentPage();
 					});
-					specify(
-						"Then I should be shown the 'Check your inbox' page for social user",
-						() => {
-							baseIdxPasscodeRegistrationMocks();
-							cy.mockNext(
-								idxEnrollNewExistingUserResponse.code,
-								idxEnrollNewExistingUserResponse.response,
-							);
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(socialUserResponse.code, socialUserResponse.response);
-							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
-							// dangerouslyResetPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
-							});
-							// validateRecoveryToken()
-							cy.mockNext(200, {
-								stateToken: 'sometoken',
-							});
-							// authenticationResetPassword()
-							cy.mockNext(200, {});
-							// set email validated/password set securely flags to false
-							cy.mockNext(updateUser.code, updateUser.response);
-							// from sendEmailToUnvalidatedUser() --> forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
 					break;
 				case 'PROVISIONED':
 				case 'STAGED':
+				case 'RECOVERY':
+				case 'PASSWORD_EXPIRED':
 					// Then Gateway should generate an activation token
 					specify("Then I should be shown the 'Check your inbox' page", () => {
 						baseIdxPasscodeRegistrationMocks();
@@ -381,35 +358,21 @@ userStatuses.forEach((status) => {
 						);
 						// Set the correct user status on the response
 						const response = { ...userResponse.response, status };
-						cy.mockNext(userExistsError.code, userExistsError.response);
-						cy.mockNext(userResponse.code, response);
+						cy.mockNext(userResponse.code, {
+							...response,
+							status,
+						});
+						cy.mockNext(200, {});
+						dangerouslySetPlaceholderPasswordMocks('test@example.com');
+						cy.mockNext(200, { ...userResponse.response, status: 'ACTIVE' });
+						idxPasscodeExistingUserMocks();
+						cy.mockNext(200, identifyResponse(true, true));
 						cy.mockNext(
-							successTokenResponse.code,
-							successTokenResponse.response,
+							idxChallengeResponseEmail.code,
+							idxChallengeResponseEmail.response,
 						);
 						cy.get('[data-cy="main-form-submit-button"]').click();
-						verifyInRegularEmailSentPage();
-					});
-					break;
-				case 'RECOVERY':
-				case 'PASSWORD_EXPIRED':
-					// Then Gateway should generate a reset password token
-					specify("Then I should be shown the 'Check your inbox' page", () => {
-						baseIdxPasscodeRegistrationMocks();
-						cy.mockNext(
-							idxEnrollNewExistingUserResponse.code,
-							idxEnrollNewExistingUserResponse.response,
-						);
-						// Set the correct user status on the response
-						const response = { ...userResponse.response, status };
-						cy.mockNext(userExistsError.code, userExistsError.response);
-						cy.mockNext(userResponse.code, response);
-						cy.mockNext(
-							resetPasswordResponse.code,
-							resetPasswordResponse.response,
-						);
-						cy.get('[data-cy="main-form-submit-button"]').click();
-						verifyInRegularEmailSentPage();
+						verifyInPasscodeEmailSentPage();
 					});
 					break;
 			}
@@ -421,7 +384,7 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify("Then I should be shown the 'Check your inbox' page", () => {
+					specify("Then I should be shown the 'Enter your code' page", () => {
 						baseIdxPasscodeRegistrationMocks();
 						cy.mockNext(
 							idxEnrollNewSelectAuthenticatorResponse.code,
@@ -436,7 +399,7 @@ userStatuses.forEach((status) => {
 					});
 					break;
 				case 'ACTIVE':
-					specify("Then I should be shown the 'Check your inbox' page", () => {
+					specify("Then I should be shown the 'Enter your code' page", () => {
 						baseIdxPasscodeRegistrationMocks();
 						cy.mockNext(
 							idxEnrollNewExistingUserResponse.code,
@@ -451,48 +414,22 @@ userStatuses.forEach((status) => {
 								password: {},
 							},
 						};
-						cy.mockNext(userExistsError.code, userExistsError.response);
 						cy.mockNext(userResponse.code, responseWithPassword);
-						cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+						idxPasscodeExistingUserMocks();
+						cy.mockNext(200, identifyResponse(true, true));
+						cy.mockNext(
+							idxChallengeResponseEmail.code,
+							idxChallengeResponseEmail.response,
+						);
+
 						cy.get('[data-cy="main-form-submit-button"]').click();
-						verifyInRegularEmailSentPage();
+						verifyInPasscodeEmailSentPage();
 					});
-					specify(
-						"Then I should be shown the 'Check your inbox' page for social users",
-						() => {
-							baseIdxPasscodeRegistrationMocks();
-							cy.mockNext(
-								idxEnrollNewExistingUserResponse.code,
-								idxEnrollNewExistingUserResponse.response,
-							);
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(socialUserResponse.code, socialUserResponse.response);
-							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
-							// dangerouslyResetPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
-							});
-							// validateRecoveryToken()
-							cy.mockNext(200, {
-								stateToken: 'sometoken',
-							});
-							// authenticationResetPassword()
-							cy.mockNext(200, {});
-							// set email validated/password set securely flags to false
-							cy.mockNext(updateUser.code, updateUser.response);
-							// from sendEmailToUnvalidatedUser() --> forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
 					break;
 				case 'PROVISIONED':
 				case 'STAGED':
+				case 'RECOVERY':
+				case 'PASSWORD_EXPIRED':
 					// Then Gateway should generate an activation token
 					specify("Then I should be shown the 'Check your inbox' page", () => {
 						baseIdxPasscodeRegistrationMocks();
@@ -502,35 +439,21 @@ userStatuses.forEach((status) => {
 						);
 						// Set the correct user status on the response
 						const response = { ...userResponse.response, status };
-						cy.mockNext(userExistsError.code, userExistsError.response);
-						cy.mockNext(userResponse.code, response);
+						cy.mockNext(userResponse.code, {
+							...response,
+							status,
+						});
+						cy.mockNext(200, {});
+						dangerouslySetPlaceholderPasswordMocks('test@example.com');
+						cy.mockNext(200, { ...userResponse.response, status: 'ACTIVE' });
+						idxPasscodeExistingUserMocks();
+						cy.mockNext(200, identifyResponse(true, true));
 						cy.mockNext(
-							successTokenResponse.code,
-							successTokenResponse.response,
+							idxChallengeResponseEmail.code,
+							idxChallengeResponseEmail.response,
 						);
 						cy.get('[data-cy="main-form-submit-button"]').click();
-						verifyInRegularEmailSentPage();
-					});
-					break;
-				case 'RECOVERY':
-				case 'PASSWORD_EXPIRED':
-					// Then Gateway should generate a reset password token
-					specify("Then I should be shown the 'Check your inbox' page", () => {
-						baseIdxPasscodeRegistrationMocks();
-						cy.mockNext(
-							idxEnrollNewExistingUserResponse.code,
-							idxEnrollNewExistingUserResponse.response,
-						);
-						// Set the correct user status on the response
-						const response = { ...userResponse.response, status };
-						cy.mockNext(userExistsError.code, userExistsError.response);
-						cy.mockNext(userResponse.code, response);
-						cy.mockNext(
-							resetPasswordResponse.code,
-							resetPasswordResponse.response,
-						);
-						cy.get('[data-cy="main-form-submit-button"]').click();
-						verifyInRegularEmailSentPage();
+						verifyInPasscodeEmailSentPage();
 					});
 					break;
 			}
