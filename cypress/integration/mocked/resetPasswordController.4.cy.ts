@@ -916,6 +916,7 @@ userStatuses.forEach((status) => {
 					).toISOString(),
 					email: 'test@example.com',
 				});
+				cy.setCookie('cypress-mock-state', '0'); // passcode send again timer
 				cy.visit(`/reset-password/email-sent`);
 			});
 			switch (status) {

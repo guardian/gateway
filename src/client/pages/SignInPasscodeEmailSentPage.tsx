@@ -14,7 +14,8 @@ export const SignInPasscodeEmailSentPage = () => {
 		recaptchaConfig,
 		shortRequestId,
 	} = clientState;
-	const { email, fieldErrors, token, passcodeUsed } = pageData;
+	const { email, fieldErrors, token, passcodeUsed, passcodeSendAgainTimer } =
+		pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -45,6 +46,7 @@ export const SignInPasscodeEmailSentPage = () => {
 			textType="signin"
 			shortRequestId={shortRequestId}
 			showSignInWithPasswordOption
+			sendAgainTimerInSeconds={passcodeSendAgainTimer}
 		/>
 	);
 };

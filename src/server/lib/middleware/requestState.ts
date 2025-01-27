@@ -23,6 +23,7 @@ import {
 	isAppLabel,
 } from '@/shared/lib/appNameUtils';
 import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { getPasscodeSendAgainTimer } from '@/server/lib/passcodeSendAgainTimer';
 
 const {
 	idapiBaseUrl,
@@ -107,6 +108,7 @@ const getRequestState = async (
 			appName,
 			hasStateHandle: !!encryptedState?.stateHandle,
 			passcodeUsed: !!encryptedState?.passcodeUsed,
+			passcodeSendAgainTimer: getPasscodeSendAgainTimer(req),
 		},
 		globalMessage: {},
 		csrf: {

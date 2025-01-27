@@ -257,6 +257,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.createTestUser({
 				isUserEmailValidated: true,
 			}).then(({ emailAddress }) => {
+				cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
 				cy.visit(`/reset-password`);
 
 				const timeRequestWasMade = new Date();
@@ -282,6 +283,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 
 						// resend email
 						const timeRequestWasMade2 = new Date();
+						cy.wait(1000); // wait for the send again button to be enabled
 						cy.contains('send again').click();
 
 						cy.checkForEmailAndGetDetails(

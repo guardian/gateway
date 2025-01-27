@@ -22,6 +22,7 @@ type Props = {
 	noAccountInfo?: boolean;
 	textType?: TextType;
 	showSignInWithPasswordOption?: boolean;
+	sendAgainTimerInSeconds?: number;
 };
 
 type PasscodeEmailSentProps = EmailSentProps & Props;
@@ -106,6 +107,7 @@ export const PasscodeEmailSent = ({
 	noAccountInfo,
 	textType = 'generic',
 	showSignInWithPasswordOption,
+	sendAgainTimerInSeconds,
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -197,6 +199,7 @@ export const PasscodeEmailSent = ({
 				queryString={queryString}
 				shortRequestId={shortRequestId}
 				noAccountInfo={noAccountInfo}
+				sendAgainTimerInSeconds={sendAgainTimerInSeconds}
 			/>
 		</MinimalLayout>
 	);
