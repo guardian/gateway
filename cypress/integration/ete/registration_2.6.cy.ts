@@ -1264,6 +1264,7 @@ describe('Registration flow - Split 2/2', () => {
 		});
 
 		it('shows reCAPTCHA errors when the request fails', () => {
+			cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
 			cy
 				.createTestUser({
 					isUserEmailValidated: false,
@@ -1287,12 +1288,13 @@ describe('Registration flow - Split 2/2', () => {
 					);
 
 					cy.interceptRecaptcha();
-
+					cy.wait(1000); // wait for the send again button to be enabled
 					cy.contains('send again').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
 
 					const timeRequestWasMade = new Date();
+					cy.wait(1000); // wait for the send again button to be enabled
 					cy.contains('send again').click();
 
 					cy.contains('Google reCAPTCHA verification failed.').should(

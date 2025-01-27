@@ -25,6 +25,7 @@ describe('Sign In flow, with passcode', () => {
 		expectedEmailBody?: 'Your one-time passcode' | 'Your verification code';
 		additionalTests?: 'passcode-incorrect' | 'resend-email' | 'change-email';
 	}) => {
+		cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
 		cy.visit(`/signin?${params ? `${params}&` : ''}usePasscodeSignIn=true`);
 		cy.get('input[name=email]').clear().type(emailAddress);
 
@@ -47,6 +48,7 @@ describe('Sign In flow, with passcode', () => {
 					case 'resend-email':
 						{
 							const timeRequestWasMade2 = new Date();
+							cy.wait(1000); // wait for the send again button to be enabled
 							cy.contains('send again').click();
 
 							cy.checkForEmailAndGetDetails(

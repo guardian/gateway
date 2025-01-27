@@ -24,6 +24,8 @@ const existingUserSendEmailAndValidatePasscode = ({
 	expectedEmailBody?: 'Your one-time passcode' | 'Your verification code';
 	additionalTests?: 'passcode-incorrect' | 'resend-email' | 'change-email';
 }) => {
+	cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
+
 	cy.visit(`/register/email?${params}`);
 	cy.get('input[name=email]').clear().type(emailAddress);
 
@@ -46,6 +48,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 				case 'resend-email':
 					{
 						const timeRequestWasMade2 = new Date();
+						cy.wait(1000); // wait for the send again button to be enabled
 						cy.contains('send again').click();
 
 						cy.checkForEmailAndGetDetails(
@@ -430,6 +433,7 @@ describe('Registration flow - Split 1/2', () => {
 		});
 
 		it('resend email functionality', () => {
+			cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.visit(`/register/email`);
 
@@ -455,6 +459,7 @@ describe('Registration flow - Split 1/2', () => {
 				// passcode page
 				cy.url().should('include', '/register/email-sent');
 				const timeRequestWasMade2 = new Date();
+				cy.wait(1000); // wait for the send again button to be enabled
 				cy.contains('send again').click();
 				cy.checkForEmailAndGetDetails(
 					unregisteredEmail,

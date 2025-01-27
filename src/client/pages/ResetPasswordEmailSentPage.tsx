@@ -14,7 +14,14 @@ export const ResetPasswordEmailSentPage = () => {
 		globalMessage = {},
 		recaptchaConfig,
 	} = clientState;
-	const { email, hasStateHandle, fieldErrors, token, passcodeUsed } = pageData;
+	const {
+		email,
+		hasStateHandle,
+		fieldErrors,
+		token,
+		passcodeUsed,
+		passcodeSendAgainTimer,
+	} = pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -44,6 +51,7 @@ export const ResetPasswordEmailSentPage = () => {
 				expiredPage={buildUrl('/reset-password/expired')}
 				noAccountInfo
 				textType="generic"
+				sendAgainTimerInSeconds={passcodeSendAgainTimer}
 			/>
 		);
 	}

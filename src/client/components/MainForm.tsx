@@ -70,6 +70,7 @@ export interface MainFormProps {
 	hideRecaptchaMessage?: boolean;
 	additionalTerms?: ReactNode;
 	shortRequestId?: string;
+	disabled?: boolean;
 }
 
 const formStyles = (displayInline: boolean) => css`
@@ -110,6 +111,7 @@ export const MainForm = ({
 	hideRecaptchaMessage,
 	additionalTerms,
 	shortRequestId,
+	disabled = false,
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
 
@@ -129,7 +131,7 @@ export const MainForm = ({
 	const [recaptchaState, setRecaptchaState] =
 		useState<UseRecaptchaReturnValue>();
 
-	const [isFormDisabled, setIsFormDisabled] = useState(false);
+	const [isFormDisabled, setIsFormDisabled] = useState(disabled);
 
 	const showFormLevelReportUrl = !!formLevelErrorContext;
 

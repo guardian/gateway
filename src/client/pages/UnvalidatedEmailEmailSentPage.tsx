@@ -20,7 +20,14 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 		recaptchaConfig,
 		shortRequestId,
 	} = clientState;
-	const { email, hasStateHandle, fieldErrors, token, passcodeUsed } = pageData;
+	const {
+		email,
+		hasStateHandle,
+		fieldErrors,
+		token,
+		passcodeUsed,
+		passcodeSendAgainTimer,
+	} = pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -51,6 +58,7 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 				noAccountInfo
 				textType="security"
 				shortRequestId={shortRequestId}
+				sendAgainTimerInSeconds={passcodeSendAgainTimer}
 			/>
 		);
 	}
