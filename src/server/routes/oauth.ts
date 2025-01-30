@@ -731,6 +731,10 @@ router.get(
 			},
 		);
 
+		// basic checks successful, so track the success metric
+		// before handing off to the specific handler
+		trackMetric('OAuthAuthorization::Success');
+
 		// call the appropriate handler depending on the callbackParam
 		switch (req.params.callbackParam) {
 			case 'application-callback':
