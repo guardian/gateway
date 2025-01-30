@@ -11,7 +11,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 				})
 				?.then(({ emailAddress, finalPassword }) => {
 					const visitUrl =
-						'/signin?clientId=jobs&returnUrl=https%3A%2F%2Fjobs.theguardian.com%2F';
+						'/signin?clientId=jobs&returnUrl=https%3A%2F%2Fjobs.theguardian.com%2F&usePasswordSignIn=true';
 					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -61,7 +61,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
-					)}`;
+					)}&usePasswordSignIn=true`;
 					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -127,7 +127,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
-					)}`;
+					)}&usePasswordSignIn=true`;
 					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
@@ -179,7 +179,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
-					)}`;
+					)}&usePasswordSignIn=true`;
 					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);

@@ -47,8 +47,8 @@ export interface PersistableQueryParams
 	appClientId?: string;
 	// fallback to Okta Classic if needed
 	useOktaClassic?: boolean;
-	// Flag to force enable sign in with passcode
-	usePasscodeSignIn?: boolean;
+	// Flag to force the sign in page to use passwords, useful for testing/using previous behaviour
+	usePasswordSignIn?: boolean;
 }
 
 /**

@@ -49,7 +49,7 @@ context('When I submit the form on /signin - useOktaClassic', () => {
 
 context('When I submit the form on /signin - idx api', () => {
 	beforeEach(() => {
-		cy.visit(`/signin`);
+		cy.visit(`/signin?usePasswordSignIn=true`);
 		cy.get('input[name="email"]').type('example@example.com');
 		cy.get('input[name="password"]').type('password');
 	});
@@ -149,7 +149,7 @@ context('When I submit the form on /reauthenticate - useOktaClassic', () => {
 
 context('When I submit the form on /reauthenticate - idx api', () => {
 	beforeEach(() => {
-		cy.visit(`/reauthenticate`);
+		cy.visit(`/reauthenticate?usePasswordSignIn=true`);
 		cy.get('input[name="email"]').type('example@example.com');
 		cy.get('input[name="password"]').type('password');
 	});

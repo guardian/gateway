@@ -1,6 +1,6 @@
 describe('POST requests return a user-facing error message when encountering a rate limit from Okta', () => {
 	specify('Submit /signin', () => {
-		cy.visit('/signin');
+		cy.visit('/signin?usePasswordSignIn=true');
 		cy.get('input[name="email"]').type('example@example.com');
 		cy.get('input[name="password"]').type('password');
 
@@ -16,7 +16,7 @@ describe('POST requests return a user-facing error message when encountering a r
 	});
 
 	specify('Submit /reauthenticate', () => {
-		cy.visit('/reauthenticate');
+		cy.visit('/reauthenticate?usePasswordSignIn=true');
 		cy.get('input[name="email"]').type('example@example.com');
 		cy.get('input[name="password"]').type('password');
 

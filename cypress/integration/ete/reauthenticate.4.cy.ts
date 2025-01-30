@@ -7,7 +7,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
 				cy.visit(
 					`/signin?returnUrl=${encodeURIComponent(
 						`https://${Cypress.env('BASE_URI')}/welcome/review`,
-					)}`,
+					)}&usePasswordSignIn=true`,
 				);
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('input[name=password]').type(finalPassword);
@@ -18,7 +18,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
 				cy.visit(
 					`/reauthenticate?returnUrl=${encodeURIComponent(
 						`https://${Cypress.env('BASE_URI')}/welcome/review`,
-					)}`,
+					)}&usePasswordSignIn=true`,
 				);
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('input[name=password]').type(finalPassword);
@@ -47,7 +47,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
 							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
+						)}&usePasswordSignIn=true`,
 					);
 					cy.get('input[name=email]').type(emailAddressA);
 					cy.get('input[name=password]').type(finalPasswordA);
@@ -66,7 +66,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
 								cy.visit(
 									`/reauthenticate?returnUrl=${encodeURIComponent(
 										`https://${Cypress.env('BASE_URI')}/welcome/review`,
-									)}`,
+									)}&usePasswordSignIn=true`,
 								);
 								cy.get('input[name=email]').type(emailAddressB);
 								cy.get('input[name=password]').type(finalPasswordB);

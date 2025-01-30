@@ -23,7 +23,7 @@ describe('Saturday Edition Geolocation', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					`https://${Cypress.env('BASE_URI')}/welcome/google`,
-				)}`,
+				)}&usePasswordSignIn=true`,
 			);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('input[name=password]').type(finalPassword);
@@ -55,7 +55,7 @@ describe('Saturday Edition Geolocation', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					`https://${Cypress.env('BASE_URI')}/welcome/google`,
-				)}`,
+				)}&usePasswordSignIn=true`,
 			);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('input[name=password]').type(finalPassword);
@@ -87,7 +87,7 @@ describe('Saturday Edition Geolocation', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					`https://${Cypress.env('BASE_URI')}/welcome/google`,
-				)}`,
+				)}&usePasswordSignIn=true`,
 			);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('input[name=password]').type(finalPassword);
@@ -118,7 +118,7 @@ describe('Saturday Edition Geolocation', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					`https://${Cypress.env('BASE_URI')}/welcome/google`,
-				)}`,
+				)}&usePasswordSignIn=true`,
 			);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('input[name=password]').type(finalPassword);
@@ -148,7 +148,7 @@ describe('Saturday Edition Geolocation', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					`https://${Cypress.env('BASE_URI')}/welcome/google`,
-				)}`,
+				)}&usePasswordSignIn=true`,
 			);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('input[name=password]').type(finalPassword);
@@ -176,7 +176,7 @@ describe('Feast newsletter for Feast app', () => {
 				cy.visit(
 					`/signin?returnUrl=${encodeURIComponent(
 						`https://${Cypress.env('BASE_URI')}/welcome/google?appClientId=${app.id}`,
-					)}`,
+					)}&usePasswordSignIn=true`,
 				);
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('input[name=password]').type(finalPassword);
@@ -204,7 +204,7 @@ describe('Feast newsletter for Feast app', () => {
 				cy.visit(
 					`/signin?returnUrl=${encodeURIComponent(
 						`https://${Cypress.env('BASE_URI')}/welcome/google?appClientId=${app.id}`,
-					)}`,
+					)}&usePasswordSignIn=true`,
 				);
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('input[name=password]').type(finalPassword);
@@ -234,7 +234,7 @@ describe('Jobs newsletter for Jobs Site', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					`https://${Cypress.env('BASE_URI')}/welcome/google?clientId=${clientId}`,
-				)}`,
+				)}&usePasswordSignIn=true`,
 			);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('input[name=password]').type(finalPassword);

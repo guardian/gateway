@@ -75,7 +75,7 @@ describe('New account review page', () => {
 				cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
 
 				// Return to Gateway so we can access the user cookie
-				cy.visit('/signin');
+				cy.visit('/signin?usePasswordSignIn=true');
 				cy.getTestOktaUser(unregisteredEmail).then((user) => {
 					cy.getTestUserDetails(user.profile.legacyIdentityId).then(
 						(response) => {
@@ -156,7 +156,7 @@ describe('New account review page', () => {
 				cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
 
 				// Return to Gateway so we can access the user cookie
-				cy.visit('/signin');
+				cy.visit('/signin?usePasswordSignIn=true');
 
 				// Check that the user does not have their registration location set
 				cy.getTestOktaUser(unregisteredEmail).then((user) => {

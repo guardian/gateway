@@ -18,7 +18,7 @@ describe('Sign out flow', () => {
 					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
-					)}`;
+					)}&usePasswordSignIn=true`;
 					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
