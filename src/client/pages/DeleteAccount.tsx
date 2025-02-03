@@ -52,13 +52,24 @@ export const DeleteAccount = ({
 			pageHeader="Delete your Guardian account"
 			errorOverride={error}
 			leadText={
-				<MainBodyText>
-					Please read the following paragraphs carefully to understand how
-					account deletion affects any Guardian products you may have. If at any
-					point you require further clarification please visit our{' '}
-					<ExternalLink href={locations.REPORT_ISSUE}>help centre</ExternalLink>
-					.
-				</MainBodyText>
+				<>
+					<MainBodyText>
+						To unsubscribe from email newsletters instead,{' '}
+						<ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
+							manage your preferences
+						</ExternalLink>
+						.
+					</MainBodyText>
+					<MainBodyText>
+						Please read the following paragraphs carefully to understand how
+						account deletion affects any Guardian products you may have. If at
+						any point you require further clarification please visit our{' '}
+						<ExternalLink href={locations.REPORT_ISSUE}>
+							help centre
+						</ExternalLink>
+						.
+					</MainBodyText>
+				</>
 			}
 		>
 			{/* Identity Account */}
