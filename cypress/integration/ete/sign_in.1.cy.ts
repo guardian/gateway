@@ -472,8 +472,8 @@ describe('Sign in flow, Okta enabled', () => {
 							cy.contains(
 								'For security reasons we need you to change your password.',
 							);
+							cy.contains('Submit verification code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit verification code').click();
 
 							cy.url().should('contain', '/set-password');
 
