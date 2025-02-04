@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect, useRef } from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { FieldError } from '@/shared/model/ClientState';
@@ -112,6 +112,7 @@ export const PasscodeEmailSent = ({
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
+	const formRef = useRef<HTMLFormElement>(null);
 
 	const text = getText(textType);
 
@@ -173,11 +174,13 @@ export const PasscodeEmailSent = ({
 				submitButtonText={text.submitButtonText}
 				disableOnSubmit
 				shortRequestId={shortRequestId}
+				formRef={formRef}
 			>
 				<PasscodeInput
 					passcode={passcode}
 					fieldErrors={fieldErrors}
 					label={text.passcodeInputLabel}
+					formRef={formRef}
 				/>
 			</MainForm>
 			{showSignInWithPasswordOption && (

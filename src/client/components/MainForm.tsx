@@ -1,9 +1,9 @@
 import React, {
-	createRef,
 	PropsWithChildren,
 	ReactNode,
 	useCallback,
 	useEffect,
+	useRef,
 	useState,
 } from 'react';
 import { css } from '@emotion/react';
@@ -71,6 +71,7 @@ export interface MainFormProps {
 	additionalTerms?: ReactNode;
 	shortRequestId?: string;
 	disabled?: boolean;
+	formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
 const formStyles = (displayInline: boolean) => css`
@@ -112,6 +113,8 @@ export const MainForm = ({
 	additionalTerms,
 	shortRequestId,
 	disabled = false,
+	// eslint-disable-next-line react-hooks/rules-of-hooks -- allow a formRef to be passed in or use a default value, either way a ref will be defined
+	formRef = useRef(null),
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
 
@@ -127,7 +130,6 @@ export const MainForm = ({
 	const formError = formLevelErrorMessage || formErrorMessageFromParent;
 	const errorContext = formLevelErrorContext || formErrorContextFromParent;
 
-	const formRef = createRef<HTMLFormElement>();
 	const [recaptchaState, setRecaptchaState] =
 		useState<UseRecaptchaReturnValue>();
 
