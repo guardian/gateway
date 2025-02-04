@@ -15,7 +15,7 @@ const getRateLimitKey = (
 ) => `gw-rl-${route}-${bucketName}${value ? '-' + sha256(value) : ''}`;
 
 const removeEmailAlias = (email?: string) => {
-	const removalRegex = /\+.*@/g;
+	const removalRegex = /\+[^@]*@/g;
 	return email?.replace(removalRegex, '@');
 };
 
