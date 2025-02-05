@@ -1,5 +1,8 @@
 import { Request } from 'express';
-import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+	readEncryptedStateCookie,
+	updateEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -44,7 +47,26 @@ export const handlePasscodeError = ({
 
 	if (error instanceof OAuthError) {
 		if (error.name === 'api.authn.error.PASSCODE_INVALID') {
-			// case for invalid passcode
+			// get the current passcode failed count
+			const { passcodeFailedCount = 0 } = encryptedState || {};
+
+			// increment the passcode failed count
+			const updatedPasscodeFailedCount = passcodeFailedCount + 1;
+
+			// if the passcode failed count is 5 or more, redirect to expired page
+			if (updatedPasscodeFailedCount >= 5) {
+				return res.redirect(
+					303,
+					addQueryParamsToPath(expiredPage, state.queryParams),
+				);
+			}
+
+			// otherwise, update the passcode failed count
+			updateEncryptedStateCookie(req, res, {
+				passcodeFailedCount: updatedPasscodeFailedCount,
+			});
+
+			// and render the email sent page with incorrect passcode error
 			const html = renderer(emailSentPage, {
 				requestState: mergeRequestState(state, {
 					queryParams: {
