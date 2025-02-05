@@ -305,9 +305,8 @@ describe('Registration flow - Split 2/2', () => {
 
 					// passcode page
 					cy.url().should('include', '/register/email-sent');
+					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
-
-					cy.contains('Submit verification code').click();
 
 					cy.contains('Complete creating account');
 

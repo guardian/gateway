@@ -61,8 +61,8 @@ describe('Sign In flow, with passcode', () => {
 								const code = codes?.[0].value;
 								expect(code).to.match(/^\d{6}$/);
 
+								cy.contains('Sign in');
 								cy.get('input[name=code]').type(code!);
-								cy.contains('Sign in').click();
 
 								cy.url().should('include', expectedReturnUrl);
 
@@ -79,9 +79,8 @@ describe('Sign In flow, with passcode', () => {
 						cy.url().should('include', '/signin');
 						break;
 					case 'passcode-incorrect':
+						cy.contains('Sign in');
 						cy.get('input[name=code]').type(`${+code! + 1}`);
-
-						cy.contains('Sign in').click();
 
 						cy.url().should('include', '/signin/code');
 
@@ -98,8 +97,8 @@ describe('Sign In flow, with passcode', () => {
 						});
 						break;
 					default: {
+						cy.contains('Sign in');
 						cy.get('input[name=code]').type(code!);
-						cy.contains('Sign in').click();
 
 						cy.url().should('include', expectedReturnUrl);
 
@@ -370,8 +369,8 @@ describe('Sign In flow, with passcode', () => {
 			cy.contains('Enter your one-time code');
 			cy.contains('Don’t have an account?');
 
+			cy.contains('Sign in');
 			cy.get('input[name=code]').clear().type('123456');
-			cy.contains('Sign in').click();
 
 			cy.url().should('include', '/signin/code');
 			cy.contains('Enter your one-time code');

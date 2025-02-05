@@ -44,9 +44,8 @@ describe('New account review page', () => {
 
 				// passcode page
 				cy.url().should('include', '/register/email-sent');
+				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
-
-				cy.contains('Submit verification code').click();
 
 				cy.contains('Complete creating account');
 				cy.get('input[name="password"]').type(randomPassword());
@@ -128,9 +127,9 @@ describe('New account review page', () => {
 
 				// passcode page
 				cy.url().should('include', '/register/email-sent');
+				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				cy.contains('Submit verification code').click();
 				cy.contains('Complete creating account');
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
@@ -204,9 +203,9 @@ describe('New account newsletters page', () => {
 
 				// passcode page
 				cy.url().should('include', '/register/email-sent');
+				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				cy.contains('Submit verification code').click();
 				cy.contains('Complete creating account');
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
@@ -249,9 +248,9 @@ describe('New account newsletters page', () => {
 
 				// passcode page
 				cy.url().should('include', '/register/email-sent');
+				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				cy.contains('Submit verification code').click();
 				cy.contains('Complete creating account');
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
@@ -296,9 +295,9 @@ describe('New account newsletters page', () => {
 
 				// passcode page
 				cy.url().should('include', '/register/email-sent');
+				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				cy.contains('Submit verification code').click();
 				cy.contains('Complete creating account');
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();

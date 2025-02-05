@@ -37,8 +37,6 @@ describe('Password reset recovery flows - with Passcodes', () => {
 						// passcode page
 						cy.url().should('include', '/reset-password/email-sent');
 						cy.contains('Enter your one-time code');
-						cy.get('input[name=code]').type(code!);
-
 						cy.get('form')
 							.should('have.attr', 'action')
 							.and('match', new RegExp(encodedReturnUrl))
@@ -46,7 +44,9 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							.and('match', new RegExp(encodedRef))
 							.and('match', new RegExp(clientId));
 
-						cy.contains('Submit one-time code').click();
+						cy.contains('Submit one-time code');
+
+						cy.get('input[name=code]').type(code!);
 
 						// password page
 						cy.url().should('include', '/reset-password/password');
@@ -123,8 +123,6 @@ describe('Password reset recovery flows - with Passcodes', () => {
 						// passcode page
 						cy.url().should('include', '/reset-password/email-sent');
 						cy.contains('Enter your one-time code');
-						cy.get('input[name=code]').type(code!);
-
 						cy.get('form')
 							.should('have.attr', 'action')
 							.and('match', new RegExp(encodedReturnUrl))
@@ -134,7 +132,9 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							.and('match', new RegExp(appClientId))
 							.and('match', new RegExp(encodeURIComponent(fromURI)));
 
-						cy.contains('Submit one-time code').click();
+						cy.contains('Submit one-time code');
+
+						cy.get('input[name=code]').type(code!);
 
 						// password page
 						cy.url().should('include', '/reset-password/password');
@@ -183,9 +183,9 @@ describe('Password reset recovery flows - with Passcodes', () => {
 						// passcode page
 						cy.url().should('include', '/reset-password/email-sent');
 						cy.contains('Enter your one-time code');
-						cy.get('input[name=code]').type(`${+code! + 1}`);
+						cy.contains('Submit one-time code');
 
-						cy.contains('Submit one-time code').click();
+						cy.get('input[name=code]').type(`${+code! + 1}`);
 
 						cy.url().should('include', '/reset-password/code');
 
@@ -232,8 +232,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 						cy.url().should('include', '/reset-password/email-sent');
 						cy.contains('Enter your one-time code');
 
+						cy.contains('Submit one-time code');
 						cy.get('input[name=code]').clear().type(code!);
-						cy.contains('Submit one-time code').click();
 
 						cy.url().should('contain', '/reset-password/password');
 
@@ -300,8 +300,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							cy.url().should('contain', '/reset-password/password');
 
@@ -390,8 +390,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							cy.url().should('contain', '/set-password');
 
@@ -453,8 +453,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							cy.url().should('contain', '/set-password');
 
@@ -489,8 +489,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 
 					// passcode page, use passcode
 					cy.url().should('include', '/register/email-sent');
+					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
-					cy.contains('Submit verification code').click();
 
 					// password page, don't set password
 					cy.url().should('include', '/welcome/password');
@@ -519,8 +519,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							// password page
 							cy.url().should('include', '/reset-password/password');
@@ -560,8 +560,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							// password page
 							cy.url().should('include', '/reset-password/password');
@@ -606,8 +606,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							// password page
 							cy.url().should('include', '/reset-password/password');
@@ -652,8 +652,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							// password page
 							cy.url().should('include', '/reset-password/password');
@@ -698,8 +698,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							cy.url().should('include', '/reset-password/email-sent');
 							cy.contains('Enter your one-time code');
 
+							cy.contains('Submit one-time code');
 							cy.get('input[name=code]').clear().type(code!);
-							cy.contains('Submit one-time code').click();
 
 							// password page
 							cy.url().should('include', '/reset-password/password');
@@ -732,8 +732,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.contains('Enter your one-time code');
 			cy.contains('Don’t have an account?');
 
+			cy.contains('Submit one-time code');
 			cy.get('input[name=code]').clear().type('123456');
-			cy.contains('Submit one-time code').click();
 
 			cy.url().should('include', '/reset-password/code');
 			cy.contains('Enter your one-time code');
