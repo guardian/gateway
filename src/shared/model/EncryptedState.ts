@@ -16,4 +16,6 @@ export interface EncryptedState {
 	passcodeUsed?: boolean;
 	// Okta IDX API - State of the user in the Okta determines if we can send passcodes to the user when resetting the password
 	userState?: InternalOktaUserState;
+	// Okta IDX API - Count of failed passcode attempts
+	passcodeFailedCount?: number;
 }
