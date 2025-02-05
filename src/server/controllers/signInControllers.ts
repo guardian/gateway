@@ -618,7 +618,7 @@ export const oktaIdxApiSignInController = async ({
 
 		// if we're using passcodes, and the user is attempting to sign in with a password
 		// on error show the password sign in page
-		const errorPage: RoutePaths = usePasscode ? '/signin/password' : '/signin';
+		const errorPage: RoutePaths = usePasscode ? '/signin' : '/signin/password';
 
 		const html = renderer(errorPage, {
 			requestState: mergeRequestState(res.locals, {
