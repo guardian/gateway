@@ -186,12 +186,32 @@ describe('Sign In flow, with passcode', () => {
 					cy.contains('Enter your one-time code');
 					cy.contains('Sign in with password instead').click();
 
+					// password page
 					cy.url().should('include', '/signin/password');
 					cy.get('input[name=email]').should('have.value', emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 				});
+		});
+
+		it('selects password option to sign in and show correct error page on incorrect password', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/signin?usePasscodeSignIn=true`);
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+			// passcode page
+			cy.url().should('include', '/signin/code');
+			cy.contains('Enter your one-time code');
+			cy.contains('Sign in with password instead').click();
+
+			// password page
+			cy.url().should('include', '/signin/password');
+			cy.get('input[name=email]').should('have.value', emailAddress);
+			cy.get('input[name=password]').type(randomPassword());
+			cy.get('[data-cy="main-form-submit-button"]').click();
+			cy.url().should('include', '/signin/password');
+			cy.contains('Email and password don’t match');
 		});
 
 		it('should sign in with passcode - resend email', () => {
