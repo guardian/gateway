@@ -21,6 +21,25 @@ type HandlePasscodeErrorParams = {
 };
 
 /**
+ * @name clearIdxStateInEncrytpedStateCookie
+ * @description Clear the IDX state in the encrypted state cookie on a redirect to the expired page to reset the state
+ * @param {Request} req - The express request object
+ * @param {ResponseWithRequestState} res - The express response object
+ */
+const clearIdxStateInEncryptedStateCookie = (
+	req: Request,
+	res: ResponseWithRequestState,
+) => {
+	updateEncryptedStateCookie(req, res, {
+		passcodeUsed: undefined,
+		stateHandle: undefined,
+		stateHandleExpiresAt: undefined,
+		userState: undefined,
+		passcodeFailedCount: undefined,
+	});
+};
+
+/**
  * @name handlePasscodeError
  * @description Handles errors from the IDX API when the user is entering a passcode.
  *
@@ -55,6 +74,7 @@ export const handlePasscodeError = ({
 
 			// if the passcode failed count is 5 or more, redirect to expired page
 			if (updatedPasscodeFailedCount >= 5) {
+				clearIdxStateInEncryptedStateCookie(req, res);
 				return res.redirect(
 					303,
 					addQueryParamsToPath(expiredPage, state.queryParams),
@@ -94,6 +114,7 @@ export const handlePasscodeError = ({
 
 		// case for too many passcode attempts
 		if (error.name === 'oie.tooManyRequests') {
+			clearIdxStateInEncryptedStateCookie(req, res);
 			return res.redirect(
 				303,
 				addQueryParamsToPath(expiredPage, state.queryParams),
@@ -102,6 +123,7 @@ export const handlePasscodeError = ({
 
 		// case for session expired
 		if (error.name === 'idx.session.expired') {
+			clearIdxStateInEncryptedStateCookie(req, res);
 			return res.redirect(
 				303,
 				addQueryParamsToPath(expiredPage, state.queryParams),
