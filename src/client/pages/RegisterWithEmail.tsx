@@ -14,11 +14,36 @@ import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { divider } from '@/client/styles/Shared';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import ThemedLink from '@/client/components/ThemedLink';
+import locations from '@/shared/lib/locations';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import { PasscodeErrors } from '@/shared/model/Errors';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	shortRequestId?: string;
+	pageError?: string;
+};
+
+const getErrorContext = (pageError?: string) => {
+	if (pageError === PasscodeErrors.PASSCODE_EXPIRED) {
+		return (
+			<>
+				<div>
+					Please request a new verification code to create your account.
+				</div>
+				<br />
+				<div>
+					If you are still having trouble, please contact our customer service
+					team at{' '}
+					<ThemedLink href={locations.SUPPORT_EMAIL_MAILTO}>
+						{SUPPORT_EMAIL}
+					</ThemedLink>
+					.
+				</div>
+			</>
+		);
+	}
 };
 
 export const RegisterWithEmail = ({
@@ -29,6 +54,7 @@ export const RegisterWithEmail = ({
 	geolocation,
 	appName,
 	shortRequestId,
+	pageError,
 }: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
 
@@ -40,6 +66,8 @@ export const RegisterWithEmail = ({
 		<MinimalLayout
 			pageHeader="Create your account"
 			shortRequestId={shortRequestId}
+			errorContext={getErrorContext(pageError)}
+			errorOverride={pageError}
 		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}

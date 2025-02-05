@@ -512,6 +512,63 @@ describe('Registration flow - Split 1/2', () => {
 				},
 			);
 		});
+
+		it('should redirect with error when multiple passcode attempts fail', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.visit(`/register/email`);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+
+					// attempt 1
+					cy.get('input[name=code]').type(`${+code! + 1}`);
+					cy.contains('Submit verification code').click();
+					cy.url().should('include', '/register/code');
+					cy.contains('Incorrect code');
+
+					// attempt 2
+					cy.get('input[name=code]').type(`${+code! + 1}`);
+					cy.contains('Submit verification code').click();
+					cy.url().should('include', '/register/code');
+					cy.contains('Incorrect code');
+
+					// attempt 3
+					cy.get('input[name=code]').type(`${+code! + 1}`);
+					cy.contains('Submit verification code').click();
+					cy.url().should('include', '/register/code');
+					cy.contains('Incorrect code');
+
+					// attempt 4
+					cy.get('input[name=code]').type(`${+code! + 1}`);
+					cy.contains('Submit verification code').click();
+					cy.url().should('include', '/register/code');
+					cy.contains('Incorrect code');
+
+					// attempt 5
+					cy.get('input[name=code]').type(`${+code! + 1}`);
+					cy.contains('Submit verification code').click();
+					cy.url().should('include', '/register/email');
+					cy.contains('Your code has expired');
+				},
+			);
+		});
 	});
 
 	context('existing user going through registration flow', () => {
@@ -598,6 +655,67 @@ describe('Registration flow - Split 1/2', () => {
 						existingUserSendEmailAndValidatePasscode({
 							emailAddress,
 							additionalTests: 'passcode-incorrect',
+						});
+					});
+			});
+
+			it('should redirect with error when multiple passcode attempts fail', () => {
+				cy
+					.createTestUser({
+						isUserEmailValidated: true,
+					})
+					?.then(({ emailAddress }) => {
+						cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
+
+						cy.visit(`/register/email`);
+						cy.get('input[name=email]').clear().type(emailAddress);
+
+						const timeRequestWasMade = new Date();
+						cy.get('[data-cy="main-form-submit-button"]').click();
+
+						cy.checkForEmailAndGetDetails(
+							emailAddress,
+							timeRequestWasMade,
+						).then(({ body, codes }) => {
+							// email
+							expect(body).to.have.string('Your one-time passcode');
+							expect(codes?.length).to.eq(1);
+							const code = codes?.[0].value;
+							expect(code).to.match(/^\d{6}$/);
+
+							// passcode page
+							cy.url().should('include', '/register/email-sent');
+							cy.contains('Enter your code');
+
+							// attempt 1
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit verification code').click();
+							cy.url().should('include', '/register/code');
+							cy.contains('Incorrect code');
+
+							// attempt 2
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit verification code').click();
+							cy.url().should('include', '/register/code');
+							cy.contains('Incorrect code');
+
+							// attempt 3
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit verification code').click();
+							cy.url().should('include', '/register/code');
+							cy.contains('Incorrect code');
+
+							// attempt 4
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit verification code').click();
+							cy.url().should('include', '/register/code');
+							cy.contains('Incorrect code');
+
+							// attempt 5
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit verification code').click();
+							cy.url().should('include', '/register/email');
+							cy.contains('Your code has expired');
 						});
 					});
 			});

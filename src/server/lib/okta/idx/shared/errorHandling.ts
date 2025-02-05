@@ -8,16 +8,21 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { OAuthError } from '@/server/models/okta/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { RegistrationErrors } from '@/shared/model/Errors';
+import { PasscodeErrors } from '@/shared/model/Errors';
 import { convertExpiresAtToExpiryTimeInMs } from './convertExpiresAtToExpiryTimeInMs';
 import { RoutePaths } from '@/shared/model/Routes';
 
-type HandlePasscodeErrorParams = {
+export type HandlePasscodeErrorParams = {
 	error: unknown;
 	req: Request;
 	res: ResponseWithRequestState;
 	emailSentPage: RoutePaths;
-	expiredPage: RoutePaths;
+	expiredPage: Extract<
+		RoutePaths,
+		| '/register/code/expired'
+		| '/reset-password/code/expired'
+		| '/signin/code/expired'
+	>;
 };
 
 /**
@@ -101,7 +106,7 @@ export const handlePasscodeError = ({
 						fieldErrors: [
 							{
 								field: 'code',
-								message: RegistrationErrors.PASSCODE_INVALID,
+								message: PasscodeErrors.PASSCODE_INVALID,
 							},
 						],
 						token: code,

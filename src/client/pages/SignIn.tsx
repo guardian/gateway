@@ -2,6 +2,7 @@ import React from 'react';
 import {
 	extractMessage,
 	GatewayError,
+	PasscodeErrors,
 	RegistrationErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
@@ -93,7 +94,7 @@ const getErrorContext = (
 				<a href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</a>
 			</>
 		);
-	} else if (error === SignInErrors.PASSCODE_EXPIRED) {
+	} else if (error === PasscodeErrors.PASSCODE_EXPIRED) {
 		return (
 			<>
 				<div>Please request a new one-time code to sign in.</div>

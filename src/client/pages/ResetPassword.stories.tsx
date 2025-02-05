@@ -4,6 +4,7 @@ import { Meta } from '@storybook/react';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
+import { PasscodeErrors } from '@/shared/model/Errors';
 
 export default {
 	title: 'Pages/ResetPassword',
@@ -83,4 +84,22 @@ export const RecaptchaError = () => (
 );
 RecaptchaError.story = {
 	name: 'with reCAPTCHA error',
+};
+
+export const PasscodeExpiredError = () => (
+	<ResetPassword
+		shortRequestId="123e4567"
+		headerText="Reset password"
+		buttonText="Request password reset"
+		queryString={{ returnUrl: 'http://theguardian.com' }}
+		pageError={PasscodeErrors.PASSCODE_EXPIRED}
+	>
+		<MainBodyText>
+			Enter your email address and we’ll send you instructions to reset your
+			password.
+		</MainBodyText>
+	</ResetPassword>
+);
+PasscodeExpiredError.story = {
+	name: 'with passcode expired error',
 };

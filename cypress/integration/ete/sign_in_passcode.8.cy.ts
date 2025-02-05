@@ -233,6 +233,65 @@ describe('Sign In flow, with passcode', () => {
 					});
 				});
 		});
+
+		it('should redirect with error when multiple passcode attempts fail', () => {
+			cy
+				.createTestUser({
+					isUserEmailValidated: true,
+				})
+				?.then(({ emailAddress }) => {
+					cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
+					cy.visit(`/signin?usePasscodeSignIn=true`);
+					cy.get('input[name=email]').clear().type(emailAddress);
+
+					const timeRequestWasMade = new Date();
+					cy.get('[data-cy="main-form-submit-button"]').click();
+
+					cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+						({ body, codes }) => {
+							// email
+							expect(body).to.have.string('Your one-time passcode');
+							expect(codes?.length).to.eq(1);
+							const code = codes?.[0].value;
+							expect(code).to.match(/^\d{6}$/);
+
+							// passcode page
+							cy.url().should('include', '/signin/code');
+							cy.contains('Enter your one-time code');
+
+							// attempt 1
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Sign in').click();
+							cy.url().should('include', '/signin/code');
+							cy.contains('Incorrect code');
+
+							// attempt 2
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Sign in').click();
+							cy.url().should('include', '/signin/code');
+							cy.contains('Incorrect code');
+
+							// attempt 3
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Sign in').click();
+							cy.url().should('include', '/signin/code');
+							cy.contains('Incorrect code');
+
+							// attempt 4
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Sign in').click();
+							cy.url().should('include', '/signin/code');
+							cy.contains('Incorrect code');
+
+							// attempt 5
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Sign in').click();
+							cy.url().should('include', '/signin');
+							cy.contains('Your code has expired');
+						},
+					);
+				});
+		});
 	});
 
 	context('ACTIVE user - with only password authenticator', () => {
@@ -378,6 +437,50 @@ describe('Sign In flow, with passcode', () => {
 			cy.contains('Don’t have an account?');
 
 			cy.contains('Incorrect code');
+		});
+
+		it('NON_EXISTENT user - should redirect with error when multiple passcode attempts fail', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/signin?usePasscodeSignIn=true`);
+
+			cy.contains('Sign in');
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			// passcode page
+			cy.url().should('include', '/signin/code');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			// attempt 1
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 2
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 3
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 4
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 5
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin');
+			cy.contains('Your code has expired');
 		});
 	});
 });

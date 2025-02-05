@@ -15,6 +15,11 @@ export enum GenericErrors {
 	DEFAULT = 'Sorry, something went wrong. Please try again.',
 }
 
+export const PasscodeErrors = {
+	PASSCODE_INVALID: 'Incorrect code',
+	PASSCODE_EXPIRED: 'Your code has expired',
+} as const;
+
 export enum ResetPasswordErrors {
 	NO_ACCOUNT = 'There is no account for that email address, please check for typos or create an account.',
 	NO_EMAIL = 'Email field must not be blank.',
@@ -24,14 +29,12 @@ export enum SignInErrors {
 	GENERIC = 'There was a problem signing in, please try again.',
 	AUTHENTICATION_FAILED = 'Email and password don’t match',
 	SOCIAL_SIGNIN_ERROR = 'Social sign-in unsuccessful',
-	PASSCODE_EXPIRED = 'Your code has expired',
 }
 
 export enum RegistrationErrors {
 	GENERIC = 'There was a problem registering, please try again.',
 	EMAIL_INVALID = 'Please enter a valid email address.',
 	PROVISIONING_FAILURE = 'Your account has been created but there was a problem signing you in.',
-	PASSCODE_INVALID = 'Incorrect code',
 }
 
 // shown at the top of the change password page when something goes wrong

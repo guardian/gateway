@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { SignIn, SignInProps } from '@/client/pages/SignIn';
-import { SignInErrors } from '@/shared/model/Errors';
+import { PasscodeErrors, SignInErrors } from '@/shared/model/Errors';
 
 export default {
 	title: 'Pages/SignIn',
@@ -138,7 +138,7 @@ export const SignInWithPasscodeError = (args: SignInProps) => (
 		{...{
 			...args,
 			usePasscodeSignIn: true,
-			pageError: SignInErrors.PASSCODE_EXPIRED,
+			pageError: PasscodeErrors.PASSCODE_EXPIRED,
 		}}
 	/>
 );

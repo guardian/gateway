@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode, useState } from 'react';
+import React, { PropsWithChildren } from 'react';
 
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { MainForm } from '@/client/components/MainForm';
@@ -17,7 +17,9 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { divider } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 
-import { GatewayError } from '@/shared/model/Errors';
+import { GatewayError, PasscodeErrors } from '@/shared/model/Errors';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import ThemedLink from '@/client/components/ThemedLink';
 
 interface ResetPasswordProps {
 	email?: string;
@@ -32,7 +34,27 @@ interface ResetPasswordProps {
 	formPageTrackingName?: string;
 	formError?: GatewayError;
 	shortRequestId?: string;
+	pageError?: string;
 }
+
+const getErrorContext = (pageError?: string) => {
+	if (pageError === PasscodeErrors.PASSCODE_EXPIRED) {
+		return (
+			<>
+				<div>Please request a new one-time code to reset your password.</div>
+				<br />
+				<div>
+					If you are still having trouble, please contact our customer service
+					team at{' '}
+					<ThemedLink href={locations.SUPPORT_EMAIL_MAILTO}>
+						{SUPPORT_EMAIL}
+					</ThemedLink>
+					.
+				</div>
+			</>
+		);
+	}
+};
 
 export const ResetPassword = ({
 	email = '',
@@ -48,20 +70,17 @@ export const ResetPassword = ({
 	formPageTrackingName,
 	formError,
 	shortRequestId,
+	pageError,
 }: PropsWithChildren<ResetPasswordProps>) => {
 	// track page/form load
 	usePageLoadOphanInteraction(formPageTrackingName);
-
-	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
-	const [recaptchaErrorContext, setRecaptchaErrorContext] =
-		useState<ReactNode>(null);
 
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
 			pageHeader={headerText}
-			errorContext={recaptchaErrorContext}
-			errorOverride={recaptchaErrorMessage}
+			errorContext={getErrorContext(pageError)}
+			errorOverride={pageError}
 		>
 			{children}
 			<MainForm
@@ -72,8 +91,6 @@ export const ResetPassword = ({
 				}
 				submitButtonText={buttonText}
 				recaptchaSiteKey={recaptchaSiteKey}
-				setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-				setRecaptchaErrorContext={setRecaptchaErrorContext}
 				formTrackingName={formPageTrackingName}
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
