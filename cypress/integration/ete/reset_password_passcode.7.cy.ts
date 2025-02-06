@@ -348,6 +348,68 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			});
 		});
 
+		it('should redirect with error when multiple passcode attempts fail', () => {
+			cy
+				.createTestUser({
+					isUserEmailValidated: true,
+				})
+				?.then(({ emailAddress }) => {
+					cy.visit(`/reset-password`);
+
+					const timeRequestWasMade = new Date();
+					cy.get('input[name=email]').type(emailAddress);
+					cy.get('[data-cy="main-form-submit-button"]').click();
+
+					cy.contains('Enter your one-time code');
+					cy.contains(emailAddress);
+					cy.contains('send again');
+					cy.contains('try another address');
+
+					cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+						({ body, codes }) => {
+							// email
+							expect(body).to.have.string('Your one-time passcode');
+							expect(codes?.length).to.eq(1);
+							const code = codes?.[0].value;
+							expect(code).to.match(/^\d{6}$/);
+
+							// passcode page
+							cy.url().should('include', '/reset-password/email-sent');
+							cy.contains('Enter your one-time code');
+
+							// attempt 1 - auto submit
+							cy.contains('Submit one-time code');
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.url().should('include', '/reset-password/code');
+							cy.contains('Incorrect code');
+
+							// attempt 2 - manual submit
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit one-time code').click();
+							cy.url().should('include', '/reset-password/code');
+							cy.contains('Incorrect code');
+
+							// attempt 3 - manual submit
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit one-time code').click();
+							cy.url().should('include', '/reset-password/code');
+							cy.contains('Incorrect code');
+
+							// attempt 4 - manual submit
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit one-time code').click();
+							cy.url().should('include', '/reset-password/code');
+							cy.contains('Incorrect code');
+
+							// attempt 5 - manual submit
+							cy.get('input[name=code]').type(`${+code! + 1}`);
+							cy.contains('Submit one-time code').click();
+							cy.url().should('include', '/reset-password/expired');
+						},
+					);
+				});
+		});
+
 		it('ACTIVE user with only password authenticator - allow the user to change thier password and authenticate', () => {
 			const emailAddress = randomMailosaurEmail();
 			cy.visit(`/register/email`);
@@ -740,6 +802,49 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.contains('Don’t have an account?');
 
 			cy.contains('Incorrect code');
+		});
+
+		it('should redirect with error when multiple passcode attempts fail', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/reset-password`);
+
+			cy.contains('Reset password');
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			// passcode page
+			cy.url().should('include', '/reset-password/email-sent');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			// attempt 1
+			cy.contains('Submit one-time code');
+			cy.get('input[name=code]').type('123456');
+			cy.url().should('include', '/reset-password/code');
+			cy.contains('Incorrect code');
+
+			// attempt 2
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Submit one-time code').click();
+			cy.url().should('include', '/reset-password/code');
+			cy.contains('Incorrect code');
+
+			// attempt 3
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Submit one-time code').click();
+			cy.url().should('include', '/reset-password/code');
+			cy.contains('Incorrect code');
+
+			// attempt 4
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Submit one-time code').click();
+			cy.url().should('include', '/reset-password/code');
+			cy.contains('Incorrect code');
+
+			// attempt 5
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Submit one-time code').click();
+			cy.url().should('include', '/reset-password/expired');
 		});
 	});
 });

@@ -1,5 +1,8 @@
 import { Request } from 'express';
-import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+	readEncryptedStateCookie,
+	updateEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -15,6 +18,25 @@ type HandlePasscodeErrorParams = {
 	res: ResponseWithRequestState;
 	emailSentPage: RoutePaths;
 	expiredPage: RoutePaths;
+};
+
+/**
+ * @name clearIdxStateInEncrytpedStateCookie
+ * @description Clear the IDX state in the encrypted state cookie on a redirect to the expired page to reset the state
+ * @param {Request} req - The express request object
+ * @param {ResponseWithRequestState} res - The express response object
+ */
+const clearIdxStateInEncryptedStateCookie = (
+	req: Request,
+	res: ResponseWithRequestState,
+) => {
+	updateEncryptedStateCookie(req, res, {
+		passcodeUsed: undefined,
+		stateHandle: undefined,
+		stateHandleExpiresAt: undefined,
+		userState: undefined,
+		passcodeFailedCount: undefined,
+	});
 };
 
 /**
@@ -43,8 +65,38 @@ export const handlePasscodeError = ({
 	const encryptedState = readEncryptedStateCookie(req);
 
 	if (error instanceof OAuthError) {
-		if (error.name === 'api.authn.error.PASSCODE_INVALID') {
-			// case for invalid passcode
+		// in all cases where the passcode is invalid, we want to increment the passcode failed count
+		// regardless of the error message we receive from the IDX API
+		// this is because we want to prevent replay attacks, so in all cases we want to increment the count
+		// up to a maximum of 5 attempts
+		if (
+			[
+				'api.authn.error.PASSCODE_INVALID',
+				'oie.tooManyRequests',
+				'idx.session.expired',
+			].includes(error.name)
+		) {
+			// get the current passcode failed count
+			const { passcodeFailedCount = 0 } = encryptedState || {};
+
+			// increment the passcode failed count
+			const updatedPasscodeFailedCount = passcodeFailedCount + 1;
+
+			// if the passcode failed count is 5 or more, redirect to expired page
+			if (updatedPasscodeFailedCount >= 5) {
+				clearIdxStateInEncryptedStateCookie(req, res);
+				return res.redirect(
+					303,
+					addQueryParamsToPath(expiredPage, state.queryParams),
+				);
+			}
+
+			// otherwise, update the passcode failed count
+			updateEncryptedStateCookie(req, res, {
+				passcodeFailedCount: updatedPasscodeFailedCount,
+			});
+
+			// and render the email sent page with incorrect passcode error
 			const html = renderer(emailSentPage, {
 				requestState: mergeRequestState(state, {
 					queryParams: {
@@ -68,22 +120,6 @@ export const handlePasscodeError = ({
 				pageTitle: 'Check Your Inbox',
 			});
 			return res.type('html').send(html);
-		}
-
-		// case for too many passcode attempts
-		if (error.name === 'oie.tooManyRequests') {
-			return res.redirect(
-				303,
-				addQueryParamsToPath(expiredPage, state.queryParams),
-			);
-		}
-
-		// case for session expired
-		if (error.name === 'idx.session.expired') {
-			return res.redirect(
-				303,
-				addQueryParamsToPath(expiredPage, state.queryParams),
-			);
 		}
 	}
 };
