@@ -561,7 +561,8 @@ describe('Registration flow - Split 1/2', () => {
 					// attempt 5
 					cy.get('input[name=code]').type('000000');
 					cy.contains('Submit verification code').click();
-					cy.url().should('include', '/welcome/expired');
+					cy.url().should('include', '/register/email');
+					cy.contains('Your code has expired');
 				},
 			);
 		});
@@ -710,6 +711,7 @@ describe('Registration flow - Split 1/2', () => {
 							cy.get('input[name=code]').type('000000');
 							cy.contains('Submit verification code').click();
 							cy.url().should('include', '/register/email');
+							cy.contains('Your code has expired');
 						},
 					);
 				});

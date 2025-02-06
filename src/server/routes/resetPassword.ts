@@ -25,16 +25,46 @@ import {
 import { OAuthError } from '@/server/models/okta/Error';
 import { forgotPassword } from '@/server/lib/okta/api/users';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
+import { GenericErrors, PasscodeErrors } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/serverSideLogger';
+
+/**
+ * Helper method to determine if a global error should show on the reset password page
+ * and return a user facing error if so
+ * if there's no error it returns undefined
+ * @param error - error query parameter
+ * @param error_description - error_description query parameter
+ * @returns string | undefined - user facing error message
+ */
+const getErrorMessageFromQueryParams = (
+	error?: string,
+	error_description?: string,
+) => {
+	// Show error if passcode expired
+	if (error === PasscodeErrors.PASSCODE_EXPIRED) {
+		return PasscodeErrors.PASSCODE_EXPIRED;
+	}
+
+	// We propagate a generic error message when we don't know what the exact error is
+	// This error will also include a request id, so users can contact us with this information
+	if (error_description) {
+		return GenericErrors.DEFAULT;
+	}
+};
 
 // reset password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
+	const state = res.locals;
+	const { error, error_description } = state.queryParams;
+
 	const html = renderer('/reset-password', {
 		pageTitle: 'Reset Password',
-		requestState: mergeRequestState(res.locals, {
+		requestState: mergeRequestState(state, {
 			pageData: {
 				email: readEmailCookie(req),
+			},
+			globalMessage: {
+				error: getErrorMessageFromQueryParams(error, error_description),
 			},
 		}),
 	});
@@ -155,7 +185,7 @@ router.post(
 				if (userState === 'NON_EXISTENT') {
 					throw new OAuthError({
 						error: 'api.authn.error.PASSCODE_INVALID',
-						error_description: RegistrationErrors.PASSCODE_INVALID,
+						error_description: PasscodeErrors.PASSCODE_INVALID,
 					});
 				}
 
@@ -254,7 +284,7 @@ router.post(
 					req,
 					res,
 					emailSentPage: '/reset-password/email-sent',
-					expiredPage: '/reset-password/expired',
+					expiredPage: '/reset-password/code/expired',
 				});
 
 				// if we redirected away during the handlePasscodeError function, we can't redirect again
@@ -296,6 +326,19 @@ router.post(
 			addQueryParamsToPath('/reset-password', res.locals.queryParams),
 		);
 	}),
+);
+
+// Handler for the passcode expired redirect
+router.get(
+	'/reset-password/code/expired',
+	(_: Request, res: ResponseWithRequestState) => {
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/reset-password', res.locals.queryParams, {
+				error: PasscodeErrors.PASSCODE_EXPIRED,
+			}),
+		);
+	},
 );
 
 // Route to resend the email for passcode reset password

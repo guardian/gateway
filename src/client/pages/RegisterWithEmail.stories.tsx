@@ -3,6 +3,7 @@ import { Meta } from '@storybook/react';
 
 import { RegisterWithEmail } from '@/client/pages/RegisterWithEmail';
 import { RegistrationProps } from '@/client/pages/Registration';
+import { PasscodeErrors } from '@/shared/model/Errors';
 
 export default {
 	title: 'Pages/RegisterWithEmail',
@@ -110,4 +111,15 @@ export const JobsSite = (args: RegistrationProps) => (
 
 JobsSite.story = {
 	name: 'with Jobs site',
+};
+
+export const WithPasscodeExpiredError = (args: RegistrationProps) => (
+	<RegisterWithEmail
+		{...args}
+		pageError={PasscodeErrors.PASSCODE_EXPIRED}
+		shortRequestId="123e4567"
+	/>
+);
+WithPasscodeExpiredError.story = {
+	name: 'with defaults',
 };

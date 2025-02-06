@@ -19,6 +19,7 @@ import {
 import {
 	GatewayError,
 	GenericErrors,
+	PasscodeErrors,
 	RegistrationErrors,
 } from '@/shared/model/Errors';
 import deepmerge from 'deepmerge';
@@ -58,15 +59,47 @@ import {
 	oktaIdxApiSignInPasscodeController,
 	oktaIdxApiSubmitPasscodeController,
 } from '@/server/controllers/signInControllers';
+import { readEmailCookie } from '@/server/lib/emailCookie';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
+
+/**
+ * Helper method to determine if a global error should show on the create account page
+ * and return a user facing error if so
+ * if there's no error it returns undefined
+ * @param error - error query parameter
+ * @param error_description - error_description query parameter
+ * @returns string | undefined - user facing error message
+ */
+const getErrorMessageFromQueryParams = (
+	error?: string,
+	error_description?: string,
+) => {
+	// Show error if passcode expired
+	if (error === PasscodeErrors.PASSCODE_EXPIRED) {
+		return PasscodeErrors.PASSCODE_EXPIRED;
+	}
+
+	// We propagate a generic error message when we don't know what the exact error is
+	// This error will also include a request id, so users can contact us with this information
+	if (error_description) {
+		return GenericErrors.DEFAULT;
+	}
+};
 
 router.get(
 	'/register',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const { error, error_description } = state.queryParams;
+
 		const html = renderer('/register', {
-			requestState: res.locals,
+			requestState: mergeRequestState(state, {
+				globalMessage: {
+					error: getErrorMessageFromQueryParams(error, error_description),
+				},
+			}),
 			pageTitle: 'Register',
 		});
 		res.type('html').send(html);
@@ -77,9 +110,19 @@ router.get(
 	'/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const { error, error_description } = state.queryParams;
+
 		const html = renderer('/register/email', {
-			requestState: res.locals,
 			pageTitle: 'Register With Email',
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email: readEmailCookie(req),
+				},
+				globalMessage: {
+					error: getErrorMessageFromQueryParams(error, error_description),
+				},
+			}),
 		});
 		res.type('html').send(html);
 	},
@@ -167,7 +210,7 @@ router.post(
 							req,
 							res,
 							emailSentPage: '/register/email-sent',
-							expiredPage: '/register/email',
+							expiredPage: '/register/code/expired',
 						});
 					}
 
@@ -238,7 +281,7 @@ router.post(
 						req,
 						res,
 						emailSentPage: '/register/email-sent',
-						expiredPage: '/welcome/expired',
+						expiredPage: '/register/code/expired',
 					});
 
 					// if we redirected away during the handlePasscodeError function, we can't redirect again
@@ -257,6 +300,19 @@ router.post(
 			);
 		},
 	),
+);
+
+// Handler for the passcode expired redirect
+router.get(
+	'/register/code/expired',
+	(_: Request, res: ResponseWithRequestState) => {
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/register/email', res.locals.queryParams, {
+				error: PasscodeErrors.PASSCODE_EXPIRED,
+			}),
+		);
+	},
 );
 
 // Route to resend the email for passcode registration

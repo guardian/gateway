@@ -42,11 +42,14 @@ import { changePasswordEmailIdx } from '@/server/controllers/sendChangePasswordE
 import {
 	GatewayError,
 	GenericErrors,
-	RegistrationErrors,
+	PasscodeErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
-import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
+import {
+	handlePasscodeError,
+	HandlePasscodeErrorParams,
+} from '@/server/lib/okta/idx/shared/errorHandling';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { UserResponse } from '@/server/models/okta/User';
 import {
@@ -653,7 +656,7 @@ export const oktaIdxApiSubmitPasscodeController = async ({
 	req: Request;
 	res: ResponseWithRequestState;
 	emailSentPage?: Extract<RoutePaths, '/signin/code' | '/register/email-sent'>;
-	expiredPage?: Extract<RoutePaths, '/signin/code/expired' | '/register/email'>;
+	expiredPage?: HandlePasscodeErrorParams['expiredPage'];
 }) => {
 	const { code } = req.body;
 
@@ -668,7 +671,7 @@ export const oktaIdxApiSubmitPasscodeController = async ({
 			if (userState === 'NON_EXISTENT') {
 				throw new OAuthError({
 					error: 'api.authn.error.PASSCODE_INVALID',
-					error_description: RegistrationErrors.PASSCODE_INVALID,
+					error_description: PasscodeErrors.PASSCODE_INVALID,
 				});
 			}
 
