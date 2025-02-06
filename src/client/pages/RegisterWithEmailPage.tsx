@@ -9,9 +9,11 @@ export const RegisterWithEmailPage = () => {
 		recaptchaConfig,
 		queryParams,
 		shortRequestId,
+		globalMessage = {},
 	} = clientState;
 	const { email, formError } = pageData;
 	const { recaptchaSiteKey } = recaptchaConfig;
+	const { error: pageError } = globalMessage;
 
 	return (
 		<RegisterWithEmail
@@ -22,6 +24,7 @@ export const RegisterWithEmailPage = () => {
 			geolocation={pageData.geolocation}
 			appName={pageData.appName}
 			shortRequestId={shortRequestId}
+			pageError={pageError}
 		/>
 	);
 };

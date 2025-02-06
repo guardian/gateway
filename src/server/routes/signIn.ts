@@ -10,6 +10,7 @@ import { decrypt } from '@/server/lib/idapi/decryptToken';
 import {
 	FederationErrors,
 	GenericErrors,
+	PasscodeErrors,
 	RegistrationErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
@@ -78,8 +79,8 @@ export const getErrorMessageFromQueryParams = (
 		return error;
 	}
 
-	if (error === SignInErrors.PASSCODE_EXPIRED) {
-		return SignInErrors.PASSCODE_EXPIRED;
+	if (error === PasscodeErrors.PASSCODE_EXPIRED) {
+		return PasscodeErrors.PASSCODE_EXPIRED;
 	}
 
 	// We propagate a generic error message when we don't know what the exact error is
@@ -321,7 +322,7 @@ router.get(
 		return res.redirect(
 			303,
 			addQueryParamsToPath('/signin', res.locals.queryParams, {
-				error: SignInErrors.PASSCODE_EXPIRED,
+				error: PasscodeErrors.PASSCODE_EXPIRED,
 			}),
 		);
 	},

@@ -404,7 +404,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 							// attempt 5 - manual submit
 							cy.get('input[name=code]').type(`${+code! + 1}`);
 							cy.contains('Submit one-time code').click();
-							cy.url().should('include', '/reset-password/expired');
+							cy.url().should('include', '/reset-password');
+							cy.contains('Your code has expired');
 						},
 					);
 				});
@@ -844,7 +845,8 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			// attempt 5
 			cy.get('input[name=code]').type('123456');
 			cy.contains('Submit one-time code').click();
-			cy.url().should('include', '/reset-password/expired');
+			cy.url().should('include', '/reset-password');
+			cy.contains('Your code has expired');
 		});
 	});
 });
