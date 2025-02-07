@@ -70,4 +70,7 @@ export interface QueryParams
 	error?: string;
 	error_description?: string;
 	maxAge?: number;
+	// only use this to prefill the email input on either sign in page, for passcode or password
+	// don't rely on this for any other purpose, or to be a valid email
+	signInEmail?: string;
 }

@@ -7,8 +7,6 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { PasscodeInput } from '@/client/components/PasscodeInput';
 import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 import { EmailSentProps } from '@/client/pages/EmailSent';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import ThemedLink from '@/client/components/ThemedLink';
 
 type TextType = 'verification' | 'security' | 'generic' | 'signin';
 
@@ -183,13 +181,6 @@ export const PasscodeEmailSent = ({
 					formRef={formRef}
 				/>
 			</MainForm>
-			{showSignInWithPasswordOption && (
-				<MainBodyText>
-					<ThemedLink href={`${buildUrl('/signin/password')}${queryString}`}>
-						Sign in with password instead
-					</ThemedLink>
-				</MainBodyText>
-			)}
 			<EmailSentInformationBox
 				setRecaptchaErrorContext={setRecaptchaErrorContext}
 				setRecaptchaErrorMessage={setRecaptchaErrorMessage}
@@ -203,6 +194,7 @@ export const PasscodeEmailSent = ({
 				shortRequestId={shortRequestId}
 				noAccountInfo={noAccountInfo}
 				sendAgainTimerInSeconds={sendAgainTimerInSeconds}
+				showSignInWithPasswordOption={showSignInWithPasswordOption}
 			/>
 		</MinimalLayout>
 	);

@@ -69,9 +69,10 @@ export const buildUrlWithQueryParams = <P extends AllRoutes>(
 	path: P,
 	params: PathParams<P> = <PathParams<P>>{},
 	queryParams: QueryParams,
+	queryParamOverrides?: Partial<QueryParams>,
 ): string => {
 	const url = buildUrl(path, params);
-	return addQueryParamsToUntypedPath(url, queryParams);
+	return addQueryParamsToUntypedPath(url, queryParams, queryParamOverrides);
 };
 
 /**

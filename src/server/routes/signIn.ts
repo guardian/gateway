@@ -98,7 +98,8 @@ router.get(
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
-		const { encryptedEmail, error, error_description } = state.queryParams;
+		const { encryptedEmail, error, error_description, signInEmail } =
+			state.queryParams;
 
 		// first attempt to get email from IDAPI encryptedEmail if it exists
 		const decryptedEmail =
@@ -106,12 +107,13 @@ router.get(
 
 		// followed by the gateway EncryptedState
 		// if it exists
-		const email = decryptedEmail || readEmailCookie(req);
+		const email = decryptedEmail || signInEmail || readEmailCookie(req);
 
 		const html = renderer('/signin', {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,
+					focusPasswordField: !!email,
 				},
 				globalMessage: {
 					error: getErrorMessageFromQueryParams(error, error_description),
@@ -225,6 +227,7 @@ router.get(
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,
+					focusPasswordField: !!email,
 				},
 				globalMessage: {
 					error: getErrorMessageFromQueryParams(error, error_description),
@@ -552,10 +555,13 @@ router.get(
 	'/signin/password',
 	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		const email =
+			state.queryParams.signInEmail || readEncryptedStateCookie(req)?.email;
 		const html = renderer('/signin/password', {
 			requestState: mergeRequestState(state, {
 				pageData: {
-					email: readEncryptedStateCookie(req)?.email,
+					email,
+					focusPasswordField: !!email,
 				},
 			}),
 			pageTitle: 'Sign in',

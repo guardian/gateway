@@ -76,6 +76,9 @@ export interface PageData {
 
 	// passcode specific
 	passcodeSendAgainTimer?: number;
+
+	// sign in with password specific
+	focusPasswordField?: boolean;
 }
 
 export interface RecaptchaConfig {

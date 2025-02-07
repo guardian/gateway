@@ -31,6 +31,7 @@ type EmailSentInformationBoxProps = Pick<
 	>;
 	setRecaptchaErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 	sendAgainTimerInSeconds?: number;
+	showSignInWithPasswordOption?: boolean;
 };
 
 const sendAgainFormWrapperStyles = css`
@@ -50,6 +51,7 @@ export const EmailSentInformationBox = ({
 	queryString,
 	shortRequestId,
 	sendAgainTimerInSeconds,
+	showSignInWithPasswordOption,
 }: EmailSentInformationBoxProps) => {
 	const timer = useCountdownTimer(sendAgainTimerInSeconds || 0);
 
@@ -89,9 +91,17 @@ export const EmailSentInformationBox = ({
 				)}
 				{changeEmailPage && (
 					<>
-						, or{' '}
+						,{!showSignInWithPasswordOption ? <> or </> : <> </>}
 						<ThemedLink href={`${changeEmailPage}${queryString}`}>
 							try another address
+						</ThemedLink>
+					</>
+				)}
+				{showSignInWithPasswordOption && (
+					<>
+						, or{' '}
+						<ThemedLink href={`${buildUrl('/signin/password')}${queryString}`}>
+							sign in with a password instead
 						</ThemedLink>
 					</>
 				)}

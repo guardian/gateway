@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	extractMessage,
 	GatewayError,
@@ -38,6 +38,7 @@ export type SignInProps = {
 	// flag to determine whether to show the passcode view or password view
 	usePasscodeSignIn?: boolean;
 	hideSocialButtons?: boolean;
+	focusPasswordField?: boolean;
 };
 
 const resetPassword = css`
@@ -145,7 +146,23 @@ export const SignIn = ({
 	shortRequestId,
 	usePasscodeSignIn = false,
 	hideSocialButtons = false,
+	focusPasswordField = false,
 }: SignInProps) => {
+	const [currentEmail, setCurrentEmail] = React.useState(email);
+
+	// autofocus the password input field when the page loads if it exists
+	// and the focusPasswordField flag is set to true and a default email exists
+	useEffect(() => {
+		if (typeof window !== 'undefined' && focusPasswordField && email) {
+			const passwordInput: HTMLInputElement | null =
+				window.document.querySelector('input[name="password"]');
+
+			if (passwordInput) {
+				passwordInput.focus();
+			}
+		}
+	}, [focusPasswordField, email]);
+
 	// status of the OTP checkbox
 	const selectedView = usePasscodeSignIn ? 'passcode' : 'password';
 
@@ -183,7 +200,7 @@ export const SignIn = ({
 					queryParams,
 				)}
 				submitButtonText={
-					selectedView === 'passcode' ? 'Continue with email' : 'Sign in'
+					selectedView === 'passcode' ? 'Sign in with email' : 'Sign in'
 				}
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
@@ -193,7 +210,10 @@ export const SignIn = ({
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
 			>
-				<EmailInput defaultValue={email} />
+				<EmailInput
+					defaultValue={email}
+					onChange={(e) => setCurrentEmail(e.target.value)}
+				/>
 				{selectedView === 'password' && (
 					<>
 						<PasswordInput label="Password" autoComplete="current-password" />
@@ -212,6 +232,27 @@ export const SignIn = ({
 					)
 				}
 			</MainForm>
+			{
+				// Hidden input to determine whether passcode view is selected
+				selectedView === 'passcode' && (
+					<>
+						<MainBodyText>
+							<ThemedLink
+								href={buildUrlWithQueryParams(
+									'/signin/password',
+									{},
+									queryParams,
+									{
+										signInEmail: currentEmail,
+									},
+								)}
+							>
+								Sign in with a password instead
+							</ThemedLink>
+						</MainBodyText>
+					</>
+				)
+			}
 			{!isReauthenticate && (
 				<>
 					<Divider size="full" cssOverrides={divider} />
