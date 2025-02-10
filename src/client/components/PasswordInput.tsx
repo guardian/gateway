@@ -27,6 +27,7 @@ export type PasswordInputProps = {
 	supporting?: string;
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	autoComplete?: PasswordAutoComplete;
+	autoFocus?: boolean;
 };
 
 // hide the microsoft password reveal eye if we're using
@@ -171,6 +172,7 @@ export const PasswordInput = ({
 	onChange,
 	displayEye = true,
 	autoComplete,
+	autoFocus,
 }: PasswordInputProps) => {
 	const [passwordVisible, setPasswordVisible] = useState(false);
 	const [fieldIsFocused, setFieldIsFocused] = useState(false);
@@ -203,6 +205,7 @@ export const PasswordInput = ({
 						hideMsReveal(displayEye),
 					]}
 					id="password"
+					autoFocus={autoFocus}
 				/>
 
 				{displayEye && (

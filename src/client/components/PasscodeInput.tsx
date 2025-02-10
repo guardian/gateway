@@ -21,6 +21,7 @@ export const PasscodeInput = ({
 	passcode = '',
 	fieldErrors,
 	formRef,
+	autoFocus,
 }: PasscodeInputProps) => {
 	/**
 	 * In gateway we normally avoid using client side javascript, but in this case
@@ -103,6 +104,7 @@ export const PasscodeInput = ({
 				value={input.value}
 				onChange={onChange}
 				onPaste={onPaste}
+				autoFocus={autoFocus}
 			/>
 		</div>
 	);

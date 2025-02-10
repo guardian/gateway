@@ -135,18 +135,6 @@ export const PasscodeEmailSent = ({
 		}
 	}, [timeUntilTokenExpiry, expiredPage, queryString]);
 
-	// autofocus the code input field when the page loads
-	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const codeInput: HTMLInputElement | null =
-				window.document.querySelector('input[name="code"]');
-
-			if (codeInput) {
-				codeInput.focus();
-			}
-		}
-	}, []);
-
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
@@ -179,6 +167,7 @@ export const PasscodeEmailSent = ({
 					fieldErrors={fieldErrors}
 					label={text.passcodeInputLabel}
 					formRef={formRef}
+					autoFocus
 				/>
 			</MainForm>
 			<EmailSentInformationBox

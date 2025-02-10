@@ -1,9 +1,4 @@
-import React, {
-	PropsWithChildren,
-	ReactNode,
-	useState,
-	useEffect,
-} from 'react';
+import React, { PropsWithChildren, ReactNode, useState } from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
@@ -43,18 +38,6 @@ export const EmailSent = ({
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
-
-	// autofocus the code input field when the page loads
-	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const codeInput: HTMLInputElement | null =
-				window.document.querySelector('input[name="code"]');
-
-			if (codeInput) {
-				codeInput.focus();
-			}
-		}
-	}, []);
 
 	return (
 		<MinimalLayout

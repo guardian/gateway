@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
 	extractMessage,
 	GatewayError,
@@ -150,19 +150,6 @@ export const SignIn = ({
 }: SignInProps) => {
 	const [currentEmail, setCurrentEmail] = React.useState(email);
 
-	// autofocus the password input field when the page loads if it exists
-	// and the focusPasswordField flag is set to true and a default email exists
-	useEffect(() => {
-		if (typeof window !== 'undefined' && focusPasswordField && email) {
-			const passwordInput: HTMLInputElement | null =
-				window.document.querySelector('input[name="password"]');
-
-			if (passwordInput) {
-				passwordInput.focus();
-			}
-		}
-	}, [focusPasswordField, email]);
-
 	// status of the OTP checkbox
 	const selectedView = usePasscodeSignIn ? 'passcode' : 'password';
 
@@ -216,7 +203,11 @@ export const SignIn = ({
 				/>
 				{selectedView === 'password' && (
 					<>
-						<PasswordInput label="Password" autoComplete="current-password" />
+						<PasswordInput
+							label="Password"
+							autoComplete="current-password"
+							autoFocus={!!(focusPasswordField && email)}
+						/>
 						<ThemedLink
 							href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
 							cssOverrides={resetPassword}
