@@ -38,6 +38,7 @@ export type SignInProps = {
 	// flag to determine whether to show the passcode view or password view
 	usePasscodeSignIn?: boolean;
 	hideSocialButtons?: boolean;
+	focusPasswordField?: boolean;
 };
 
 const resetPassword = css`
@@ -145,7 +146,10 @@ export const SignIn = ({
 	shortRequestId,
 	usePasscodeSignIn = false,
 	hideSocialButtons = false,
+	focusPasswordField = false,
 }: SignInProps) => {
+	const [currentEmail, setCurrentEmail] = React.useState(email);
+
 	// status of the OTP checkbox
 	const selectedView = usePasscodeSignIn ? 'passcode' : 'password';
 
@@ -183,7 +187,7 @@ export const SignIn = ({
 					queryParams,
 				)}
 				submitButtonText={
-					selectedView === 'passcode' ? 'Continue with email' : 'Sign in'
+					selectedView === 'passcode' ? 'Sign in with email' : 'Sign in'
 				}
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
@@ -193,10 +197,17 @@ export const SignIn = ({
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
 			>
-				<EmailInput defaultValue={email} />
+				<EmailInput
+					defaultValue={email}
+					onChange={(e) => setCurrentEmail(e.target.value)}
+				/>
 				{selectedView === 'password' && (
 					<>
-						<PasswordInput label="Password" autoComplete="current-password" />
+						<PasswordInput
+							label="Password"
+							autoComplete="current-password"
+							autoFocus={!!(focusPasswordField && email)}
+						/>
 						<ThemedLink
 							href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
 							cssOverrides={resetPassword}
@@ -212,6 +223,27 @@ export const SignIn = ({
 					)
 				}
 			</MainForm>
+			{
+				// Hidden input to determine whether passcode view is selected
+				selectedView === 'passcode' && (
+					<>
+						<MainBodyText>
+							<ThemedLink
+								href={buildUrlWithQueryParams(
+									'/signin/password',
+									{},
+									queryParams,
+									{
+										signInEmail: currentEmail,
+									},
+								)}
+							>
+								Sign in with a password instead
+							</ThemedLink>
+						</MainBodyText>
+					</>
+				)
+			}
 			{!isReauthenticate && (
 				<>
 					<Divider size="full" cssOverrides={divider} />

@@ -21,7 +21,7 @@ export const SignInPage = ({
 		queryParams,
 		recaptchaConfig,
 	} = clientState;
-	const { email, formError } = pageData;
+	const { email, formError, focusPasswordField } = pageData;
 	const { error: pageError } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -31,7 +31,7 @@ export const SignInPage = ({
 	// determines if the passcode view of the sign in page should be shown
 	const usePasscodeSignIn: boolean = (() => {
 		// if the forcePasswordPage flag is set, we should always show the password view
-		// for example when the user clicks "sign in with password instead"
+		// for example when the user clicks "sign in with a password instead"
 		if (forcePasswordPage) {
 			return false;
 		}
@@ -62,6 +62,7 @@ export const SignInPage = ({
 			shortRequestId={clientState.shortRequestId}
 			usePasscodeSignIn={usePasscodeSignIn}
 			hideSocialButtons={hideSocialButtons}
+			focusPasswordField={focusPasswordField}
 		/>
 	);
 };

@@ -83,6 +83,22 @@ export const WithNoAccountInfo = () => {
 };
 WithNoAccountInfo.storyName = 'with noAccountInfo';
 
+export const WithShowSignInWithPasswordOption = () => {
+	return (
+		<EmailSentInformationBox
+			setRecaptchaErrorContext={() => {}}
+			setRecaptchaErrorMessage={() => {}}
+			changeEmailPage="#"
+			email="test@example.com"
+			resendEmailAction="#"
+			noAccountInfo
+			showSignInWithPasswordOption
+		/>
+	);
+};
+WithShowSignInWithPasswordOption.storyName =
+	'with showSignInWithPasswordOption';
+
 export const WithTimer = () => {
 	return (
 		<EmailSentInformationBox
