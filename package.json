@@ -124,7 +124,7 @@
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.0",
 		"@guardian/ab-core": "8.0.1",
-		"@guardian/libs": "0.0.0-canary-20250211103036",
+		"@guardian/libs": "0.0.0-canary-20250212172814",
 		"@guardian/source": "^8.0.1",
 		"@guardian/source-development-kitchen": "^14.0.0",
 		"@okta/jwt-verifier": "^4.0.1",
