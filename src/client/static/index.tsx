@@ -27,7 +27,10 @@ if (!routingConfig.clientState.pageData?.isNativeApp) {
 			const country = await getLocale();
 
 			if (country) {
-				cmp.init({ country });
+				cmp.init({
+					country,
+					useNonAdvertisedList: true,
+				});
 			}
 		})();
 	}
