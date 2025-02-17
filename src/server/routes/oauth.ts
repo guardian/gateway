@@ -376,6 +376,33 @@ const authenticationHandler = async (
 		// track the success metric
 		trackMetric('OAuthAuthenticationCallback::Success');
 
+		// track social sign in metrics
+		if (authState.data?.socialProvider) {
+			if (isSocialRegistration) {
+				// track new social user sign in
+				trackMetric('OktaIDXSocialRegistration::Success');
+				switch (authState.data.socialProvider) {
+					case 'apple':
+						trackMetric('OktaIDXSocialRegistration::Apple');
+						break;
+					case 'google':
+						trackMetric('OktaIDXSocialRegistration::Google');
+						break;
+				}
+			} else {
+				// track existing social user sign in
+				trackMetric('OktaIDXSocialSignIn::Success');
+				switch (authState.data.socialProvider) {
+					case 'apple':
+						trackMetric('OktaIDXSocialSignIn::Apple');
+						break;
+					case 'google':
+						trackMetric('OktaIDXSocialSignIn::Google');
+						break;
+				}
+			}
+		}
+
 		/** ========================================================================
 		 *  ONWARD REDIRECT HANDLING
 		 *  =========================================================================
