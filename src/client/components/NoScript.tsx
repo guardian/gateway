@@ -7,16 +7,21 @@ import {
 	errorContextLastTypeSpacing,
 	errorMessageStyles,
 } from '@/client/styles/Shared';
-import { ExternalLink } from './ExternalLink';
 
+// don't use any non-default html tags, or react components,
+// inside the context within the noscript tag, as this
+// has the possibility to break styling outside of the noscript tag
 export const NoScriptContext = () => (
 	<>
 		<p css={errorContextSpacing}>
 			We use JavaScript to provide a seamless and secure authentication
 			experience. Please{' '}
-			<ExternalLink href="https://www.whatismybrowser.com/guides/how-to-enable-javascript/">
+			<a
+				href="https://www.whatismybrowser.com/guides/how-to-enable-javascript/"
+				rel="noopener noreferrer"
+			>
 				enable JavaScript
-			</ExternalLink>{' '}
+			</a>{' '}
 			in your browser settings and reload the page.
 		</p>
 		<p css={[errorContextSpacing, errorContextLastTypeSpacing]}>
