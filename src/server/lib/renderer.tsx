@@ -64,7 +64,6 @@ const clientStateFromRequestStateLocals = ({
 	abTesting,
 	clientHosts,
 	recaptchaConfig,
-	sentryConfig,
 	requestId,
 }: RequestState): ClientState => {
 	const clientState: ClientState = {
@@ -75,7 +74,6 @@ const clientStateFromRequestStateLocals = ({
 		clientHosts,
 		recaptchaConfig,
 		queryParams,
-		sentryConfig,
 		shortRequestId: requestId?.split('-').at(0),
 	};
 

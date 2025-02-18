@@ -84,7 +84,7 @@ describe('Content Security Policy headers', () => {
 			);
 			expect(splitCSPHeader).toContain('font-src assets.guim.co.uk');
 			expect(splitCSPHeader).toContain(
-				`connect-src vendorlist.consensu.org consent-logs.${apiDomain} sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com o14302.ingest.sentry.io`,
+				`connect-src vendorlist.consensu.org consent-logs.${apiDomain} sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com`,
 			);
 			expect(splitCSPHeader).toContain("object-src 'none'");
 			expect(splitCSPHeader).toContain("script-src-attr 'none'");

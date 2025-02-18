@@ -5,7 +5,6 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
-import { Stage } from '@/shared/model/Configuration';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { GatewayError } from '@/shared/model/Errors';
 
@@ -85,12 +84,6 @@ export interface RecaptchaConfig {
 	recaptchaSiteKey: string;
 }
 
-export interface SentryConfig {
-	build?: string;
-	stage?: Stage;
-	dsn: string;
-}
-
 export interface ClientHosts {
 	idapiBaseUrl: string;
 	oauthBaseUrl: string;
@@ -104,7 +97,6 @@ export interface ClientState {
 	abTesting?: ABTesting;
 	clientHosts: ClientHosts;
 	recaptchaConfig: RecaptchaConfig;
-	sentryConfig: SentryConfig;
 	//just the first group of the request id UUID
 	shortRequestId?: string;
 }

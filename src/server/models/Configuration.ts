@@ -22,7 +22,6 @@ export interface Configuration {
 	oauthBaseUrl: string;
 	okta: Okta;
 	githubRunNumber: string;
-	sentryDsn: string;
 	redis: RedisConfiguration;
 	accountManagementUrl: string;
 	rateLimiter: RateLimiterConfiguration;

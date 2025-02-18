@@ -5,7 +5,6 @@ import {
 	CsrfState,
 	PageData,
 	RecaptchaConfig,
-	SentryConfig,
 } from '@/shared/model/ClientState';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
 import { OphanConfig } from '@/server/lib/ophan';
@@ -41,7 +40,6 @@ export interface RequestState {
 	clientHosts: ClientHosts;
 	recaptchaConfig: RecaptchaConfig;
 	ophanConfig: OphanConfig;
-	sentryConfig: SentryConfig;
 	browser: Bowser.Parser.Details;
 	oauthState?: OAuthState;
 	requestId?: string;
