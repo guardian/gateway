@@ -35,7 +35,6 @@ import {
 } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
 import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
-import { NoScript } from './NoScript';
 
 export interface MainFormProps {
 	wideLayout?: boolean;
@@ -279,7 +278,6 @@ export const MainForm = ({
 			onInvalid={(e) => onInvalid && onInvalid(e)}
 			data-testid="main-form"
 		>
-			{recaptchaEnabled && <NoScript />}
 			{formError && (
 				<GatewayErrorSummary
 					gatewayError={formError}

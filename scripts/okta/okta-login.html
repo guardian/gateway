@@ -16,48 +16,9 @@
 			#okta-login-container {
 				visibility: hidden;
 			}
-			/* basic noscript styling */
-			#noscript {
-				color: #121212;
-				font-family:
-					'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial,
-					sans-serif;
-				font-size: 16px;
-				line-height: 1.5;
-				margin: 10px auto;
-				max-width: 600px;
-				padding: 20px;
-			}
 		</style>
 	</head>
 	<body>
-		<noscript>
-			<div id="noscript">
-				<p>
-					<b>The Guardian</b>
-				</p>
-				<p>
-					<b>
-						Please
-						<a
-							href="https://www.whatismybrowser.com/guides/how-to-enable-javascript/"
-							>enable JavaScript</a
-						>
-						in your browser/device settings and try again.
-					</b>
-				</p>
-				<p>
-					We use JavaScript to provide a seamless and secure authentication
-					experience.
-				</p>
-				<p>
-					For further help please contact our customer service team at
-					<a href="mailto:signinsupport@theguardian.com"
-						>signinsupport@theguardian.com</a
-					>.
-				</p>
-			</div>
-		</noscript>
 		<div id="okta-login-container"></div>
 		{{{OktaUtil}}}
 		<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@main/scripts/okta/okta-login.min.js"></script>
