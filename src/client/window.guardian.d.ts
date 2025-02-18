@@ -1,6 +1,7 @@
 /// <reference types="@emotion/react/types/css-prop" />
 
 import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
+import { Subscription } from '@guardian/libs';
 
 declare global {
 	/*
@@ -13,6 +14,9 @@ declare global {
 				record: (_: object) => void;
 				viewId: string;
 				pageViewId: string;
+			};
+			logger: {
+				subscribeTo: (subscription: Subscription) => void;
 			};
 		};
 		Cypress: unknown;

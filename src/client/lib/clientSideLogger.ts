@@ -1,5 +1,6 @@
 import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
+import { log } from '@guardian/libs';
 
 class ClientSideLogger extends BaseLogger {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- allow any for error
@@ -11,14 +12,17 @@ class ClientSideLogger extends BaseLogger {
 			error.stack &&
 			typeof error.message === 'string'
 		) {
-			// todo: log the error stack as well as the message
+			log('identity', 'error', message, error.stack);
+			return;
 		}
 
 		if (error) {
-			// todo: log the error as an object
+			log('identity', 'error', message, error);
+			return;
 		}
 
-		// todo: log the message
+		log('identity', level, message);
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error

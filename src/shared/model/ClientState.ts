@@ -7,6 +7,7 @@ import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { GatewayError } from '@/shared/model/Errors';
+import { Stage } from './Configuration';
 
 export interface FieldError {
 	field: string;
@@ -26,6 +27,10 @@ interface GlobalMessage {
 export type IsNativeApp = 'android' | 'ios' | undefined;
 
 export interface PageData {
+	// environment
+	stage?: Stage;
+	build?: string;
+
 	// general page data
 	returnUrl?: string;
 	email?: string;

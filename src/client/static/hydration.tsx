@@ -6,6 +6,7 @@ import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { ABProvider } from '@/client/components/ABReact';
+import { log } from '@guardian/libs';
 
 type Props = {
 	routingConfig: RoutingConfig;
@@ -14,8 +15,21 @@ type Props = {
 export const hydrateApp = ({ routingConfig }: Props) => {
 	const clientState = routingConfig.clientState;
 
-	const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
-		clientState;
+	const {
+		abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
+		pageData: { stage, build } = {},
+	} = clientState;
+
+	if (stage === 'DEV' && typeof window !== 'undefined') {
+		window.guardian.logger.subscribeTo('identity');
+	}
+
+	// this won't be logged unless the logger is subscribed to the identity channel
+	// which it is in the dev environment
+	log('identity', 'info', 'Hydrating Gateway', {
+		stage,
+		build,
+	});
 
 	hydrateRoot(
 		document.getElementById('app')!,

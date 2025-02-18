@@ -25,7 +25,8 @@ import {
 import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { getPasscodeSendAgainTimer } from '@/server/lib/passcodeSendAgainTimer';
 
-const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha } = getConfiguration();
+const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha, stage, githubRunNumber } =
+	getConfiguration();
 
 export const requestStateHasOAuthTokens = (
 	requestState: RequestState,
@@ -95,6 +96,8 @@ const getRequestState = async (
 	return {
 		queryParams,
 		pageData: {
+			stage,
+			build: githubRunNumber,
 			geolocation: getGeolocationRegion(req),
 			returnUrl: queryParams.returnUrl,
 			isNativeApp,
