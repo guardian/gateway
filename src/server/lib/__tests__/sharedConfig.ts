@@ -40,7 +40,6 @@ const defaultEnv = {
 	OKTA_IDP_APPLE: 'okta-idp-apple',
 	OKTA_IDP_GOOGLE: 'okta-idp-google',
 	OKTA_GUARDIAN_USERS_ALL_GROUP_ID: 'okta-guardian-users-group-id',
-	SENTRY_DSN: 'sentry-dsn',
 	GITHUB_RUN_NUMBER: '5',
 	REDIS_PASSWORD: 'redispassword',
 	REDIS_HOST: 'localhost:1234',

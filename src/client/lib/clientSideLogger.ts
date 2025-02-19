@@ -1,35 +1,10 @@
 import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
-import {
-	captureException,
-	captureMessage,
-	startInactiveSpan,
-	SeverityLevel,
-} from '@sentry/browser';
-
-const getSentryLevel = (level: LogLevel): SeverityLevel => {
-	switch (level) {
-		case LogLevel.ERROR:
-			return 'error';
-		case LogLevel.INFO:
-			return 'info';
-		case LogLevel.WARN:
-			return 'warning';
-		default:
-			return 'log';
-	}
-};
+import { log } from '@guardian/libs';
 
 class ClientSideLogger extends BaseLogger {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- allow any for error
 	log(level: LogLevel, message: string, error?: any, extra?: ExtraLogFields) {
-		// Wrap the log in a new Sentry transaction.
-		// Setting `sampled` to true ensures that it is logged every time.
-		const span = startInactiveSpan({
-			name: 'logger-event',
-			forceTransaction: true,
-		});
-
 		if (
 			level === LogLevel.ERROR &&
 			error &&
@@ -37,21 +12,17 @@ class ClientSideLogger extends BaseLogger {
 			error.stack &&
 			typeof error.message === 'string'
 		) {
-			captureException(error, { extra });
-			return span?.end();
+			log('identity', 'error', message, error.stack);
+			return;
 		}
 
 		if (error) {
-			captureMessage(`${message} - ${error}`, {
-				level: getSentryLevel(level),
-				extra,
-			});
-			return span?.end();
+			log('identity', 'error', message, error);
+			return;
 		}
 
-		// should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
-		captureMessage(message, { level: getSentryLevel(level), extra });
-		return span?.end();
+		log('identity', level, message);
+		return;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error

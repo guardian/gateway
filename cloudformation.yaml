@@ -26,9 +26,6 @@ Parameters:
   RedisHost:
     Description: The Redis server URL, used for rate limiting.
     Type: AWS::SSM::Parameter::Value<String>
-  SentryDsn:
-    Description: Public data source name for us to send Sentry logs to
-    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -346,7 +343,6 @@ Resources:
               Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
               Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
               Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
-              Environment=SENTRY_DSN=${SentryDsn}
               Environment=REDIS_PASSWORD=$REDIS_PASSWORD
               Environment=REDIS_HOST=${RedisHost}
               Environment=REDIS_SSL_ON=true

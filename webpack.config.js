@@ -10,7 +10,6 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin =
 	require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const webpack = require('webpack');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('./.swcrc.config');
 
@@ -198,11 +197,6 @@ const browser = ({ isLegacy }) => {
 		new AssetsPlugin({
 			path: path.resolve(__dirname, 'build'),
 			filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
-		}),
-		// Reduce Sentry bundle size
-		new webpack.DefinePlugin({
-			__SENTRY_DEBUG__: false,
-			__SENTRY_TRACING__: false,
 		}),
 	];
 

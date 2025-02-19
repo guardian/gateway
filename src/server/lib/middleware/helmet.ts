@@ -21,7 +21,6 @@ enum CSP_VALID_URI {
 	GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
 	CMP = `sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com`,
 	HAVEIBEENPWNED = 'https://api.pwnedpasswords.com',
-	SENTRY = 'o14302.ingest.sentry.io',
 }
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
@@ -62,7 +61,6 @@ const helmetConfig: HelmetOptions = {
 				CSP_VALID_URI.HAVEIBEENPWNED,
 				idapiOrigin,
 				CSP_VALID_URI.GOOGLE_RECAPTCHA,
-				CSP_VALID_URI.SENTRY,
 			],
 			frameSrc: [CSP_VALID_URI.CMP, CSP_VALID_URI.GOOGLE_RECAPTCHA],
 			formAction: null,

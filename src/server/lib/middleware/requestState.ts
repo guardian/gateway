@@ -25,14 +25,8 @@ import {
 import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { getPasscodeSendAgainTimer } from '@/server/lib/passcodeSendAgainTimer';
 
-const {
-	idapiBaseUrl,
-	oauthBaseUrl,
-	googleRecaptcha,
-	stage,
-	githubRunNumber,
-	sentryDsn,
-} = getConfiguration();
+const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha, stage, githubRunNumber } =
+	getConfiguration();
 
 export const requestStateHasOAuthTokens = (
 	requestState: RequestState,
@@ -102,6 +96,8 @@ const getRequestState = async (
 	return {
 		queryParams,
 		pageData: {
+			stage,
+			build: githubRunNumber,
 			geolocation: getGeolocationRegion(req),
 			returnUrl: queryParams.returnUrl,
 			isNativeApp,
@@ -128,11 +124,6 @@ const getRequestState = async (
 			bwid: req.cookies.bwid,
 			consentUUID: req.cookies.consentUUID,
 			viewId: queryParams.refViewId,
-		},
-		sentryConfig: {
-			build: githubRunNumber,
-			stage,
-			dsn: sentryDsn,
 		},
 		browser: browser.getBrowser(),
 		requestId: req.get('x-request-id'),
