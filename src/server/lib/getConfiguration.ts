@@ -194,7 +194,6 @@ export const getConfiguration = (): Configuration => {
 		},
 	};
 
-	const sentryDsn = getOrDefault(process.env.SENTRY_DSN, '');
 	const githubRunNumber = getOrDefault(process.env.GITHUB_RUN_NUMBER, '0');
 
 	const redis: RedisConfiguration = {
@@ -235,7 +234,6 @@ export const getConfiguration = (): Configuration => {
 		oauthBaseUrl,
 		okta,
 		githubRunNumber,
-		sentryDsn,
 		redis,
 		accountManagementUrl,
 		rateLimiter,

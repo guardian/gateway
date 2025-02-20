@@ -122,10 +122,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "The Redis server URL, used for rate limiting.",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "SentryDsn": {
-      "Description": "Public data source name for us to send Sentry logs to",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
     "SignInPageUrl": {
       "Description": "Sign in page URL used as a fallback if auth redirect retrieval fails.",
       "Type": "AWS::SSM::Parameter::Value<String>",
@@ -1148,7 +1144,6 @@ Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
 Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
 Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
 Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
-Environment=SENTRY_DSN=\${SentryDsn}
 Environment=REDIS_PASSWORD=$REDIS_PASSWORD
 Environment=REDIS_HOST=\${RedisHost}
 Environment=REDIS_SSL_ON=true

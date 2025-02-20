@@ -34,7 +34,6 @@ describe('getConfiguration', () => {
 		process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customoauthserverid';
 		process.env.OKTA_CLIENT_ID = 'oktaclientid';
 		process.env.OKTA_CLIENT_SECRET = 'oktaclientsecret';
-		process.env.SENTRY_DSN = 'sentry-dsn';
 		process.env.GITHUB_RUN_NUMBER = '5';
 		process.env.REDIS_PASSWORD = 'redispassword';
 		process.env.REDIS_HOST = 'localhost:1234';
@@ -108,7 +107,6 @@ describe('getConfiguration', () => {
 				},
 			},
 			githubRunNumber: '5',
-			sentryDsn: 'sentry-dsn',
 			redis: {
 				password: 'redispassword',
 				host: 'localhost:1234',

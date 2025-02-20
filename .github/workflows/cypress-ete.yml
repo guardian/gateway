@@ -115,9 +115,6 @@ jobs:
           OKTA_IDP_APPLE: ${{ secrets.OKTA_IDP_APPLE }}
           OKTA_IDP_GOOGLE: ${{ secrets.OKTA_IDP_GOOGLE }}
           OKTA_GUARDIAN_USERS_ALL_GROUP_ID: ${{ secrets.OKTA_GUARDIAN_USERS_ALL_GROUP_ID }}
-          # This is a public URL+key sent to Sentry on the client side
-          # We disable Sentry for our tests
-          SENTRY_DSN: ''
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_SSL_ON: false
