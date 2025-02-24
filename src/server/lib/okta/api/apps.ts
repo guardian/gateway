@@ -35,6 +35,7 @@ export const getApp = async (id: string): Promise<AppResponse> => {
 		headers: { ...defaultHeaders(), ...authorizationHeader() },
 	}).then(handleAppResponse);
 
+	// eslint-disable-next-line functional/immutable-data -- we need to cache the app, so  we need to mutate it here
 	AppCache.set(id, app);
 
 	return app;
