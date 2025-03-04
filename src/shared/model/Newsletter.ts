@@ -1,3 +1,4 @@
+import { Literal } from '@/shared/types';
 export interface NewsLetter {
 	id: string;
 	nameId: string;
@@ -7,37 +8,37 @@ export interface NewsLetter {
 	subscribed?: boolean;
 }
 
-export enum Newsletters {
+export const Newsletters = {
 	// General newsletters
-	WELL_ACTUALLY = '6039',
+	WELL_ACTUALLY: '6039',
 	// US newsletters
-	HEADLINES_US = '4152',
-	THE_STAKES_US = '6042',
-	TRUMP_ON_TRIAL_US = '6032',
+	HEADLINES_US: '4152',
+	THE_STAKES_US: '6042',
+	TRUMP_ON_TRIAL_US: '6032',
 	// AUS newsletters
-	MORNING_MAIL_AU = '4148',
-	AFTERNOON_UPDATE_AU = '6023',
-	THE_CRUNCH_AU = '6034',
-	SAVED_FOR_LATER_AU = '6003',
+	MORNING_MAIL_AU: '4148',
+	AFTERNOON_UPDATE_AU: '6023',
+	THE_CRUNCH_AU: '6034',
+	SAVED_FOR_LATER_AU: '6003',
 	// Registration newsletters
-	SATURDAY_EDITION = '6031',
-	FEAST = '6002',
-	WEEKEND_MAIL_AU = '6043',
-	WEEKEND_US = '6044',
+	SATURDAY_EDITION: '6031',
+	FEAST: '6002',
+	WEEKEND_MAIL_AU: '6043',
+	WEEKEND_US: '6044',
 	// Registration newsletter bundles (parsed to individual newsletters in the backend)
-	AU_BUNDLE = 'auBundle',
-	US_BUNDLE = 'usBundle',
-}
+	AU_BUNDLE: 'auBundle',
+	US_BUNDLE: 'usBundle',
+} as const;
 
 export type NewslettersWithImages =
-	| Newsletters.MORNING_MAIL_AU
-	| Newsletters.AFTERNOON_UPDATE_AU
-	| Newsletters.SAVED_FOR_LATER_AU
-	| Newsletters.THE_CRUNCH_AU
-	| Newsletters.HEADLINES_US
-	| Newsletters.THE_STAKES_US
-	| Newsletters.WELL_ACTUALLY
-	| Newsletters.TRUMP_ON_TRIAL_US;
+	| typeof Newsletters.MORNING_MAIL_AU
+	| typeof Newsletters.AFTERNOON_UPDATE_AU
+	| typeof Newsletters.SAVED_FOR_LATER_AU
+	| typeof Newsletters.THE_CRUNCH_AU
+	| typeof Newsletters.HEADLINES_US
+	| typeof Newsletters.THE_STAKES_US
+	| typeof Newsletters.WELL_ACTUALLY
+	| typeof Newsletters.TRUMP_ON_TRIAL_US;
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
@@ -49,7 +50,7 @@ type RegistrationNewsletterFormIds =
 	| 'usBundle';
 
 export interface RegistrationNewsletterFormFields {
-	id: Newsletters;
+	id: Literal<typeof Newsletters>;
 	label: string;
 	context: string;
 }
@@ -91,8 +92,8 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 };
 
 export const newsletterBundleToIndividualNewsletters = (
-	bundleId: Newsletters.US_BUNDLE | Newsletters.AU_BUNDLE,
-): Newsletters[] => {
+	bundleId: typeof Newsletters.US_BUNDLE | typeof Newsletters.AU_BUNDLE,
+): Literal<typeof Newsletters>[] => {
 	switch (bundleId) {
 		case Newsletters.US_BUNDLE:
 			return [Newsletters.SATURDAY_EDITION, Newsletters.WEEKEND_US];
