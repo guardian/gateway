@@ -1,10 +1,17 @@
 import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
+import { Literal } from '@/shared/types';
 import { log } from '@guardian/libs';
 
 class ClientSideLogger extends BaseLogger {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars -- allow any for error
-	log(level: LogLevel, message: string, error?: any, extra?: ExtraLogFields) {
+	log(
+		level: Literal<typeof LogLevel>,
+		message: string,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
+		error?: any,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars -- allow unused extra, this is ignored on client side logger
+		extra?: ExtraLogFields,
+	) {
 		if (
 			level === LogLevel.ERROR &&
 			error &&

@@ -117,15 +117,15 @@ export type ResetPasswordUrlResponse = z.infer<
 >;
 
 // https://developer.okta.com/docs/reference/api/users/#user-status
-export enum Status {
-	STAGED = 'STAGED',
-	ACTIVE = 'ACTIVE',
-	PROVISIONED = 'PROVISIONED',
-	RECOVERY = 'RECOVERY',
-	PASSWORD_EXPIRED = 'PASSWORD_EXPIRED',
-	SUSPENDED = 'SUSPENDED',
-	DEPROVISIONED = 'DEPROVISIONED',
-}
+export const Status = {
+	STAGED: 'STAGED',
+	ACTIVE: 'ACTIVE',
+	PROVISIONED: 'PROVISIONED',
+	RECOVERY: 'RECOVERY',
+	PASSWORD_EXPIRED: 'PASSWORD_EXPIRED',
+	SUSPENDED: 'SUSPENDED',
+	DEPROVISIONED: 'DEPROVISIONED',
+} as const;
 
 // https://developer.okta.com/docs/reference/api/sessions/#session-object
 const sessionResponseSchema = z.object({

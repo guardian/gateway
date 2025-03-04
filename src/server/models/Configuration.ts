@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-duplicate-enum-values -- allow duplicates in enums within this file e.g. for GU_API_DOMAIN */
 import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { Stage } from '@/shared/model/Configuration';
 
@@ -49,23 +48,24 @@ export interface Okta {
 	};
 }
 
-export enum GU_DOMAIN {
-	DEV = 'thegulocal.com',
-	CODE = 'code.dev-theguardian.com',
-	PROD = 'theguardian.com',
-}
+export const GU_DOMAIN = {
+	DEV: 'thegulocal.com',
+	CODE: 'code.dev-theguardian.com',
+	PROD: 'theguardian.com',
+} as const;
 
-export enum GU_API_DOMAIN {
-	DEV = 'code.dev-guardianapis.com',
-	CODE = 'code.dev-guardianapis.com',
-	PROD = 'guardianapis.com',
-}
+export const GU_API_DOMAIN = {
+	DEV: 'code.dev-guardianapis.com',
+	CODE: 'code.dev-guardianapis.com',
+	PROD: 'guardianapis.com',
+} as const;
 
-export enum GU_MANAGE_URL {
-	DEV = 'https://manage.code.dev-theguardian.com',
-	CODE = 'https://manage.code.dev-theguardian.com',
-	PROD = 'https://manage.theguardian.com',
-}
+export const GU_MANAGE_URL = {
+	DEV: 'https://manage.code.dev-theguardian.com',
+	CODE: 'https://manage.code.dev-theguardian.com',
+	PROD: 'https://manage.theguardian.com',
+} as const;
+
 export interface RedisConfiguration {
 	password: string;
 	host: string;
