@@ -5,14 +5,14 @@ export interface Consent {
 	consented?: boolean;
 }
 
-export enum Consents {
-	ADVERTISING = 'personalised_advertising',
+export const Consents = {
+	ADVERTISING: 'personalised_advertising',
 	// OPT OUT API CONSENTS (modeled as opt ins in Gateway)
-	PROFILING = 'profiling_optin',
+	PROFILING: 'profiling_optin',
 	// PRODUCT CONSENTS
-	SIMILAR_GUARDIAN_PRODUCTS = 'similar_guardian_products',
-	JOBS = 'jobs',
-}
+	SIMILAR_GUARDIAN_PRODUCTS: 'similar_guardian_products',
+	JOBS: 'jobs',
+} as const;
 
 export const CONSENTS_DATA_PAGE: string[] = [
 	Consents.PROFILING, // modelled as an opt in in Gateway
