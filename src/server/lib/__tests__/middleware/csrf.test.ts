@@ -11,16 +11,18 @@ const testToken =
 // moved mocks before importing csrf module
 // to avoid "ReferenceError: Cannot access 'digestSpy' before initialization"
 const digestSpy = jest.fn();
-const randomBytesSpy = jest.fn();
+const randomBytesSpy = jest
+	.fn()
+	.mockReturnValue(Buffer.from(testToken, 'base64url'));
+
+// Mock crypto module
 jest.mock('crypto', () => ({
 	createHmac: () => ({
 		update: () => ({
 			digest: digestSpy.mockReturnValue('hash'),
 		}),
 	}),
-	randomBytes: randomBytesSpy.mockReturnValue(
-		Buffer.from(testToken, 'base64url'),
-	),
+	randomBytes: () => randomBytesSpy(),
 }));
 
 import { csrf, invalidCsrfTokenError, cookieName } from '@/server/lib/csrf';

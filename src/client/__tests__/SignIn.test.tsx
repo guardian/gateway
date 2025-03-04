@@ -1,9 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-/** @jsx jsx */
-
-import { jsx } from '@emotion/react';
 import { render, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom/jest-globals';
 import { SignIn, SignInProps } from '../pages/SignIn';

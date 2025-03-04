@@ -1,6 +1,8 @@
 /* eslint-disable functional/immutable-data */
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- Jest config
+const config = require('./.swcrc.config');
+
 module.exports = {
-	preset: 'ts-jest',
 	testEnvironment: 'node',
 	clearMocks: false,
 	moduleNameMapper: {
@@ -23,10 +25,11 @@ module.exports = {
 		'cdk',
 	],
 	transform: {
-		'<regex_match_files>': [
-			'ts-jest',
+		'^.+\\.(t|j)sx?$': [
+			'@swc/jest',
 			{
-				isolatedModules: true,
+				// isolatedModules: true,
+				...config.options,
 			},
 		],
 	},

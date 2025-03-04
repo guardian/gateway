@@ -1,9 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-/** @jsx jsx */
 
-import { jsx } from '@emotion/react';
 import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/jest-globals';
 import { Registration, RegistrationProps } from '../pages/Registration';

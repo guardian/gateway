@@ -36,7 +36,7 @@ import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connec
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { changePasswordMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
-import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
+import { setPasswordAndRedirect } from '@/server/lib/okta/idx/shared/submitPasscode';
 
 const { passcodesEnabled } = getConfiguration();
 

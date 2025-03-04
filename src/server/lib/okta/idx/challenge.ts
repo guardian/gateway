@@ -1,16 +1,7 @@
 import { z } from 'zod';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
-import { logger } from '@/server/lib/serverSideLogger';
-import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { Request } from 'express';
-import { setupJobsUserInOkta } from '@/server/lib/jobs';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import {
 	CompleteLoginResponse,
 	completeLoginResponseSchema,
-	getLoginRedirectUrl,
 	idxFetch,
 } from '@/server/lib/okta/idx/shared/idxFetch';
 import {
@@ -25,9 +16,6 @@ import {
 	validateRemediation,
 	Authenticators,
 } from '@/server/lib/okta/idx/shared/schemas';
-import { submitPassword } from '@/server/lib/okta/idx/shared/submitPasscode';
-import { IntrospectRemediationNames } from '@/server/lib/okta/idx/introspect';
-import { OAuthError } from '@/server/models/okta/Error';
 
 // list of all possible remediations for the challenge response
 export const challengeRemediations = z.union([
@@ -285,104 +273,6 @@ export const challengeResend = (
 		schema: challengeAnswerResponseSchema,
 		ip,
 	});
-};
-
-/**
- * @name setPasswordAndRedirect
- * @description Okta IDX API/Interaction Code flow - Answer a challenge with a password, and redirect the user to set a global session and then back to the app. This could be one the final possible steps in the authentication process.
- * @param stateHandle - The state handle from the previous step
- * @param password - The password to set
- * @param expressReq - The express request object
- * @param expressRes - The express response object
- * @param introspectRemediation - The remediation object name to validate the introspect response against
- * @param path - The path of the page
- * @param ip - The ip address
- * @returns Promise<void> - Performs a express redirect
- */
-export const setPasswordAndRedirect = async ({
-	stateHandle,
-	password,
-	expressReq,
-	expressRes,
-	introspectRemediation,
-	path,
-	ip,
-}: {
-	stateHandle: IdxBaseResponse['stateHandle'];
-	password: string;
-	expressReq: Request;
-	expressRes: ResponseWithRequestState;
-	introspectRemediation: IntrospectRemediationNames;
-	path?: string;
-	ip?: string;
-}): Promise<void> => {
-	const challengeAnswerResponse = await submitPassword({
-		stateHandle,
-		password,
-		introspectRemediation,
-		ip,
-		validateBreachedPassword: true,
-		validatePasswordLength: true,
-	});
-
-	if (!isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
-		throw new OAuthError({
-			error: 'idx.invalid.response',
-			error_description: 'The response was not a complete login response',
-		});
-	}
-
-	const loginRedirectUrl = getLoginRedirectUrl(challengeAnswerResponse);
-
-	// set the validation flags in Okta
-	const { id } = challengeAnswerResponse.user.value;
-	if (id) {
-		await validateEmailAndPasswordSetSecurely({
-			id,
-			ip,
-		});
-	} else {
-		logger.error(
-			'Failed to set validation flags in Okta as there was no id',
-			undefined,
-		);
-	}
-
-	// When a jobs user is registering, we add them to the GRS group and set their name
-	if (
-		expressRes.locals.queryParams.clientId === 'jobs' &&
-		path === '/welcome'
-	) {
-		if (id) {
-			const { firstName, secondName } = expressReq.body;
-			await setupJobsUserInOkta(firstName, secondName, id, ip);
-			trackMetric('JobsGRSGroupAgree::Success');
-		} else {
-			logger.error(
-				'Failed to set jobs user name and field in Okta as there was no id',
-			);
-		}
-	}
-
-	updateEncryptedStateCookie(expressReq, expressRes, {
-		// Update the passwordSetOnWelcomePage only when we are on the welcome page
-		...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
-		// We want to remove all query params from the cookie after the password is set,
-		queryParams: undefined,
-	});
-
-	// fire ophan component event if applicable
-	if (expressRes.locals.queryParams.componentEventParams) {
-		void sendOphanComponentEventFromQueryParamsServer(
-			expressRes.locals.queryParams.componentEventParams,
-			'SIGN_IN',
-			'web',
-			expressRes.locals.ophanConfig.consentUUID,
-		);
-	}
-
-	// redirect the user to set a global session and then back to completing the authorization flow
-	return expressRes.redirect(303, loginRedirectUrl);
 };
 
 // Type to extract all the remediation names from the challenge/answer response

@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
-		"jsx": "react",
+		"jsx": "preserve",
 		"module": "commonjs",
 		"noUnusedLocals": true,
 		"outDir": "build",
@@ -17,7 +17,8 @@
 		},
 		"lib": ["ES2022", "DOM"],
 		"importHelpers": true,
-		"allowJs": true
+		"allowJs": true,
+		"isolatedModules": true
 	},
 	"include": [
 		"src",
