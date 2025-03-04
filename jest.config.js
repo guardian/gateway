@@ -28,7 +28,6 @@ module.exports = {
 		'^.+\\.(t|j)sx?$': [
 			'@swc/jest',
 			{
-				// isolatedModules: true,
 				...config.options,
 			},
 		],
