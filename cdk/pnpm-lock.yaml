@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@guardian/cdk':
         specifier: 61.3.1
-        version: 61.3.1(aws-cdk-lib@2.181.1(constructs@10.4.2))(aws-cdk@2.1001.0)(constructs@10.4.2)
+        version: 61.3.1(aws-cdk-lib@2.181.1(constructs@10.4.2))(aws-cdk@2.1002.0)(constructs@10.4.2)
       '@guardian/eslint-config-typescript':
         specifier: 12.0.0
         version: 12.0.0(eslint@9.21.0)(tslib@2.7.0)(typescript@5.8.2)
@@ -27,8 +27,8 @@ importers:
         specifier: 22.13.8
         version: 22.13.8
       aws-cdk:
-        specifier: 2.1001.0
-        version: 2.1001.0
+        specifier: 2.1002.0
+        version: 2.1002.0
       aws-cdk-lib:
         specifier: 2.181.1
         version: 2.181.1(constructs@10.4.2)
@@ -716,8 +716,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1001.0:
-    resolution: {integrity: sha512-Wp6fKNXcxBm+f8U1GkLV4gEgqq1pu5uwyDCMBg7ZB/6CtP+PsD/mPhuKyMULNWucDvYN8oy70XLOkMnxa3NWFw==}
+  aws-cdk@2.1002.0:
+    resolution: {integrity: sha512-2lq1ho1Rq/sDMTieA6zna9aogk3qHM3Oq/mF7QCx2Jj0+e8/ZJOJW+5xU9oUBclRpUIxfUevC93H3eCSr1VW6g==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
 
@@ -2693,10 +2693,10 @@ snapshots:
       '@eslint/core': 0.12.0
       levn: 0.4.1
 
-  '@guardian/cdk@61.3.1(aws-cdk-lib@2.181.1(constructs@10.4.2))(aws-cdk@2.1001.0)(constructs@10.4.2)':
+  '@guardian/cdk@61.3.1(aws-cdk-lib@2.181.1(constructs@10.4.2))(aws-cdk@2.1002.0)(constructs@10.4.2)':
     dependencies:
       '@oclif/core': 3.26.6
-      aws-cdk: 2.1001.0
+      aws-cdk: 2.1002.0
       aws-cdk-lib: 2.181.1(constructs@10.4.2)
       aws-sdk: 2.1692.0
       chalk: 4.1.2
@@ -3330,7 +3330,7 @@ snapshots:
       '@aws-cdk/cloud-assembly-schema': 39.2.20
       constructs: 10.4.2
 
-  aws-cdk@2.1001.0:
+  aws-cdk@2.1002.0:
     optionalDependencies:
       fsevents: 2.3.2
 
