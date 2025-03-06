@@ -88,13 +88,15 @@ export const redirectIfLoggedIn = async (
 		});
 
 		return res.type('html').send(html);
-	} catch {
+	} catch (error) {
 		// if the cookie exists, but the session is invalid, we remove the cookie
 		clearOktaCookies(res);
 		// we also clear the identity cookies, to keep the parity
 		clearIDAPICookies(res);
-		logger.info(
+		// error is a warning, as it doesn't affect the user experience
+		logger.warn(
 			'User attempting to access signed-out-only route had an existing Okta session cookie, but it was invalid',
+			error,
 		);
 		//we redirect to /reauthenticate to make sure the cookies has been removed
 		return res.redirect(

@@ -276,44 +276,36 @@ router.post(
 
 // Essentially the email-sent page, but for passcode sign in
 // we're not using /signin/email-sent as that route is used by the security/email validation flow
-router.get(
-	'/signin/code',
-	redirectIfLoggedIn,
-	(req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
+router.get('/signin/code', (req: Request, res: ResponseWithRequestState) => {
+	const state = res.locals;
 
-		const encryptedState = readEncryptedStateCookie(req);
+	const encryptedState = readEncryptedStateCookie(req);
 
-		if (encryptedState?.email && encryptedState.stateHandle) {
-			try {
-				const html = renderer('/signin/code', {
-					requestState: mergeRequestState(state, {
-						pageData: {
-							email: readEncryptedStateCookie(req)?.email,
-							timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
-								encryptedState.stateHandleExpiresAt,
-							),
-						},
-					}),
-					pageTitle: 'Check Your Inbox',
-				});
-				return res.type('html').send(html);
-			} catch (error) {
-				logger.error(`${req.method} ${req.originalUrl} Error`, error);
-			}
+	if (encryptedState?.email && encryptedState.stateHandle) {
+		try {
+			const html = renderer('/signin/code', {
+				requestState: mergeRequestState(state, {
+					pageData: {
+						email: readEncryptedStateCookie(req)?.email,
+						timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+							encryptedState.stateHandleExpiresAt,
+						),
+					},
+				}),
+				pageTitle: 'Check Your Inbox',
+			});
+			return res.type('html').send(html);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl} Error`, error);
 		}
+	}
 
-		// on error, redirect to the sign in page
-		return res.redirect(
-			303,
-			addQueryParamsToPath('/signin', state.queryParams),
-		);
-	},
-);
+	// on error, redirect to the sign in page
+	return res.redirect(303, addQueryParamsToPath('/signin', state.queryParams));
+});
 
 router.post(
 	'/signin/code',
-	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		return await oktaIdxApiSubmitPasscodeController({ req, res });
 	}),
@@ -335,7 +327,6 @@ router.get(
 // Essentially the same as POST /signin, but call the correct controller
 router.post(
 	'/signin/code/resend',
-	redirectIfLoggedIn,
 	handleRecaptcha,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		await oktaIdxApiSignInPasscodeController({ req, res });
