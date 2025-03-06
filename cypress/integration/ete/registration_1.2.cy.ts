@@ -275,7 +275,6 @@ describe('Registration flow - Split 1/2', () => {
 
 		it('registers registrationLocation for email with no existing account if cmp is NOT consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
-			cy.setCookie('GU_country', 'FR');
 			cy.enableCMP();
 			cy.visit(`/register/email`);
 			cy.setCookie('cypress-mock-state', 'FR');
