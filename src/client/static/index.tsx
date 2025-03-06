@@ -21,7 +21,7 @@ ophanInit();
 // load CMP
 if (!routingConfig.clientState.pageData?.isNativeApp) {
 	if (window.Cypress) {
-		cmp.init({ country: 'GB', useNonAdvertisedList: true }); // CI hosted on GithubActions runs in US by default
+		cmp.init({ country: 'FR' }); // CI hosted on GithubActions runs in US by default
 	} else {
 		void (async () => {
 			const country = await getLocale();
