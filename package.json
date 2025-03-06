@@ -16,7 +16,7 @@
 		"start": "node ./build/server.js",
 		"test": "pnpm run lint && pnpm run tsc && pnpm run tsc:cypress && pnpm run knip && pnpm run test:unit",
 		"test:unit": "jest --ci",
-		"tsc": "tsc --noEmit --skipLibCheck",
+		"tsc": "tsc --noEmit --skipLibCheck --erasableSyntaxOnly",
 		"tsc:cypress": "tsc --noEmit --skipLibCheck --project cypress/tsconfig.json",
 		"watch:cypress": "pnpm run tsc:cypress --watch",
 		"watch:server": "mkdir -p ./build && touch ./build/server.js && nodemon --inspect ./build/server.js --watch ./build/server.js --watch .ratelimit.json",

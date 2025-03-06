@@ -3,7 +3,7 @@ import { remSpace } from '@guardian/source/foundations';
 
 import React, { FieldsetHTMLAttributes, useState, useEffect } from 'react';
 import {
-	InputFieldState,
+	InputFieldStates,
 	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
 import ThemedTextInput from '@/client/components/ThemedTextInput';
@@ -29,7 +29,7 @@ const FirstNameInput = (props: NameInputProps) => {
 
 	const [errorMessage, setErrorMessage] = useState<string>();
 
-	const isEmpty = inputFieldState === InputFieldState.EMPTY;
+	const isEmpty = inputFieldState === InputFieldStates.EMPTY;
 
 	useEffect(() => {
 		if (props.onError) {
@@ -61,7 +61,7 @@ const SecondNameInput = (props: NameInputProps) => {
 
 	const [errorMessage, setErrorMessage] = useState<string>();
 
-	const isEmpty = inputFieldState === InputFieldState.EMPTY;
+	const isEmpty = inputFieldState === InputFieldStates.EMPTY;
 
 	useEffect(() => {
 		if (props.onError) {
