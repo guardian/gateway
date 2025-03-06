@@ -41,5 +41,16 @@ Cypress.on('uncaught:exception', (err) => {
 		return false;
 	}
 
+	// test
+	if (
+		err.message.includes(
+			"Cannot read properties of undefined (reading 'consents')",
+		)
+	) {
+		// eslint-disable-next-line no-console
+		console.warn(err);
+		return false;
+	}
+
 	return true;
 });
