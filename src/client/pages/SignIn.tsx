@@ -230,7 +230,9 @@ export const SignIn = ({
 						<MainBodyText>
 							<ThemedLink
 								href={buildUrlWithQueryParams(
-									'/signin/password',
+									isReauthenticate
+										? '/reauthenticate/password'
+										: '/signin/password',
 									{},
 									queryParams,
 									{

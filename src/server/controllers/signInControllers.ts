@@ -396,9 +396,11 @@ export const oktaIdxApiSignInPasscodeController = async ({
 export const oktaIdxApiSignInController = async ({
 	req,
 	res,
+	isReauthenticate = false,
 }: {
 	req: Request;
 	res: ResponseWithRequestState;
+	isReauthenticate?: boolean;
 }) => {
 	// get the email and password from the request body if using passwords
 	// or the "passcode" parameter is a hidden input, which is to determine if the
@@ -621,7 +623,12 @@ export const oktaIdxApiSignInController = async ({
 
 		// if we're using passcodes, and the user is attempting to sign in with a password
 		// on error show the password sign in page
-		const errorPage: RoutePaths = usePasscode ? '/signin' : '/signin/password';
+		const errorPage: RoutePaths = (() => {
+			if (isReauthenticate) {
+				return usePasscode ? '/reauthenticate' : '/reauthenticate/password';
+			}
+			return usePasscode ? '/signin' : '/signin/password';
+		})();
 
 		const html = renderer(errorPage, {
 			requestState: mergeRequestState(res.locals, {
