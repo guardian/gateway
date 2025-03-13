@@ -239,6 +239,25 @@ router.get(
 	}),
 );
 
+router.get(
+	'/reauthenticate/password',
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const email =
+			state.queryParams.signInEmail || readEncryptedStateCookie(req)?.email;
+		const html = renderer('/reauthenticate/password', {
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email,
+					focusPasswordField: !!email,
+				},
+			}),
+			pageTitle: 'Sign in',
+		});
+		return res.type('html').send(html);
+	},
+);
+
 router.post(
 	'/reauthenticate',
 	handleRecaptcha,
@@ -376,6 +395,7 @@ const oktaSignInController = async ({
 			await oktaIdxApiSignInController({
 				req,
 				res,
+				isReauthenticate,
 			});
 			// if successful, the user will be redirected
 			// so we need to check if the headers have been sent to prevent further processing

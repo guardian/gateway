@@ -80,6 +80,12 @@ const routes: Array<{
 		element: <SignInPage isReauthenticate />,
 	},
 	{
+		path: '/reauthenticate/password',
+		element: (
+			<SignInPage isReauthenticate hideSocialButtons forcePasswordPage />
+		),
+	},
+	{
 		path: '/register',
 		element: <RegistrationPage />,
 	},
