@@ -9,9 +9,7 @@ describe('Saturday Edition Geolocation', () => {
 			// eslint-disable-next-line functional/immutable-data
 			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.GB;
 		});
-		cy.enableCMP();
 		cy.visit(`/register/email`);
-		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('exist');
 		cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
 			'exist',
@@ -41,9 +39,7 @@ describe('Saturday Edition Geolocation', () => {
 			// eslint-disable-next-line functional/immutable-data
 			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.EUROPE;
 		});
-		cy.enableCMP();
 		cy.visit(`/register/email`);
-		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('exist');
 		cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
 			'exist',
@@ -73,9 +69,7 @@ describe('Saturday Edition Geolocation', () => {
 			// eslint-disable-next-line functional/immutable-data
 			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.OTHERS;
 		});
-		cy.enableCMP();
 		cy.visit(`/register/email`);
-		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('exist');
 		cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
 			'exist',
@@ -105,9 +99,7 @@ describe('Saturday Edition Geolocation', () => {
 			// eslint-disable-next-line functional/immutable-data
 			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.AMERICA;
 		});
-		cy.enableCMP();
 		cy.visit(`/register/email`);
-		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('not.exist');
 		cy.contains('Weekend newsletters').should('exist');
 		cy.contains(RegistrationNewsletterDescriptions.usBundle).should('exist');
@@ -135,9 +127,7 @@ describe('Saturday Edition Geolocation', () => {
 			// eslint-disable-next-line functional/immutable-data
 			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.AUSTRALIA;
 		});
-		cy.enableCMP();
 		cy.visit(`/register/email`);
-		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('not.exist');
 		cy.contains('Saturday newsletters').should('exist');
 		cy.contains(RegistrationNewsletterDescriptions.auBundle).should('exist');

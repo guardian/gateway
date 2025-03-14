@@ -2,7 +2,6 @@ import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { Consents } from '@/shared/model/Consent';
 
-import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { useAdFreeCookie } from '@/client/lib/hooks/useAdFreeCookie';
 import { NewAccountReview } from '@/client/pages/NewAccountReview';
 
@@ -21,18 +20,14 @@ export const NewAccountReviewPage = () => {
 	const advertising = consents.find(
 		(consent) => consent.id === Consents.ADVERTISING,
 	);
-	const hasCmpConsent = useCmpConsent();
+
 	const isDigitalSubscriber = useAdFreeCookie();
-	const shouldPersonalisedAdvertisingPermissionRender =
-		hasCmpConsent && !isDigitalSubscriber;
 
 	return (
 		<NewAccountReview
 			shortRequestId={shortRequestId}
 			profiling={profiling}
-			advertising={
-				shouldPersonalisedAdvertisingPermissionRender ? advertising : undefined
-			}
+			advertising={isDigitalSubscriber ? undefined : advertising}
 			queryParams={queryParams}
 		/>
 	);
