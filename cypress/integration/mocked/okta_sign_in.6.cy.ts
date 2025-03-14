@@ -28,9 +28,6 @@ describe('Sign in flow', () => {
 
 			cy.setCookie('idx', `the_idx_cookie`);
 
-			// disable the cmp  on the redirect
-			cy.disableCMP();
-
 			cy.visit('/signin');
 
 			cy.contains('Sign in to the Guardian');
@@ -86,9 +83,6 @@ describe('Sign in flow', () => {
 			);
 
 			cy.setCookie('idx', `the_idx_cookie`);
-
-			// disable the cmp  on the redirect
-			cy.disableCMP();
 
 			cy.visit(
 				'/signin?appClientId=123&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
@@ -147,9 +141,6 @@ describe('Sign in flow', () => {
 
 			cy.setCookie('idx', `the_idx_cookie`);
 
-			// disable the cmp  on the redirect
-			cy.disableCMP();
-
 			cy.visit(
 				'/signin?appClientId=456&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
@@ -206,9 +197,6 @@ describe('Sign in flow', () => {
 			);
 
 			cy.setCookie('idx', `the_idx_cookie`);
-
-			// disable the cmp  on the redirect
-			cy.disableCMP();
 
 			cy.visit(
 				'/signin?appClientId=456&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',

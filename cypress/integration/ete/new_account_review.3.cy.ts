@@ -20,10 +20,7 @@ describe('New account review page', () => {
 		// Set the country cookie so we can check that it's set correctly on the user
 		cy.setCookie('cypress-mock-state', 'GB');
 
-		// Consent to CMP so we are shown the personalised advertising checkbox
-		cy.enableCMP();
 		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
-		cy.acceptCMP();
 
 		const timeRequestWasMade = new Date();
 		cy.get('input[name=email]').type(unregisteredEmail);
