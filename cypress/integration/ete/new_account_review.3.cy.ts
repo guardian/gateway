@@ -139,13 +139,10 @@ describe('New account review page', () => {
 				cy.contains('What we mean by signed-in data');
 
 				cy.get('label').should(
-					'not.contain',
+					'contain',
 					'Allow personalised advertising with my signed-in data',
 				);
-				cy.should(
-					'not.contain',
-					'Advertising is a crucial source of our funding',
-				);
+				cy.should('contain', 'Advertising is a crucial source of our funding');
 
 				cy.get('button[type="submit"]').click();
 
