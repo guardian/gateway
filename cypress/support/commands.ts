@@ -11,7 +11,6 @@ import { mockPattern } from './commands/mockPattern';
 import { lastPayloadIs } from './commands/lastPayloadIs';
 import { lastPayloadsAre } from './commands/lastPayloadsAre';
 import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
-
 import {
 	getTestOktaUser,
 	activateTestOktaUser,
