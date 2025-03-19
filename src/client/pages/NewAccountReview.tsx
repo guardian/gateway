@@ -92,7 +92,7 @@ export const NewAccountReview = ({
 						<ToggleSwitchInput
 							id={advertising.id}
 							description="Allow personalised advertising with my signed-in data"
-							defaultChecked={advertising.consented ?? false}
+							defaultChecked={advertising.consented ?? true} // should opt in by default
 						/>
 					)}
 					{!!profiling && (

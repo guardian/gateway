@@ -30,17 +30,29 @@ const profiling: Consent = {
 };
 
 export const WithProfiling = (args: NewAccountReviewProps) => (
-	<NewAccountReview {...args} profiling={profiling} />
+	<NewAccountReview {...args} profiling={profiling} advertising={undefined} />
 );
 WithProfiling.story = {
 	name: 'with profiling consent',
 };
 
-export const WithAdvertising = (args: NewAccountReviewProps) => (
-	<NewAccountReview {...args} advertising={advertising} />
+export const WithAdvertisingConsentSetToFalse = (
+	args: NewAccountReviewProps,
+) => <NewAccountReview {...args} advertising={advertising} />;
+WithAdvertisingConsentSetToFalse.story = {
+	name: 'with advertising consent set to false',
+};
+
+export const WithAdvertisingConsentSetToTrue = (
+	args: NewAccountReviewProps,
+) => (
+	<NewAccountReview
+		{...args}
+		advertising={{ ...advertising, consented: true }}
+	/>
 );
-WithAdvertising.story = {
-	name: 'with advertising consent',
+WithAdvertisingConsentSetToTrue.story = {
+	name: 'with advertising consent set to true',
 };
 
 export const WithBothConsents = (args: NewAccountReviewProps) => (

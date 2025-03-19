@@ -275,10 +275,8 @@ describe('Registration flow - Split 1/2', () => {
 
 		it('registers registrationLocation for email with no existing account if cmp is NOT consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
-			cy.enableCMP();
 			cy.visit(`/register/email`);
 			cy.setCookie('cypress-mock-state', 'FR');
-			cy.declineCMP();
 
 			cy.get('input[name=email]').type(unregisteredEmail);
 
@@ -294,11 +292,9 @@ describe('Registration flow - Split 1/2', () => {
 
 		it('registers registrationLocation for email with no existing account if cmp IS consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
-			cy.enableCMP();
+
 			cy.visit(`/register/email`);
 			cy.setCookie('cypress-mock-state', 'FR');
-			cy.acceptCMP();
-
 			cy.get('input[name=email]').type(unregisteredEmail);
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
