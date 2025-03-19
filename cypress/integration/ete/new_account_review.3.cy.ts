@@ -61,9 +61,7 @@ describe('New account review page', () => {
 				);
 				cy.contains('Advertising is a crucial source of our funding');
 
-				// Flip the switches so personalised advertising is on
-				// and profiling is off
-				cy.get(`label#${Consents.ADVERTISING}_description`).click();
+				// Flip profiling_optout toggle switch
 				cy.get(`label#${Consents.PROFILING}_description`).click();
 				cy.get('button[type="submit"]').click();
 
