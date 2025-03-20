@@ -1,15 +1,4 @@
-# Newsletter Localisation and Updates
-
-Newsletter localisation and general updates is managed in this file:
-`src/shared/lib/newsletterConsentsPageLocalisation.ts`
-
-If we do not have CMP permission then we can only localise editorial content (eg. the edition of the main headlines newsletter)
-
-If we have CMP permission then we localise the entire newsletter selection. Non-permissioned users see the UK editorial content plus any selected "consent" sign up, eg. Events emails (`ConsentsOnNewslettersPageMap`)
-
-SSR localisation relies on country code being sent from the client in the `x-gu-geolcation` header (`src/server/lib/getGeolocationRegion.ts`)
-
----
+# Newsletter localisation
 
 ## Updates
 
