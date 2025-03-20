@@ -92,14 +92,14 @@ export const NewAccountReview = ({
 						<ToggleSwitchInput
 							id={advertising.id}
 							description="Allow personalised advertising with my signed-in data"
-							defaultChecked={advertising.consented ?? true} // should opt in by default
+							defaultChecked // should opt in by default
 						/>
 					)}
 					{!!profiling && (
 						<ToggleSwitchInput
 							id={profiling.id}
 							description="Allow the Guardian to analyse my signed-in data to improve marketing content"
-							defaultChecked={profiling.consented ?? true} // legitimate interests so defaults to true
+							defaultChecked // legitimate interests so defaults to true
 						/>
 					)}
 				</ToggleSwitchList>
