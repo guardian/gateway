@@ -273,24 +273,7 @@ describe('Registration flow - Split 1/2', () => {
 			);
 		});
 
-		it('registers registrationLocation for email with no existing account if cmp is NOT consented', () => {
-			const unregisteredEmail = randomMailosaurEmail();
-			cy.visit(`/register/email`);
-			cy.setCookie('cypress-mock-state', 'FR');
-
-			cy.get('input[name=email]').type(unregisteredEmail);
-
-			cy.get('[data-cy="main-form-submit-button"]').click();
-
-			cy.contains('Enter your code');
-			cy.contains(unregisteredEmail);
-
-			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
-				expect(oktaUser.profile.registrationLocation).to.eq('Europe');
-			});
-		});
-
-		it('registers registrationLocation for email with no existing account if cmp IS consented', () => {
+		it('registers registrationLocation for email with no existing account', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 
 			cy.visit(`/register/email`);

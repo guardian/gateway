@@ -1,6 +1,5 @@
 import { hydrateApp } from '@/client/static/hydration';
 
-// method to check if the cmp should show
 import { RoutingConfig } from '@/client/routes';
 
 import { init as ophanInit } from '@/client/static/analytics/ophan';
