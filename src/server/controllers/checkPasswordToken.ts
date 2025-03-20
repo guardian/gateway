@@ -30,6 +30,7 @@ import {
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
+import { Literal } from '@/shared/types';
 
 const { defaultReturnUri, passcodesEnabled } = getConfiguration();
 
@@ -135,7 +136,7 @@ const oktaIdxApiCheckHandler = async ({
 	pageTitle: PasswordPageTitle;
 	req: Request;
 	res: ResponseWithRequestState;
-	error?: ChangePasswordErrors;
+	error?: Literal<typeof ChangePasswordErrors>;
 	fieldErrors?: FieldError[];
 }) => {
 	const state = res.locals;
@@ -199,7 +200,7 @@ export const checkTokenInOkta = async (
 	pageTitle: PasswordPageTitle,
 	req: Request,
 	res: ResponseWithRequestState,
-	error?: ChangePasswordErrors,
+	error?: Literal<typeof ChangePasswordErrors>,
 	fieldErrors?: FieldError[],
 ) => {
 	const state = res.locals;

@@ -3,6 +3,7 @@ import { createLogger, transports } from 'winston';
 import { formatWithOptions, InspectOptions } from 'util';
 import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
 import { requestContext } from './middleware/requestContext';
+import { Literal } from '@/shared/types';
 
 const winstonLogger = createLogger({
 	transports: [new transports.Console()],
@@ -21,7 +22,7 @@ const formatLogParam = (message?: any) =>
 
 class ServerSideLogger extends BaseLogger {
 	log(
-		level: LogLevel,
+		level: Literal<typeof LogLevel>,
 		message: string,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 		error?: any,
