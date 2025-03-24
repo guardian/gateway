@@ -26,6 +26,7 @@ const { defaultReturnUri, baseUri } = getConfiguration();
 const DotComCookies = [
 	'GU_AF1',
 	'gu_user_features_expiry',
+	'gu_user_benefits_expiry',
 	'gu_paying_member',
 	'gu_recurring_contributor',
 	'gu_digital_subscriber',
