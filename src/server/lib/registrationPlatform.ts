@@ -67,6 +67,6 @@ export const updateRegistrationPlatform = async ({
 			ip,
 		);
 	} catch (error) {
-		logger.error(`Error updating registrationLocation via Okta`, error);
+		logger.error(`Error updating registrationPlatform via Okta`, error);
 	}
 };

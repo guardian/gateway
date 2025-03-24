@@ -290,6 +290,26 @@ describe('Registration flow - Split 1/2', () => {
 			});
 		});
 
+		it('registers registrationLocation and registrationLocationState for email with no existing account', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+
+			cy.visit(`/register/email`);
+			cy.setCookie('cypress-mock-state', 'AU-ACT');
+			cy.get('input[name=email]').type(unregisteredEmail);
+
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+
+			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+				expect(oktaUser.profile.registrationLocation).to.eq('Australia');
+				expect(oktaUser.profile.registrationLocationState).to.eq(
+					'Australian Capital Territory',
+				);
+			});
+		});
+
 		it('successfully blocks the password set page /welcome if a password has already been set', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.visit(`/register/email`);

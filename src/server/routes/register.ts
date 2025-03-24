@@ -31,7 +31,6 @@ import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan
 import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import {
 	challengeResend,
 	isChallengeAnswerCompleteLoginResponse,
@@ -430,7 +429,7 @@ const oktaIdxCreateAccount = async (
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
-	const registrationLocation: RegistrationLocation | undefined =
+	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
 	try {
@@ -459,7 +458,8 @@ const oktaIdxCreateAccount = async (
 			{
 				email,
 				isGuardianUser: true,
-				registrationLocation: registrationLocation,
+				registrationLocation,
+				registrationLocationState,
 				registrationPlatform: await getRegistrationPlatform(appClientId),
 			},
 			req.ip,
@@ -563,8 +563,7 @@ export const OktaRegistration = async (
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
-	const registrationLocation: RegistrationLocation | undefined =
-		getRegistrationLocation(req);
+	const [registrationLocation] = getRegistrationLocation(req);
 
 	// OKTA IDX API FLOW
 	// Attempt to register the user with Okta using the IDX API
