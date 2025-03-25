@@ -31,8 +31,12 @@ const DotComCookies = [
 	'gu_recurring_contributor',
 	'gu_digital_subscriber',
 	'gu_action_required_for',
-	'gu_hide_support_messaging',
 	'gu_one_off_contribution_date',
+];
+
+const DotComCookiesToClear = [
+	'gu_user_benefits_expiry',
+	'gu_hide_support_messaging',
 ];
 
 const OKTA_IDENTITY_CLASSIC_SESSION_COOKIE_NAME = 'sid';
@@ -56,6 +60,10 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 			domain,
 			maxAge: 0, // set to 0 to expire cookie immediately, and clear these cookies
 		});
+	});
+
+	DotComCookiesToClear.forEach((key) => {
+		res.clearCookie(key);
 	});
 };
 
