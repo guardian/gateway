@@ -273,11 +273,11 @@ describe('Registration flow - Split 1/2', () => {
 			);
 		});
 
-		it('registers registrationLocation for email with no existing account if cmp is NOT consented', () => {
+		it('registers registrationLocation for email with no existing account', () => {
 			const unregisteredEmail = randomMailosaurEmail();
+
 			cy.visit(`/register/email`);
 			cy.setCookie('cypress-mock-state', 'FR');
-
 			cy.get('input[name=email]').type(unregisteredEmail);
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
@@ -290,11 +290,11 @@ describe('Registration flow - Split 1/2', () => {
 			});
 		});
 
-		it('registers registrationLocation for email with no existing account if cmp IS consented', () => {
+		it('registers registrationLocation and registrationLocationState for email with no existing account', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 
 			cy.visit(`/register/email`);
-			cy.setCookie('cypress-mock-state', 'FR');
+			cy.setCookie('cypress-mock-state', 'AU-ACT');
 			cy.get('input[name=email]').type(unregisteredEmail);
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
@@ -303,7 +303,10 @@ describe('Registration flow - Split 1/2', () => {
 			cy.contains(unregisteredEmail);
 
 			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
-				expect(oktaUser.profile.registrationLocation).to.eq('Europe');
+				expect(oktaUser.profile.registrationLocation).to.eq('Australia');
+				expect(oktaUser.profile.registrationLocationState).to.eq(
+					'Australian Capital Territory',
+				);
 			});
 		});
 

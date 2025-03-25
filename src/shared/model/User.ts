@@ -1,4 +1,7 @@
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import {
+	RegistrationLocation,
+	RegistrationLocationState,
+} from '@/shared/model/RegistrationLocation';
 import { UserConsent } from '@/shared/model/UserConsents';
 
 export default interface User {
@@ -24,4 +27,5 @@ interface PrivateFields {
 	firstName?: string;
 	secondName?: string;
 	registrationLocation?: RegistrationLocation;
+	registrationLocationState?: RegistrationLocationState;
 }
