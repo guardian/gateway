@@ -50,6 +50,9 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 		// we can't use res.clearCookie because we don't know the exact settings for these cookies
 		// so we overwrite them with an empty string, and expire them immediately
 		res.cookie(key, '', {
+			encode() {
+				return '';
+			},
 			domain,
 			maxAge: 0, // set to 0 to expire cookie immediately, and clear these cookies
 		});
