@@ -26,11 +26,11 @@ const { defaultReturnUri, baseUri } = getConfiguration();
 const DotComCookies = [
 	'GU_AF1',
 	'gu_user_features_expiry',
+	'gu_user_benefits_expiry',
 	'gu_paying_member',
 	'gu_recurring_contributor',
 	'gu_digital_subscriber',
 	'gu_action_required_for',
-	'gu_hide_support_messaging',
 	'gu_one_off_contribution_date',
 ];
 
@@ -44,7 +44,24 @@ const OKTA_IDENTITY_ENGINE_SESSION_COOKIE_NAME = 'idx';
 const clearDotComCookies = (res: ResponseWithRequestState) => {
 	// the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
 	// we also remove the port after the ':' to make it work in localhost for development and testing
-	const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
+	// const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
+
+	/**
+	 * This function is used to get the domain from a URL string
+	 * profile.theguardian.com:9000 => theguardian.com
+	 * profile.code.dev-theguardian.com => dev-theguardian.com
+	 *
+	 * @param {string} urlString
+	 * @return {*}  {string}
+	 */
+	const getDomain = (urlString: string): string => {
+		const hostnameArr = new URL(urlString).hostname.split('.');
+
+		return `${hostnameArr[hostnameArr.length - 2]}.${hostnameArr[hostnameArr.length - 1]}`;
+	};
+
+	const domain = getDomain(baseUri);
+
 	DotComCookies.forEach((key) => {
 		// we can't use res.clearCookie because we don't know the exact settings for these cookies
 		// so we overwrite them with an empty string, and expire them immediately
