@@ -34,11 +34,6 @@ const DotComCookies = [
 	'gu_one_off_contribution_date',
 ];
 
-const DotComCookiesToClear = [
-	'gu_user_benefits_expiry',
-	'gu_hide_support_messaging',
-];
-
 const OKTA_IDENTITY_CLASSIC_SESSION_COOKIE_NAME = 'sid';
 const OKTA_IDENTITY_ENGINE_SESSION_COOKIE_NAME = 'idx';
 
@@ -63,16 +58,9 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 		// we can't use res.clearCookie because we don't know the exact settings for these cookies
 		// so we overwrite them with an empty string, and expire them immediately
 		res.cookie(key, '', {
-			encode() {
-				return '';
-			},
 			domain,
 			maxAge: 0, // set to 0 to expire cookie immediately, and clear these cookies
 		});
-	});
-
-	DotComCookiesToClear.forEach((key) => {
-		res.clearCookie(key);
 	});
 };
 
