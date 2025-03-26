@@ -46,6 +46,14 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 	// we also remove the port after the ':' to make it work in localhost for development and testing
 	// const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
 
+	/**
+	 * This function is used to get the domain from a URL string
+	 * profile.theguardian.com:9000 => theguardian.com
+	 * profile.code.dev-theguardian.com => dev-theguardian.com
+	 *
+	 * @param {string} urlString
+	 * @return {*}  {string}
+	 */
 	const getDomain = (urlString: string): string => {
 		const hostnameArr = new URL(urlString).hostname.split('.');
 
