@@ -1,4 +1,5 @@
 import { LogLevel, Logger } from '@/shared/model/Logger';
+import { Literal } from '@/shared/types';
 
 export interface ExtraLogFields {
 	request_id?: never;
@@ -9,7 +10,7 @@ export interface ExtraLogFields {
 
 export abstract class BaseLogger implements Logger {
 	abstract log(
-		logLevel: LogLevel,
+		logLevel: Literal<typeof LogLevel>,
 		message: string,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any for error
 		error?: any,

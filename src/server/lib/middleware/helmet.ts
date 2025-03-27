@@ -3,23 +3,23 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const { baseUri, apiDomain, idapiBaseUrl, stage } = getConfiguration();
 
-enum HELMET_OPTIONS {
-	SELF = "'self'",
-	NONE = "'none'",
-	UNSAFE_INLINE = "'unsafe-inline'",
-	UNSAFE_EVAL = "'unsafe-eval'", // !!! ONLY USE FOR DEV !!!
-}
+const HELMET_OPTIONS = {
+	SELF: "'self'",
+	NONE: "'none'",
+	UNSAFE_INLINE: "'unsafe-inline'",
+	UNSAFE_EVAL: "'unsafe-eval'", // !!! ONLY USE FOR DEV !!!
+} as const;
 
-enum CSP_VALID_URI {
-	GSTATIC_RECAPTCHA = 'www.gstatic.com',
-	GOOGLE_RECAPTCHA = 'www.google.com',
-	GUARDIAN_STATIC = 'static.guim.co.uk',
-	GUARDIAN_ASSETS = 'assets.guim.co.uk',
-	GUARDIAN_API = 'api.nextgen.guardianapps.co.uk',
-	OPHAN = 'ophan.theguardian.com',
-	GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
-	HAVEIBEENPWNED = 'https://api.pwnedpasswords.com',
-}
+const CSP_VALID_URI = {
+	GSTATIC_RECAPTCHA: 'www.gstatic.com',
+	GOOGLE_RECAPTCHA: 'www.google.com',
+	GUARDIAN_STATIC: 'static.guim.co.uk',
+	GUARDIAN_ASSETS: 'assets.guim.co.uk',
+	GUARDIAN_API: 'api.nextgen.guardianapps.co.uk',
+	OPHAN: 'ophan.theguardian.com',
+	GUARDIAN_CONSENTS_LOGS: 'consent-logs.',
+	HAVEIBEENPWNED: 'https://api.pwnedpasswords.com',
+} as const;
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 
