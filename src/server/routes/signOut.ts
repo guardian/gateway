@@ -30,7 +30,9 @@ const DotComCookies = [
 	'gu_paying_member',
 	'gu_recurring_contributor',
 	'gu_digital_subscriber',
+	'gu_allow_reject_all',
 	'gu_action_required_for',
+	'gu_hide_support_messaging',
 	'gu_one_off_contribution_date',
 ];
 
