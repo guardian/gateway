@@ -144,6 +144,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "Deployment environment",
       "Type": "String",
     },
+    "UserBenefitsApiUrl": {
+      "Description": "The url for members-data-api",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
     "VpcId": {
       "Description": "VPC id of VPC for this service to use",
       "Type": "String",
@@ -1148,6 +1152,7 @@ Environment=REDIS_PASSWORD=$REDIS_PASSWORD
 Environment=REDIS_HOST=\${RedisHost}
 Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=\${MembersDataApiUrl}
+Environment=USER_BENEFITS_API_URL=\${UserBenefitsApiUrl}
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 
