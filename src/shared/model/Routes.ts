@@ -131,6 +131,8 @@ type OktaApiRoutePaths =
 
 type MembersDataApiRoutePaths = '/user-attributes/me';
 
+type UserBenefitsApiRoutePaths = '/benefits/me';
+
 export type PasswordRoutePath = Extract<
 	'/reset-password' | '/set-password' | '/welcome',
 	RoutePaths
@@ -143,4 +145,5 @@ export type AllRoutes =
 	| ApiRoutePaths
 	| RoutePaths
 	| OktaApiRoutePaths
-	| MembersDataApiRoutePaths;
+	| MembersDataApiRoutePaths
+	| UserBenefitsApiRoutePaths;

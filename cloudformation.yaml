@@ -23,6 +23,9 @@ Parameters:
   MembersDataApiUrl:
     Description: The url for members-data-api
     Type: AWS::SSM::Parameter::Value<String>
+  UserBenefitsApiUrl:
+    Description: The url for members-data-api
+    Type: AWS::SSM::Parameter::Value<String>
   RedisHost:
     Description: The Redis server URL, used for rate limiting.
     Type: AWS::SSM::Parameter::Value<String>
@@ -347,6 +350,7 @@ Resources:
               Environment=REDIS_HOST=${RedisHost}
               Environment=REDIS_SSL_ON=true
               Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
+              Environment=USER_BENEFITS_API_URL=${UserBenefitsApiUrl}
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 

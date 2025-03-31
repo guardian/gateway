@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getUserAttributes } from '@/server/lib/members-data-api/user-attributes';
+import { getUserBenefits } from './user-benefits-api/user-benefits';
 
 // port of some functionality from https://github.com/guardian/frontend/blob/main/static/src/javascripts/projects/common/modules/commercial/user-features.ts
 
@@ -28,6 +29,17 @@ export const setUserFeatureCookies = async ({
 	const userAttributes = await getUserAttributes({
 		accessToken,
 	});
+
+	const userBenefits = await getUserBenefits({
+		accessToken,
+	});
+
+	if (userBenefits?.benefits) {
+		res.cookie('gu_test_cookie', 'true', {
+			domain,
+			maxAge: 0,
+		});
+	}
 
 	// set the GU_AF1 cookie if the user has the ad-free product
 	if (userAttributes?.contentAccess.digitalPack) {
