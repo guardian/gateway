@@ -8,7 +8,7 @@ export const getGeolocationRegion = (req: Request): GeoLocation => {
 	/**
 	 * Cypress Test START
 	 */
-	const maybeMockedCountryCode =
+	const [maybeMockedCountryCode] =
 		maybeGetCountryCodeFromCypressMockStateCookie(req);
 	if (maybeMockedCountryCode) {
 		return countryCodeToRegion(maybeMockedCountryCode);

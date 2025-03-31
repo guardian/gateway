@@ -82,6 +82,7 @@ type EnrollNewWithEmailBody = IdxStateHandleBody<{
 		email: string;
 		isGuardianUser: true;
 		registrationLocation?: string;
+		registrationLocationState?: string;
 		registrationPlatform?: string;
 	};
 }>;

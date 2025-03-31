@@ -3,7 +3,6 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { Jwt } from '@okta/jwt-verifier';
 import { getUser, updateUser } from '@/server/lib/okta/api/users';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 export const updateRegistrationLocationViaOkta = async (
 	req: Request,
@@ -12,7 +11,7 @@ export const updateRegistrationLocationViaOkta = async (
 	if (!accessToken) {
 		throw new Error('No access token provided');
 	}
-	const registrationLocation: RegistrationLocation | undefined =
+	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
 	// don't update users if we can't derive location from request
@@ -24,7 +23,10 @@ export const updateRegistrationLocationViaOkta = async (
 		const user = await getUser(accessToken.claims.sub, req.ip);
 
 		// don't update users who already have a location set
-		if (user.profile.registrationLocation) {
+		if (
+			user.profile.registrationLocation ||
+			user.profile.registrationLocationState
+		) {
 			return;
 		}
 
@@ -33,6 +35,7 @@ export const updateRegistrationLocationViaOkta = async (
 			{
 				profile: {
 					registrationLocation,
+					registrationLocationState,
 				},
 			},
 			req.ip,

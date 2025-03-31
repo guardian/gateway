@@ -1,5 +1,8 @@
 // for some reason, we can't use @/shared/model/RegisterLocation here, as this breaks cypress, so use relative path instead ¯\_(ツ)_/¯
-import { RegistrationLocationSchema } from '../../../shared/model/RegistrationLocation';
+import {
+	RegistrationLocationSchema,
+	RegistrationLocationStateSchema,
+} from '../../../shared/model/RegistrationLocation';
 import { z } from 'zod';
 
 // social registration identity provider type
@@ -19,6 +22,8 @@ const userProfileSchema = z.object({
 	lastPasswordSetSecurelyTimestamp: z.string().nullable().optional(),
 	registrationIdp: RegistrationIdp.nullable().optional(),
 	registrationLocation: RegistrationLocationSchema.nullable().optional(),
+	registrationLocationState:
+		RegistrationLocationStateSchema.nullable().optional(),
 	googleExternalId: z.string().nullable().optional(),
 	appleExternalId: z.string().nullable().optional(),
 	facebookExternalId: z.string().nullable().optional(),
@@ -58,6 +63,7 @@ export const userResponseSchema = z.object({
 		lastName: true,
 		isJobsUser: true,
 		registrationLocation: true,
+		registrationLocationState: true,
 		registrationPlatform: true,
 		legacyIdentityId: true,
 	}),
