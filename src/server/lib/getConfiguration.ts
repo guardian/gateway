@@ -165,7 +165,7 @@ export const getConfiguration = (): Configuration => {
 
 	const userBenefitsApiUrl = getOrThrow(
 		process.env.USER_BENEFITS_API_URL,
-		'Members Data API URL missing.',
+		'User Benefits API URL missing.',
 	);
 
 	const okta: Okta = {
