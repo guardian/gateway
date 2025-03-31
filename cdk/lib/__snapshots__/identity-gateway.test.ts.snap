@@ -145,7 +145,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Type": "String",
     },
     "UserBenefitsApiUrl": {
-      "Description": "The url for members-data-api",
+      "Description": "The url for user-benefits-api",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "VpcId": {
@@ -1108,6 +1108,7 @@ while true; do
     OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+    USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     then break

@@ -306,6 +306,7 @@ Resources:
                   OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   then break
@@ -350,7 +351,7 @@ Resources:
               Environment=REDIS_HOST=${RedisHost}
               Environment=REDIS_SSL_ON=true
               Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
-              Environment=USER_BENEFITS_API_URL=${UserBenefitsApiUrl}
+              Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 
