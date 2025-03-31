@@ -44,23 +44,12 @@ const OKTA_IDENTITY_ENGINE_SESSION_COOKIE_NAME = 'idx';
 const clearDotComCookies = (res: ResponseWithRequestState) => {
 	// the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
 	// we also remove the port after the ':' to make it work in localhost for development and testing
-	// const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
+	const domain = (() => {
+		if (baseUri.includes('profile.code'))
+			return baseUri.replace('profile.code', '').split(':')[0];
 
-	/**
-	 * This function is used to get the domain from a URL string
-	 * profile.theguardian.com:9000 => theguardian.com
-	 * profile.code.dev-theguardian.com => dev-theguardian.com
-	 *
-	 * @param {string} urlString
-	 * @return {*}  {string}
-	 */
-	const getDomain = (urlString: string): string => {
-		const hostnameArr = new URL(urlString).hostname.split('.');
-
-		return `${hostnameArr[hostnameArr.length - 2]}.${hostnameArr[hostnameArr.length - 1]}`;
-	};
-
-	const domain = getDomain(baseUri);
+		return `${baseUri.replace('profile.', '').split(':')[0]}`;
+	})();
 
 	DotComCookies.forEach((key) => {
 		// we can't use res.clearCookie because we don't know the exact settings for these cookies
