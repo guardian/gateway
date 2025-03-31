@@ -35,6 +35,7 @@ export const setUserFeatureCookies = async ({
 	});
 
 	if (userBenefits?.benefits) {
+		// for testing purposes
 		res.cookie('gu_test_cookie', 'true', {
 			domain,
 			maxAge: 0,
