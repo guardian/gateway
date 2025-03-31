@@ -5,6 +5,7 @@ describe('Sign out flow', () => {
 		'gu_paying_member',
 		'gu_recurring_contributor',
 		'gu_digital_subscriber',
+		'gu_allow_reject_all',
 	];
 	context('Signs a user out', () => {
 		it('Removes Okta cookies and dotcom cookies when signing out', () => {
