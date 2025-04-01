@@ -38,7 +38,7 @@ export const setUserFeatureCookies = async ({
 		// for testing purposes
 		res.cookie('gu_test_cookie', 'true', {
 			domain,
-			maxAge: 0,
+			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 		});
 	}
 
