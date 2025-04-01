@@ -1,8 +1,8 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { buildUrl } from '@/shared/lib/routeUtils';
 import {
 	UserBenefitsResponse,
 	userBenefitsResponseSchema,
+	UserBenefitsSchema,
 } from '@/shared/lib/user-benefits-api';
 import { logger } from '../serverSideLogger';
 import { joinUrl } from '@guardian/libs';
@@ -13,9 +13,9 @@ export const getUserBenefits = async ({
 	accessToken,
 }: {
 	accessToken: string;
-}): Promise<UserBenefitsResponse | undefined> => {
+}): Promise<UserBenefitsSchema | undefined> => {
 	try {
-		const path = buildUrl('/benefits/me');
+		const path = '/benefits/me';
 
 		const headers = new Headers();
 		headers.append('Authorization', `Bearer ${accessToken}`);
@@ -31,8 +31,22 @@ export const getUserBenefits = async ({
 			);
 		}
 
-		return userBenefitsResponseSchema.parse(await response.json());
+		return translateDataFromUserBenefitsApi(
+			userBenefitsResponseSchema.parse(await response.json()),
+		);
 	} catch (error) {
 		logger.error(`UserBenefitsAPI Error getUserBenefits '/benefits/me'`, error);
 	}
+};
+
+export const translateDataFromUserBenefitsApi = (
+	userBenefitsResponse: UserBenefitsResponse,
+): UserBenefitsSchema => {
+	return {
+		hideSupportMessaging: userBenefitsResponse?.benefits?.includes(
+			'hideSupportMessaging',
+		),
+		adFree: userBenefitsResponse?.benefits?.includes('adFree'),
+		allowRejectAll: userBenefitsResponse?.benefits?.includes('allowRejectAll'),
+	};
 };
