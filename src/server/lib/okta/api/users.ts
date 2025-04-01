@@ -21,6 +21,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { Group, groupSchema } from '@/server/models/okta/Group';
 import { z } from 'zod';
+import { logger } from '@/server/lib/serverSideLogger';
 
 const { okta } = getConfiguration();
 
@@ -393,6 +394,7 @@ const handleUserResponse = async (
 		try {
 			return userResponseSchema.parse(await response.json());
 		} catch (error) {
+			logger.error(`Parsing error - userResponseSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta user response',
 			});
@@ -414,6 +416,7 @@ const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
 		try {
 			return z.array(groupSchema).parse(await response.json());
 		} catch (error) {
+			logger.error(`Parsing error - groupSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta user group response',
 			});
@@ -443,6 +446,7 @@ const handleActivationTokenResponse = async (
 				token: activationTokenResponse.activationToken,
 			};
 		} catch (error) {
+			logger.error(`Parsing error - activationTokenResponseSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta activation token response',
 				// E0000038 - The code in okta for "User operation forbidden exception"
@@ -485,6 +489,7 @@ const handleResetPasswordUrlResponse = async (
 				throw new Error('Could not parse OTT from resetPasswordUrl');
 			}
 		} catch (error) {
+			logger.error(`Parsing error - resetPasswordUrlResponseSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta reset password url response',
 			});

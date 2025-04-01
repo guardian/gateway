@@ -16,6 +16,7 @@ import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 import { ApiError } from '@/server/models/Error';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
 import { extractOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { logger } from '@/server/lib/serverSideLogger';
 
 const { okta } = getConfiguration();
 
@@ -147,6 +148,7 @@ const handleAuthenticationResponse = async (
 		try {
 			return authenticationTransactionSchema.parse(await response.json());
 		} catch (error) {
+			logger.error(`Parsing error - authenticationTransactionSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta authentication transaction response',
 			});

@@ -4,6 +4,7 @@ import {
 	OktaError,
 	ErrorCause,
 } from '@/server/models/okta/Error';
+import { logger } from '@/server/lib/serverSideLogger';
 
 const extractErrorResponse = async (
 	response: Response,
@@ -11,6 +12,7 @@ const extractErrorResponse = async (
 	try {
 		return errorResponseSchema.parse(await response.json());
 	} catch (error) {
+		logger.error(`Parsing error - errorResponseSchema`, error);
 		throw new OktaError({
 			message: 'Could not parse Okta error response',
 		});
