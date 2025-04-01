@@ -1,5 +1,5 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { buildUrl } from '@/shared/lib/routeUtils';
+// import { buildUrl } from '@/shared/lib/routeUtils';
 import {
 	UserBenefitsResponse,
 	userBenefitsResponseSchema,
@@ -15,7 +15,8 @@ export const getUserBenefits = async ({
 	accessToken: string;
 }): Promise<UserBenefitsResponse | undefined> => {
 	try {
-		const path = buildUrl('/benefits/me');
+		const path = '/benefits/me';
+		// const path = `https://user-benefits.guardianapis.com/benefits/me`;
 
 		const headers = new Headers();
 		headers.append('Authorization', `Bearer ${accessToken}`);
