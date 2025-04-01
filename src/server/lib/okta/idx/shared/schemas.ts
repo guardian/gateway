@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { logger } from '@/client/lib/clientSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 
 // Define the authenticators that can be used with the IDX API

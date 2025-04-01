@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { joinUrl } from '@guardian/libs';
-import { logger } from '@/client/lib/clientSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OAuthError } from '@/server/models/okta/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
