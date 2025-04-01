@@ -96,6 +96,7 @@ export const RegistrationLocationStateSchema = z.enum([
 	// General
 	'Other', // Other
 	'Prefer not to say', // Prefer not to say
+	'', // Empty string - for when the user has manually changed their location from AU or US to something else, where we need to set it to empty
 ]);
 
 export type RegistrationLocationState = z.infer<
