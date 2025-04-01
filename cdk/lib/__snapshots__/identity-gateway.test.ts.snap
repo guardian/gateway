@@ -144,10 +144,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "Deployment environment",
       "Type": "String",
     },
-    "UserBenefitsApiUrl": {
-      "Description": "The url for user-benefits-api",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
     "VpcId": {
       "Description": "VPC id of VPC for this service to use",
       "Type": "String",
