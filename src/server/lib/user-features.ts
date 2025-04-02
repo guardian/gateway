@@ -40,8 +40,6 @@ export const setUserFeatureCookies = async ({
 		accessToken,
 	});
 
-	console.log('userBenefits', userBenefits);
-
 	if (userBenefits) {
 		persistUserBenefitsCookies({
 			userBenefits,
