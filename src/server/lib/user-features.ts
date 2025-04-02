@@ -64,13 +64,16 @@ export const setUserFeatureCookies = async ({
 export const createCookie = ({
 	name,
 	res,
+	daysTillExpiry,
 }: {
 	name: string;
 	res: Response;
+	daysTillExpiry: number;
 }) => {
-	res.cookie(name, 'true', {
+	const tmpDate = new Date(Date.now() + daysTillExpiry * 24 * 60 * 60 * 1000);
+	res.cookie(name, tmpDate.getTime().toString(), {
 		domain,
-		expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+		expires: tmpDate,
 	});
 };
 
@@ -82,12 +85,22 @@ export const persistUserBenefitsCookies = ({
 	res: Response;
 }) => {
 	if (userBenefits.hideSupportMessaging) {
-		createCookie({ name: HIDE_SUPPORT_MESSAGING_COOKIE, res });
+		createCookie({
+			name: HIDE_SUPPORT_MESSAGING_COOKIE,
+			res,
+			daysTillExpiry: 7,
+		});
 	}
 	if (userBenefits.allowRejectAll) {
-		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res });
+		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 7 });
 	}
 	if (userBenefits.adFree) {
-		createCookie({ name: AD_FREE_USER_COOKIE, res });
+		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 2 });
 	}
+
+	createCookie({
+		name: USER_BENEFITS_EXPIRY_COOKIE,
+		res,
+		daysTillExpiry: 7,
+	});
 };
