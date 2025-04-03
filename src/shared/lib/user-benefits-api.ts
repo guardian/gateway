@@ -1,13 +1,18 @@
 import { z } from 'zod';
 
-// export const userBenefitsResponseSchema = z.object({
-// 	benefits: z
-// 		.array(z.enum(['adFree', 'allowRejectAll', 'hideSupportMessaging']))
-// 		.optional(),
-// });
+// list of benefits we're looking for
+const BenefitEnum = z.enum([
+	'adFree',
+	'allowRejectAll',
+	'hideSupportMessaging',
+]);
 
 export const userBenefitsResponseSchema = z.object({
-	benefits: z.array(z.string()).optional(),
+	benefits: z
+		.array(z.string()) // Accept any array of strings
+		.transform((values) =>
+			values.filter((val) => BenefitEnum.safeParse(val).success),
+		), // Filter out unknown values based on the BenefitEnum
 });
 
 export const userBenefitsSchema = z.object({
