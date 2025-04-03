@@ -128,7 +128,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 
 describe('Registration flow - Split 1/2', () => {
 	context('Registering with Okta', () => {
-		it('successfully registers using an email with no existing account using a passcode', () => {
+		it('successfully registers using an email with no existing account using a passcode - passwordless user', () => {
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
@@ -170,20 +170,6 @@ describe('Registration flow - Split 1/2', () => {
 
 					cy.get('input[name=code]').type(code!);
 
-					// password page
-					cy.url().should('include', '/welcome/password');
-					cy.get('form')
-						.should('have.attr', 'action')
-						.and('match', new RegExp(encodedReturnUrl))
-						.and('match', new RegExp(refViewId))
-						.and('match', new RegExp(encodedRef))
-						.and('match', new RegExp(clientId));
-
-					cy.get('input[name="firstName"]').type('First Name');
-					cy.get('input[name="secondName"]').type('Last Name');
-					cy.get('input[name="password"]').type(randomPassword());
-					cy.get('button[type="submit"]').click();
-
 					// test the registration platform is set correctly
 					cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.ACTIVE);
@@ -195,7 +181,7 @@ describe('Registration flow - Split 1/2', () => {
 			);
 		});
 
-		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI', () => {
+		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI - passwordless user', () => {
 			const appClientId = 'appClientId1';
 			const fromURI = '/oauth2/v1/authorize';
 
@@ -249,8 +235,60 @@ describe('Registration flow - Split 1/2', () => {
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
 
-					// password page
-					cy.url().should('include', '/welcome/password');
+					// test the registration platform is set correctly
+					cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+						expect(oktaUser.status).to.eq(Status.ACTIVE);
+						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
+					});
+
+					cy.url().should('contain', decodeURIComponent(fromURI));
+				},
+			);
+		});
+
+		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI - password user', () => {
+			const appClientId = 'appClientId1';
+			const fromURI = '/oauth2/v1/authorize';
+
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept(
+				'GET',
+				`https://${Cypress.env('BASE_URI')}${decodeURIComponent(fromURI)}`,
+				(req) => {
+					req.reply(200);
+				},
+			);
+
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
+			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+			const refViewId = 'testRefViewId';
+
+			cy.visit(
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&appClientId=${appClientId}&fromURI=${fromURI}&useSetPassword=true`,
+			);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
 					cy.get('form')
 						.should('have.attr', 'action')
 						.and('match', new RegExp(encodedReturnUrl))
@@ -258,6 +296,9 @@ describe('Registration flow - Split 1/2', () => {
 						.and('match', new RegExp(encodedRef))
 						.and('match', new RegExp(appClientId))
 						.and('match', new RegExp(encodeURIComponent(fromURI)));
+
+					cy.contains('Submit verification code');
+					cy.get('input[name=code]').type(code!);
 
 					cy.get('input[name="password"]').type(randomPassword());
 					cy.get('button[type="submit"]').click();
@@ -310,9 +351,9 @@ describe('Registration flow - Split 1/2', () => {
 			});
 		});
 
-		it('successfully blocks the password set page /welcome if a password has already been set', () => {
+		it('successfully blocks the password set page /welcome if a password has already been set - password user', () => {
 			const unregisteredEmail = randomMailosaurEmail();
-			cy.visit(`/register/email`);
+			cy.visit(`/register/email?useSetPassword=true`);
 
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
@@ -381,7 +422,7 @@ describe('Registration flow - Split 1/2', () => {
 					cy.get('input[name=code]').clear().type(code!);
 					cy.contains('Submit verification code').click();
 
-					cy.url().should('contain', '/welcome/password');
+					cy.url().should('contain', '/welcome/review');
 				},
 			);
 		});
@@ -411,17 +452,12 @@ describe('Registration flow - Split 1/2', () => {
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').clear().type(code!);
 
-					cy.url().should('contain', '/welcome/password');
+					cy.url().should('contain', '/welcome/review');
 
 					cy.go('back');
 					cy.url().should('contain', '/register/email');
 					cy.contains('Email verified');
 					cy.contains('Complete creating account').click();
-
-					cy.url().should('contain', '/welcome/password');
-
-					cy.get('input[name="password"]').type(randomPassword());
-					cy.get('button[type="submit"]').click();
 
 					cy.url().should('contain', '/welcome/review');
 				},
@@ -474,7 +510,7 @@ describe('Registration flow - Split 1/2', () => {
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
 
-					cy.url().should('contain', '/welcome/password');
+					cy.url().should('contain', '/welcome/review');
 				});
 			});
 		});
@@ -850,7 +886,7 @@ describe('Registration flow - Split 1/2', () => {
 				breachCheck();
 
 				const emailAddress = randomMailosaurEmail();
-				cy.visit(`/register/email`);
+				cy.visit(`/register/email?useSetPassword=true`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
@@ -920,7 +956,7 @@ describe('Registration flow - Split 1/2', () => {
 				breachCheck();
 
 				const emailAddress = randomMailosaurEmail();
-				cy.visit(`/register/email`);
+				cy.visit(`/register/email?useSetPassword=true`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
