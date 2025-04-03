@@ -308,17 +308,11 @@ describe('Registration flow - Split 2/2', () => {
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
 
-					cy.contains('Complete creating account');
-
-					cy.get('form')
-						.should('have.attr', 'action')
-						.and('match', new RegExp(encodedReturnUrl));
+					cy.url().should('contain', '/welcome/review');
 
 					//we are reloading here to make sure the params are persisted even on page refresh
 					cy.reload();
 
-					cy.get('input[name="password"]').type(randomPassword());
-					cy.get('button[type="submit"]').click();
 					cy.url().should('contain', encodedReturnUrl);
 				},
 			);

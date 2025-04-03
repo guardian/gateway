@@ -18,7 +18,7 @@ describe('Password reset recovery flows', () => {
 				breachCheck();
 
 				const emailAddress = randomMailosaurEmail();
-				cy.visit(`/register/email`);
+				cy.visit(`/register/email?useSetPassword=true`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
@@ -87,7 +87,7 @@ describe('Password reset recovery flows', () => {
 				breachCheck();
 
 				const emailAddress = randomMailosaurEmail();
-				cy.visit(`/register/email`);
+				cy.visit(`/register/email?useSetPassword=true`);
 
 				const timeRequestWasMade = new Date();
 				cy.get('input[name=email]').type(emailAddress);
