@@ -38,6 +38,7 @@ describe('getPersistableQueryParams', () => {
 			useOktaClassic: undefined,
 			listName: undefined,
 			usePasswordSignIn: undefined,
+			useSetPassword: undefined,
 		};
 
 		expect(output).toStrictEqual(expected);

@@ -25,6 +25,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { IdxBaseResponse } from '@/server/lib/okta/idx/shared/schemas';
+import { skip } from '../skip';
 
 type Params = {
 	stateHandle: string;
@@ -204,6 +205,75 @@ export const setPasswordAndRedirect = async ({
 	updateEncryptedStateCookie(expressReq, expressRes, {
 		// Update the passwordSetOnWelcomePage only when we are on the welcome page
 		...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
+		// We want to remove all query params from the cookie after the password is set,
+		queryParams: undefined,
+	});
+
+	// fire ophan component event if applicable
+	if (expressRes.locals.queryParams.componentEventParams) {
+		void sendOphanComponentEventFromQueryParamsServer(
+			expressRes.locals.queryParams.componentEventParams,
+			'SIGN_IN',
+			'web',
+			expressRes.locals.ophanConfig.consentUUID,
+		);
+	}
+
+	// redirect the user to set a global session and then back to completing the authorization flow
+	return expressRes.redirect(303, loginRedirectUrl);
+};
+
+/**
+ * @name skipPasswordEnrollment
+ * @description Okta IDX API/Interaction Code flow - After email factor verification for a new account, we can choose to skip setting a password for the user, and set the emailValidated flag in Okta, and complete the authorization code flow.
+ * @param stateHandle - The state handle from the previous step
+ * @param expressReq - The express request object
+ * @param expressRes - The express response object
+ * @param ip - The ip address
+ * @returns Promise<void> - Performs a express redirect
+ */
+export const skipPasswordEnrollment = async ({
+	stateHandle,
+	expressReq,
+	expressRes,
+	ip,
+}: {
+	stateHandle: IdxBaseResponse['stateHandle'];
+	expressReq: Request;
+	expressRes: ResponseWithRequestState;
+	ip?: string;
+}): Promise<void> => {
+	const skipResponse = await skip(stateHandle, ip);
+
+	if (!isChallengeAnswerCompleteLoginResponse(skipResponse)) {
+		throw new OAuthError({
+			error: 'idx.invalid.response',
+			error_description: 'The response was not a complete login response',
+		});
+	}
+
+	const loginRedirectUrl = getLoginRedirectUrl(skipResponse);
+
+	// set the validation flags in Okta
+	const { id } = skipResponse.user.value;
+	if (id) {
+		// we only want to set the emailValidated flag here,
+		// as the password is not set yet
+		await validateEmailAndPasswordSetSecurely({
+			id,
+			ip,
+			updateEmail: true,
+			updatePassword: false,
+		});
+	} else {
+		logger.error(
+			'Failed to set validation flags in Okta as there was no id',
+			undefined,
+		);
+	}
+
+	updateEncryptedStateCookie(expressReq, expressRes, {
+		passcodeUsed: true,
 		// We want to remove all query params from the cookie after the password is set,
 		queryParams: undefined,
 	});

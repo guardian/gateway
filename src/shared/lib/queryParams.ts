@@ -43,6 +43,7 @@ export const getPersistableQueryParams = (
 	appClientId: params.appClientId,
 	useOktaClassic: params.useOktaClassic,
 	usePasswordSignIn: params.usePasswordSignIn,
+	useSetPassword: params.useSetPassword,
 });
 
 /**

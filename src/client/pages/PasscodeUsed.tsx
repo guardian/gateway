@@ -4,7 +4,7 @@ import { LinkButton } from '@guardian/source/react-components';
 import { primaryButtonStyles } from '@/client/styles/Shared';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { PasswordRoutePath } from '@/shared/model/Routes';
+import { AllRoutes, PasswordRoutePath } from '@/shared/model/Routes';
 
 type Props = {
 	path: PasswordRoutePath;
@@ -39,6 +39,14 @@ const getText = (path: PasswordRoutePath): Text => {
 
 export const PasscodeUsed = ({ path, queryParams, shortRequestId }: Props) => {
 	const { title, leadText, buttonText } = getText(path);
+	const { useSetPassword } = queryParams;
+
+	// If its a passwordless new account, we want to redirect to the review page
+	// instead of the password page.
+	const hrefUrl: AllRoutes =
+		!useSetPassword && path === '/welcome'
+			? `/welcome/review`
+			: `${path}/password`;
 	return (
 		<MinimalLayout
 			pageHeader={title}
@@ -48,7 +56,7 @@ export const PasscodeUsed = ({ path, queryParams, shortRequestId }: Props) => {
 		>
 			<LinkButton
 				cssOverrides={primaryButtonStyles()}
-				href={buildUrlWithQueryParams(`${path}/password`, {}, queryParams)}
+				href={buildUrlWithQueryParams(hrefUrl, {}, queryParams)}
 				priority="primary"
 			>
 				{buttonText}
