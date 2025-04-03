@@ -3,6 +3,7 @@ import React from 'react';
 import { disableAutofillBackground } from '@/client/styles/Shared';
 import {
 	InputFieldState,
+	InputFieldStates,
 	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
 import ThemedTextInput from '@/client/components/ThemedTextInput';
@@ -13,14 +14,14 @@ interface EmailInputProps extends Omit<TextInputProps, 'label'> {
 	initialState?: InputFieldState;
 }
 
-enum EmailInputFieldErrorMessages {
-	INVALID = 'Please enter a valid email format.',
-	EMPTY = 'Please enter your email.',
-}
+const EmailInputFieldErrorMessages = {
+	INVALID: 'Please enter a valid email format.',
+	EMPTY: 'Please enter your email.',
+} as const;
 
 export const EmailInput: React.FC<EmailInputProps> = ({
 	label = 'Email',
-	initialState = InputFieldState.VALID,
+	initialState = InputFieldStates.VALID,
 	...rest
 }) => {
 	const { onBlur, onInput, onInvalid, inputFieldState } =
@@ -29,9 +30,9 @@ export const EmailInput: React.FC<EmailInputProps> = ({
 	// Set the error message based on the current state.
 	const errorMessage = React.useMemo(() => {
 		switch (inputFieldState) {
-			case InputFieldState.INVALID:
+			case InputFieldStates.INVALID:
 				return EmailInputFieldErrorMessages.INVALID;
-			case InputFieldState.EMPTY:
+			case InputFieldStates.EMPTY:
 				return EmailInputFieldErrorMessages.EMPTY;
 		}
 	}, [inputFieldState]);

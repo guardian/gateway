@@ -5,34 +5,36 @@ export interface FontFace {
 	style?: string;
 }
 
-export enum FontWeightName {
-	BOLD = 'Bold',
-	MEDIUM = 'Medium',
-	REGULAR = 'Regular',
-	LIGHT = 'Light',
-}
+export const FontWeightName = {
+	BOLD: 'Bold',
+	MEDIUM: 'Medium',
+	REGULAR: 'Regular',
+	LIGHT: 'Light',
+} as const;
 
-export enum FontWeightNumber {
-	BOLD = 700,
-	MEDIUM = 500,
-	REGULAR = 400,
-	LIGHT = 300,
-}
+export const FontWeightNumber = {
+	BOLD: 700,
+	MEDIUM: 500,
+	REGULAR: 400,
+	LIGHT: 300,
+} as const;
 
-export enum FontStyle {
-	ITALIC = 'Italic',
-}
+export const FontStyle = {
+	ITALIC: 'Italic',
+} as const;
 
-export enum FontFamily {
-	TITLEPIECE = 'GT Guardian Titlepiece',
-	HEADLINE = 'GH Guardian Headline',
-	EGYPTIAN = 'GuardianTextEgyptian',
-	SANS = 'GuardianTextSans',
-}
+export const FontFamily = {
+	TITLEPIECE: 'GT Guardian Titlepiece',
+	HEADLINE: 'GH Guardian Headline',
+	EGYPTIAN: 'GuardianTextEgyptian',
+	SANS: 'GuardianTextSans',
+} as const;
 
-export enum FontFamilyPath {
-	TITLEPIECE = 'fonts/guardian-titlepiece/noalts-not-hinted/GTGuardianTitlepiece',
-	HEADLINE = 'fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline',
-	EGYPTIAN = 'fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian',
-	SANS = 'fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans',
-}
+export const FontFamilyPath = {
+	TITLEPIECE:
+		'fonts/guardian-titlepiece/noalts-not-hinted/GTGuardianTitlepiece',
+	HEADLINE: 'fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline',
+	EGYPTIAN:
+		'fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian',
+	SANS: 'fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans',
+} as const;
