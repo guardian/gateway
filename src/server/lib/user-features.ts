@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getUserAttributes } from '@/server/lib/members-data-api/user-attributes';
 import { getUserBenefits } from './user-benefits-api/user-benefits';
-import { UserBenefitsSchema } from '@/shared/lib/user-benefits-api';
+import { UserBenefitsResponse } from '@/shared/lib/user-benefits-api';
 
 // port of some functionality from https://github.com/guardian/frontend/blob/main/static/src/javascripts/projects/common/modules/commercial/user-features.ts
 
@@ -81,20 +81,20 @@ export const persistUserBenefitsCookies = ({
 	userBenefits,
 	res,
 }: {
-	userBenefits: UserBenefitsSchema;
+	userBenefits: UserBenefitsResponse;
 	res: Response;
 }) => {
-	if (userBenefits.hideSupportMessaging) {
+	if (userBenefits?.benefits?.includes('hideSupportMessaging')) {
 		createCookie({
 			name: HIDE_SUPPORT_MESSAGING_COOKIE,
 			res,
 			daysTillExpiry: 7,
 		});
 	}
-	if (userBenefits.allowRejectAll) {
+	if (userBenefits?.benefits?.includes('allowRejectAll')) {
 		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 7 });
 	}
-	if (userBenefits.adFree) {
+	if (userBenefits?.benefits?.includes('adFree')) {
 		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 2 });
 	}
 
