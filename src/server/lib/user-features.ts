@@ -1,12 +1,19 @@
 import { Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getUserAttributes } from '@/server/lib/members-data-api/user-attributes';
+import { getUserBenefits } from './user-benefits-api/user-benefits';
+import { UserBenefitsResponse } from '@/shared/lib/user-benefits-api';
 
 // port of some functionality from https://github.com/guardian/frontend/blob/main/static/src/javascripts/projects/common/modules/commercial/user-features.ts
 
 const { baseUri } = getConfiguration();
 
 const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
+
+export const AD_FREE_USER_COOKIE = 'GU_AF1';
+export const HIDE_SUPPORT_MESSAGING_COOKIE = 'gu_hide_support_messaging';
+export const ALLOW_REJECT_ALL_COOKIE = 'gu_allow_reject_all';
+export const USER_BENEFITS_EXPIRY_COOKIE = 'gu_user_benefits_expiry';
 
 /**
  * @name setUserFeatureCookies
@@ -29,6 +36,17 @@ export const setUserFeatureCookies = async ({
 		accessToken,
 	});
 
+	const userBenefits = await getUserBenefits({
+		accessToken,
+	});
+
+	if (userBenefits) {
+		persistUserBenefitsCookies({
+			userBenefits,
+			res,
+		});
+	}
+
 	// set the GU_AF1 cookie if the user has the ad-free product
 	if (userAttributes?.contentAccess.digitalPack) {
 		// for some reason the value is set to 6 months time,
@@ -41,4 +59,48 @@ export const setUserFeatureCookies = async ({
 			expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
 		});
 	}
+};
+
+export const createCookie = ({
+	name,
+	res,
+	daysTillExpiry,
+}: {
+	name: string;
+	res: Response;
+	daysTillExpiry: number;
+}) => {
+	const tmpDate = new Date(Date.now() + daysTillExpiry * 24 * 60 * 60 * 1000);
+	res.cookie(name, tmpDate.getTime().toString(), {
+		domain,
+		expires: tmpDate,
+	});
+};
+
+export const persistUserBenefitsCookies = ({
+	userBenefits,
+	res,
+}: {
+	userBenefits: UserBenefitsResponse;
+	res: Response;
+}) => {
+	if (userBenefits?.benefits?.includes('hideSupportMessaging')) {
+		createCookie({
+			name: HIDE_SUPPORT_MESSAGING_COOKIE,
+			res,
+			daysTillExpiry: 7,
+		});
+	}
+	if (userBenefits?.benefits?.includes('allowRejectAll')) {
+		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 7 });
+	}
+	if (userBenefits?.benefits?.includes('adFree')) {
+		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 2 });
+	}
+
+	createCookie({
+		name: USER_BENEFITS_EXPIRY_COOKIE,
+		res,
+		daysTillExpiry: 7,
+	});
 };

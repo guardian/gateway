@@ -93,6 +93,7 @@ jobs:
           SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
           OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
           MEMBERS_DATA_API_URL: https://members-data-api.code.dev-theguardian.com
+          USER_BENEFITS_API_URL: https://user-benefits.code.dev-guardianapis.com
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
           IS_HTTPS: true
           APP_SECRET: ${{ secrets.APP_SECRET }}
