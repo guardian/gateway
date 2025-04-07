@@ -49,7 +49,7 @@ type BuildUrl = <P extends AllRoutes>(
  */
 export const buildUrl: BuildUrl = <P extends AllRoutes>(
 	path: P,
-	params: PathParams<P> = <PathParams<P>>{},
+	params: PathParams<P> = {} as PathParams<P>,
 ): string => {
 	// //Upcast `params` to be used in string replacement.
 	const paramObj: Record<string, string> = params;
@@ -67,7 +67,7 @@ export const buildUrl: BuildUrl = <P extends AllRoutes>(
  */
 export const buildUrlWithQueryParams = <P extends AllRoutes>(
 	path: P,
-	params: PathParams<P> = <PathParams<P>>{},
+	params: PathParams<P> = {} as PathParams<P>,
 	queryParams: QueryParams,
 	queryParamOverrides?: Partial<QueryParams>,
 ): string => {
@@ -83,7 +83,7 @@ export const buildUrlWithQueryParams = <P extends AllRoutes>(
  */
 export const buildApiUrlWithQueryParams = <P extends AllRoutes>(
 	path: P,
-	params: PathParams<P> = <PathParams<P>>{},
+	params: PathParams<P> = {} as PathParams<P>,
 	queryParams: IdApiQueryParams | OktaQueryParams,
 ): string => {
 	const url = buildUrl(path, params);
