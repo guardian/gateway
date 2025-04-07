@@ -86,6 +86,7 @@ Identity Engine Upgrade PRs:
   - https://github.com/guardian/identity-platform/pull/684
   - https://github.com/guardian/identity-platform/pull/685
   - https://github.com/guardian/identity-platform/pull/688
+  - https://github.com/guardian/identity-platform/pull/806
 
 Okta IDX API Setup and Social Sign In using IDX - https://github.com/guardian/gateway/pull/2625 & https://github.com/guardian/identity-platform/pull/718
 

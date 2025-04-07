@@ -51,7 +51,10 @@ import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
-import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
+import {
+	skipPasswordEnrollment,
+	submitPasscode,
+} from '@/server/lib/okta/idx/shared/submitPasscode';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
 import {
@@ -229,6 +232,34 @@ router.post(
 						});
 					}
 
+					// We can now decide whether to set a password or not, and thus make a passwordless user
+					// We should:
+					// - If the `skip` schema is present, we always use that, and allow the user to manually set a password
+					// if they want to
+					// - If the `skip` schema is not present, we can check if the password authenticator is required,
+					// and always ask the user to set a password
+					// This is dependent on the "password" authenticator either being set to "optional" or "required" respectively
+
+					const hasSkipSchema = validateChallengeAnswerRemediation(
+						challengeAnswerResponse,
+						'skip',
+						false,
+					);
+
+					// if the skip schema is present, we know that the user can skip setting a password and we
+					// can give the user the option to set a password or not
+					// We also check the `useSetPassword` query param to see if we should force the user to set a password
+					// which is useful for testing and checking previous behaviour
+					if (hasSkipSchema && !res.locals.queryParams.useSetPassword) {
+						return skipPasswordEnrollment({
+							stateHandle,
+							expressReq: req,
+							expressRes: res,
+							ip: req.ip,
+						});
+					}
+
+					// If we don't have the skip schema, we have to have the user set a password
 					// check if the remediation array contains the correct remediation object supplied
 					// if it does, then we know that we're in the correct state and the passcode was correct
 					validateChallengeAnswerRemediation(
@@ -465,8 +496,14 @@ const oktaIdxCreateAccount = async (
 			req.ip,
 		);
 
-		// we need to check if the email has been sent to the user, or if
-		// we need to select an authenticator to enroll
+		// We need to check for the 'select-authenticator-enroll' remediation next
+		// If it exists, then that means that the "password" authenticator is set to
+		// "required" in the Okta settings, and we need to manually select the "email"
+		// authenticator to verify their account before they set a password.
+		// If it doesn't exist, then the "password" authenticator is set to "optional"
+		// Which means that the "email" authenticator is automatically selected and a
+		// passcode is sent to the user. Once the user verifies their account, we can
+		// choose to set a password or skip and make them a passwordless user.
 		const hasSelectAuthenticator = validateEnrollNewRemediation(
 			enrollNewWithEmailResponse,
 			'select-authenticator-enroll',
