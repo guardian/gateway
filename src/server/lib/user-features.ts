@@ -92,23 +92,25 @@ const persistUserBenefitsCookies = ({
 	userBenefits: UserBenefitsResponse;
 	res: Response;
 }) => {
+	createCookie({
+		name: USER_BENEFITS_EXPIRY_COOKIE,
+		res,
+		daysTillExpiry: 1,
+	});
 	if (userBenefits?.benefits?.includes('hideSupportMessaging')) {
 		createCookie({
 			name: HIDE_SUPPORT_MESSAGING_COOKIE,
 			res,
-			daysTillExpiry: 7,
+			daysTillExpiry: 1,
 		});
 	}
+	// Allow reject all cookie
 	if (userBenefits?.benefits?.includes('allowRejectAll')) {
-		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 7 });
+		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 1 });
 	}
+	// Ad free user cookie is set for 2 days
+	// https://github.com/guardian/frontend/blob/f17fe93c542fbd448392a0687d0b92f35796097a/static/src/javascripts/projects/common/modules/commercial/user-features.ts#L128
 	if (userBenefits?.benefits?.includes('adFree')) {
-		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 7 });
+		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 2 });
 	}
-
-	createCookie({
-		name: USER_BENEFITS_EXPIRY_COOKIE,
-		res,
-		daysTillExpiry: 7,
-	});
 };
