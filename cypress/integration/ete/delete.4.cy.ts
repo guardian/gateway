@@ -1,3 +1,5 @@
+import { randomPassword } from '../../support/commands/testUser';
+
 describe('Delete my account flow in Okta', () => {
 	const signInAndVisitDeletePage = (email: string, password: string) => {
 		// First, sign in
@@ -176,28 +178,32 @@ describe('Delete my account flow in Okta', () => {
 
 				cy.contains('Send validation email').click();
 
-				cy.url().should('include', '/delete/email-sent');
+				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+					({ body, codes }) => {
+						// email
+						expect(body).to.have.string('Your one-time passcode');
+						expect(codes?.length).to.eq(1);
+						const code = codes?.[0].value;
+						expect(code).to.match(/^\d{6}$/);
 
-				cy.checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade,
-					/reset-password\/([^"]*)/,
-				).then(({ links, body, token }) => {
-					expect(body).to.have.string(
-						'Because your security is extremely important to us, we have changed our password policy.',
-					);
-					expect(body).to.have.string('Reset password');
-					expect(links.length).to.eq(2);
-					const resetPasswordLink = links.find((s) =>
-						s.text?.includes('Reset password'),
-					);
-					expect(resetPasswordLink?.href ?? '').to.have.string(
-						'reset-password',
-					);
-					cy.visit(`/reset-password/${token}`);
-					cy.contains(emailAddress);
-					cy.contains('Create new password');
-				});
+						// passcode page
+						cy.url().should('include', '/reset-password/email-sent');
+						cy.contains('Enter your one-time code');
+						cy.contains('Submit one-time code');
+
+						cy.get('input[name=code]').clear().type(code!);
+
+						cy.url().should('contain', '/reset-password/password');
+
+						cy.get('input[name="password"]').type(randomPassword());
+						cy.get('button[type="submit"]').click();
+
+						cy.url().should('contain', '/reset-password/complete');
+						cy.clearCookie('cypress-mock-state');
+						cy.contains('Continue to the Guardian').click();
+						cy.url().should('contain', '/delete');
+					},
+				);
 			},
 		);
 	});
@@ -218,28 +224,32 @@ describe('Delete my account flow in Okta', () => {
 
 				cy.contains('Set password').click();
 
-				cy.url().should('include', '/delete/email-sent');
+				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+					({ body, codes }) => {
+						// email
+						expect(body).to.have.string('Your one-time passcode');
+						expect(codes?.length).to.eq(1);
+						const code = codes?.[0].value;
+						expect(code).to.match(/^\d{6}$/);
 
-				cy.checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade,
-					/reset-password\/([^"]*)/,
-				).then(({ links, body, token }) => {
-					expect(body).to.have.string(
-						'Because your security is extremely important to us, we have changed our password policy.',
-					);
-					expect(body).to.have.string('Reset password');
-					expect(links.length).to.eq(2);
-					const resetPasswordLink = links.find((s) =>
-						s.text?.includes('Reset password'),
-					);
-					expect(resetPasswordLink?.href ?? '').to.have.string(
-						'reset-password',
-					);
-					cy.visit(`/reset-password/${token}`);
-					cy.contains(emailAddress);
-					cy.contains('Create new password');
-				});
+						// passcode page
+						cy.url().should('include', '/reset-password/email-sent');
+						cy.contains('Enter your one-time code');
+						cy.contains('Submit one-time code');
+
+						cy.get('input[name=code]').clear().type(code!);
+
+						cy.url().should('contain', '/reset-password/password');
+
+						cy.get('input[name="password"]').type(randomPassword());
+						cy.get('button[type="submit"]').click();
+
+						cy.url().should('contain', '/reset-password/complete');
+						cy.clearCookie('cypress-mock-state');
+						cy.contains('Continue to the Guardian').click();
+						cy.url().should('contain', '/delete');
+					},
+				);
 			},
 		);
 	});

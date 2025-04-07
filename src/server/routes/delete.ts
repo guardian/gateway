@@ -26,8 +26,13 @@ import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import { dangerouslySetPlaceholderPassword } from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { requestStateHasOAuthTokens } from '@/server/lib/middleware/requestState';
+import { changePasswordEmailIdx } from '@/server/controllers/sendChangePasswordEmail';
+import { joinUrl } from '@guardian/libs';
+import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
-const { signInPageUrl } = getConfiguration();
+const { signInPageUrl, passcodesEnabled } = getConfiguration();
+
+const profileUrl = getProfileUrl();
 
 router.get(
 	'/delete',
@@ -70,7 +75,13 @@ router.get(
 				// if not, ask them to validate their email address
 				const html = renderer('/delete-email-validation', {
 					pageTitle: 'Verify Email',
-					requestState: state,
+					requestState: mergeRequestState(state, {
+						queryParams: {
+							...state.queryParams,
+							// force the returnUrl to be the delete page after email validation
+							returnUrl: joinUrl(profileUrl, req.path),
+						},
+					}),
 				});
 				return res.type('html').send(html);
 			}
@@ -89,7 +100,13 @@ router.get(
 				// if not, ask them to set a password
 				const html = renderer('/delete-set-password', {
 					pageTitle: 'Create Password',
-					requestState: state,
+					requestState: mergeRequestState(state, {
+						queryParams: {
+							...state.queryParams,
+							// force the returnUrl to be the delete page after setting a password
+							returnUrl: joinUrl(profileUrl, req.path),
+						},
+					}),
 				});
 				return res.type('html').send(html);
 			}
@@ -324,6 +341,25 @@ router.post(
 
 			// get the user's profile from okta
 			const user = await getUser(sub, req.ip);
+
+			// attempt to use the idx flow to send the user a passcode
+			// to validate their email address and set a password
+			if (passcodesEnabled && !state.queryParams.useOktaClassic) {
+				// try to start the IDX flow to send the user a passcode for set password/email verification
+				await changePasswordEmailIdx({
+					req,
+					res,
+					user,
+					emailSentPage: '/reset-password/email-sent',
+				});
+				// if successful, the user will be redirected to the email sent page
+				// so we need to check if the headers have been sent to prevent further processing
+				if (res.headersSent) {
+					return;
+				}
+			}
+
+			// if the idx flow is not enables, or as a fallback, we can use the classic flow
 
 			// if the user doesn't have a password set, set a placeholder password
 			if (!user.credentials.password) {
