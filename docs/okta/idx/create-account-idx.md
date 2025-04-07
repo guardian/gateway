@@ -73,3 +73,4 @@ Here is a list of pull requests/issues relating to the create account flow with 
 - [#2786 - Passcodes | Improve passcode styling/functionality](https://github.com/guardian/gateway/pull/2786)
 - [Identity Platform - #806 - Okta | Make passwords optional](https://github.com/guardian/identity-platform/pull/806)
 - [#3217 - Passwordless | Remove set password on account creation](https://github.com/guardian/gateway/pull/3127)
+- [#3134 - Passwordless | Fix password optional double verification email](https://github.com/guardian/gateway/pull/3134)
