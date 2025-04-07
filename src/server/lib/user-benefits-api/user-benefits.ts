@@ -8,6 +8,17 @@ import { joinUrl } from '@guardian/libs';
 
 const { userBenefitsApiUrl } = getConfiguration();
 
+/**
+ * User benefits api
+ * https://github.com/guardian/support-service-lambdas/tree/main/handlers/user-benefits
+ *
+ * @param {{
+ * 	accessToken: string;
+ * }} {
+ * 	accessToken,
+ * }
+ * @return {*}  {(Promise<UserBenefitsResponse | undefined>)}
+ */
 export const getUserBenefits = async ({
 	accessToken,
 }: {

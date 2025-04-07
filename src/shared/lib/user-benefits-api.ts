@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-// list of benefits we're looking for
+// list of product benefits
+// https://github.com/guardian/support-service-lambdas/blob/main/modules/product-benefits/src/schemas.ts
 const BenefitEnum = z.enum([
 	'adFree',
 	'allowRejectAll',
@@ -11,7 +12,10 @@ export const userBenefitsResponseSchema = z.object({
 	benefits: z
 		.array(z.string()) // Accept any array of strings
 		.transform((values) =>
-			values.filter((val) => BenefitEnum.safeParse(val).success),
+			values.filter(
+				(val): val is z.infer<typeof BenefitEnum> =>
+					BenefitEnum.safeParse(val).success,
+			),
 		), // Filter out unknown values based on the BenefitEnum
 });
 
