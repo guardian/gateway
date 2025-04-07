@@ -17,7 +17,6 @@ import {
 import { validatePasswordFieldForOkta } from '@/server/lib/validatePasswordField';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
-import { logger } from '@/server/lib/serverSideLogger';
 import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
@@ -174,32 +173,20 @@ export const setPasswordAndRedirect = async ({
 
 	// set the validation flags in Okta
 	const { id } = challengeAnswerResponse.user.value;
-	if (id) {
-		await validateEmailAndPasswordSetSecurely({
-			id,
-			ip,
-		});
-	} else {
-		logger.error(
-			'Failed to set validation flags in Okta as there was no id',
-			undefined,
-		);
-	}
+
+	await validateEmailAndPasswordSetSecurely({
+		id,
+		ip,
+	});
 
 	// When a jobs user is registering, we add them to the GRS group and set their name
 	if (
 		expressRes.locals.queryParams.clientId === 'jobs' &&
 		path === '/welcome'
 	) {
-		if (id) {
-			const { firstName, secondName } = expressReq.body;
-			await setupJobsUserInOkta(firstName, secondName, id, ip);
-			trackMetric('JobsGRSGroupAgree::Success');
-		} else {
-			logger.error(
-				'Failed to set jobs user name and field in Okta as there was no id',
-			);
-		}
+		const { firstName, secondName } = expressReq.body;
+		await setupJobsUserInOkta(firstName, secondName, id, ip);
+		trackMetric('JobsGRSGroupAgree::Success');
 	}
 
 	updateEncryptedStateCookie(expressReq, expressRes, {
@@ -256,21 +243,15 @@ export const skipPasswordEnrollment = async ({
 
 	// set the validation flags in Okta
 	const { id } = skipResponse.user.value;
-	if (id) {
-		// we only want to set the emailValidated flag here,
-		// as the password is not set yet
-		await validateEmailAndPasswordSetSecurely({
-			id,
-			ip,
-			updateEmail: true,
-			updatePassword: false,
-		});
-	} else {
-		logger.error(
-			'Failed to set validation flags in Okta as there was no id',
-			undefined,
-		);
-	}
+
+	// we only want to set the emailValidated flag here,
+	// as the password is not set yet
+	await validateEmailAndPasswordSetSecurely({
+		id,
+		ip,
+		updateEmail: true,
+		updatePassword: false,
+	});
 
 	updateEncryptedStateCookie(expressReq, expressRes, {
 		passcodeUsed: true,
