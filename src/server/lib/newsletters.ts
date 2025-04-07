@@ -4,12 +4,16 @@ import {
 	readUserNewsletters,
 	read as getNewsletters,
 } from './idapi/newsletters';
+import { Literal } from '@/shared/types';
 
 // map of newsletters to country codes
 // undefined also included as key, in case of fallback
 // We're currently only using the 'AU' and 'US' keys - whether the newsletters page
 // is shown is controlled by getNextWelcomeFlowPage in lib/welcome.ts.
-export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
+export const NewsletterMap = new Map<
+	GeoLocation | undefined,
+	Literal<typeof Newsletters>[]
+>([
 	[undefined, []],
 	['ROW', []],
 	['GB', []],

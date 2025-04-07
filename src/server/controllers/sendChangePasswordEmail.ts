@@ -48,6 +48,7 @@ import {
 	forceUserIntoActiveState,
 	sendVerifyEmailAuthenticatorIdx,
 } from '@/server/controllers/oktaIdxShared';
+import { Literal } from '@/shared/types';
 
 const { passcodesEnabled } = getConfiguration();
 
@@ -348,7 +349,9 @@ export const changePasswordEmailIdx = async ({
 		logger.error('Okta changePasswordEmailIdx failed', error);
 
 		// track the failure metrics
-		trackMetric(`OktaIDXResetPasswordSend::${user.status as Status}::Failure`);
+		trackMetric(
+			`OktaIDXResetPasswordSend::${user.status as Literal<typeof Status>}::Failure`,
+		);
 
 		// don't throw the error, so we can fall back to okta classic flow
 	}

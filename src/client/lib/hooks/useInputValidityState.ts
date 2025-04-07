@@ -1,3 +1,4 @@
+import { Literal } from '@/shared/types';
 import { useCallback, useState } from 'react';
 
 const isInputInvalid = (validityState: ValidityState) =>
@@ -11,14 +12,15 @@ const isInputInvalid = (validityState: ValidityState) =>
 	validityState.stepMismatch ||
 	validityState.typeMismatch;
 
-export enum InputFieldState {
-	VALID = 'valid',
-	EMPTY = 'empty',
-	INVALID = 'invalid',
-}
+export const InputFieldStates = {
+	VALID: 'valid',
+	EMPTY: 'empty',
+	INVALID: 'invalid',
+} as const;
+export type InputFieldState = Literal<typeof InputFieldStates>;
 
 export const useInputValidityState = (
-	initialState = InputFieldState.VALID,
+	initialState: InputFieldState = InputFieldStates.VALID,
 ): {
 	onBlur: React.FocusEventHandler<HTMLInputElement>;
 	onInput: React.FormEventHandler<HTMLInputElement>;
@@ -36,11 +38,11 @@ export const useInputValidityState = (
 		const inputIsEmpty = validityState.valueMissing;
 
 		if (inputIsEmpty) {
-			setInputFieldState(InputFieldState.EMPTY);
+			setInputFieldState(InputFieldStates.EMPTY);
 		} else if (inputIsInvalid) {
-			setInputFieldState(InputFieldState.INVALID);
+			setInputFieldState(InputFieldStates.INVALID);
 		} else {
-			setInputFieldState(InputFieldState.VALID);
+			setInputFieldState(InputFieldStates.VALID);
 		}
 	}, []);
 

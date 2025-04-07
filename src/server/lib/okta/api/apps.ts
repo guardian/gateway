@@ -5,6 +5,7 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { authorizationHeader, defaultHeaders } from './headers';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
+import { logger } from '@/server/lib/serverSideLogger';
 
 const { okta } = getConfiguration();
 
@@ -46,6 +47,7 @@ const handleAppResponse = async (response: Response): Promise<AppResponse> => {
 		try {
 			return appResponseSchema.parse(await response.json());
 		} catch (error) {
+			logger.error(`Parsing error - appResponseSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta app response',
 			});

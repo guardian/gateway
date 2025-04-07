@@ -27,6 +27,7 @@ import { Group } from '@/server/models/okta/Group';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { AuthenticationTransaction } from '@/server/models/okta/Authentication';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { Literal } from '@/shared/types';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({
@@ -123,7 +124,7 @@ jest.mock('@/server/lib/trackMetric', () => ({
 
 const email = 'someemail';
 const User = (
-	status: Status,
+	status: Literal<typeof Status>,
 	hasPassword = true,
 	registrationLocation: RegistrationLocation | undefined = undefined,
 ): UserResponse => {
