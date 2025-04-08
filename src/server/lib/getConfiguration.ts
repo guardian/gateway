@@ -163,11 +163,6 @@ export const getConfiguration = (): Configuration => {
 		'Members Data API URL missing.',
 	);
 
-	const userBenefitsApiUrl = getOrThrow(
-		process.env.USER_BENEFITS_API_URL,
-		'User Benefits API URL missing.',
-	);
-
 	const okta: Okta = {
 		enabled: true,
 		orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
@@ -243,7 +238,6 @@ export const getConfiguration = (): Configuration => {
 		accountManagementUrl,
 		rateLimiter,
 		membersDataApiUrl,
-		userBenefitsApiUrl,
 		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
 	};
