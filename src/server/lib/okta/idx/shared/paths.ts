@@ -9,5 +9,6 @@ const idxPaths = [
 	'identify',
 	'introspect',
 	'recover',
+	'skip',
 ] as const;
 export type IDXPath = (typeof idxPaths)[number];

@@ -10,12 +10,12 @@ describe('handleAsyncErrors', () => {
 			},
 		);
 
-		const request: Request = <Request>{};
-		const response: ResponseWithRequestState = <ResponseWithRequestState>{};
+		const request: Request = {} as Request;
+		const response: ResponseWithRequestState = {} as ResponseWithRequestState;
 		const next: NextFunction = jest.fn();
 
 		expect(await wrappedHandler(request, response, next)).toBe(response);
-		expect((<jest.Mock>next).mock.calls.length).toBe(0);
+		expect((next as jest.Mock).mock.calls.length).toBe(0);
 	});
 
 	it('should call the provided function and handle failures by calling next', async () => {
@@ -25,12 +25,12 @@ describe('handleAsyncErrors', () => {
 			return Promise.reject(error);
 		});
 
-		const request: Request = <Request>{};
-		const response: ResponseWithRequestState = <ResponseWithRequestState>{};
+		const request: Request = {} as Request;
+		const response: ResponseWithRequestState = {} as ResponseWithRequestState;
 		const next: NextFunction = jest.fn();
 
 		expect(await wrappedHandler(request, response, next)).toBe(undefined);
-		expect((<jest.Mock>next).mock.calls.length).toBe(1);
-		expect((<jest.Mock>next).mock.calls[0][0]).toBe(error);
+		expect((next as jest.Mock).mock.calls.length).toBe(1);
+		expect((next as jest.Mock).mock.calls[0][0]).toBe(error);
 	});
 });

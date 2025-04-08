@@ -1,8 +1,5 @@
 import { Consents } from '../../../src/shared/model/Consent';
-import {
-	randomMailosaurEmail,
-	randomPassword,
-} from '../../support/commands/testUser';
+import { randomMailosaurEmail } from '../../support/commands/testUser';
 
 describe('New account review page', () => {
 	beforeEach(() => {
@@ -43,10 +40,6 @@ describe('New account review page', () => {
 				cy.url().should('include', '/register/email-sent');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
-
-				cy.contains('Complete creating account');
-				cy.get('input[name="password"]').type(randomPassword());
-				cy.get('button[type="submit"]').click();
 
 				cy.url().should('contain', '/welcome/review');
 
@@ -136,10 +129,6 @@ describe('New account newsletters page', () => {
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				cy.contains('Complete creating account');
-				cy.get('input[name="password"]').type(randomPassword());
-				cy.get('button[type="submit"]').click();
-
 				cy.url().should('contain', '/welcome/review');
 				cy.get('button[type="submit"]').click();
 				cy.contains(
@@ -180,10 +169,6 @@ describe('New account newsletters page', () => {
 				cy.url().should('include', '/register/email-sent');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
-
-				cy.contains('Complete creating account');
-				cy.get('input[name="password"]').type(randomPassword());
-				cy.get('button[type="submit"]').click();
 
 				cy.url().should('contain', '/welcome/review');
 				cy.get('button[type="submit"]').click();
@@ -227,10 +212,6 @@ describe('New account newsletters page', () => {
 				cy.url().should('include', '/register/email-sent');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
-
-				cy.contains('Complete creating account');
-				cy.get('input[name="password"]').type(randomPassword());
-				cy.get('button[type="submit"]').click();
 
 				cy.url().should('contain', '/welcome/review');
 				cy.get('button[type="submit"]').click();

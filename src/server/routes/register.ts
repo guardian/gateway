@@ -51,7 +51,10 @@ import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
-import { submitPasscode } from '@/server/lib/okta/idx/shared/submitPasscode';
+import {
+	skipPasswordEnrollment,
+	submitPasscode,
+} from '@/server/lib/okta/idx/shared/submitPasscode';
 import { findAuthenticatorId } from '@/server/lib/okta/idx/shared/findAuthenticatorId';
 import { handlePasscodeError } from '@/server/lib/okta/idx/shared/errorHandling';
 import {
@@ -229,6 +232,34 @@ router.post(
 						});
 					}
 
+					// We can now decide whether to set a password or not, and thus make a passwordless user
+					// We should:
+					// - If the `skip` schema is present, we always use that, and allow the user to manually set a password
+					// if they want to
+					// - If the `skip` schema is not present, we can check if the password authenticator is required,
+					// and always ask the user to set a password
+					// This is dependent on the "password" authenticator either being set to "optional" or "required" respectively
+
+					const hasSkipSchema = validateChallengeAnswerRemediation(
+						challengeAnswerResponse,
+						'skip',
+						false,
+					);
+
+					// if the skip schema is present, we know that the user can skip setting a password and we
+					// can give the user the option to set a password or not
+					// We also check the `useSetPassword` query param to see if we should force the user to set a password
+					// which is useful for testing and checking previous behaviour
+					if (hasSkipSchema && !res.locals.queryParams.useSetPassword) {
+						return skipPasswordEnrollment({
+							stateHandle,
+							expressReq: req,
+							expressRes: res,
+							ip: req.ip,
+						});
+					}
+
+					// If we don't have the skip schema, we have to have the user set a password
 					// check if the remediation array contains the correct remediation object supplied
 					// if it does, then we know that we're in the correct state and the passcode was correct
 					validateChallengeAnswerRemediation(
@@ -465,8 +496,28 @@ const oktaIdxCreateAccount = async (
 			req.ip,
 		);
 
-		// we need to check if the email has been sent to the user, or if
-		// we need to select an authenticator to enroll
+		// We first check if the `enroll-authenticator` remediation is present
+		// and that the current authenticator is set to "email"
+		// In this scenario, if both are present, then the "password" authenticator
+		// in Okta is set to "optional" and the "email" authenticator is set
+		// to "required" in the Okta settings.
+		// This means that since "email" is the only authenticator that is set to "required",
+		// it will automatically select the "email" authenticator and send the user a passcode.
+		// In which case we can skip the `select-authenticator-enroll` remediation to
+		// manually select the "email" authenticator.
+		const hasEnrollAuthenticator = validateEnrollNewRemediation(
+			enrollNewWithEmailResponse,
+			'enroll-authenticator',
+			false,
+		);
+		const currentAuthenticatorIsEmail =
+			enrollNewWithEmailResponse.currentAuthenticator?.value.type === 'email';
+
+		// We also need to check for the 'select-authenticator-enroll' remediation next
+		// If it exists, and hasEnrollAuthenticator and currentAuthenticatorIsEmail don't,
+		// then that means that both the "password" and "email" authenticator is set to
+		// "required" in the Okta settings, and we need to manually select the "email"
+		// authenticator to verify their account before they set a password.
 		const hasSelectAuthenticator = validateEnrollNewRemediation(
 			enrollNewWithEmailResponse,
 			'select-authenticator-enroll',
@@ -474,9 +525,13 @@ const oktaIdxCreateAccount = async (
 		);
 
 		// if we have the `select-authenticator-enroll` remediation property
+		// and we don't have the `enroll-authenticator` remediation property
 		// we need to handle this by selecting the authenticator email
 		// to send the passcode to the user
-		if (hasSelectAuthenticator) {
+		if (
+			hasSelectAuthenticator &&
+			!(hasEnrollAuthenticator && currentAuthenticatorIsEmail)
+		) {
 			const emailAuthenticatorId = findAuthenticatorId({
 				response: enrollNewWithEmailResponse,
 				remediationName: 'select-authenticator-enroll',
@@ -501,7 +556,8 @@ const oktaIdxCreateAccount = async (
 			);
 		}
 
-		// at this point the user will have been sent an email with a passcode
+		// at this point the user will have been sent an email with a passcode,
+		// either by the `enroll-authenticator` or `select-authenticator-enroll` remediation
 
 		// set the encrypted state cookie to persist the email and stateHandle
 		setEncryptedStateCookie(res, {

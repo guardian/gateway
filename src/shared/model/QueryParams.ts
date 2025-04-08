@@ -49,6 +49,8 @@ export interface PersistableQueryParams
 	useOktaClassic?: boolean;
 	// Flag to force the sign in page to use passwords, useful for testing/using previous behaviour
 	usePasswordSignIn?: boolean;
+	// Flag to force the create account flow to force the user to set a password, useful for testing/using previous behaviour
+	useSetPassword?: boolean;
 }
 
 /**
