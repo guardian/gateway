@@ -125,7 +125,7 @@
 		"@guardian/ab-core": "8.0.1",
 		"@guardian/libs": "^22.1.0",
 		"@guardian/source": "^9.0.0",
-		"@guardian/source-development-kitchen": "^17.0.0",
+		"@guardian/source-development-kitchen": "^18.0.0",
 		"@okta/jwt-verifier": "^4.0.1",
 		"@smithy/node-http-handler": "^4.0.4",
 		"awesome-debounce-promise": "^2.1.0",
