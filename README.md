@@ -6,7 +6,11 @@ profile (dot) theguardian (dot) com
 
 Gateway is the frontend to sign-in and registration at the Guardian at [profile.theguardian.com](https://profile.theguardian.com).
 
-Need help? Contact the Identity & Trust team on [P&E/Identity & Trust](https://chat.google.com/room/AAAAFdv9gK8).
+Team - [P&E/Identity & Trust](https://chat.google.com/room/AAAAFdv9gK8)
+
+**_Having issues with authentication, or would like to report an issue?_**
+
+**_Contact our customer service team at [signinsupport@theguardian.com](mailto:signinsupport@theguardian.com)_**
 
 ## Architecture/Overview
 

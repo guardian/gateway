@@ -105,3 +105,26 @@ NativeLayer ->> Okta: SDK uses auth_code to call OAuth /token to get OAuth token
 Okta ->> NativeLayer: Return tokens to SDK
 note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session and user data
 ```
+
+## FAQs
+
+- **How long are the tokens valid for?**
+  - Speak to the Identity team about this as this is configurable, but for native apps we set the `access_token` and `id_token` in the apps are valid for 24 hours, and the refresh token is valid for 1 year, but will expire if not used for 6 months.
+- **When/how do I refresh the tokens?**
+  - We suggest checking the validity of the tokens before using them internally or making a request to the API.
+  - If the token is expired, you should use the refresh token to get a new access token and id token.
+  - If the refresh token is expired, you should sign the user out
+  - The best time to check and refresh the tokens is when the app is opened, or before making a request to an API that required an access token/
+- **How do I sign the user out?**
+  - While the app has methods to sign the user out, we recommend implementing a sign out method that should be used instead.
+  - This is because the SDK sign out method will use the browser to invalidate the users okta session, but we don't want to do this as we want to keep the session alive for other apps for SSO purposes. It also causes issues with other applications that may be using the same session.
+  - Instead we recommend using the Okta SDK to simply revoke the tokens using the `revoke` method, and then clearing the tokens from the storage.
+  - This will ensure that the tokens are invalidated and removed from the app, and the user will be signed out of the app only
+- **How do I check if the user is signed in?**
+  - You can also use the `isAuthenticated` method to check if the user is signed in or not.
+- **How do I get the user information?**
+  - User data to use within the application is stored in the `id_token`, the SDK should have methods to decode the token and get the user information.
+  - If you need additional information in the token that is not currently available, please speak to the Identity team about this. You may need an additional scope, or the identity team may need to make configuration changes in order to add the information to the token
+- **Any other questions?**
+  - Please speak to the Identity team about any other questions you may have, or if you need help with implementing the flow.
+  - We can then also update this documentation with any additional information that may be useful to others!
