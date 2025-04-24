@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@guardian/cdk':
         specifier: 61.4.0
-        version: 61.4.0(aws-cdk-lib@2.190.0(constructs@10.4.2))(aws-cdk@2.1010.0)(constructs@10.4.2)
+        version: 61.4.0(aws-cdk-lib@2.191.0(constructs@10.4.2))(aws-cdk@2.1010.0)(constructs@10.4.2)
       '@guardian/eslint-config-typescript':
         specifier: 12.0.0
         version: 12.0.0(eslint@9.25.1)(tslib@2.7.0)(typescript@5.8.3)
@@ -36,8 +36,8 @@ importers:
         specifier: 2.1010.0
         version: 2.1010.0
       aws-cdk-lib:
-        specifier: 2.190.0
-        version: 2.190.0(constructs@10.4.2)
+        specifier: 2.191.0
+        version: 2.191.0(constructs@10.4.2)
       constructs:
         specifier: 10.4.2
         version: 10.4.2
@@ -818,8 +818,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-cdk-lib@2.190.0:
-    resolution: {integrity: sha512-D6BGf0Gg4s3XCnNiXnCgH1NHXYjngizs676HeytI4ekrUMtsw1ZmH9dlFBattH1x9gYX/9A+UxMkid+P4bNZKA==}
+  aws-cdk-lib@2.191.0:
+    resolution: {integrity: sha512-MrD937EsVCzT6ZvPr8u82TBVBYdcrvNSx/z8lZ8XvviFDgr6bA2yBWQ6CI+OqiPi/Z+OWizjkqYIb43Lovjixw==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -2789,11 +2789,11 @@ snapshots:
       '@eslint/core': 0.13.0
       levn: 0.4.1
 
-  '@guardian/cdk@61.4.0(aws-cdk-lib@2.190.0(constructs@10.4.2))(aws-cdk@2.1010.0)(constructs@10.4.2)':
+  '@guardian/cdk@61.4.0(aws-cdk-lib@2.191.0(constructs@10.4.2))(aws-cdk@2.1010.0)(constructs@10.4.2)':
     dependencies:
       '@oclif/core': 3.26.6
       aws-cdk: 2.1010.0
-      aws-cdk-lib: 2.190.0(constructs@10.4.2)
+      aws-cdk-lib: 2.191.0(constructs@10.4.2)
       aws-sdk: 2.1692.0
       chalk: 4.1.2
       codemaker: 1.111.0
@@ -3513,7 +3513,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  aws-cdk-lib@2.190.0(constructs@10.4.2):
+  aws-cdk-lib@2.191.0(constructs@10.4.2):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.233
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.0
