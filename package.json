@@ -53,8 +53,8 @@
 		"@storybook/addon-webpack5-compiler-babel": "^3.0.6",
 		"@storybook/preact-webpack5": "^8.6.12",
 		"@storybook/react": "^8.6.12",
-		"@swc/core": "^1.11.21",
-		"@swc/jest": "^0.2.37",
+		"@swc/core": "^1.11.22",
+		"@swc/jest": "^0.2.38",
 		"@swc/plugin-emotion": "^9.0.3",
 		"@testing-library/cypress": "^10.0.3",
 		"@testing-library/jest-dom": "^6.6.3",
@@ -70,7 +70,7 @@
 		"@types/jest": "^29.5.14",
 		"@types/mjml": "^4.7.4",
 		"@types/ms": "^2.1.0",
-		"@types/node": "^22.14.1",
+		"@types/node": "^22.15.3",
 		"@types/react": "^19.1.2",
 		"@types/react-dom": "^19.1.2",
 		"@types/serialize-javascript": "^5.0.4",
@@ -98,7 +98,7 @@
 		"jest-environment-jsdom": "^29.7.0",
 		"jest-mock": "^29.7.0",
 		"knip": "^5.50.5",
-		"nodemon": "^3.1.9",
+		"nodemon": "^3.1.10",
 		"prettier": "^3.5.3",
 		"react-docgen-typescript-plugin": "^1.0.8",
 		"sharp": "^0.34.1",
@@ -109,7 +109,7 @@
 		"typescript": "^5.8.3",
 		"typescript-eslint": "^8.31.0",
 		"wait-on": "^8.0.3",
-		"webpack": "^5.99.6",
+		"webpack": "^5.99.7",
 		"webpack-bundle-analyzer": "^4.10.2",
 		"webpack-cli": "^6.0.1",
 		"webpack-merge": "^6.0.1",
@@ -117,9 +117,9 @@
 		"zod-to-json-schema": "^3.24.5"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.787.0",
-		"@aws-sdk/client-sesv2": "^3.787.0",
-		"@aws-sdk/credential-providers": "^3.787.0",
+		"@aws-sdk/client-cloudwatch": "^3.797.0",
+		"@aws-sdk/client-sesv2": "^3.797.0",
+		"@aws-sdk/credential-providers": "^3.797.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.0",
 		"@guardian/ab-core": "8.0.1",
@@ -161,5 +161,5 @@
 			"sharp"
 		]
 	},
-	"packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
+	"packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
 }
