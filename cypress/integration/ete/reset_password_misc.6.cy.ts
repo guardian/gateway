@@ -10,7 +10,7 @@ const breachCheck = () => {
 	}).as('breachCheck');
 };
 
-describe('Password reset recovery flows', () => {
+describe('Reset password misc tests', () => {
 	context(
 		'Passcode limbo state - user does not set password after using passcode',
 		() => {
