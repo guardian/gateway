@@ -1,6 +1,6 @@
 import { Status } from '../../../src/server/models/okta/User';
 import { randomMailosaurEmail } from '../../support/commands/testUser';
-import { sendEmailAndValidatePasscode } from './sign_in_idx_passcode_active_users.5.cy';
+import { sendEmailAndValidatePasscode } from './sign_in_idx_passcode_active_users.6.cy';
 
 describe('Sign In flow, with passcode, non-ACTIVE users', () => {
 	// set up useful variables
