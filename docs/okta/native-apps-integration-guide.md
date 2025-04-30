@@ -31,7 +31,7 @@ We recommend using an SDK to implement the authentication flow:
 
 To initiate authentication the app will use the SDK to call the relevant method to start web authentication using OpenID Connect redirect. In Kotlin SDK see [here](https://github.com/okta/okta-mobile-kotlin?tab=readme-ov-file#web-authentication-using-oidc-redirect) and in Swift SDK see [here](https://github.com/okta/okta-mobile-swift?tab=readme-ov-file#web-authentication-using-oidc) for information on web authentication. The SDK uses the functionality to launch the Authorization Code Flow with PKCE in a web browser.
 
-It will launch an in-app browser tab (iOS: `ASWebAuthenticationSession`, Android: `CustomTabsService` (Custom Tab)) to check if a user session exists in Okta. In **_all_** cases you will want to pass the `prompt=login` parameter to the SDK to ensure that the user is shown the sign in page regardless of if they have an existing session or not.
+It will launch an in-app browser tab (iOS: `ASWebAuthenticationSession`, Android: `CustomTabsService` (Custom Tab)) to check if a user session exists in Okta. In **_all_** cases you will want to pass the `prompt=login` parameter to the SDK to ensure that the user is shown the sign in page regardless of if they have an existing session or not. You **_may_** also pass a `page` parameter, this will be used to show the correct page, `page=signin` (default behaviour) will show the sign in page, `page=register` will show the create account page, `page=google` or `page=apple` will directly start social authentication. This is optional, but we recommend using it to ensure that the user is shown the correct page depending on the UI action taken in app. See the [Kotlin SDK](https://okta.github.io/okta-mobile-kotlin/web-authentication-ui/com.okta.webauthenticationui/-web-authentication-client/login.html) and the [Swift SDK ](https://okta.github.io/okta-mobile-swift/development/webauthenticationui/documentation/webauthenticationui/webauthentication) for more information on adding parameters to the request.
 
 If a user session exists, Okta will redirect back to the app with an authorization code. The app will then use the SDK to exchange the authorization code for any tokens, usually the `id_token`, `access_token` and `refresh_token`. These tokens are stored in the SDK and can be used to authenticate the user, and authorize the app to access other resources. Once the tokens are received, checking the validity of these tokens is enough to check if the use is signed in, instead of having to perform the full login flow again. See the [token](./oauth.md#oauthoidc-tokens-claims-and-scopes) documentation for more information on the differences between the tokens.
 
@@ -108,6 +108,13 @@ note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>
 
 ## FAQs
 
+- **Additional parameters to pass to the signin call?**
+  - You **MUST** always pass the `prompt=login` parameter to the signin (`/authorize`) call to ensure that the user is always shown an identity page, either the signed in as page or an authentication page.
+    - If the user has an existing browser session for SSO (single sign on), they will be shown the "signed in as" page, where they can choose to continue as that user, or sign in as a different user.
+    - If the user does not have an existing browser session, they will be shown the sign in page (or a different page if you pass the `page` parameter).
+  - You **MAY** also pass the `page` parameter to the signin (`/authorize`) call to show a specific page, such as the sign in page, create account page, or social login page.
+    - This is optional, but we recommend using it to ensure that the user is shown the correct page depending on the UI action taken in app.
+    - `page=signin` (default behaviour) will show the sign in page, `page=register` will show the create account page, `page=google` or `page=apple` will directly start social authentication.
 - **How long are the tokens valid for?**
   - Speak to the Identity team about this as this is configurable, but for native apps we set the `access_token` and `id_token` in the apps are valid for 24 hours, and the refresh token is valid for 1 year, but will expire if not used for 6 months.
 - **When/how do I refresh the tokens?**
