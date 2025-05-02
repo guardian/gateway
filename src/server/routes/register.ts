@@ -469,6 +469,10 @@ const oktaIdxCreateAccount = async (
 			res,
 			authorizationCodeFlowOptions: {
 				confirmationPagePath: '/welcome/review',
+				extraData: {
+					flow: 'create-account',
+					appLabel: res.locals.appLabel,
+				},
 			},
 			consents,
 		});
