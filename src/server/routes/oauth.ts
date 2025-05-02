@@ -423,6 +423,7 @@ const authenticationHandler = async (
 						idp,
 						appLabel,
 					});
+					trackMetric(`UserFlow-social-registration-${idp}-${appLabel}`);
 				} else {
 					// if the user is an existing social user, we want to log the flow as social sign in
 					logger.info('OAuth Authentication via Gateway flow', undefined, {
@@ -430,6 +431,7 @@ const authenticationHandler = async (
 						idp,
 						appLabel,
 					});
+					trackMetric(`UserFlow-social-sign-in-${idp}-${appLabel}`);
 				}
 			} else {
 				// otherwise log the flow as is
@@ -437,6 +439,7 @@ const authenticationHandler = async (
 					flow: authState.data.flow,
 					appLabel,
 				});
+				trackMetric(`UserFlow-${authState.data.flow}-${appLabel}`);
 			}
 		} else {
 			// users would hit this if they complete oauth authentication without a flow
