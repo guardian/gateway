@@ -5,6 +5,7 @@ import { PasswordRoutePath } from '@/shared/model/Routes';
 import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
 import { Status } from './okta/User';
 import { Literal } from '@/shared/types';
+import { UserFlow } from '../lib/okta/openid-connect';
 
 // Specific emails to track
 type EmailMetrics =
@@ -93,7 +94,8 @@ type UnconditionalMetrics =
 			| 'WeakPassword'
 			| 'StrongPassword'}`
 	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`
-	| `ExistingUserInCreateAccountFlow`;
+	| `ExistingUserInCreateAccountFlow`
+	| `UserFlow-${UserFlow}-${string}`;
 
 // Combine all the metrics above together into a type
 export type Metrics =
