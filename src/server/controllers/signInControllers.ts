@@ -243,6 +243,10 @@ export const oktaIdxApiSignInPasscodeController = async ({
 					res,
 					authorizationCodeFlowOptions: {
 						confirmationPagePath,
+						extraData: {
+							flow: 'sign-in-passcode',
+							appLabel: res.locals.appLabel,
+						},
 					},
 				});
 
@@ -446,6 +450,12 @@ export const oktaIdxApiSignInController = async ({
 			email,
 			req,
 			res,
+			authorizationCodeFlowOptions: {
+				extraData: {
+					flow: 'sign-in-password',
+					appLabel: res.locals.appLabel,
+				},
+			},
 		});
 
 		// check for the "password" authenticator, we can only authenticate with a password

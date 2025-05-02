@@ -123,6 +123,10 @@ export const changePasswordEmailIdx = async ({
 				confirmationPagePath: user.credentials.password
 					? '/reset-password/complete'
 					: '/set-password/complete',
+				extraData: {
+					flow: 'account-recovery',
+					appLabel: res.locals.appLabel,
+				},
 			},
 		});
 

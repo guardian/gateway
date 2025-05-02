@@ -403,6 +403,47 @@ const authenticationHandler = async (
 			}
 		}
 
+		// log user flow for analytics
+		if (authState.data?.flow) {
+			// users would hit this flow if they take a gateway authentication action,
+			// e.g. sign in, register, reset password, etc.
+
+			// check if we have an appLabel in the authState.data, if not we know the user is authenticating
+			// via gateway web, so we use the `profile` label
+			const appLabel = authState.data.appLabel || 'profile';
+
+			// identify if the user is a social user first to add additional context
+			if (authState.data.flow === 'social-authentication') {
+				const idp = authState.data.socialProvider;
+
+				// if the user is a new social user, we want to log the flow as social registration
+				if (isSocialRegistration) {
+					logger.info('OAuth Authentication via Gateway flow', undefined, {
+						flow: 'social-registration',
+						idp,
+						appLabel,
+					});
+				} else {
+					// if the user is an existing social user, we want to log the flow as social sign in
+					logger.info('OAuth Authentication via Gateway flow', undefined, {
+						flow: 'social-sign-in',
+						idp,
+						appLabel,
+					});
+				}
+			} else {
+				// otherwise log the flow as is
+				logger.info('OAuth Authentication via Gateway flow', undefined, {
+					flow: authState.data.flow,
+					appLabel,
+				});
+			}
+		} else {
+			// users would hit this if they complete oauth authentication without a flow
+			// e.g. token refresh etc.
+			logger.info('OAuth Authentication without Gateway flow');
+		}
+
 		/** ========================================================================
 		 *  ONWARD REDIRECT HANDLING
 		 *  =========================================================================
