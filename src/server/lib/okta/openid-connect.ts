@@ -9,6 +9,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
 import { SocialProvider } from '@/shared/model/Social';
+import { OutgoingHttpHeaders } from 'http';
 
 /**
  * @interface AuthorizationState
@@ -121,6 +122,21 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 	INTERACTION_CODE: `${getProfileUrl()}/oauth/authorization-code/interaction-code-callback`,
 };
 
+const withXForwardedForHeader = (
+	headers: OutgoingHttpHeaders | readonly string[],
+	ip: string,
+): OutgoingHttpHeaders | readonly string[] => {
+	if (isOutGoingHttpHeaders(headers)) {
+		return { ...headers, 'X-Forwarded-For': ip };
+	} else {
+		return [...headers, 'X-Forwarded-For', ip];
+	}
+};
+
+const isOutGoingHttpHeaders = (
+	headers: OutgoingHttpHeaders | readonly string[],
+): headers is OutgoingHttpHeaders => !Array.isArray(headers);
+
 /**
  * @class ProfileOpenIdClient
  *
@@ -144,14 +160,14 @@ const ProfileOpenIdClient = (ip?: string) => {
 	client[custom.http_options] = (_, options) => {
 		// Add the IP address to the headers
 		const headers = options.headers || {};
-		if (ip) {
-			// eslint-disable-next-line functional/immutable-data -- add the IP address to the headers
-			headers['X-Forwarded-For'] = ip;
-		}
+
+		const headersWithXForwardedFor = ip
+			? withXForwardedForHeader(headers, ip)
+			: headers;
 
 		return {
 			...options,
-			headers,
+			headers: headersWithXForwardedFor,
 		};
 	};
 
@@ -188,14 +204,13 @@ const DevProfileIdClient = (devIssuer: string, ip?: string) => {
 	devClient[custom.http_options] = (_, options) => {
 		// Add the IP address to the headers
 		const headers = options.headers || {};
-		if (ip) {
-			// eslint-disable-next-line functional/immutable-data -- add the IP address to the headers
-			headers['X-Forwarded-For'] = ip;
-		}
+		const headersWithXForwardedFor = ip
+			? withXForwardedForHeader(headers, ip)
+			: headers;
 
 		return {
 			...options,
-			headers,
+			headers: headersWithXForwardedFor,
 		};
 	};
 
