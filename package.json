@@ -37,7 +37,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.27.1",
-		"@babel/preset-env": "^7.27.1",
+		"@babel/preset-env": "^7.27.2",
 		"@babel/preset-react": "^7.27.1",
 		"@babel/preset-typescript": "^7.27.1",
 		"@chromatic-com/storybook": "^3.2.6",
@@ -79,7 +79,7 @@
 		"axe-core": "^4.10.3",
 		"chalk-rainbow": "^1.0.0",
 		"copy-webpack-plugin": "^13.0.0",
-		"cypress": "14.3.2",
+		"cypress": "14.3.3",
 		"cypress-axe": "^1.6.0",
 		"cypress-mailosaur": "2.17.0",
 		"dotenv-webpack": "^8.1.0",
