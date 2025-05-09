@@ -68,10 +68,15 @@ const getRequestState = async (
 	// eslint-disable-next-line functional/no-let -- need to assign value based on logic
 	let appName: AppName | undefined;
 
+	// the app label as it is returned from the api
+	// eslint-disable-next-line functional/no-let -- need to assign value based on logic
+	let appLabel: string | undefined;
+
 	try {
 		if (queryParams.appClientId) {
 			const app = await getApp(queryParams.appClientId);
 			const label = app.label.toLowerCase();
+			appLabel = label;
 
 			if (isAppLabel(label)) {
 				if (label.startsWith('android_')) {
@@ -127,6 +132,7 @@ const getRequestState = async (
 		},
 		browser: browser.getBrowser(),
 		requestId: req.get('x-request-id'),
+		appLabel,
 	};
 };
 

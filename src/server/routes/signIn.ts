@@ -609,6 +609,10 @@ router.get(
 		try {
 			const [{ interaction_handle }, authState] = await interact(req, res, {
 				closeExistingSession: true,
+				extraData: {
+					flow: 'social-authentication',
+					appLabel: res.locals.appLabel,
+				},
 			});
 
 			const introspectResponse = await introspect(
