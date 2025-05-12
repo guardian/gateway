@@ -43,6 +43,7 @@ export interface RequestState {
 	browser: Bowser.Parser.Details;
 	oauthState?: OAuthState;
 	requestId?: string;
+	appLabel?: string;
 }
 
 export type ResponseWithRequestState = Response<unknown, RequestState>;

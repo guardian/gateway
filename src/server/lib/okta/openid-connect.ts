@@ -11,6 +11,14 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { SocialProvider } from '@/shared/model/Social';
 import type { OutgoingHttpHeaders } from 'http';
 
+export type UserFlow =
+	| 'sign-in-passcode'
+	| 'sign-in-password'
+	| 'social-registration'
+	| 'social-sign-in'
+	| 'social-authentication'
+	| 'create-account'
+	| 'account-recovery';
 /**
  * @interface AuthorizationState
  * An object to hold the state the user was in while performing the
@@ -38,6 +46,9 @@ export interface AuthorizationState {
 		appPrefix?: string; // used to track if the recovery token has a native app prefix
 		codeVerifier?: string; // used to track the code verifier used in the PKCE flow
 		stateToken?: string; // state handle from Okta IDX /introspect response but only everything before the first tilde (`stateHandle.split('~')[0]`), used to redirect user to login redirect endpoint to set global session (`/login/token/redirect?stateToken=${stateToken}`)
+		// used to track the flow the user is in for basic metrics/analytics
+		flow?: UserFlow; // password reset, and email verification flows outside of create account
+		appLabel?: string; // used to track the app used to start the flow
 	};
 }
 

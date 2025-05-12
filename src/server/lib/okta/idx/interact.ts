@@ -93,6 +93,8 @@ export const interact = async (
 				appPrefix: extraData?.appPrefix,
 				encryptedRegistrationConsents: extraData?.encryptedRegistrationConsents,
 				codeVerifier,
+				flow: extraData?.flow,
+				appLabel: extraData?.appLabel,
 			},
 		);
 		setAuthorizationStateCookie(authState, res);
