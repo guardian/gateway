@@ -44,6 +44,7 @@ export const getPersistableQueryParams = (
 	useOktaClassic: params.useOktaClassic,
 	usePasswordSignIn: params.usePasswordSignIn,
 	useSetPassword: params.useSetPassword,
+	loginLoop: params.loginLoop,
 });
 
 /**
