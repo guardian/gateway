@@ -50,7 +50,7 @@ export const NewAccountReview = ({
 			<MinimalLayout
 				shortRequestId={shortRequestId}
 				pageHeader="You're signed in! Welcome to the Guardian."
-				imageId="welcome"
+				centered={true}
 			>
 				<MainForm
 					shortRequestId={shortRequestId}
@@ -68,11 +68,11 @@ export const NewAccountReview = ({
 		<MinimalLayout
 			shortRequestId={shortRequestId}
 			pageHeader="You're signed in! Welcome to the Guardian."
-			imageId="welcome"
 			leadText="
 				Before you start, confirm how you’d like the Guardian to use your
 				signed-in data.
 			"
+			centered={true}
 		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
