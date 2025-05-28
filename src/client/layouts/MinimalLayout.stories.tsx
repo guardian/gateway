@@ -65,7 +65,7 @@ export const WithSuccessMessage = () => (
 WithSuccessMessage.storyName = 'with success message';
 
 export const WithImage = () => (
-	<MinimalLayout {...withLeadTextArgs} imageId="welcome">
+	<MinimalLayout {...withLeadTextArgs} imageId="email">
 		<Paragraphs />
 	</MinimalLayout>
 );
@@ -74,7 +74,7 @@ WithImage.storyName = 'with image';
 export const WithImageAndErrorMessage = () => (
 	<MinimalLayout
 		{...withLeadTextArgs}
-		imageId="welcome"
+		imageId="email"
 		errorOverride="An error occurred"
 		errorContext="Some additional context."
 		shortRequestId="123e4567"
@@ -95,7 +95,7 @@ export const WithForm = () => (
 WithForm.storyName = 'with form';
 
 export const WithFormAndImage = () => (
-	<MinimalLayout {...withLeadTextArgs} imageId="welcome">
+	<MinimalLayout {...withLeadTextArgs} imageId="email">
 		<Paragraphs />
 		<MainForm formAction="/" submitButtonText="Submit">
 			<NameInputField />
@@ -107,7 +107,7 @@ WithFormAndImage.storyName = 'with form and image';
 export const WithFormImageAndErrorMessage = () => (
 	<MinimalLayout
 		{...withLeadTextArgs}
-		imageId="welcome"
+		imageId="email"
 		errorOverride="An error occurred"
 		errorContext="Some additional context."
 		shortRequestId="123e4567"
