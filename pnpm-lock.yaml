@@ -19,10 +19,10 @@ importers:
         version: 3.817.0
       '@emotion/react':
         specifier: ^11.14.0
-        version: 11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)
+        version: 11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)
       '@faire/mjml-react':
         specifier: ^3.5.0
-        version: 3.5.0(@preact/compat@18.3.1(preact@10.26.7))(@preact/compat@18.3.1(preact@10.26.7))(mjml@4.15.3)
+        version: 3.5.0(@preact/compat@18.3.1(preact@10.26.8))(@preact/compat@18.3.1(preact@10.26.8))(mjml@4.15.3)
       '@guardian/ab-core':
         specifier: 8.0.1
         version: 8.0.1(tslib@2.8.1)(typescript@5.8.3)
@@ -31,10 +31,10 @@ importers:
         version: 22.5.0(tslib@2.8.1)(typescript@5.8.3)
       '@guardian/source':
         specifier: ^10.2.0
-        version: 10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)
+        version: 10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)
       '@guardian/source-development-kitchen':
         specifier: ^18.0.0
-        version: 18.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@guardian/libs@22.5.0(tslib@2.8.1)(typescript@5.8.3))(@guardian/source@10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)
+        version: 18.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@guardian/libs@22.5.0(tslib@2.8.1)(typescript@5.8.3))(@guardian/source@10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)
       '@okta/jwt-verifier':
         specifier: ^4.0.1
         version: 4.0.1
@@ -87,17 +87,17 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       preact:
-        specifier: ^10.26.7
-        version: 10.26.7
+        specifier: ^10.26.8
+        version: 10.26.8
       preact-render-to-string:
         specifier: ^6.5.13
-        version: 6.5.13(preact@10.26.7)
+        version: 6.5.13(preact@10.26.8)
       react:
         specifier: npm:@preact/compat
-        version: '@preact/compat@18.3.1(preact@10.26.7)'
+        version: '@preact/compat@18.3.1(preact@10.26.8)'
       react-dom:
         specifier: npm:@preact/compat
-        version: '@preact/compat@18.3.1(preact@10.26.7)'
+        version: '@preact/compat@18.3.1(preact@10.26.8)'
       serialize-javascript:
         specifier: ^6.0.2
         version: 6.0.2
@@ -112,7 +112,7 @@ importers:
         version: 3.17.0
       zod:
         specifier: ^3.25.32
-        version: 3.25.32
+        version: 3.25.36
     devDependencies:
       '@babel/core':
         specifier: ^7.27.3
@@ -128,7 +128,7 @@ importers:
         version: 7.27.1(@babel/core@7.27.3)
       '@chromatic-com/storybook':
         specifier: ^3.2.6
-        version: 3.2.6(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))
+        version: 3.2.6(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))
       '@emotion/babel-preset-css-prop':
         specifier: ^11.12.0
         version: 11.12.0(@babel/core@7.27.3)
@@ -146,7 +146,7 @@ importers:
         version: 8.6.14(@types/react@19.1.6)(storybook@8.6.14(prettier@3.5.3))
       '@storybook/addon-links':
         specifier: ^8.6.14
-        version: 8.6.14(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))
+        version: 8.6.14(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))
       '@storybook/addon-styling-webpack':
         specifier: ^1.0.1
         version: 1.0.1(webpack@5.99.9)
@@ -161,10 +161,10 @@ importers:
         version: 3.0.6(webpack@5.99.9)
       '@storybook/preact-webpack5':
         specifier: ^8.6.14
-        version: 8.6.14(@swc/core@1.11.29)(esbuild@0.25.4)(preact@10.26.7)(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)(webpack-cli@6.0.1)
+        version: 8.6.14(@swc/core@1.11.29)(esbuild@0.25.4)(preact@10.26.8)(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)(webpack-cli@6.0.1)
       '@storybook/react':
         specifier: ^8.6.14
-        version: 8.6.14(@preact/compat@18.3.1(preact@10.26.7))(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)
+        version: 8.6.14(@preact/compat@18.3.1(preact@10.26.8))(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)
       '@swc/core':
         specifier: ^1.11.29
         version: 1.11.29
@@ -182,25 +182,25 @@ importers:
         version: 6.6.3
       '@testing-library/preact':
         specifier: ^3.2.4
-        version: 3.2.4(preact@10.26.7)
+        version: 3.2.4(preact@10.26.8)
       '@testing-library/preact-hooks':
         specifier: ^1.1.0
-        version: 1.1.0(@testing-library/preact@3.2.4(preact@10.26.7))(preact@10.26.7)
+        version: 1.1.0(@testing-library/preact@3.2.4(preact@10.26.8))(preact@10.26.8)
       '@testing-library/react':
         specifier: npm:@testing-library/preact
-        version: '@testing-library/preact@3.2.4(preact@10.26.7)'
+        version: '@testing-library/preact@3.2.4(preact@10.26.8)'
       '@testing-library/react-hooks':
         specifier: npm:@testing-library/preact-hooks
-        version: '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.26.7))(preact@10.26.7)'
+        version: '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.26.8))(preact@10.26.8)'
       '@types/compression':
         specifier: ^1.8.0
         version: 1.8.0
       '@types/cookie-parser':
         specifier: ^1.4.8
-        version: 1.4.8(@types/express@4.17.21)
+        version: 1.4.8(@types/express@4.17.22)
       '@types/express':
         specifier: ^4.17.21
-        version: 4.17.21
+        version: 4.17.22
       '@types/http-errors':
         specifier: ^2.0.4
         version: 2.0.4
@@ -218,7 +218,7 @@ importers:
         version: 2.1.0
       '@types/node':
         specifier: ^22.15.23
-        version: 22.15.23
+        version: 22.15.24
       '@types/react':
         specifier: ^19.1.6
         version: 19.1.6
@@ -281,7 +281,7 @@ importers:
         version: 9.1.7
       image-minimizer-webpack-plugin:
         specifier: ^4.1.3
-        version: 4.1.3(imagemin@9.0.1)(sharp@0.34.1)(webpack@5.99.9)
+        version: 4.1.3(imagemin@9.0.1)(sharp@0.34.2)(webpack@5.99.9)
       imagemin:
         specifier: ^9.0.1
         version: 9.0.1
@@ -290,7 +290,7 @@ importers:
         version: 8.9.0(@types/ioredis-mock@8.2.6(ioredis@5.6.1))(ioredis@5.6.1)
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+        version: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
@@ -299,7 +299,7 @@ importers:
         version: 29.7.0
       knip:
         specifier: ^5.58.1
-        version: 5.58.1(@types/node@22.15.23)(typescript@5.8.3)
+        version: 5.59.1(@types/node@22.15.24)(typescript@5.8.3)
       nodemon:
         specifier: ^3.1.10
         version: 3.1.10
@@ -311,7 +311,7 @@ importers:
         version: 1.0.8(typescript@5.8.3)(webpack@5.99.9)
       sharp:
         specifier: ^0.34.1
-        version: 0.34.1
+        version: 0.34.2
       storybook:
         specifier: ^8.6.14
         version: 8.6.14(prettier@3.5.3)
@@ -323,7 +323,7 @@ importers:
         version: 5.3.14(@swc/core@1.11.29)(esbuild@0.25.4)(webpack@5.99.9)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3)
+        version: 10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -350,7 +350,7 @@ importers:
         version: 3.0.0
       zod-to-json-schema:
         specifier: ^3.24.5
-        version: 3.24.5(zod@3.25.32)
+        version: 3.24.5(zod@3.25.36)
 
 packages:
 
@@ -1250,9 +1250,6 @@ packages:
   '@emnapi/core@1.4.3':
     resolution: {integrity: sha512-4m62DuCE07lw01soJwPiBGC0nAww0Q+RY70VZ+n49yDIO13yyinhbWCeNnaob0lakDtWQzSdtNWzJeOJt2ma+g==}
 
-  '@emnapi/runtime@1.4.1':
-    resolution: {integrity: sha512-LMshMVP0ZhACNjQNYXiU1iZJ6QCcv0lUdPDPugqGvCGXt5xtRVBPdtA0qU12pEXZzpWAhWlZYptfdAFq10DOVQ==}
-
   '@emnapi/runtime@1.4.3':
     resolution: {integrity: sha512-pBPWdu6MLKROBX05wSNKcNb++m5Er+KQ9QkB+WVM+pW2Kx9hoSrVTnu3BdkI5eBLZoKu/J6mW/B6i6bJB2ytXQ==}
 
@@ -1623,14 +1620,14 @@ packages:
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
 
-  '@img/sharp-darwin-arm64@0.34.1':
-    resolution: {integrity: sha512-pn44xgBtgpEbZsu+lWf2KNb6OAf70X68k+yk69Ic2Xz11zHR/w24/U49XT7AeRwJ0Px+mhALhU5LPci1Aymk7A==}
+  '@img/sharp-darwin-arm64@0.34.2':
+    resolution: {integrity: sha512-OfXHZPppddivUJnqyKoi5YVeHRkkNE2zUFT2gbpKxp/JZCFYEYubnMg+gOp6lWfasPrTS+KPosKqdI+ELYVDtg==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [arm64]
     os: [darwin]
 
-  '@img/sharp-darwin-x64@0.34.1':
-    resolution: {integrity: sha512-VfuYgG2r8BpYiOUN+BfYeFo69nP/MIwAtSJ7/Zpxc5QF3KS22z8Pvg3FkrSFJBPNQ7mmcUcYQFBmEQp7eu1F8Q==}
+  '@img/sharp-darwin-x64@0.34.2':
+    resolution: {integrity: sha512-dYvWqmjU9VxqXmjEtjmvHnGqF8GrVjM2Epj9rJ6BUIXvk8slvNDJbhGFvIoXzkDhrJC2jUxNLz/GUjjvSzfw+g==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [darwin]
@@ -1680,55 +1677,61 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@img/sharp-linux-arm64@0.34.1':
-    resolution: {integrity: sha512-kX2c+vbvaXC6vly1RDf/IWNXxrlxLNpBVWkdpRq5Ka7OOKj6nr66etKy2IENf6FtOgklkg9ZdGpEu9kwdlcwOQ==}
+  '@img/sharp-linux-arm64@0.34.2':
+    resolution: {integrity: sha512-D8n8wgWmPDakc83LORcfJepdOSN6MvWNzzz2ux0MnIbOqdieRZwVYY32zxVx+IFUT8er5KPcyU3XXsn+GzG/0Q==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [arm64]
     os: [linux]
 
-  '@img/sharp-linux-arm@0.34.1':
-    resolution: {integrity: sha512-anKiszvACti2sGy9CirTlNyk7BjjZPiML1jt2ZkTdcvpLU1YH6CXwRAZCA2UmRXnhiIftXQ7+Oh62Ji25W72jA==}
+  '@img/sharp-linux-arm@0.34.2':
+    resolution: {integrity: sha512-0DZzkvuEOqQUP9mo2kjjKNok5AmnOr1jB2XYjkaoNRwpAYMDzRmAqUIa1nRi58S2WswqSfPOWLNOr0FDT3H5RQ==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [arm]
     os: [linux]
 
-  '@img/sharp-linux-s390x@0.34.1':
-    resolution: {integrity: sha512-7s0KX2tI9mZI2buRipKIw2X1ufdTeaRgwmRabt5bi9chYfhur+/C1OXg3TKg/eag1W+6CCWLVmSauV1owmRPxA==}
+  '@img/sharp-linux-s390x@0.34.2':
+    resolution: {integrity: sha512-EGZ1xwhBI7dNISwxjChqBGELCWMGDvmxZXKjQRuqMrakhO8QoMgqCrdjnAqJq/CScxfRn+Bb7suXBElKQpPDiw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [s390x]
     os: [linux]
 
-  '@img/sharp-linux-x64@0.34.1':
-    resolution: {integrity: sha512-wExv7SH9nmoBW3Wr2gvQopX1k8q2g5V5Iag8Zk6AVENsjwd+3adjwxtp3Dcu2QhOXr8W9NusBU6XcQUohBZ5MA==}
+  '@img/sharp-linux-x64@0.34.2':
+    resolution: {integrity: sha512-sD7J+h5nFLMMmOXYH4DD9UtSNBD05tWSSdWAcEyzqW8Cn5UxXvsHAxmxSesYUsTOBmUnjtxghKDl15EvfqLFbQ==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [linux]
 
-  '@img/sharp-linuxmusl-arm64@0.34.1':
-    resolution: {integrity: sha512-DfvyxzHxw4WGdPiTF0SOHnm11Xv4aQexvqhRDAoD00MzHekAj9a/jADXeXYCDFH/DzYruwHbXU7uz+H+nWmSOQ==}
+  '@img/sharp-linuxmusl-arm64@0.34.2':
+    resolution: {integrity: sha512-NEE2vQ6wcxYav1/A22OOxoSOGiKnNmDzCYFOZ949xFmrWZOVII1Bp3NqVVpvj+3UeHMFyN5eP/V5hzViQ5CZNA==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [arm64]
     os: [linux]
 
-  '@img/sharp-linuxmusl-x64@0.34.1':
-    resolution: {integrity: sha512-pax/kTR407vNb9qaSIiWVnQplPcGU8LRIJpDT5o8PdAx5aAA7AS3X9PS8Isw1/WfqgQorPotjrZL3Pqh6C5EBg==}
+  '@img/sharp-linuxmusl-x64@0.34.2':
+    resolution: {integrity: sha512-DOYMrDm5E6/8bm/yQLCWyuDJwUnlevR8xtF8bs+gjZ7cyUNYXiSf/E8Kp0Ss5xasIaXSHzb888V1BE4i1hFhAA==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [linux]
 
-  '@img/sharp-wasm32@0.34.1':
-    resolution: {integrity: sha512-YDybQnYrLQfEpzGOQe7OKcyLUCML4YOXl428gOOzBgN6Gw0rv8dpsJ7PqTHxBnXnwXr8S1mYFSLSa727tpz0xg==}
+  '@img/sharp-wasm32@0.34.2':
+    resolution: {integrity: sha512-/VI4mdlJ9zkaq53MbIG6rZY+QRN3MLbR6usYlgITEzi4Rpx5S6LFKsycOQjkOGmqTNmkIdLjEvooFKwww6OpdQ==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [wasm32]
 
-  '@img/sharp-win32-ia32@0.34.1':
-    resolution: {integrity: sha512-WKf/NAZITnonBf3U1LfdjoMgNO5JYRSlhovhRhMxXVdvWYveM4kM3L8m35onYIdh75cOMCo1BexgVQcCDzyoWw==}
+  '@img/sharp-win32-arm64@0.34.2':
+    resolution: {integrity: sha512-cfP/r9FdS63VA5k0xiqaNaEoGxBg9k7uE+RQGzuK9fHt7jib4zAVVseR9LsE4gJcNWgT6APKMNnCcnyOtmSEUQ==}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [arm64]
+    os: [win32]
+
+  '@img/sharp-win32-ia32@0.34.2':
+    resolution: {integrity: sha512-QLjGGvAbj0X/FXl8n1WbtQ6iVBpWU7JO94u/P2M4a8CFYsvQi4GW2mRy/JqkRx0qpBzaOdKJKw8uc930EX2AHw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [ia32]
     os: [win32]
 
-  '@img/sharp-win32-x64@0.34.1':
-    resolution: {integrity: sha512-hw1iIAHpNE8q3uMIRCgGOeDoz9KtFNarFLQclLxr/LK1VBkj8nby18RjFvr6aP7USRYAjTZW6yisnBWMX571Tw==}
+  '@img/sharp-win32-x64@0.34.2':
+    resolution: {integrity: sha512-aUdT6zEYtDKCaxkofmmJDJYGCf0+pJg3eU9/oBuqvEeoB9dKI6ZLc/1iLJCTuJQDO4ptntAlkUmHgGjyuobZbw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
@@ -2556,8 +2559,8 @@ packages:
   '@types/express-serve-static-core@4.19.5':
     resolution: {integrity: sha512-y6W03tvrACO72aijJ5uF02FRq5cgDR9lUxddQ8vyF+GvmjJQqbzDcJngEjURc+ZsG31VI3hODNZJ2URj86pzmg==}
 
-  '@types/express@4.17.21':
-    resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
+  '@types/express@4.17.22':
+    resolution: {integrity: sha512-eZUmSnhRX9YRSkplpz0N+k6NljUUn5l3EWZIKZvYzhvMphEuNiyyy1viH/ejgt66JWgALwC/gtSUAeQKtSwW/w==}
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -2618,8 +2621,8 @@ packages:
   '@types/node@15.14.9':
     resolution: {integrity: sha512-qjd88DrCxupx/kJD5yQgZdcYKZKSIGBVDIBE1/LTGcNm3d2Np/jxojkdePDdfnBHJc5W7vSMpbJ1aB7p/Py69A==}
 
-  '@types/node@22.15.23':
-    resolution: {integrity: sha512-7Ec1zaFPF4RJ0eXu1YT/xgiebqwqoJz8rYPDi/O2BcZ++Wpt0Kq9cl0eg6NN6bYbPnR67ZLo7St5Q3UK0SnARw==}
+  '@types/node@22.15.24':
+    resolution: {integrity: sha512-w9CZGm9RDjzTh/D+hFwlBJ3ziUaVw7oufKA3vOFSOZlzmW9AkZnfjPb+DLnrV6qtgL/LNmP0/2zBNCFHL3F0ng==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -3818,8 +3821,8 @@ packages:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
-  detect-libc@2.0.3:
-    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
+  detect-libc@2.0.4:
+    resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
 
   detect-newline@3.1.0:
@@ -3991,12 +3994,12 @@ packages:
   error-ex@1.3.2:
     resolution: {integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==}
 
-  es-abstract@1.23.10:
-    resolution: {integrity: sha512-MtUbM072wlJNyeYAe0mhzrD+M6DIJa96CZAOBBrhDbgKnB4MApIKefcyAB1eOdYn8cUNZgvwBvEzdoAYsxgEIw==}
-    engines: {node: '>= 0.4'}
-
   es-abstract@1.23.9:
     resolution: {integrity: sha512-py07lI0wjxAC/DcfK1S6G7iANonniZwTISvdPzk9hzeH0IZIshbuuFxLIU96OyF89Yb9hiqWn8M/bY83KY5vzA==}
+    engines: {node: '>= 0.4'}
+
+  es-abstract@1.24.0:
+    resolution: {integrity: sha512-WSzPgsdLtTcQwm4CROfS5ju2Wa1QQcVeT37jFjYzdFz1r9ahadC8B8/a4qxJxM+09F18iumCdRmlr96ZYkQvEg==}
     engines: {node: '>= 0.4'}
 
   es-define-property@1.0.0:
@@ -5040,6 +5043,10 @@ packages:
     resolution: {integrity: sha512-1Qed0/Hr2m+YqxnM09CjA2d/i6YZNfF6R2oRAOj36eUdS6qIV/huPJNSEpKbupewFs+ZsJlxsjjPbc0/afW6Lw==}
     engines: {node: '>= 0.4'}
 
+  is-negative-zero@2.0.3:
+    resolution: {integrity: sha512-5KoIu2Ngpyek75jXodFvnafB6DJgr3u8uuK0LEZJjrU19DrMD3EVERaR8sjz8CCGgpZvxPl9SuE1GMVPFHx1mw==}
+    engines: {node: '>= 0.4'}
+
   is-number-object@1.0.7:
     resolution: {integrity: sha512-k1U0IRzLMo7ZlYIfzRu23Oh6MiIFasgpb9X76eqfFZAqwH44UI4KTBvBYIZ1dSL9ZzChTB9ShHfLkR4pdW5krQ==}
     engines: {node: '>= 0.4'}
@@ -5441,8 +5448,8 @@ packages:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
 
-  knip@5.58.1:
-    resolution: {integrity: sha512-9FKnuGhGFZ8wDgcjEYQ6btMmtGHa7dkvNU2ZHuMcv2NaxL7xDeFXZKjETbaiJBjWnLytrDXrh7a58lGXcE0Zfw==}
+  knip@5.59.1:
+    resolution: {integrity: sha512-pOMBw6sLQhi/RfnpI6TwBY6NrAtKXDO5wkmMm+pCsSK5eWbVfDnDtPXbLDGNCoZPXiuAojb27y4XOpp4JPNxlA==}
     engines: {node: '>=18.18.0'}
     hasBin: true
     peerDependencies:
@@ -6197,8 +6204,8 @@ packages:
     peerDependencies:
       preact: '>=10'
 
-  preact@10.26.7:
-    resolution: {integrity: sha512-43xS+QYc1X1IPbw03faSgY6I6OYWcLrJRv3hU0+qMOfh/XCHcP0MX2CVjNARYR2cC/guu975sta4OcjlczxD7g==}
+  preact@10.26.8:
+    resolution: {integrity: sha512-1nMfdFjucm5hKvq0IClqZwK4FJkGXhRrQstOQ3P4vp8HxKrJEMFcY6RdBRVTdfQS/UlnX6gfbPuTvaqx/bDoeQ==}
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -6581,8 +6588,8 @@ packages:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
     engines: {node: '>=8'}
 
-  sharp@0.34.1:
-    resolution: {integrity: sha512-1j0w61+eVxu7DawFJtnfYcvSv6qPFvfTaqzTQ2BLknVhHTwGS8sc63ZBF4rzkWMBVKybo4S5OBtDdZahh2A1xg==}
+  sharp@0.34.2:
+    resolution: {integrity: sha512-lszvBmB9QURERtyKT2bNmsgxXK0ShJrL/fvqlonCo7e6xBF8nT8xU6pW+PMIbLsz0RxQk3rgH9kd8UmvOzlMJg==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
 
   shebang-command@2.0.0:
@@ -6720,6 +6727,10 @@ packages:
 
   stop-iteration-iterator@1.0.0:
     resolution: {integrity: sha512-iCGQj+0l0HOdZ2AEeBADlsRC+vsnDsZsbdSiH1yNSjcfKM7fdpCMfqAL/dwF5BLiw/XhRft/Wax6zQbhq2BcjQ==}
+    engines: {node: '>= 0.4'}
+
+  stop-iteration-iterator@1.1.0:
+    resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
 
   storybook@8.6.14:
@@ -7481,8 +7492,8 @@ packages:
     peerDependencies:
       zod: ^3.24.4
 
-  zod@3.25.32:
-    resolution: {integrity: sha512-OSm2xTIRfW8CV5/QKgngwmQW/8aPfGdaQFlrGoErlgg/Epm7cjb6K6VEyExfe65a3VybUOnu381edLb0dfJl0g==}
+  zod@3.25.36:
+    resolution: {integrity: sha512-eRFS3i8T0IrpGdL8HQyqFAugGOn7jOjyGgGdtv5NY4Wkhi7lJDk732bNZ609YMIGFbLoaj6J69O1Mura23gfIw==}
 
 snapshots:
 
@@ -8920,12 +8931,12 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@chromatic-com/storybook@3.2.6(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))':
+  '@chromatic-com/storybook@3.2.6(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
       chromatic: 11.27.0
       filesize: 10.1.6
       jsonfile: 6.1.0
-      react-confetti: 6.4.0(@preact/compat@18.3.1(preact@10.26.7))
+      react-confetti: 6.4.0(@preact/compat@18.3.1(preact@10.26.8))
       storybook: 8.6.14(prettier@3.5.3)
       strip-ansi: 7.1.0
     transitivePeerDependencies:
@@ -8980,11 +8991,6 @@ snapshots:
   '@emnapi/core@1.4.3':
     dependencies:
       '@emnapi/wasi-threads': 1.0.2
-      tslib: 2.8.1
-    optional: true
-
-  '@emnapi/runtime@1.4.1':
-    dependencies:
       tslib: 2.8.1
     optional: true
 
@@ -9057,17 +9063,17 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)':
+  '@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)':
     dependencies:
       '@babel/runtime': 7.26.10
       '@emotion/babel-plugin': 11.13.5
       '@emotion/cache': 11.14.0
       '@emotion/serialize': 1.3.3
-      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(@preact/compat@18.3.1(preact@10.26.7))
+      '@emotion/use-insertion-effect-with-fallbacks': 1.2.0(@preact/compat@18.3.1(preact@10.26.8))
       '@emotion/utils': 1.4.2
       '@emotion/weak-memoize': 0.4.0
       hoist-non-react-statics: 3.3.2
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
     optionalDependencies:
       '@types/react': 19.1.6
     transitivePeerDependencies:
@@ -9093,9 +9099,9 @@ snapshots:
 
   '@emotion/unitless@0.10.0': {}
 
-  '@emotion/use-insertion-effect-with-fallbacks@1.2.0(@preact/compat@18.3.1(preact@10.26.7))':
+  '@emotion/use-insertion-effect-with-fallbacks@1.2.0(@preact/compat@18.3.1(preact@10.26.8))':
     dependencies:
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
 
   '@emotion/utils@1.4.0': {}
 
@@ -9235,12 +9241,12 @@ snapshots:
       '@eslint/core': 0.14.0
       levn: 0.4.1
 
-  '@faire/mjml-react@3.5.0(@preact/compat@18.3.1(preact@10.26.7))(@preact/compat@18.3.1(preact@10.26.7))(mjml@4.15.3)':
+  '@faire/mjml-react@3.5.0(@preact/compat@18.3.1(preact@10.26.8))(@preact/compat@18.3.1(preact@10.26.8))(mjml@4.15.3)':
     dependencies:
       lodash.kebabcase: 4.1.1
       mjml: 4.15.3
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
-      react-dom: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
+      react-dom: '@preact/compat@18.3.1(preact@10.26.8)'
 
   '@guardian/ab-core@8.0.1(tslib@2.8.1)(typescript@5.8.3)':
     dependencies:
@@ -9280,25 +9286,25 @@ snapshots:
       prettier: 3.5.3
       tslib: 2.8.1
 
-  '@guardian/source-development-kitchen@18.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@guardian/libs@22.5.0(tslib@2.8.1)(typescript@5.8.3))(@guardian/source@10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)':
+  '@guardian/source-development-kitchen@18.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@guardian/libs@22.5.0(tslib@2.8.1)(typescript@5.8.3))(@guardian/source@10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)':
     dependencies:
       '@guardian/libs': 22.5.0(tslib@2.8.1)(typescript@5.8.3)
-      '@guardian/source': 10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)
+      '@guardian/source': 10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)
       tslib: 2.8.1
     optionalDependencies:
-      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)
+      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)
       '@types/react': 19.1.6
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
       typescript: 5.8.3
 
-  '@guardian/source@10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)':
+  '@guardian/source@10.2.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6))(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)(tslib@2.8.1)(typescript@5.8.3)':
     dependencies:
       mini-svg-data-uri: 1.4.4
       tslib: 2.8.1
     optionalDependencies:
-      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.26.7))(@types/react@19.1.6)
+      '@emotion/react': 11.14.0(@preact/compat@18.3.1(preact@10.26.8))(@types/react@19.1.6)
       '@types/react': 19.1.6
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
       typescript: 5.8.3
 
   '@hapi/hoek@9.3.0': {}
@@ -9320,12 +9326,12 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@img/sharp-darwin-arm64@0.34.1':
+  '@img/sharp-darwin-arm64@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-darwin-arm64': 1.1.0
     optional: true
 
-  '@img/sharp-darwin-x64@0.34.1':
+  '@img/sharp-darwin-x64@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-darwin-x64': 1.1.0
     optional: true
@@ -9357,45 +9363,48 @@ snapshots:
   '@img/sharp-libvips-linuxmusl-x64@1.1.0':
     optional: true
 
-  '@img/sharp-linux-arm64@0.34.1':
+  '@img/sharp-linux-arm64@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-linux-arm64': 1.1.0
     optional: true
 
-  '@img/sharp-linux-arm@0.34.1':
+  '@img/sharp-linux-arm@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-linux-arm': 1.1.0
     optional: true
 
-  '@img/sharp-linux-s390x@0.34.1':
+  '@img/sharp-linux-s390x@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-linux-s390x': 1.1.0
     optional: true
 
-  '@img/sharp-linux-x64@0.34.1':
+  '@img/sharp-linux-x64@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-linux-x64': 1.1.0
     optional: true
 
-  '@img/sharp-linuxmusl-arm64@0.34.1':
+  '@img/sharp-linuxmusl-arm64@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-linuxmusl-arm64': 1.1.0
     optional: true
 
-  '@img/sharp-linuxmusl-x64@0.34.1':
+  '@img/sharp-linuxmusl-x64@0.34.2':
     optionalDependencies:
       '@img/sharp-libvips-linuxmusl-x64': 1.1.0
     optional: true
 
-  '@img/sharp-wasm32@0.34.1':
+  '@img/sharp-wasm32@0.34.2':
     dependencies:
-      '@emnapi/runtime': 1.4.1
+      '@emnapi/runtime': 1.4.3
     optional: true
 
-  '@img/sharp-win32-ia32@0.34.1':
+  '@img/sharp-win32-arm64@0.34.2':
     optional: true
 
-  '@img/sharp-win32-x64@0.34.1':
+  '@img/sharp-win32-ia32@0.34.2':
+    optional: true
+
+  '@img/sharp-win32-x64@0.34.2':
     optional: true
 
   '@ioredis/as-callback@3.0.0': {}
@@ -9424,27 +9433,27 @@ snapshots:
   '@jest/console@29.7.0':
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       chalk: 4.1.2
       jest-message-util: 29.7.0
       jest-util: 29.7.0
       slash: 3.0.0
 
-  '@jest/core@29.7.0(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))':
+  '@jest/core@29.7.0(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))':
     dependencies:
       '@jest/console': 29.7.0
       '@jest/reporters': 29.7.0(node-notifier@10.0.1)
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.9.0
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -9475,7 +9484,7 @@ snapshots:
     dependencies:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       jest-mock: 29.7.0
 
   '@jest/expect-utils@29.7.0':
@@ -9493,7 +9502,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@sinonjs/fake-timers': 10.3.0
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       jest-message-util: 29.7.0
       jest-mock: 29.7.0
       jest-util: 29.7.0
@@ -9515,7 +9524,7 @@ snapshots:
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
       '@jridgewell/trace-mapping': 0.3.25
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
       exit: 0.1.2
@@ -9587,7 +9596,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
@@ -9710,9 +9719,9 @@ snapshots:
 
   '@polka/url@1.0.0-next.25': {}
 
-  '@preact/compat@18.3.1(preact@10.26.7)':
+  '@preact/compat@18.3.1(preact@10.26.8)':
     dependencies:
-      preact: 10.26.7
+      preact: 10.26.8
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -10082,13 +10091,13 @@ snapshots:
       '@storybook/global': 5.0.0
       storybook: 8.6.14(prettier@3.5.3)
 
-  '@storybook/addon-links@8.6.14(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))':
+  '@storybook/addon-links@8.6.14(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
       '@storybook/global': 5.0.0
       storybook: 8.6.14(prettier@3.5.3)
       ts-dedent: 2.2.0
     optionalDependencies:
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
 
   '@storybook/addon-measure@8.6.14(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
@@ -10226,12 +10235,12 @@ snapshots:
 
   '@storybook/node-logger@8.1.11': {}
 
-  '@storybook/preact-webpack5@8.6.14(@swc/core@1.11.29)(esbuild@0.25.4)(preact@10.26.7)(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)(webpack-cli@6.0.1)':
+  '@storybook/preact-webpack5@8.6.14(@swc/core@1.11.29)(esbuild@0.25.4)(preact@10.26.8)(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)(webpack-cli@6.0.1)':
     dependencies:
       '@storybook/builder-webpack5': 8.6.14(@swc/core@1.11.29)(esbuild@0.25.4)(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)(webpack-cli@6.0.1)
-      '@storybook/preact': 8.6.14(preact@10.26.7)(storybook@8.6.14(prettier@3.5.3))
-      '@storybook/preset-preact-webpack': 8.6.14(preact@10.26.7)(storybook@8.6.14(prettier@3.5.3))
-      preact: 10.26.7
+      '@storybook/preact': 8.6.14(preact@10.26.8)(storybook@8.6.14(prettier@3.5.3))
+      '@storybook/preset-preact-webpack': 8.6.14(preact@10.26.8)(storybook@8.6.14(prettier@3.5.3))
+      preact: 10.26.8
       storybook: 8.6.14(prettier@3.5.3)
     transitivePeerDependencies:
       - '@rspack/core'
@@ -10241,31 +10250,31 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@storybook/preact@8.6.14(preact@10.26.7)(storybook@8.6.14(prettier@3.5.3))':
+  '@storybook/preact@8.6.14(preact@10.26.8)(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
       '@storybook/components': 8.6.14(storybook@8.6.14(prettier@3.5.3))
       '@storybook/global': 5.0.0
       '@storybook/manager-api': 8.6.14(storybook@8.6.14(prettier@3.5.3))
       '@storybook/preview-api': 8.6.14(storybook@8.6.14(prettier@3.5.3))
       '@storybook/theming': 8.6.14(storybook@8.6.14(prettier@3.5.3))
-      preact: 10.26.7
+      preact: 10.26.8
       storybook: 8.6.14(prettier@3.5.3)
       ts-dedent: 2.2.0
 
-  '@storybook/preset-preact-webpack@8.6.14(preact@10.26.7)(storybook@8.6.14(prettier@3.5.3))':
+  '@storybook/preset-preact-webpack@8.6.14(preact@10.26.8)(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
       '@storybook/core-webpack': 8.6.14(storybook@8.6.14(prettier@3.5.3))
-      preact: 10.26.7
+      preact: 10.26.8
       storybook: 8.6.14(prettier@3.5.3)
 
   '@storybook/preview-api@8.6.14(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
       storybook: 8.6.14(prettier@3.5.3)
 
-  '@storybook/react-dom-shim@8.6.14(@preact/compat@18.3.1(preact@10.26.7))(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))':
+  '@storybook/react-dom-shim@8.6.14(@preact/compat@18.3.1(preact@10.26.8))(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))':
     dependencies:
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
-      react-dom: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
+      react-dom: '@preact/compat@18.3.1(preact@10.26.8)'
       storybook: 8.6.14(prettier@3.5.3)
 
   '@storybook/react-dom-shim@8.6.14(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@8.6.14(prettier@3.5.3))':
@@ -10274,16 +10283,16 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
       storybook: 8.6.14(prettier@3.5.3)
 
-  '@storybook/react@8.6.14(@preact/compat@18.3.1(preact@10.26.7))(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)':
+  '@storybook/react@8.6.14(@preact/compat@18.3.1(preact@10.26.8))(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))(typescript@5.8.3)':
     dependencies:
       '@storybook/components': 8.6.14(storybook@8.6.14(prettier@3.5.3))
       '@storybook/global': 5.0.0
       '@storybook/manager-api': 8.6.14(storybook@8.6.14(prettier@3.5.3))
       '@storybook/preview-api': 8.6.14(storybook@8.6.14(prettier@3.5.3))
-      '@storybook/react-dom-shim': 8.6.14(@preact/compat@18.3.1(preact@10.26.7))(@preact/compat@18.3.1(preact@10.26.7))(storybook@8.6.14(prettier@3.5.3))
+      '@storybook/react-dom-shim': 8.6.14(@preact/compat@18.3.1(preact@10.26.8))(@preact/compat@18.3.1(preact@10.26.8))(storybook@8.6.14(prettier@3.5.3))
       '@storybook/theming': 8.6.14(storybook@8.6.14(prettier@3.5.3))
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
-      react-dom: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
+      react-dom: '@preact/compat@18.3.1(preact@10.26.8)'
       storybook: 8.6.14(prettier@3.5.3)
     optionalDependencies:
       typescript: 5.8.3
@@ -10405,15 +10414,15 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.26.7))(preact@10.26.7)':
+  '@testing-library/preact-hooks@1.1.0(@testing-library/preact@3.2.4(preact@10.26.8))(preact@10.26.8)':
     dependencies:
-      '@testing-library/preact': 3.2.4(preact@10.26.7)
-      preact: 10.26.7
+      '@testing-library/preact': 3.2.4(preact@10.26.8)
+      preact: 10.26.8
 
-  '@testing-library/preact@3.2.4(preact@10.26.7)':
+  '@testing-library/preact@3.2.4(preact@10.26.8)':
     dependencies:
       '@testing-library/dom': 8.20.1
-      preact: 10.26.7
+      preact: 10.26.8
 
   '@tokenizer/token@0.3.0': {}
 
@@ -10458,20 +10467,20 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
 
   '@types/compression@1.8.0':
     dependencies:
-      '@types/express': 4.17.21
-      '@types/node': 22.15.23
+      '@types/express': 4.17.22
+      '@types/node': 22.15.24
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
 
-  '@types/cookie-parser@1.4.8(@types/express@4.17.21)':
+  '@types/cookie-parser@1.4.8(@types/express@4.17.22)':
     dependencies:
-      '@types/express': 4.17.21
+      '@types/express': 4.17.22
 
   '@types/cookiejar@2.1.5': {}
 
@@ -10493,12 +10502,12 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.5':
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       '@types/qs': 6.9.15
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
 
-  '@types/express@4.17.21':
+  '@types/express@4.17.22':
     dependencies:
       '@types/body-parser': 1.19.5
       '@types/express-serve-static-core': 4.19.5
@@ -10507,7 +10516,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
 
   '@types/html-minifier-terser@6.1.0': {}
 
@@ -10534,7 +10543,7 @@ snapshots:
 
   '@types/jsdom@20.0.1':
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       '@types/tough-cookie': 4.0.5
       parse5: 7.1.2
 
@@ -10545,7 +10554,7 @@ snapshots:
 
   '@types/jsonwebtoken@9.0.6':
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
 
   '@types/mdx@2.0.13': {}
 
@@ -10563,7 +10572,7 @@ snapshots:
 
   '@types/node@15.14.9': {}
 
-  '@types/node@22.15.23':
+  '@types/node@22.15.24':
     dependencies:
       undici-types: 6.21.0
 
@@ -10588,14 +10597,14 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
 
   '@types/serialize-javascript@5.0.4': {}
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       '@types/send': 0.17.4
 
   '@types/sinonjs__fake-timers@8.1.1': {}
@@ -10608,7 +10617,7 @@ snapshots:
     dependencies:
       '@types/cookiejar': 2.1.5
       '@types/methods': 1.1.4
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       form-data: 4.0.2
 
   '@types/supertest@6.0.3':
@@ -10630,7 +10639,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
     optional: true
 
   '@typescript-eslint/eslint-plugin@8.22.0(@typescript-eslint/parser@8.22.0(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3))(eslint@9.27.0(jiti@2.4.2))(typescript@5.8.3)':
@@ -10787,7 +10796,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.1
+      semver: 7.7.2
       ts-api-utils: 2.0.1(typescript@5.8.3)
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -11109,7 +11118,7 @@ snapshots:
       call-bind: 1.0.8
       call-bound: 1.0.4
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
       es-shim-unscopables: 1.1.0
@@ -11718,13 +11727,13 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  create-jest@29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3)):
+  create-jest@29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3)):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -11960,7 +11969,7 @@ snapshots:
 
   destroy@1.2.0: {}
 
-  detect-libc@2.0.3: {}
+  detect-libc@2.0.4: {}
 
   detect-newline@3.1.0: {}
 
@@ -12077,7 +12086,7 @@ snapshots:
       '@one-ini/wasm': 0.1.1
       commander: 10.0.1
       minimatch: 9.0.1
-      semver: 7.7.1
+      semver: 7.7.2
 
   ee-first@1.1.1: {}
 
@@ -12122,61 +12131,6 @@ snapshots:
   error-ex@1.3.2:
     dependencies:
       is-arrayish: 0.2.1
-
-  es-abstract@1.23.10:
-    dependencies:
-      array-buffer-byte-length: 1.0.2
-      arraybuffer.prototype.slice: 1.0.4
-      available-typed-arrays: 1.0.7
-      call-bind: 1.0.8
-      call-bound: 1.0.4
-      data-view-buffer: 1.0.2
-      data-view-byte-length: 1.0.2
-      data-view-byte-offset: 1.0.1
-      es-define-property: 1.0.1
-      es-errors: 1.3.0
-      es-object-atoms: 1.1.1
-      es-set-tostringtag: 2.1.0
-      es-to-primitive: 1.3.0
-      function.prototype.name: 1.1.8
-      get-intrinsic: 1.3.0
-      get-proto: 1.0.1
-      get-symbol-description: 1.1.0
-      globalthis: 1.0.4
-      gopd: 1.2.0
-      has-property-descriptors: 1.0.2
-      has-proto: 1.2.0
-      has-symbols: 1.1.0
-      hasown: 2.0.2
-      internal-slot: 1.1.0
-      is-array-buffer: 3.0.5
-      is-callable: 1.2.7
-      is-data-view: 1.0.2
-      is-regex: 1.2.1
-      is-shared-array-buffer: 1.0.4
-      is-string: 1.1.1
-      is-typed-array: 1.1.15
-      is-weakref: 1.1.1
-      math-intrinsics: 1.1.0
-      object-inspect: 1.13.4
-      object-keys: 1.1.1
-      object.assign: 4.1.7
-      own-keys: 1.0.1
-      regexp.prototype.flags: 1.5.4
-      safe-array-concat: 1.1.3
-      safe-push-apply: 1.0.0
-      safe-regex-test: 1.1.0
-      set-proto: 1.0.0
-      string.prototype.trim: 1.2.10
-      string.prototype.trimend: 1.0.9
-      string.prototype.trimstart: 1.0.8
-      typed-array-buffer: 1.0.3
-      typed-array-byte-length: 1.0.3
-      typed-array-byte-offset: 1.0.4
-      typed-array-length: 1.0.7
-      unbox-primitive: 1.1.0
-      which-typed-array: 1.1.19
-    optional: true
 
   es-abstract@1.23.9:
     dependencies:
@@ -12231,6 +12185,64 @@ snapshots:
       typed-array-length: 1.0.7
       unbox-primitive: 1.1.0
       which-typed-array: 1.1.18
+
+  es-abstract@1.24.0:
+    dependencies:
+      array-buffer-byte-length: 1.0.2
+      arraybuffer.prototype.slice: 1.0.4
+      available-typed-arrays: 1.0.7
+      call-bind: 1.0.8
+      call-bound: 1.0.4
+      data-view-buffer: 1.0.2
+      data-view-byte-length: 1.0.2
+      data-view-byte-offset: 1.0.1
+      es-define-property: 1.0.1
+      es-errors: 1.3.0
+      es-object-atoms: 1.1.1
+      es-set-tostringtag: 2.1.0
+      es-to-primitive: 1.3.0
+      function.prototype.name: 1.1.8
+      get-intrinsic: 1.3.0
+      get-proto: 1.0.1
+      get-symbol-description: 1.1.0
+      globalthis: 1.0.4
+      gopd: 1.2.0
+      has-property-descriptors: 1.0.2
+      has-proto: 1.2.0
+      has-symbols: 1.1.0
+      hasown: 2.0.2
+      internal-slot: 1.1.0
+      is-array-buffer: 3.0.5
+      is-callable: 1.2.7
+      is-data-view: 1.0.2
+      is-negative-zero: 2.0.3
+      is-regex: 1.2.1
+      is-set: 2.0.3
+      is-shared-array-buffer: 1.0.4
+      is-string: 1.1.1
+      is-typed-array: 1.1.15
+      is-weakref: 1.1.1
+      math-intrinsics: 1.1.0
+      object-inspect: 1.13.4
+      object-keys: 1.1.1
+      object.assign: 4.1.7
+      own-keys: 1.0.1
+      regexp.prototype.flags: 1.5.4
+      safe-array-concat: 1.1.3
+      safe-push-apply: 1.0.0
+      safe-regex-test: 1.1.0
+      set-proto: 1.0.0
+      stop-iteration-iterator: 1.1.0
+      string.prototype.trim: 1.2.10
+      string.prototype.trimend: 1.0.9
+      string.prototype.trimstart: 1.0.8
+      typed-array-buffer: 1.0.3
+      typed-array-byte-length: 1.0.3
+      typed-array-byte-offset: 1.0.4
+      typed-array-length: 1.0.7
+      unbox-primitive: 1.1.0
+      which-typed-array: 1.1.19
+    optional: true
 
   es-define-property@1.0.0:
     dependencies:
@@ -13277,14 +13289,14 @@ snapshots:
 
   image-dimensions@2.3.0: {}
 
-  image-minimizer-webpack-plugin@4.1.3(imagemin@9.0.1)(sharp@0.34.1)(webpack@5.99.9):
+  image-minimizer-webpack-plugin@4.1.3(imagemin@9.0.1)(sharp@0.34.2)(webpack@5.99.9):
     dependencies:
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       webpack: 5.99.9(@swc/core@1.11.29)(esbuild@0.25.4)(webpack-cli@6.0.1)
     optionalDependencies:
       imagemin: 9.0.1
-      sharp: 0.34.1
+      sharp: 0.34.2
 
   imagemin@9.0.1:
     dependencies:
@@ -13495,6 +13507,9 @@ snapshots:
 
   is-map@2.0.3: {}
 
+  is-negative-zero@2.0.3:
+    optional: true
+
   is-number-object@1.0.7:
     dependencies:
       has-tostringtag: 1.0.2
@@ -13653,7 +13668,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.5.3(babel-plugin-macros@3.1.0)
@@ -13673,16 +13688,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3)):
+  jest-cli@29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3)):
     dependencies:
-      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      create-jest: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      jest-config: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -13694,7 +13709,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3)):
+  jest-config@29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3)):
     dependencies:
       '@babel/core': 7.27.3
       '@jest/test-sequencer': 29.7.0
@@ -13719,8 +13734,8 @@ snapshots:
       slash: 3.0.0
       strip-json-comments: 3.1.1
     optionalDependencies:
-      '@types/node': 22.15.23
-      ts-node: 10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3)
+      '@types/node': 22.15.24
+      ts-node: 10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -13750,7 +13765,7 @@ snapshots:
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
       '@types/jsdom': 20.0.1
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       jest-mock: 29.7.0
       jest-util: 29.7.0
       jsdom: 20.0.3
@@ -13764,7 +13779,7 @@ snapshots:
       '@jest/environment': 29.7.0
       '@jest/fake-timers': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
@@ -13774,7 +13789,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.6.3
       '@types/graceful-fs': 4.1.9
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -13813,7 +13828,7 @@ snapshots:
   jest-mock@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       jest-util: 29.7.0
 
   jest-pnp-resolver@1.2.3(jest-resolve@29.7.0):
@@ -13848,7 +13863,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       chalk: 4.1.2
       emittery: 0.13.1
       graceful-fs: 4.2.11
@@ -13876,7 +13891,7 @@ snapshots:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       chalk: 4.1.2
       cjs-module-lexer: 1.4.3
       collect-v8-coverage: 1.0.2
@@ -13922,7 +13937,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -13941,7 +13956,7 @@ snapshots:
     dependencies:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.13.1
@@ -13950,23 +13965,23 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@29.7.0:
     dependencies:
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3)):
+  jest@29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3)):
     dependencies:
-      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
       '@jest/types': 29.6.3
       import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@22.15.23)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3))
+      jest-cli: 29.7.0(@types/node@22.15.24)(babel-plugin-macros@3.1.0)(node-notifier@10.0.1)(ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3))
     optionalDependencies:
       node-notifier: 10.0.1
     transitivePeerDependencies:
@@ -14106,7 +14121,7 @@ snapshots:
 
   jwks-rsa@3.1.0:
     dependencies:
-      '@types/express': 4.17.21
+      '@types/express': 4.17.22
       '@types/jsonwebtoken': 9.0.6
       debug: 4.4.0(supports-color@5.5.0)
       jose: 4.15.9
@@ -14123,10 +14138,10 @@ snapshots:
 
   kleur@3.0.3: {}
 
-  knip@5.58.1(@types/node@22.15.23)(typescript@5.8.3):
+  knip@5.59.1(@types/node@22.15.24)(typescript@5.8.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       fast-glob: 3.3.3
       formatly: 0.2.3
       jiti: 2.4.2
@@ -14138,8 +14153,8 @@ snapshots:
       smol-toml: 1.3.4
       strip-json-comments: 5.0.1
       typescript: 5.8.3
-      zod: 3.25.32
-      zod-validation-error: 3.4.1(zod@3.25.32)
+      zod: 3.25.36
+      zod-validation-error: 3.4.1(zod@3.25.36)
 
   kuler@2.0.0: {}
 
@@ -14788,7 +14803,7 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
     optional: true
 
   object.values@1.2.1:
@@ -15046,11 +15061,11 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact-render-to-string@6.5.13(preact@10.26.7):
+  preact-render-to-string@6.5.13(preact@10.26.8):
     dependencies:
-      preact: 10.26.7
+      preact: 10.26.8
 
-  preact@10.26.7: {}
+  preact@10.26.8: {}
 
   prelude-ls@1.2.1: {}
 
@@ -15150,9 +15165,9 @@ snapshots:
       iconv-lite: 0.6.3
       unpipe: 1.0.0
 
-  react-confetti@6.4.0(@preact/compat@18.3.1(preact@10.26.7)):
+  react-confetti@6.4.0(@preact/compat@18.3.1(preact@10.26.8)):
     dependencies:
-      react: '@preact/compat@18.3.1(preact@10.26.7)'
+      react: '@preact/compat@18.3.1(preact@10.26.8)'
       tween-functions: 1.2.0
 
   react-docgen-typescript-plugin@1.0.8(typescript@5.8.3)(webpack@5.99.9):
@@ -15477,14 +15492,14 @@ snapshots:
     dependencies:
       kind-of: 6.0.3
 
-  sharp@0.34.1:
+  sharp@0.34.2:
     dependencies:
       color: 4.2.3
-      detect-libc: 2.0.3
-      semver: 7.7.1
+      detect-libc: 2.0.4
+      semver: 7.7.2
     optionalDependencies:
-      '@img/sharp-darwin-arm64': 0.34.1
-      '@img/sharp-darwin-x64': 0.34.1
+      '@img/sharp-darwin-arm64': 0.34.2
+      '@img/sharp-darwin-x64': 0.34.2
       '@img/sharp-libvips-darwin-arm64': 1.1.0
       '@img/sharp-libvips-darwin-x64': 1.1.0
       '@img/sharp-libvips-linux-arm': 1.1.0
@@ -15494,15 +15509,16 @@ snapshots:
       '@img/sharp-libvips-linux-x64': 1.1.0
       '@img/sharp-libvips-linuxmusl-arm64': 1.1.0
       '@img/sharp-libvips-linuxmusl-x64': 1.1.0
-      '@img/sharp-linux-arm': 0.34.1
-      '@img/sharp-linux-arm64': 0.34.1
-      '@img/sharp-linux-s390x': 0.34.1
-      '@img/sharp-linux-x64': 0.34.1
-      '@img/sharp-linuxmusl-arm64': 0.34.1
-      '@img/sharp-linuxmusl-x64': 0.34.1
-      '@img/sharp-wasm32': 0.34.1
-      '@img/sharp-win32-ia32': 0.34.1
-      '@img/sharp-win32-x64': 0.34.1
+      '@img/sharp-linux-arm': 0.34.2
+      '@img/sharp-linux-arm64': 0.34.2
+      '@img/sharp-linux-s390x': 0.34.2
+      '@img/sharp-linux-x64': 0.34.2
+      '@img/sharp-linuxmusl-arm64': 0.34.2
+      '@img/sharp-linuxmusl-x64': 0.34.2
+      '@img/sharp-wasm32': 0.34.2
+      '@img/sharp-win32-arm64': 0.34.2
+      '@img/sharp-win32-ia32': 0.34.2
+      '@img/sharp-win32-x64': 0.34.2
 
   shebang-command@2.0.0:
     dependencies:
@@ -15648,6 +15664,12 @@ snapshots:
   stop-iteration-iterator@1.0.0:
     dependencies:
       internal-slot: 1.0.7
+
+  stop-iteration-iterator@1.1.0:
+    dependencies:
+      es-errors: 1.3.0
+      internal-slot: 1.1.0
+    optional: true
 
   storybook@8.6.14(prettier@3.5.3):
     dependencies:
@@ -15943,14 +15965,14 @@ snapshots:
 
   ts-dedent@2.2.0: {}
 
-  ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.23)(typescript@5.8.3):
+  ts-node@10.9.2(@swc/core@1.11.29)(@types/node@22.15.24)(typescript@5.8.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.15.23
+      '@types/node': 22.15.24
       acorn: 8.12.1
       acorn-walk: 8.3.3
       arg: 4.1.3
@@ -16473,12 +16495,12 @@ snapshots:
 
   yocto-queue@1.2.1: {}
 
-  zod-to-json-schema@3.24.5(zod@3.25.32):
+  zod-to-json-schema@3.24.5(zod@3.25.36):
     dependencies:
-      zod: 3.25.32
+      zod: 3.25.36
 
-  zod-validation-error@3.4.1(zod@3.25.32):
+  zod-validation-error@3.4.1(zod@3.25.36):
     dependencies:
-      zod: 3.25.32
+      zod: 3.25.36
 
-  zod@3.25.32: {}
+  zod@3.25.36: {}
