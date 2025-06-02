@@ -203,6 +203,35 @@ describe('getRedirectUrl', () => {
 		);
 	});
 
+	it('should return /signin with valid query params and loginLoop on Jobs client - identity classic', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams(),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						target: {
+							clientId: '0oa4io9lk5ZVh6mJe0x7',
+							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin?fromURI=%2FtestFromURI&appClientId=0oa4io9lk5ZVh6mJe0x7&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100&loginLoop=true',
+		);
+	});
+
 	it('should return /welcome/:token with valid query params and third party return url and third party client id - identity classic', () => {
 		expect(
 			getRedirectUrl(

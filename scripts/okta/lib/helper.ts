@@ -287,6 +287,16 @@ export const getRedirectUrl = (
 		maxAge = parseInt(searchParams.get('max_age')!, 10);
 	}
 
+	/// LOGIN LOOP DETECTION ///
+	// When users first navigate to Gateway from Jobs we drop the IDX cookie forcing Okta to show the sign in page.
+	// We want to avoid doing this on subsequent visits, so we add a `loginLoop` parameter to the query string to
+	// tell our VCL to not drop the IDX cookie after they've been redirected.
+	if (
+		['0oa4io9lk5ZVh6mJe0x7', '0oa53cg0ucozndoKl417'].includes(clientId ?? '')
+	) {
+		searchParams.set('loginLoop', 'true');
+	}
+
 	// if fromURI doesn't exist, which is the case when prompt="login" is set and the user is already logged in
 	// we pass the current url as the fromURI so that the user completes the OAuth flow after login
 	// as all the parameters we need are in the url
