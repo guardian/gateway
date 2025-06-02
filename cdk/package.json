@@ -20,7 +20,7 @@
     "@swc/jest": "^0.2.38",
     "@types/jest": "^29.5.14",
     "@types/node": "22.15.23",
-    "aws-cdk": "2.1016.1",
+    "aws-cdk": "2.1017.1",
     "aws-cdk-lib": "2.199.0",
     "constructs": "10.4.2",
     "eslint": "^9.27.0",
