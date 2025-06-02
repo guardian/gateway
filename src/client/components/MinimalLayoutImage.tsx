@@ -2,8 +2,6 @@ import React from 'react';
 import {
 	EMAIL_LIGHT,
 	EMAIL_DARK,
-	WELCOME_LIGHT,
-	WELCOME_DARK,
 	DecorativeImageId,
 } from '@/client/assets/decorative';
 import { css } from '@emotion/react';
@@ -12,21 +10,31 @@ interface Props {
 	id: DecorativeImageId;
 }
 
+const image = (id: DecorativeImageId) => {
+	switch (id) {
+		case 'email':
+			return {
+				light: EMAIL_LIGHT,
+				dark: EMAIL_DARK,
+			};
+	}
+};
+
 const imageStyles = (id: DecorativeImageId) => css`
 	@media (prefers-color-scheme: dark) {
-		content: url(${id === 'email' ? EMAIL_DARK : WELCOME_DARK});
+		content: url(${image(id).dark});
 	}
 	@media (prefers-color-scheme: light) {
-		content: url(${id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
+		content: url(${image(id).light});
 	}
 	/* These class-based themes are only for Storybook/Chromatic modes 
 	 * (see preview.js).
 	 */
 	html.dark-theme & {
-		content: url(${id === 'email' ? EMAIL_DARK : WELCOME_DARK});
+		content: url(${image(id).dark});
 	}
 	html.light-theme & {
-		content: url(${id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
+		content: url(${image(id).light}});
 	}
 `;
 
