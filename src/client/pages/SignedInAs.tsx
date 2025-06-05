@@ -77,7 +77,15 @@ export const SignedInAs = ({
 			errorContext={errorContext}
 			leadText={
 				<MainBodyText>
-					You are signed in with <strong>{email}</strong>
+					<p>
+						You are signed in with <strong>{email}</strong>.
+					</p>
+					{queryParams?.clientId === 'jobs' && (
+						<p>
+							If this is your first time using <strong>Guardian Jobs</strong> a
+							new profile will be created for you after continuing.
+						</p>
+					)}
 				</MainBodyText>
 			}
 		>
