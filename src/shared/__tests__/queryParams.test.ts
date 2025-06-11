@@ -39,6 +39,7 @@ describe('getPersistableQueryParams', () => {
 			listName: undefined,
 			usePasswordSignIn: undefined,
 			useSetPassword: undefined,
+			loginLoop: undefined,
 		};
 
 		expect(output).toStrictEqual(expected);
