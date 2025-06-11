@@ -31,6 +31,16 @@ export const FeastApp = () => (
 	/>
 );
 
+export const Jobs = () => (
+	<SignedInAs
+		email="test@example.com"
+		continueLink="#"
+		signOutLink="#"
+		appName="Guardian"
+		queryParams={{ clientId: 'jobs', returnUrl: '#' }}
+	/>
+);
+
 export const Error = () => (
 	<SignedInAs
 		email="test@example.com"

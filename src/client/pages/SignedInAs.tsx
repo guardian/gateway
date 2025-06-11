@@ -49,6 +49,9 @@ const DetailedLoginRequiredError = ({
 	</>
 );
 
+const isJobsClient = (queryParams?: QueryParams): boolean =>
+	queryParams?.clientId === 'jobs';
+
 export const SignedInAs = ({
 	email,
 	continueLink,
@@ -72,12 +75,23 @@ export const SignedInAs = ({
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
-			pageHeader={`Sign in to the ${appName ? `${appName} app` : 'Guardian'}`}
+			pageHeader={
+				isJobsClient(queryParams)
+					? 'Sign in with the Guardian'
+					: `Sign in to the ${appName ? `${appName} app` : 'Guardian'}`
+			}
 			errorOverride={pageError}
 			errorContext={errorContext}
 			leadText={
 				<MainBodyText>
-					You are signed in with <strong>{email}</strong>
+					You are signed in with <strong>{email}</strong>.
+					{isJobsClient(queryParams) && (
+						<p>
+							If this is your first time using Guardian Jobs, this email address
+							will be used to create your <strong>Guardian Jobs</strong>{' '}
+							account.
+						</p>
+					)}
 				</MainBodyText>
 			}
 		>
