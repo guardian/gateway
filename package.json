@@ -62,24 +62,24 @@
 		"@testing-library/preact-hooks": "^1.1.0",
 		"@testing-library/react": "npm:@testing-library/preact",
 		"@testing-library/react-hooks": "npm:@testing-library/preact-hooks",
-		"@types/compression": "^1.8.0",
-		"@types/cookie-parser": "^1.4.8",
+		"@types/compression": "^1.8.1",
+		"@types/cookie-parser": "^1.4.9",
 		"@types/express": "^4.17.21",
-		"@types/http-errors": "^2.0.4",
+		"@types/http-errors": "^2.0.5",
 		"@types/ioredis-mock": "^8.2.6",
 		"@types/jest": "^29.5.14",
 		"@types/mjml": "^4.7.4",
 		"@types/ms": "^2.1.0",
 		"@types/node": "^22.15.29",
-		"@types/react": "^19.1.6",
-		"@types/react-dom": "^19.1.5",
+		"@types/react": "^19.1.8",
+		"@types/react-dom": "^19.1.6",
 		"@types/serialize-javascript": "^5.0.4",
 		"@types/supertest": "^6.0.3",
 		"assets-webpack-plugin": "^7.1.1",
 		"axe-core": "^4.10.3",
 		"chalk-rainbow": "^1.0.0",
 		"copy-webpack-plugin": "^13.0.0",
-		"cypress": "14.4.0",
+		"cypress": "14.4.1",
 		"cypress-axe": "^1.6.0",
 		"cypress-mailosaur": "2.17.0",
 		"dotenv-webpack": "^8.1.0",
@@ -97,7 +97,7 @@
 		"jest": "^29.7.0",
 		"jest-environment-jsdom": "^29.7.0",
 		"jest-mock": "^29.7.0",
-		"knip": "^5.59.1",
+		"knip": "^5.61.0",
 		"nodemon": "^3.1.10",
 		"prettier": "^3.5.3",
 		"react-docgen-typescript-plugin": "^1.0.8",
@@ -107,7 +107,7 @@
 		"terser-webpack-plugin": "^5.3.14",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3",
-		"typescript-eslint": "^8.33.1",
+		"typescript-eslint": "^8.34.0",
 		"wait-on": "^8.0.3",
 		"webpack": "^5.99.9",
 		"webpack-bundle-analyzer": "^4.10.2",
@@ -117,13 +117,13 @@
 		"zod-to-json-schema": "^3.24.5"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.821.0",
-		"@aws-sdk/client-sesv2": "^3.821.0",
-		"@aws-sdk/credential-providers": "^3.821.0",
+		"@aws-sdk/client-cloudwatch": "^3.828.0",
+		"@aws-sdk/client-sesv2": "^3.828.0",
+		"@aws-sdk/credential-providers": "^3.828.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.0",
 		"@guardian/ab-core": "8.0.1",
-		"@guardian/libs": "^22.5.0",
+		"@guardian/libs": "^22.5.1",
 		"@guardian/source": "^10.2.0",
 		"@guardian/source-development-kitchen": "^18.0.0",
 		"@okta/jwt-verifier": "^4.0.1",
@@ -143,7 +143,7 @@
 		"ms": "^2.1.3",
 		"openid-client": "^5.7.1",
 		"ophan-tracker-js": "^2.0.2",
-		"preact": "^10.26.8",
+		"preact": "^10.26.9",
 		"preact-render-to-string": "^6.5.13",
 		"react": "npm:@preact/compat",
 		"react-dom": "npm:@preact/compat",
@@ -151,7 +151,7 @@
 		"supertest": "^7.1.1",
 		"tslib": "^2.8.1",
 		"winston": "^3.17.0",
-		"zod": "^3.25.49"
+		"zod": "^3.25.63"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
@@ -161,5 +161,5 @@
 			"sharp"
 		]
 	},
-	"packageManager": "pnpm@10.11.1+sha512.e519b9f7639869dc8d5c3c5dfef73b3f091094b0a006d7317353c72b124e80e1afd429732e28705ad6bfa1ee879c1fce46c128ccebd3192101f43dd67c667912"
+	"packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
 }
