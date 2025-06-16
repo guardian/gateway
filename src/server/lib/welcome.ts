@@ -19,8 +19,13 @@ export const getNextWelcomeFlowPage = ({
 	returnUrl: string;
 	queryParams: QueryParams;
 }): string => {
+	// Jobs users need to accept additional Jobs terms and conditions
+	// and submit their first and last name.
+	if (queryParams.clientId === 'jobs') {
+		return addQueryParamsToPath('/agree/GRS', queryParams);
+	}
+
 	// if there is a fromURI, we need to complete the oauth flow by redirecting to it
-	// fromURIs are only set in apps.
 	if (fromURI) {
 		return fromURI;
 	}
