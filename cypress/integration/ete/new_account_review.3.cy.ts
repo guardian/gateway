@@ -224,4 +224,57 @@ describe('New account newsletters page', () => {
 			},
 		);
 	});
+
+	it('should redirect to the Jobs T&C page if client is Jobs', () => {
+		cy.intercept('GET', 'https://jobs.theguardian.com/', (req) => {
+			req.reply(200);
+		});
+
+		const encodedReturnUrl =
+			'https%3A%2F%2Fjobs.theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+		const unregisteredEmail = randomMailosaurEmail();
+
+		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}&clientId=jobs`);
+
+		const timeRequestWasMade = new Date();
+		cy.get('input[name=email]').type(unregisteredEmail);
+		cy.get('[data-cy="main-form-submit-button"]').click();
+
+		cy.contains('Enter your code');
+		cy.contains(unregisteredEmail);
+		cy.contains('send again');
+		cy.contains('try another address');
+
+		cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+			({ id, body, codes }) => {
+				// email
+				expect(body).to.have.string('Your verification code');
+				expect(codes?.length).to.eq(1);
+				const code = codes?.[0].value;
+				expect(code).to.match(/^\d{6}$/);
+
+				// passcode page
+				cy.url().should('include', '/register/email-sent');
+				cy.contains('Submit verification code');
+				cy.get('input[name=code]').type(code!);
+
+				// consents page
+				cy.url().should('contain', '/welcome/review');
+				cy.get('button[type="submit"]').click();
+
+				// jobs T&C page
+				cy.url().should('contain', '/agree/GRS');
+				cy.contains(
+					'Click ‘continue’ to automatically use your existing Guardian account to sign in with Guardian Jobs',
+				);
+
+				cy.get('input[name=firstName]').type(id);
+				cy.get('input[name=secondName]').type(id);
+				cy.get('button[type="submit"]').click();
+
+				// jobs.theguardian.com
+				cy.url().should('include', 'https://jobs.theguardian.com/');
+			},
+		);
+	});
 });
