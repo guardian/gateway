@@ -497,7 +497,7 @@ const authenticationHandler = async (
 				// For email registration users, we want to show the new account review page, but in the app browser
 				// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 				authState.confirmationPage = '/welcome/review';
-			} else {
+			} else if (authState.data?.flow !== 'create-account') {
 				// In this case, they're signing in, rather than registering so take them straight back to the app
 				// without showing any other pages
 				return res.redirect(303, authState.queryParams.fromURI);
