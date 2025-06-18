@@ -292,8 +292,8 @@ export const getRedirectUrl = (
 	// as all the parameters we need are in the url
 	// however this works only in the case when the pathname starts with /oauth2/
 	if (!fromURI && locationPathname.startsWith('/oauth2/')) {
-		// delete the prompt parameter so that the user doesn't get stuck in a login loop
-		searchParams.delete('prompt');
+		// set the prompt parameter to none that the user doesn't get stuck in a login loop
+		searchParams.set('prompt', 'none');
 		// delete any custom parameters oauth doesn't use
 		searchParams.delete('activation_token');
 		searchParams.delete('reset_password_token');
