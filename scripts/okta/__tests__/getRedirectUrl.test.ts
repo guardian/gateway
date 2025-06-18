@@ -586,7 +586,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123%26prompt%3Dnone&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -615,7 +615,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123%26prompt%3Dnone&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -632,7 +632,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123%26max_age%3D100&appClientId=test123&maxAge=100',
+			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123%26prompt%3Dnone%26max_age%3D100&appClientId=test123&maxAge=100',
 		);
 	});
 
