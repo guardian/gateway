@@ -893,6 +893,49 @@ describe('Sign in flow, Okta enabled', () => {
 				},
 			);
 		});
+
+		it('shows the signed in as page - jobs', () => {
+			// Create a validated test user
+			cy.createTestUser({ isUserEmailValidated: true }).then(
+				({ emailAddress, finalPassword }) => {
+					// Sign our new user in
+					cy.visit(
+						`/signin?returnUrl=${encodeURIComponent(
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
+						)}&usePasswordSignIn=true`,
+					);
+					cy.get('input[name=email]').type(emailAddress);
+					cy.get('input[name=password]').type(finalPassword);
+					cy.get('[data-cy="main-form-submit-button"]').click();
+					cy.url().should('include', '/welcome/review');
+
+					// Get the current session data
+					cy.getCookie('idx').then((originalIdxCookie) => {
+						expect(originalIdxCookie).to.exist;
+
+						// Visit sign in again
+						cy.visit(
+							`/signin?fromURI=${encodeURIComponent(`/oauth2/`)}&clientId=jobs`,
+						);
+						cy.url().should('include', '/signin');
+
+						cy.contains('Sign in with the Guardian');
+						cy.contains('You are signed in with');
+						cy.contains(emailAddress);
+						cy.contains('If this is your first time using Guardian Jobs');
+
+						cy.contains('Continue')
+							.should('have.attr', 'href')
+							.and('include', `fromURI=${encodeURIComponent(`/oauth2/`)}`)
+							.and('include', '/agree/GRS');
+						cy.contains('a', 'Sign in')
+							.should('have.attr', 'href')
+							.and('include', '/signout?returnUrl=');
+						cy.contains('Sign in with a different email');
+					});
+				},
+			);
+		});
 	});
 
 	context('Okta missing legacyIdentityId', () => {
