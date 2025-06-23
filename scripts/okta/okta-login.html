@@ -60,6 +60,9 @@
 		</noscript>
 		<div id="okta-login-container"></div>
 		{{{OktaUtil}}}
-		<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@main/scripts/okta/okta-login.min.js"></script>
+		<!-- Temporarily set to https://github.com/guardian/gateway/commit/0d2d9f14ec39ad9d1a442b0ccbe6241634058fdb -->
+		<!-- Which is the latest commit on main at time of writting. -->
+		<!-- This allows us to bust the cache on the following JS and avoid redirect loops -->
+		<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@0d2d9f14ec39ad9d1a442b0ccbe6241634058fdb/scripts/okta/okta-login.min.js"></script>
 	</body>
 </html>
