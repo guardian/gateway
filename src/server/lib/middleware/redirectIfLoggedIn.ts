@@ -54,12 +54,18 @@ export const redirectIfLoggedIn = async (
 
 		// determine the "Continue" button link, either "fromURI" if coming from Okta login page (and OAuth flow)
 		// or /signin/refresh if not (this will refresh their identity and okta session and redirect them back to the returnUrl)
+		// or /agree/GRS if the user is coming from the Jobs client
 		const continueLink =
-			state.queryParams.fromURI ||
-			`https://${baseUri}${addQueryParamsToPath(
-				'/signin/refresh',
-				state.queryParams,
-			)}`;
+			state.queryParams?.clientId === 'jobs'
+				? `https://${baseUri}${addQueryParamsToPath(
+						'/agree/GRS',
+						state.queryParams,
+					)}`
+				: state.queryParams.fromURI ||
+					`https://${baseUri}${addQueryParamsToPath(
+						'/signin/refresh',
+						state.queryParams,
+					)}`;
 
 		// the "Sign in" link is used to log in as a different user, so we add the parameters we need to the link
 		const signInLink = encodeURIComponent(
