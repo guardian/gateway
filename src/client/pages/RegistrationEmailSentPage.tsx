@@ -1,6 +1,5 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { EmailSent } from '@/client/pages/EmailSent';
 import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { buildUrl } from '@/shared/lib/routeUtils';
@@ -15,14 +14,8 @@ export const RegistrationEmailSentPage = () => {
 		recaptchaConfig,
 		shortRequestId,
 	} = clientState;
-	const {
-		email,
-		hasStateHandle,
-		fieldErrors,
-		token,
-		passcodeUsed,
-		passcodeSendAgainTimer,
-	} = pageData;
+	const { email, fieldErrors, token, passcodeUsed, passcodeSendAgainTimer } =
+		pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -32,50 +25,32 @@ export const RegistrationEmailSentPage = () => {
 	});
 
 	// show passcode email sent page if we have a state handle
-	if (hasStateHandle) {
-		if (passcodeUsed) {
-			return (
-				<PasscodeUsed
-					path="/welcome"
-					queryParams={queryParams}
-					shortRequestId={shortRequestId}
-				/>
-			);
-		}
-
+	if (passcodeUsed) {
 		return (
-			<PasscodeEmailSent
-				email={email}
-				queryString={queryString}
-				changeEmailPage={buildUrl('/register/email')}
-				passcodeAction={buildUrl('/register/code')}
-				showSuccess={emailSentSuccess}
-				errorMessage={error}
-				recaptchaSiteKey={recaptchaSiteKey}
-				formTrackingName="register-resend"
-				fieldErrors={fieldErrors}
-				passcode={token}
+			<PasscodeUsed
+				path="/welcome"
+				queryParams={queryParams}
 				shortRequestId={shortRequestId}
-				expiredPage={buildUrl('/welcome/expired')}
-				textType="verification"
-				sendAgainTimerInSeconds={passcodeSendAgainTimer}
 			/>
 		);
 	}
 
-	// otherwise show original email sent page
 	return (
-		<EmailSent
+		<PasscodeEmailSent
 			email={email}
 			queryString={queryString}
 			changeEmailPage={buildUrl('/register/email')}
-			resendEmailAction={buildUrl('/register/email-sent/resend')}
-			instructionContext="verify and complete creating your account"
+			passcodeAction={buildUrl('/register/code')}
 			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName="register-resend"
+			fieldErrors={fieldErrors}
+			passcode={token}
 			shortRequestId={shortRequestId}
+			expiredPage={buildUrl('/welcome/expired')}
+			textType="verification"
+			sendAgainTimerInSeconds={passcodeSendAgainTimer}
 		/>
 	);
 };
