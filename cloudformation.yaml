@@ -668,27 +668,13 @@ Resources:
       AlarmDescription: No one has successfully registered in the last hour.
       Metrics:
         - Id: totalRegistrationCount
-          Expression: oktaIdxRegistrationCount + oktaRegistrationCount
+          Expression: oktaIdxRegistrationCount
           Label: 'Total registrations in Okta Classic and Okta IDX'
         - Id: oktaIdxRegistrationCount
           MetricStat:
             Metric:
               Namespace: Gateway
               MetricName: 'OktaIDXRegister::Success'
-              Dimensions:
-                - Name: Stage
-                  Value: !Ref 'Stage'
-                - Name: ApiMode
-                  Value: identity-gateway
-            Period: 3600
-            Stat: Sum
-            Unit: Count
-          ReturnData: false
-        - Id: oktaRegistrationCount
-          MetricStat:
-            Metric:
-              Namespace: Gateway
-              MetricName: 'OktaRegistration::Success'
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'

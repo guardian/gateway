@@ -1,6 +1,5 @@
 import {
 	activateUser,
-	createUser,
 	forgotPassword,
 	getUser,
 	reactivateUser,
@@ -9,7 +8,7 @@ import {
 	clearUserSessions,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
-import { UserCreationRequest, UserResponse } from '@/server/models/okta/User';
+import { UserResponse } from '@/server/models/okta/User';
 
 const userId = '12345';
 const email = 'test@test.com';
@@ -35,117 +34,6 @@ const json = jest.fn() as jest.MockedFunction<any>;
 
 // mocked logger
 jest.mock('@/server/lib/serverSideLogger');
-
-const userCreationRequest = (email: string): UserCreationRequest => {
-	return {
-		profile: {
-			email,
-			login: email,
-			isGuardianUser: true,
-			registrationPlatform: 'identity-gateway',
-		},
-		groupIds: ['groupId1'],
-	};
-};
-
-describe('okta#createUser', () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
-
-	test('should create a new user', async () => {
-		const user = {
-			id: userId,
-			status: 'PROVISIONED',
-			profile: { email: email, login: email, isGuardianUser: true },
-			credentials: {},
-		} as UserResponse;
-
-		json.mockResolvedValueOnce(user);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: true, json } as Response),
-		);
-
-		const response = await createUser(userCreationRequest(email));
-		expect(response).toEqual(user);
-	});
-
-	test('should throw an error if user already exists', async () => {
-		const userAlreadyExists = {
-			errorCode: 'E0000001',
-			errorSummary: 'Api validation failed: login',
-			errorLink: 'E0000001',
-			errorId: '123456',
-			errorCauses: [
-				{
-					errorSummary:
-						'login: An object with this field already exists in the current organization',
-				},
-			],
-		};
-
-		json.mockResolvedValueOnce(userAlreadyExists);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: false, status: 400, json } as Response),
-		);
-
-		await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
-			new OktaError({ message: 'Api validation failed: login' }),
-		);
-	});
-
-	test('should throw an error if email address is invalid', async () => {
-		const causes = [
-			{
-				errorSummary: 'login: Username must be in the form of an email address',
-			},
-			{
-				errorSummary: 'email: Does not match required pattern',
-			},
-		];
-
-		const emailAddressInvalid = {
-			errorCode: 'E0000001',
-			errorSummary: 'Api validation failed: login',
-			errorLink: 'E0000001',
-			errorId: '123456',
-			errorCauses: causes,
-		};
-
-		json.mockResolvedValueOnce(emailAddressInvalid);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: false, status: 400, json } as Response),
-		);
-
-		await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
-			new OktaError({ message: 'Api validation failed: login', causes }),
-		);
-	});
-
-	test('should throw an error if required field is missing', async () => {
-		const causes = [
-			{
-				errorSummary: 'login: The field cannot be left blank',
-			},
-		];
-		const emailAddressMissing = {
-			errorCode: 'E0000001',
-			errorSummary: 'Api validation failed: login',
-			errorLink: 'E0000001',
-			errorId: '123456',
-			errorCauses: causes,
-		};
-
-		json.mockResolvedValueOnce(emailAddressMissing);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: false, status: 400, json } as Response),
-		);
-
-		await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
-			new OktaError({ message: 'Api validation failed: login', causes }),
-		);
-	});
-});
 
 describe('okta#fetchUser', () => {
 	beforeEach(() => {

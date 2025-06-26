@@ -7,7 +7,6 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/serverSideLogger';
-import { register as registerWithOkta } from '@/server/lib/okta/register';
 import { renderer } from '@/server/lib/renderer';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -16,16 +15,8 @@ import {
 	addQueryParamsToPath,
 	getPersistableQueryParamsWithoutOktaParams,
 } from '@/shared/lib/queryParams';
-import {
-	GatewayError,
-	GenericErrors,
-	PasscodeErrors,
-	RegistrationErrors,
-} from '@/shared/model/Errors';
-import deepmerge from 'deepmerge';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { OAuthError, OktaError } from '@/server/models/okta/Error';
-import { causesInclude } from '@/server/lib/okta/api/errors';
+import { GenericErrors, PasscodeErrors } from '@/shared/model/Errors';
+import { OAuthError } from '@/server/models/okta/Error';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -62,8 +53,6 @@ import {
 	oktaIdxApiSubmitPasscodeController,
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-
-const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
 /**
  * Helper method to determine if a global error should show on the create account page
@@ -147,19 +136,11 @@ router.get(
 );
 
 router.post(
-	'/register/email-sent/resend',
-	handleRecaptcha,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		await OktaResendEmail(req, res);
-	}),
-);
-
-router.post(
 	'/register',
 	handleRecaptcha,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		await OktaRegistration(req, res);
+		await oktaIdxCreateAccount(req, res);
 	}),
 );
 
@@ -448,7 +429,7 @@ export const setEncryptedStateCookieForOktaRegistration = (
  * @param {ResponseWithRequestState} res - Express response object
  * @returns {Promise<void | ResponseWithRequestState>}
  */
-const oktaIdxCreateAccount = async (
+export const oktaIdxCreateAccount = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
@@ -608,154 +589,6 @@ const oktaIdxCreateAccount = async (
 		// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
 		trackMetric('OktaIDXRegister::Failure');
 		logger.error('IDX API - registration error:', error);
-	}
-};
-
-export const OktaRegistration = async (
-	req: Request,
-	res: ResponseWithRequestState,
-) => {
-	const { email = '' } = req.body;
-
-	const {
-		queryParams: { appClientId, ref, refViewId, useOktaClassic },
-	} = res.locals;
-
-	const consents = bodyFormFieldsToRegistrationConsents(req.body);
-
-	const [registrationLocation] = getRegistrationLocation(req);
-
-	// OKTA IDX API FLOW
-	// Attempt to register the user with Okta using the IDX API
-	// and specifically using passcodes.
-	// If there are specific failures, we fall back to the legacy Okta registration flow
-	if (passcodesEnabled && !useOktaClassic) {
-		// try to start the IDX flow to create an account for the user
-		await oktaIdxCreateAccount(req, res);
-
-		// if successful, the user will be redirected to the email sent page
-		// so we need to check if the headers have been sent to prevent further processing
-		if (res.headersSent) {
-			return;
-		}
-	}
-
-	try {
-		const user = await registerWithOkta({
-			email,
-			registrationLocation,
-			appClientId,
-			consents,
-			ref,
-			refViewId,
-			ip: req.ip,
-		});
-
-		// fire ophan component event if applicable
-		if (res.locals.queryParams.componentEventParams) {
-			void sendOphanComponentEventFromQueryParamsServer(
-				res.locals.queryParams.componentEventParams,
-				'CREATE_ACCOUNT',
-				'web',
-				res.locals.ophanConfig.consentUUID,
-			);
-		}
-
-		setEncryptedStateCookie(res, {
-			email: user.profile.email,
-			// We set queryParams here to allow state to be persisted as part of the registration flow,
-			// because we are unable to pass these query parameters via the email activation link in Okta email templates
-			queryParams: getPersistableQueryParamsWithoutOktaParams(
-				res.locals.queryParams,
-			),
-		});
-
-		trackMetric('OktaRegistration::Success');
-
-		return res.redirect(
-			303,
-			addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
-		);
-	} catch (error) {
-		logger.error('Okta Registration failure', error);
-
-		const errorMessage = (): GatewayError => {
-			if (
-				error instanceof OktaError &&
-				causesInclude(error.causes, 'email: Does not match required pattern')
-			) {
-				return {
-					message: RegistrationErrors.EMAIL_INVALID,
-					severity: 'BAU',
-				};
-			} else {
-				return RegistrationErrors.GENERIC;
-			}
-		};
-
-		trackMetric('OktaRegistration::Failure');
-
-		const requestState = deepmerge(res.locals, {
-			pageData: {
-				email,
-				formError: errorMessage(),
-			},
-		});
-
-		return res.type('html').send(
-			renderer('/register/email', {
-				requestState,
-				pageTitle: 'Register With Email',
-			}),
-		);
-	}
-};
-
-const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
-	try {
-		const encryptedState = readEncryptedStateCookie(req);
-		const { email, queryParams } = encryptedState ?? {};
-
-		if (typeof email !== 'undefined') {
-			// Always attempt to register the user first when their email is resent.
-			// If the user doesn't exist, this creates them and Okta sends them an email.
-			// If the user does exist, this returns an error and we send them an email
-			// as part of the registerWithOkta function's error handler.
-			const user = await registerWithOkta({
-				email,
-				appClientId: queryParams?.appClientId,
-				ref: queryParams?.ref,
-				refViewId: queryParams?.refViewId,
-				ip: req.ip,
-			});
-			trackMetric('OktaRegistrationResendEmail::Success');
-			setEncryptedStateCookieForOktaRegistration(res, user);
-			return res.redirect(
-				303,
-				addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
-					emailSentSuccess: true,
-				}),
-			);
-		} else {
-			throw new OktaError({
-				message: 'Could not resend registration email as email was undefined',
-			});
-		}
-	} catch (error) {
-		logger.error('Okta Registration resend email failure', error);
-
-		trackMetric('OktaRegistrationResendEmail::Failure');
-
-		return res.type('html').send(
-			renderer('/register/email-sent', {
-				pageTitle: 'Check Your Inbox',
-				requestState: mergeRequestState(res.locals, {
-					pageData: {
-						formError: GenericErrors.DEFAULT,
-					},
-				}),
-			}),
-		);
 	}
 };
 

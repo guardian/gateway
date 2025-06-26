@@ -6,7 +6,6 @@ import {
 	defaultHeaders,
 } from '@/server/lib/okta/api/headers';
 import {
-	UserCreationRequest,
 	UserResponse,
 	UserUpdateRequest,
 	TokenResponse,
@@ -29,42 +28,6 @@ const { okta } = getConfiguration();
  * Okta's Users API
  * https://developer.okta.com/docs/reference/api/users/
  */
-
-/**
- * @name createUser
- * @description Creates a new user in Okta with or without credentials.
- * If activate is true, Okta will perform the activation lifecycle operation
- * on the user. If activate is false, the user will be created in a "STAGED" state
- * and will need to be sent an activation token in a subsequent call to activateUser.
- *
- * https://developer.okta.com/docs/reference/api/users/#create-user
- *
- * @param {UserCreationRequest} body the request body to create a user in Okta
- * @param {string} ip The IP Address of the user
- *
- * @returns Promise<UserResponse>
- */
-export const createUser = async (
-	body: UserCreationRequest,
-	ip?: string,
-): Promise<UserResponse> => {
-	// If 'activate' is true, Okta will peform the activation lifecycle operation
-	// on the user, which in the case of a user without a password will send them
-	// an activation email but not transition their state from 'STAGED' to 'ACTIVE'.
-	// If 'activate' is false, Okta will only create the user, and neither
-	// send an email nor transition their state.
-	// We always set 'activate' to false.
-	const path = buildApiUrlWithQueryParams(
-		'/api/v1/users',
-		{},
-		{ activate: false },
-	);
-	return await fetch(joinUrl(okta.orgUrl, path), {
-		method: 'POST',
-		body: JSON.stringify(body),
-		headers: { ...defaultHeaders(ip), ...authorizationHeader() },
-	}).then(handleUserResponse);
-};
 
 /**
  * @name updateUser

@@ -10,8 +10,6 @@ import { UserFlow } from '../lib/okta/openid-connect';
 // Specific emails to track
 type EmailMetrics =
 	| 'OktaAccountExists'
-	| 'OktaAccountExistsWithoutPassword'
-	| 'OktaCompleteRegistration'
 	| 'OktaCreatePassword'
 	| 'OktaResetPassword'
 	| 'OktaUnvalidatedEmailResetPassword';

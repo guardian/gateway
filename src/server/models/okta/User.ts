@@ -88,19 +88,6 @@ const tokenResponseSchema = z.object({
 });
 export type TokenResponse = z.infer<typeof tokenResponseSchema>;
 
-// https://developer.okta.com/docs/reference/api/users/#request-parameters
-const userCreationRequestSchema = z.object({
-	profile: userProfileSchema.pick({
-		email: true,
-		login: true,
-		isGuardianUser: true,
-		registrationPlatform: true,
-		registrationLocation: true,
-	}),
-	groupIds: z.array(z.string()),
-});
-export type UserCreationRequest = z.infer<typeof userCreationRequestSchema>;
-
 // https://developer.okta.com/docs/reference/api/users/#request-parameters-6
 const userUpdateRequestSchema = z.object({
 	profile: userProfileSchema.partial().nullable().optional(),
