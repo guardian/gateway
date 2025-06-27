@@ -19,7 +19,7 @@ export default {
 
 const advertising: Consent = {
 	id: 'personalised_advertising',
-	name: 'Allow personalised advertising using this data - this supports the Guardian',
+	name: 'Allow personalised advertising using this data',
 	consented: false,
 };
 

@@ -109,10 +109,19 @@ export const NewAccountReview = ({
 							Personalised advertising
 						</MainBodyText>
 						<MainBodyText>
-							Advertising is a crucial source of our funding. You won’t see more
-							ads, and your data won’t be shared with third parties to use for
-							their own advertising. Instead, we would analyse your information
-							to predict what you might be interested in.
+							We do this by:
+							<ul css={listStyles}>
+								<li>
+									Checking if you are already a customer of other trusted
+									partners
+								</li>
+								<li>
+									Generating random identifiers based on your email address for
+									advertising and marketing
+								</li>
+							</ul>
+							Advertising is a crucial source of our funding. You won't see more
+							ads, but your advertising may be more relevant.
 						</MainBodyText>
 					</>
 				)}
