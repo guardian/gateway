@@ -149,17 +149,15 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin?useOktaClassic=true');
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-				});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin?useOktaClassic=true');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
 		});
 
 		it('respects the returnUrl query param', () => {
@@ -168,19 +166,17 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', returnUrl, (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(
-						`/signin?returnUrl=${encodeURIComponent(returnUrl)}&useOktaClassic=true`,
-					);
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('eq', returnUrl);
-				});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit(
+					`/signin?returnUrl=${encodeURIComponent(returnUrl)}&useOktaClassic=true`,
+				);
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('eq', returnUrl);
+			});
 		});
 
 		it('hits access token rate limit and recovers token after timeout', () => {
@@ -189,72 +185,68 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin?useOktaClassic=true');
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin?useOktaClassic=true');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
-					// We visit reauthenticate here because if we visit /signin or
-					// /register, the logged in user guard will redirect us away before
-					// the ratelimiter has a chance to work
-					cy.visit('/reauthenticate');
-					cy.contains('Sign');
-					Cypress._.times(6, () => cy.reload());
-					cy.contains('Rate limit exceeded');
-				});
+				// We visit reauthenticate here because if we visit /signin or
+				// /register, the logged in user guard will redirect us away before
+				// the ratelimiter has a chance to work
+				cy.visit('/reauthenticate');
+				cy.contains('Sign');
+				Cypress._.times(6, () => cy.reload());
+				cy.contains('Rate limit exceeded');
+			});
 		});
 
 		it('Sends a user with an unvalidated email a reset password email on sign in', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: false,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					const timeRequestWasMade = new Date();
-					cy.visit('/signin?useOktaClassic=true');
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/signin/email-sent');
-					cy.contains(
-						'For security reasons we need you to change your password.',
-					);
-					cy.contains(emailAddress);
-					cy.contains('send again');
-					cy.contains('try another address');
+			cy.createTestUser({
+				isUserEmailValidated: false,
+			})?.then(({ emailAddress, finalPassword }) => {
+				const timeRequestWasMade = new Date();
+				cy.visit('/signin?useOktaClassic=true');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', '/signin/email-sent');
+				cy.contains(
+					'For security reasons we need you to change your password.',
+				);
+				cy.contains(emailAddress);
+				cy.contains('send again');
+				cy.contains('try another address');
 
-					// Ensure the user's authentication cookies are not set
-					cy.getCookie('idx').then((idxCookie) => {
-						expect(idxCookie).to.not.exist;
+				// Ensure the user's authentication cookies are not set
+				cy.getCookie('idx').then((idxCookie) => {
+					expect(idxCookie).to.not.exist;
 
-						cy.checkForEmailAndGetDetails(
-							emailAddress,
-							timeRequestWasMade,
-							/reset-password\/([^"]*)/,
-						).then(({ links, body, token }) => {
-							expect(body).to.have.string(
-								'Because your security is extremely important to us, we have changed our password policy.',
-							);
-							expect(body).to.have.string('Reset password');
-							expect(links.length).to.eq(2);
-							const resetPasswordLink = links.find((s) =>
-								s.text?.includes('Reset password'),
-							);
-							expect(resetPasswordLink?.href ?? '').to.have.string(
-								'reset-password',
-							);
-							cy.visit(`/reset-password/${token}`);
-							cy.contains(emailAddress);
-							cy.contains('Create new password');
-						});
+					cy.checkForEmailAndGetDetails(
+						emailAddress,
+						timeRequestWasMade,
+						/reset-password\/([^"]*)/,
+					).then(({ links, body, token }) => {
+						expect(body).to.have.string(
+							'Because your security is extremely important to us, we have changed our password policy.',
+						);
+						expect(body).to.have.string('Reset password');
+						expect(links.length).to.eq(2);
+						const resetPasswordLink = links.find((s) =>
+							s.text?.includes('Reset password'),
+						);
+						expect(resetPasswordLink?.href ?? '').to.have.string(
+							'reset-password',
+						);
+						cy.visit(`/reset-password/${token}`);
+						cy.contains(emailAddress);
+						cy.contains('Create new password');
 					});
 				});
+			});
 		});
 
 		it('sets emailValidated flag on oauth callback', () => {
@@ -324,17 +316,15 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin?usePasswordSignIn=true');
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-				});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin?usePasswordSignIn=true');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
 		});
 
 		it('ACTIVE user - email + password authenticators - successfully sign in - preserve returnUrl', () => {
@@ -343,19 +333,17 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', returnUrl, (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(
-						`/signin?returnUrl=${encodeURIComponent(returnUrl)}&usePasswordSignIn=true`,
-					);
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('eq', returnUrl);
-				});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit(
+					`/signin?returnUrl=${encodeURIComponent(returnUrl)}&usePasswordSignIn=true`,
+				);
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('eq', returnUrl);
+			});
 		});
 
 		it('ACTIVE user - email + password authenticators - successfully sign in - preserve fromURI', () => {
@@ -373,24 +361,22 @@ describe('Sign in flow, Okta enabled', () => {
 				},
 			);
 
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(
-						`/signin?returnUrl=${encodeURIComponent(returnUrl)}&usePasswordSignIn=true`,
-					);
-					cy.visit(
-						`/signin?returnUrl=${encodedReturnUrl}&appClientId=${appClientId}&fromURI=${fromURI}&usePasswordSignIn=true`,
-					);
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit(
+					`/signin?returnUrl=${encodeURIComponent(returnUrl)}&usePasswordSignIn=true`,
+				);
+				cy.visit(
+					`/signin?returnUrl=${encodedReturnUrl}&appClientId=${appClientId}&fromURI=${fromURI}&usePasswordSignIn=true`,
+				);
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
 
-					// fromURI redirect
-					cy.url().should('contain', decodeURIComponent(fromURI));
-				});
+				// fromURI redirect
+				cy.url().should('contain', decodeURIComponent(fromURI));
+			});
 		});
 
 		it('ACTIVE user - password authenticator only - send OTP reset password security email', () => {
@@ -493,17 +479,15 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin?usePasswordSignIn=true');
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(`${finalPassword}!`);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains('Email and password don’t match');
-				});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin?usePasswordSignIn=true');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(`${finalPassword}!`);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.contains('Email and password don’t match');
+			});
 		});
 
 		it('NON-EXISTENT user - shows authentication error in all scenarios', () => {
@@ -520,15 +504,15 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({ isGuestUser: true })
-				?.then(({ emailAddress, finalPassword }) => {
+			cy.createTestUser({ isGuestUser: true })?.then(
+				({ emailAddress, finalPassword }) => {
 					cy.visit('/signin?usePasswordSignIn=true');
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(`${finalPassword}`);
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.contains('Email and password don’t match');
-				});
+				},
+			);
 		});
 
 		it('SOCIAL user - sets emailValidated flag on oauth callback', () => {
@@ -596,30 +580,28 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
 				req.reply(200);
 			});
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin?usePasswordSignIn=true');
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin?usePasswordSignIn=true');
 
-					cy.interceptRecaptcha();
+				cy.interceptRecaptcha();
 
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.contains('Google reCAPTCHA verification failed.');
-					cy.contains('If the problem persists please try the following:');
+				cy.contains('Google reCAPTCHA verification failed.');
+				cy.contains('If the problem persists please try the following:');
 
-					cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.contains('Google reCAPTCHA verification failed.').should(
-						'not.exist',
-					);
+				cy.contains('Google reCAPTCHA verification failed.').should(
+					'not.exist',
+				);
 
-					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-				});
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
 		});
 	});
 
@@ -940,40 +922,38 @@ describe('Sign in flow, Okta enabled', () => {
 
 	context('Okta missing legacyIdentityId', () => {
 		it('Adds the missing legacyIdentityId to the user on authentication', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.getTestOktaUser(emailAddress).then((user) => {
-						const originalLegacyIdentityId = user.profile.legacyIdentityId;
-						expect(originalLegacyIdentityId).to.not.be.undefined;
-						// Remove the legacyIdentityId from the user
-						cy.updateOktaTestUserProfile(emailAddress, {
-							legacyIdentityId: null,
-						}).then(() => {
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.getTestOktaUser(emailAddress).then((user) => {
+					const originalLegacyIdentityId = user.profile.legacyIdentityId;
+					expect(originalLegacyIdentityId).to.not.be.undefined;
+					// Remove the legacyIdentityId from the user
+					cy.updateOktaTestUserProfile(emailAddress, {
+						legacyIdentityId: null,
+					}).then(() => {
+						cy.getTestOktaUser(emailAddress).then((user) => {
+							expect(user.profile.legacyIdentityId).to.be.undefined;
+							const postSignInReturnUrl = `https://${Cypress.env(
+								'BASE_URI',
+							)}/welcome/review`;
+							const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+								postSignInReturnUrl,
+							)}&usePasswordSignIn=true`;
+							cy.visit(visitUrl);
+							cy.get('input[name=email]').type(emailAddress);
+							cy.get('input[name=password]').type(finalPassword);
+							cy.get('[data-cy="main-form-submit-button"]').click();
+							cy.url().should('include', '/welcome/review');
 							cy.getTestOktaUser(emailAddress).then((user) => {
-								expect(user.profile.legacyIdentityId).to.be.undefined;
-								const postSignInReturnUrl = `https://${Cypress.env(
-									'BASE_URI',
-								)}/welcome/review`;
-								const visitUrl = `/signin?returnUrl=${encodeURIComponent(
-									postSignInReturnUrl,
-								)}&usePasswordSignIn=true`;
-								cy.visit(visitUrl);
-								cy.get('input[name=email]').type(emailAddress);
-								cy.get('input[name=password]').type(finalPassword);
-								cy.get('[data-cy="main-form-submit-button"]').click();
-								cy.url().should('include', '/welcome/review');
-								cy.getTestOktaUser(emailAddress).then((user) => {
-									expect(user.profile.legacyIdentityId).to.eq(
-										originalLegacyIdentityId,
-									);
-								});
+								expect(user.profile.legacyIdentityId).to.eq(
+									originalLegacyIdentityId,
+								);
 							});
 						});
 					});
 				});
+			});
 		});
 	});
 });

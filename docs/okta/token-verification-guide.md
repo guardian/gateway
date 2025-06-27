@@ -31,19 +31,16 @@ You will need the `issuer` and `audience` values to verify the token. The identi
    ```
 
 2. Ideally use one of the libraries listed below to verify the token. The libraries will handle the verification process for you, including fetching the JWKS from Okta and verifying the token signature and the expiry.
-
    - If the token is not valid, the library will throw an exception or return an error. You should handle this error and return a 401 Unauthorized response to the client.
 
    - If you need to verify the token manually, steps are visited below.
 
 3. If the token is valid, you should check the scopes in the token to make sure that the user has the necessary permissions to access the requested resource. The scopes are usually included in the `scp` claim of the token.
-
    - If the token does not have the necessary scopes, you should return a 403 Forbidden response to the client.
    - If the token has the necessary scopes, you can proceed to access the requested resource.
 
 4. If the token has a `.secure` scope, you should verify the token with Okta to make sure that it has not been revoked.
    This can be done by making a request to the OAuth `/userinfo` endpoint.
-
    - If the token is valid, it will return a 200 OK response with the latest user information.
    - If the token is not valid, it will return a 401 Unauthorized response. You should handle this error and return a 401 Unauthorized response to the client.
 
@@ -139,7 +136,6 @@ If you are unable to find a library that works for you, you can implement the to
    See: https://developer.okta.com/docs/api/openapi/okta-oauth/guides/overview/#reserved-claims-in-the-header-section
 
    The header should contain the following fields:
-
    - `alg`: The algorithm used to sign the token. This should be `RS256`.
    - `kid`: The key ID used to identify the key. This should match the `kid` value in the JWKS (which we'll check later).
 
@@ -150,7 +146,6 @@ If you are unable to find a library that works for you, you can implement the to
    See: https://developer.okta.com/docs/api/openapi/okta-oauth/guides/overview/#reserved-claims-in-the-payload-section
 
    The payload should contain the following fields:
-
    - `auth_time`: The time the user authenticated. This is a Unix timestamp in seconds.
    - `cid`: The client ID of the application that requested the access token.
    - `exp`: The expiry time of the token. This is a Unix timestamp in seconds.
@@ -233,7 +228,6 @@ If you are unable to find a library that works for you, you can implement the to
 6. Verify the access token claims.
 
    The claims are the fields in the payload. We need to verify the following claims:
-
    - `exp`: The expiry time of the token. This should be in the future. If the token is expired, it is invalid. A `401 Unauthorized` response should be returned to the client.
    - `iat`: The time the token was issued. This should be in the past. If the token is issued in the future, it is invalid. A `401 Unauthorized` response should be returned to the client.
    - `iss`: The issuer URL of the authorization server. This should match the issuer URL provided by the identity team. If it does not match, the token is invalid. A `401 Unauthorized` response should be returned to the client.

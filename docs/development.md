@@ -553,19 +553,16 @@ As mentioned in the setup guide, some environment variables are required to star
 Environment variables appear in a lot of places, so it's likely you'll need to update all these places.
 
 1. `.env` file
-
    - Determines all the environment variables available on local development
    - Should **not** be committed, gitignored by default.
    - e.g. `ENV_KEY=ENV_VALUE`
 
 2. `.env.example`
-
    - Example file for `.env` without populated values
    - Should be committed, but make sure not to include any values that should be secret.
    - e.g. `ENV_KEY=`
 
 3. Configuration and Tests
-
    - Environment Variables should only be accessible on the server, as not to possibly leak them.
    - To register them with the server, first add it to the [`Configuration`](../src/server/models/Configuration.ts) interface.
    - Next make sure it's exported in the config object in the [`getConfiguration`](../src/server/lib/configuration.ts) method. The `getOrThrow` method makes sure that it's in the environment variables, otherwise the server will not start.

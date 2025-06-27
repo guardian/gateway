@@ -28,12 +28,10 @@ OAuth has multiple different ways of authenticating a reader, and for web applic
 Once the OAuth flow is completed, the application will get two tokens, an access token and an id token. The access token is used to authenticate the reader to an API, and the id token is used to retrieve the reader's profile information within the app. More information about tokens can be found in the [tokens](./oauth.md#oauthoidc-tokens-claims-and-scopes) documentation. But in general the following rules apply for each type:
 
 - Access Token
-
   - Should only be used to authenticate the reader to an API, and should not be used to read reader profile information directly from the token.
   - An example of this would be to use the access token to call members-data-api to retrieve the reader's subscription status, or discussion-api to post a comment, etc.
 
 - ID Token
-
   - Should only be used to read a reader profile information, and should not be used to authenticate the reader to an API.
   - An example of this would be to read the access token to read the readers email, name, etc. to display in the app.
 

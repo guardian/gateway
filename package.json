@@ -36,7 +36,7 @@
 		"knip": "knip"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.27.4",
+		"@babel/core": "^7.27.7",
 		"@babel/preset-env": "^7.27.2",
 		"@babel/preset-react": "^7.27.1",
 		"@babel/preset-typescript": "^7.27.1",
@@ -53,7 +53,7 @@
 		"@storybook/addon-webpack5-compiler-babel": "^3.0.6",
 		"@storybook/preact-webpack5": "^8.6.14",
 		"@storybook/react": "^8.6.14",
-		"@swc/core": "^1.11.29",
+		"@swc/core": "^1.12.7",
 		"@swc/jest": "^0.2.38",
 		"@swc/plugin-emotion": "^9.0.4",
 		"@testing-library/cypress": "^10.0.3",
@@ -79,14 +79,14 @@
 		"axe-core": "^4.10.3",
 		"chalk-rainbow": "^1.0.0",
 		"copy-webpack-plugin": "^13.0.0",
-		"cypress": "14.4.1",
+		"cypress": "14.5.0",
 		"cypress-axe": "^1.6.0",
 		"cypress-mailosaur": "2.17.0",
 		"dotenv-webpack": "^8.1.0",
-		"eslint": "^9.28.0",
+		"eslint": "^9.29.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-functional": "^9.0.2",
-		"eslint-plugin-prettier": "^5.4.1",
+		"eslint-plugin-prettier": "^5.5.1",
 		"file-loader": "^6.2.0",
 		"fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
 		"fork-ts-checker-webpack-plugin": "^9.1.0",
@@ -99,7 +99,7 @@
 		"jest-mock": "^29.7.0",
 		"knip": "^5.61.0",
 		"nodemon": "^3.1.10",
-		"prettier": "^3.5.3",
+		"prettier": "^3.6.2",
 		"react-docgen-typescript-plugin": "^1.0.8",
 		"sharp": "^0.34.1",
 		"storybook": "^8.6.14",
@@ -107,7 +107,7 @@
 		"terser-webpack-plugin": "^5.3.14",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3",
-		"typescript-eslint": "^8.34.0",
+		"typescript-eslint": "^8.35.0",
 		"wait-on": "^8.0.3",
 		"webpack": "^5.99.9",
 		"webpack-bundle-analyzer": "^4.10.2",
@@ -117,9 +117,9 @@
 		"zod-to-json-schema": "^3.24.5"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.828.0",
-		"@aws-sdk/client-sesv2": "^3.828.0",
-		"@aws-sdk/credential-providers": "^3.828.0",
+		"@aws-sdk/client-cloudwatch": "^3.835.0",
+		"@aws-sdk/client-sesv2": "^3.835.0",
+		"@aws-sdk/credential-providers": "^3.835.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.0",
 		"@guardian/ab-core": "8.0.1",
@@ -151,7 +151,7 @@
 		"supertest": "^7.1.1",
 		"tslib": "^2.8.1",
 		"winston": "^3.17.0",
-		"zod": "^3.25.63"
+		"zod": "^3.25.67"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
@@ -161,5 +161,5 @@
 			"sharp"
 		]
 	},
-	"packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
+	"packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }
