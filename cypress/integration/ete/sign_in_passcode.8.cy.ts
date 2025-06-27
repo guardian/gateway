@@ -132,63 +132,55 @@ describe('Sign In flow, with passcode', () => {
 
 	context('ACTIVE user - with email authenticator', () => {
 		it('should sign in with passcode', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					sendEmailAndValidatePasscode({
-						emailAddress,
-					});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				sendEmailAndValidatePasscode({
+					emailAddress,
 				});
+			});
 		});
 
 		it('should sign in with passocde - preserve returnUrl', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					sendEmailAndValidatePasscode({
-						emailAddress,
-						expectedReturnUrl: returnUrl,
-						params: `returnUrl=${encodedReturnUrl}`,
-					});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				sendEmailAndValidatePasscode({
+					emailAddress,
+					expectedReturnUrl: returnUrl,
+					params: `returnUrl=${encodedReturnUrl}`,
 				});
+			});
 		});
 
 		it('should sign in with passcode - preserve fromURI', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					sendEmailAndValidatePasscode({
-						emailAddress,
-						expectedReturnUrl: fromURI,
-						params: `fromURI=${fromURI}&appClientId=${appClientId}`,
-					});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				sendEmailAndValidatePasscode({
+					emailAddress,
+					expectedReturnUrl: fromURI,
+					params: `fromURI=${fromURI}&appClientId=${appClientId}`,
 				});
+			});
 		});
 
 		it('selects password option to sign in from initial sign in page', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(`/signin`);
-					cy.get('input[name=email]').type(emailAddress);
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit(`/signin`);
+				cy.get('input[name=email]').type(emailAddress);
 
-					cy.contains('Sign in with a password instead').click();
+				cy.contains('Sign in with a password instead').click();
 
-					// password page
-					cy.url().should('include', '/signin/password');
-					cy.get('input[name=email]').should('have.value', emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-				});
+				// password page
+				cy.url().should('include', '/signin/password');
+				cy.get('input[name=email]').should('have.value', emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
 		});
 
 		it('selects password option to sign in from the initial sign in page and show correct error page on incorrect password', () => {
@@ -207,27 +199,25 @@ describe('Sign In flow, with passcode', () => {
 		});
 
 		it('selects password option to sign in from passcode page', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit(`/signin?usePasscodeSignIn=true`);
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('[data-cy="main-form-submit-button"]').click();
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress, finalPassword }) => {
+				cy.visit(`/signin?usePasscodeSignIn=true`);
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('[data-cy="main-form-submit-button"]').click();
 
-					// passcode page
-					cy.url().should('include', '/signin/code');
-					cy.contains('Enter your one-time code');
-					cy.contains('sign in with a password instead').click();
+				// passcode page
+				cy.url().should('include', '/signin/code');
+				cy.contains('Enter your one-time code');
+				cy.contains('sign in with a password instead').click();
 
-					// password page
-					cy.url().should('include', '/signin/password');
-					cy.get('input[name=email]').should('have.value', emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-				});
+				// password page
+				cy.url().should('include', '/signin/password');
+				cy.get('input[name=email]').should('have.value', emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
 		});
 
 		it('selects password option to sign in from passcode page and show correct error page on incorrect password', () => {
@@ -250,100 +240,92 @@ describe('Sign In flow, with passcode', () => {
 		});
 
 		it('should sign in with passcode - resend email', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					sendEmailAndValidatePasscode({
-						emailAddress,
-						additionalTests: 'resend-email',
-					});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				sendEmailAndValidatePasscode({
+					emailAddress,
+					additionalTests: 'resend-email',
 				});
+			});
 		});
 
 		it('should sign in with passcode - change email', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					sendEmailAndValidatePasscode({
-						emailAddress,
-						additionalTests: 'change-email',
-					});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				sendEmailAndValidatePasscode({
+					emailAddress,
+					additionalTests: 'change-email',
 				});
+			});
 		});
 
 		it('should sign in with passcode - passcode incorrect', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					sendEmailAndValidatePasscode({
-						emailAddress,
-						additionalTests: 'passcode-incorrect',
-					});
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				sendEmailAndValidatePasscode({
+					emailAddress,
+					additionalTests: 'passcode-incorrect',
 				});
+			});
 		});
 
 		it('should redirect with error when multiple passcode attempts fail', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					cy.visit(`/signin?usePasscodeSignIn=true`);
-					cy.get('input[name=email]').clear().type(emailAddress);
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				cy.visit(`/signin?usePasscodeSignIn=true`);
+				cy.get('input[name=email]').clear().type(emailAddress);
 
-					const timeRequestWasMade = new Date();
-					cy.get('[data-cy="main-form-submit-button"]').click();
+				const timeRequestWasMade = new Date();
+				cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
-						({ body, codes }) => {
-							// email
-							expect(body).to.have.string('Your one-time passcode');
-							expect(codes?.length).to.eq(1);
-							const code = codes?.[0].value;
-							expect(code).to.match(/^\d{6}$/);
+				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+					({ body, codes }) => {
+						// email
+						expect(body).to.have.string('Your one-time passcode');
+						expect(codes?.length).to.eq(1);
+						const code = codes?.[0].value;
+						expect(code).to.match(/^\d{6}$/);
 
-							// passcode page
-							cy.url().should('include', '/signin/code');
-							cy.contains('Enter your one-time code');
+						// passcode page
+						cy.url().should('include', '/signin/code');
+						cy.contains('Enter your one-time code');
 
-							// attempt 1
-							cy.contains('Sign in');
-							cy.get('input[name=code]').type(`${+code! + 1}`);
-							cy.url().should('include', '/signin/code');
-							cy.contains('Incorrect code');
+						// attempt 1
+						cy.contains('Sign in');
+						cy.get('input[name=code]').type(`${+code! + 1}`);
+						cy.url().should('include', '/signin/code');
+						cy.contains('Incorrect code');
 
-							// attempt 2
-							cy.get('input[name=code]').type(`${+code! + 1}`);
-							cy.contains('Sign in').click();
-							cy.url().should('include', '/signin/code');
-							cy.contains('Incorrect code');
+						// attempt 2
+						cy.get('input[name=code]').type(`${+code! + 1}`);
+						cy.contains('Sign in').click();
+						cy.url().should('include', '/signin/code');
+						cy.contains('Incorrect code');
 
-							// attempt 3
-							cy.get('input[name=code]').type(`${+code! + 1}`);
-							cy.contains('Sign in').click();
-							cy.url().should('include', '/signin/code');
-							cy.contains('Incorrect code');
+						// attempt 3
+						cy.get('input[name=code]').type(`${+code! + 1}`);
+						cy.contains('Sign in').click();
+						cy.url().should('include', '/signin/code');
+						cy.contains('Incorrect code');
 
-							// attempt 4
-							cy.get('input[name=code]').type(`${+code! + 1}`);
-							cy.contains('Sign in').click();
-							cy.url().should('include', '/signin/code');
-							cy.contains('Incorrect code');
+						// attempt 4
+						cy.get('input[name=code]').type(`${+code! + 1}`);
+						cy.contains('Sign in').click();
+						cy.url().should('include', '/signin/code');
+						cy.contains('Incorrect code');
 
-							// attempt 5
-							cy.get('input[name=code]').type(`${+code! + 1}`);
-							cy.contains('Sign in').click();
-							cy.url().should('include', '/signin');
-							cy.contains('Your code has expired');
-						},
-					);
-				});
+						// attempt 5
+						cy.get('input[name=code]').type(`${+code! + 1}`);
+						cy.contains('Sign in').click();
+						cy.url().should('include', '/signin');
+						cy.contains('Your code has expired');
+					},
+				);
+			});
 		});
 	});
 

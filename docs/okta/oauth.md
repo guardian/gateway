@@ -62,24 +62,20 @@ The high-level flow looks the same for both OpenID Connect and regular OAuth 2.0
 OAuth 2.0 defines a number of flows to get an access token. These flows are called grant types. The links provide more information from Okta, and how they can be implemented.
 
 - Authorization Code Flow
-
   - If you are building a server-side (or web) application that is capable of securely storing secrets, then the Authorization Code flow is the recommended method for controlling access to it.
   - https://developer.okta.com/docs/concepts/oauth-openid/#authorization-code-flow
 
 - Authorization Code Flow with PKCE (Proof Key for Code Exchange)
-
   - If you are building a native application, single page application, or a client-side heavy application, then the Authorization Code flow with a Proof Key for Code Exchange (PKCE) is the recommended method for controlling the access between your application and a resource server.
   - The Authorization Code flow with PKCE is similar to the standard Authorization Code flow with an extra step at the beginning and an extra verification at the end.
   - https://developer.okta.com/docs/concepts/oauth-openid/#authorization-code-flow-with-pkce
 
 - Client Credentials Flow
-
   - The Client Credentials flow is recommended for server-side (AKA confidential) client applications with no end user, which normally describes machine-to-machine communication.
   - The application needs to securely store its Client ID and secret and pass those to Okta in exchange for an access token.
   - https://developer.okta.com/docs/concepts/oauth-openid/#client-credentials-flow
 
 - Implicit Flow
-
   - The Implicit flow is **not a recommended approach**, as it is extremely challenging to implement the Implicit flow securely.
   - The recommendation is to use Authorization Code Flow with PKCE if possible.
   - If you are building a Single-Page Application (SPA) on browsers that don't support Web Crypto for PKCE, then the Implicit flow can be used for controlling access between your SPA and a resource server.
@@ -87,7 +83,6 @@ OAuth 2.0 defines a number of flows to get an access token. These flows are call
   - https://developer.okta.com/docs/concepts/oauth-openid/#implicit-flow
 
 - Resource Owner Password Flow
-
   - The Resource Owner Password flow is **not a recommended approach**.
   - It is intended for applications for which no other flow works, as it requires your application code to be fully trusted and protected from credential-stealing attacks.
   - It is made available primarily to provide a consistent and predictable integration pattern for legacy applications that can't otherwise be updated to a more secure flow such as the Authorization Code flow.
