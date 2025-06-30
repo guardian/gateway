@@ -12,5 +12,3 @@ export default {
 } as Meta;
 
 export const Email = () => <MinimalLayoutImage id="email" />;
-
-export const Welcome = () => <MinimalLayoutImage id="welcome" />;
