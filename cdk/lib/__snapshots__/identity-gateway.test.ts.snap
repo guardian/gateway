@@ -1518,7 +1518,7 @@ systemctl start identity-gateway
         ],
         "Metrics": [
           {
-            "Expression": "oktaIdxRegistrationCount + oktaRegistrationCount",
+            "Expression": "oktaIdxRegistrationCount",
             "Id": "totalRegistrationCount",
             "Label": "Total registrations in Okta Classic and Okta IDX",
           },
@@ -1539,31 +1539,6 @@ systemctl start identity-gateway
                   },
                 ],
                 "MetricName": "OktaIDXRegister::Success",
-                "Namespace": "Gateway",
-              },
-              "Period": 3600,
-              "Stat": "Sum",
-              "Unit": "Count",
-            },
-            "ReturnData": false,
-          },
-          {
-            "Id": "oktaRegistrationCount",
-            "MetricStat": {
-              "Metric": {
-                "Dimensions": [
-                  {
-                    "Name": "Stage",
-                    "Value": {
-                      "Ref": "Stage",
-                    },
-                  },
-                  {
-                    "Name": "ApiMode",
-                    "Value": "identity-gateway",
-                  },
-                ],
-                "MetricName": "OktaRegistration::Success",
                 "Namespace": "Gateway",
               },
               "Period": 3600,

@@ -14,17 +14,9 @@ import {
 	addQueryParamsToPath,
 	addQueryParamsToUntypedPath,
 } from '@/shared/lib/queryParams';
-import deepmerge from 'deepmerge';
 import { Request } from 'express';
-import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { OktaError } from '@/server/models/okta/Error';
-import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import {
-	OktaRegistration,
-	setEncryptedStateCookieForOktaRegistration,
-} from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
@@ -49,9 +41,9 @@ import {
 import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
+import { oktaIdxCreateAccount } from './register';
 
-const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
-	getConfiguration();
+const { signInPageUrl } = getConfiguration();
 
 // temp return to app page for app users who get stuck in browser
 router.get(
@@ -225,7 +217,7 @@ router.post(
 	'/welcome/resend',
 	handleRecaptcha,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		await OktaResendEmail(req, res);
+		await oktaIdxCreateAccount(req, res);
 	}),
 );
 
@@ -478,61 +470,5 @@ router.post(
 	'/welcome/:token',
 	setPasswordController('/welcome', 'Welcome', '/welcome/review'),
 );
-
-const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
-	const state = res.locals;
-	// if registration passcodes are enabled, we need to handle this differently
-	// by using the passcode registration flow
-	if (passcodesEnabled && !state.queryParams.useOktaClassic) {
-		return OktaRegistration(req, res);
-	}
-
-	const { email } = req.body;
-
-	try {
-		if (typeof email !== 'undefined') {
-			const user = await register({
-				email,
-				appClientId: state.queryParams.appClientId,
-				ip: req.ip,
-			});
-
-			trackMetric('OktaWelcomeResendEmail::Success');
-
-			setEncryptedStateCookieForOktaRegistration(res, user);
-
-			return res.redirect(
-				303,
-				addQueryParamsToPath('/welcome/email-sent', state.queryParams, {
-					emailSentSuccess: true,
-				}),
-			);
-		} else {
-			throw new OktaError({
-				message: 'Could not resend welcome email as email was undefined',
-			});
-		}
-	} catch (error) {
-		logger.error('Okta Registration resend email failure', error);
-
-		trackMetric('OktaWelcomeResendEmail::Failure');
-
-		const html = renderer('/welcome/email-sent', {
-			pageTitle: 'Check Your Inbox',
-			requestState: deepmerge(state, {
-				globalMessage: {
-					error: GenericErrors.DEFAULT,
-				},
-				pageData: {
-					email,
-					resendEmailAction: '/welcome/resend',
-					changeEmailPage: '/welcome/resend',
-				},
-			}),
-		});
-
-		return res.type('html').send(html);
-	}
-};
 
 export default router.router;

@@ -103,9 +103,6 @@ describe('getConfiguration', () => {
 					apple: 'okta-idp-apple',
 					google: 'okta-idp-google',
 				},
-				groupIds: {
-					GuardianUserAll: 'okta-guardian-users-group-id',
-				},
 			},
 			githubRunNumber: '5',
 			redis: {
