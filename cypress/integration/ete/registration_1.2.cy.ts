@@ -241,6 +241,9 @@ describe('Registration flow - Split 1/2', () => {
 						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
 					});
 
+					cy.url().should('include', '/welcome/review');
+					cy.get('button[type="submit"]').click();
+
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
 			);
@@ -308,6 +311,9 @@ describe('Registration flow - Split 1/2', () => {
 						expect(oktaUser.status).to.eq(Status.ACTIVE);
 						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
 					});
+
+					cy.url().should('include', '/welcome/review');
+					cy.get('button[type="submit"]').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
