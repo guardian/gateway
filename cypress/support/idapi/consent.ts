@@ -83,7 +83,7 @@ export const allConsents = [
 		id: 'personalised_advertising',
 		isOptOut: false,
 		isChannel: false,
-		name: 'Allow personalised advertising using this data - this supports the Guardian',
+		name: 'Allow personalised advertising using this data',
 	},
 	{
 		id: 'similar_guardian_products',

@@ -8,7 +8,11 @@ import {
 } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { remSpace, textSansBold17 } from '@guardian/source/foundations';
+import {
+	remSpace,
+	textSans15,
+	textSansBold17,
+} from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
@@ -21,6 +25,10 @@ import { MainForm } from '@/client/components/MainForm';
 
 const subheadingStyles = css`
 	${textSansBold17};
+`;
+
+const listContainerStyles = css`
+	${textSans15};
 `;
 
 const listStyles = css`
@@ -108,11 +116,22 @@ export const NewAccountReview = ({
 						<MainBodyText cssOverrides={subheadingStyles}>
 							Personalised advertising
 						</MainBodyText>
+						<MainBodyText>We do this by:</MainBodyText>
+						<div css={listContainerStyles}>
+							<ul css={listStyles}>
+								<li>
+									Checking if you are already a customer of other trusted
+									partners
+								</li>
+								<li>
+									Generating random identifiers based on your email address for
+									advertising and marketing
+								</li>
+							</ul>
+						</div>
 						<MainBodyText>
-							Advertising is a crucial source of our funding. You won’t see more
-							ads, and your data won’t be shared with third parties to use for
-							their own advertising. Instead, we would analyse your information
-							to predict what you might be interested in.
+							Advertising is a crucial source of our funding. You won't see more
+							ads, but your advertising may be more relevant.
 						</MainBodyText>
 					</>
 				)}
@@ -121,11 +140,13 @@ export const NewAccountReview = ({
 				</MainBodyText>
 				<MainBodyText>
 					Information you provide when you create an account with us e.g.
+				</MainBodyText>
+				<div css={listContainerStyles}>
 					<ul css={listStyles}>
 						<li>First name and last name</li>
 						<li>Email address</li>
 					</ul>
-				</MainBodyText>
+				</div>
 				<InformationBox>
 					<InformationBoxText>
 						You can change your settings under{' '}
