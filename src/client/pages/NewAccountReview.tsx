@@ -1,5 +1,8 @@
 import React from 'react';
-import { MainBodyText } from '@/client/components/MainBodyText';
+import {
+	MainBodyText,
+	mainBodyTextStyles,
+} from '@/client/components/MainBodyText';
 import { Consent } from '@/shared/model/Consent';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 import {
@@ -8,11 +11,7 @@ import {
 } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import {
-	remSpace,
-	textSans15,
-	textSansBold17,
-} from '@guardian/source/foundations';
+import { remSpace, textSansBold17 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
@@ -25,10 +24,6 @@ import { MainForm } from '@/client/components/MainForm';
 
 const subheadingStyles = css`
 	${textSansBold17};
-`;
-
-const listContainerStyles = css`
-	${textSans15};
 `;
 
 const listStyles = css`
@@ -117,7 +112,7 @@ export const NewAccountReview = ({
 							Personalised advertising
 						</MainBodyText>
 						<MainBodyText>We do this by:</MainBodyText>
-						<div css={listContainerStyles}>
+						<div css={mainBodyTextStyles}>
 							<ul css={listStyles}>
 								<li>
 									Checking if you are already a customer of other trusted
@@ -141,7 +136,7 @@ export const NewAccountReview = ({
 				<MainBodyText>
 					Information you provide when you create an account with us e.g.
 				</MainBodyText>
-				<div css={listContainerStyles}>
+				<div css={mainBodyTextStyles}>
 					<ul css={listStyles}>
 						<li>First name and last name</li>
 						<li>Email address</li>

@@ -6,7 +6,7 @@ interface Props {
 	cssOverrides?: SerializedStyles;
 }
 
-const mainBodyTextStyles = css`
+export const mainBodyTextStyles = css`
 	${textSans15};
 	color: var(--color-text);
 	margin: 0;
