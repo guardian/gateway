@@ -117,9 +117,9 @@
 		"zod-to-json-schema": "^3.24.5"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.828.0",
-		"@aws-sdk/client-sesv2": "^3.828.0",
-		"@aws-sdk/credential-providers": "^3.828.0",
+		"@aws-sdk/client-cloudwatch": "^3.841.0",
+		"@aws-sdk/client-sesv2": "^3.840.0",
+		"@aws-sdk/credential-providers": "^3.840.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.0",
 		"@guardian/ab-core": "8.0.1",
@@ -151,7 +151,7 @@
 		"supertest": "^7.1.1",
 		"tslib": "^2.8.1",
 		"winston": "^3.17.0",
-		"zod": "^3.25.63"
+		"zod": "^3.25.75"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
