@@ -619,143 +619,129 @@ describe('Registration flow - Split 1/2', () => {
 
 		context('ACTIVE user - with email authenticator', () => {
 			it('Should sign in with passcode', () => {
-				cy
-					.createTestUser({
-						isUserEmailValidated: true,
-					})
-					?.then(({ emailAddress }) => {
-						existingUserSendEmailAndValidatePasscode({
-							emailAddress,
-						});
+				cy.createTestUser({
+					isUserEmailValidated: true,
+				})?.then(({ emailAddress }) => {
+					existingUserSendEmailAndValidatePasscode({
+						emailAddress,
 					});
+				});
 			});
 
 			it('should sign in with passocde - preserve returnUrl', () => {
-				cy
-					.createTestUser({
-						isUserEmailValidated: true,
-					})
-					?.then(({ emailAddress }) => {
-						existingUserSendEmailAndValidatePasscode({
-							emailAddress,
-							expectedReturnUrl: returnUrl,
-							params: `returnUrl=${encodedReturnUrl}`,
-						});
+				cy.createTestUser({
+					isUserEmailValidated: true,
+				})?.then(({ emailAddress }) => {
+					existingUserSendEmailAndValidatePasscode({
+						emailAddress,
+						expectedReturnUrl: returnUrl,
+						params: `returnUrl=${encodedReturnUrl}`,
 					});
+				});
 			});
 
 			it('should sign in with passcode - preserve fromURI', () => {
-				cy
-					.createTestUser({
-						isUserEmailValidated: true,
-					})
-					?.then(({ emailAddress }) => {
-						existingUserSendEmailAndValidatePasscode({
-							emailAddress,
-							expectedReturnUrl: fromURI,
-							params: `fromURI=${fromURI}&appClientId=${appClientId}`,
-						});
+				cy.createTestUser({
+					isUserEmailValidated: true,
+				})?.then(({ emailAddress }) => {
+					existingUserSendEmailAndValidatePasscode({
+						emailAddress,
+						expectedReturnUrl: fromURI,
+						params: `fromURI=${fromURI}&appClientId=${appClientId}`,
 					});
+				});
 			});
 
 			it('should sign in with passcode - resend email', () => {
-				cy
-					.createTestUser({
-						isUserEmailValidated: true,
-					})
-					?.then(({ emailAddress }) => {
-						existingUserSendEmailAndValidatePasscode({
-							emailAddress,
-							additionalTests: 'resend-email',
-						});
+				cy.createTestUser({
+					isUserEmailValidated: true,
+				})?.then(({ emailAddress }) => {
+					existingUserSendEmailAndValidatePasscode({
+						emailAddress,
+						additionalTests: 'resend-email',
 					});
+				});
 			});
 
 			it('should sign in with passcode - change email', () => {
-				cy
-					.createTestUser({
-						isUserEmailValidated: true,
-					})
-					?.then(({ emailAddress }) => {
-						existingUserSendEmailAndValidatePasscode({
-							emailAddress,
-							additionalTests: 'change-email',
-						});
+				cy.createTestUser({
+					isUserEmailValidated: true,
+				})?.then(({ emailAddress }) => {
+					existingUserSendEmailAndValidatePasscode({
+						emailAddress,
+						additionalTests: 'change-email',
 					});
+				});
 			});
 
 			it('should sign in with passcode - passcode incorrect', () => {
-				cy
-					.createTestUser({
-						isUserEmailValidated: true,
-					})
-					?.then(({ emailAddress }) => {
-						existingUserSendEmailAndValidatePasscode({
-							emailAddress,
-							additionalTests: 'passcode-incorrect',
-						});
+				cy.createTestUser({
+					isUserEmailValidated: true,
+				})?.then(({ emailAddress }) => {
+					existingUserSendEmailAndValidatePasscode({
+						emailAddress,
+						additionalTests: 'passcode-incorrect',
 					});
+				});
 			});
 		});
 
 		it('should redirect with error when multiple passcode attempts fail', () => {
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress }) => {
-					cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			})?.then(({ emailAddress }) => {
+				cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
 
-					cy.visit(`/register/email`);
-					cy.get('input[name=email]').clear().type(emailAddress);
+				cy.visit(`/register/email`);
+				cy.get('input[name=email]').clear().type(emailAddress);
 
-					const timeRequestWasMade = new Date();
-					cy.get('[data-cy="main-form-submit-button"]').click();
+				const timeRequestWasMade = new Date();
+				cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
-						({ body, codes }) => {
-							// email
-							expect(body).to.have.string('Your one-time passcode');
-							expect(codes?.length).to.eq(1);
-							const code = codes?.[0].value;
-							expect(code).to.match(/^\d{6}$/);
+				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+					({ body, codes }) => {
+						// email
+						expect(body).to.have.string('Your one-time passcode');
+						expect(codes?.length).to.eq(1);
+						const code = codes?.[0].value;
+						expect(code).to.match(/^\d{6}$/);
 
-							// passcode page
-							cy.url().should('include', '/register/email-sent');
-							cy.contains('Enter your code');
+						// passcode page
+						cy.url().should('include', '/register/email-sent');
+						cy.contains('Enter your code');
 
-							// attempt 1 - auto submit
-							cy.contains('Submit verification code');
-							cy.get('input[name=code]').type('000000');
-							cy.contains('Incorrect code');
-							cy.url().should('include', '/register/code');
+						// attempt 1 - auto submit
+						cy.contains('Submit verification code');
+						cy.get('input[name=code]').type('000000');
+						cy.contains('Incorrect code');
+						cy.url().should('include', '/register/code');
 
-							// attempt 2 - manual submit
-							cy.get('input[name=code]').type('000000');
-							cy.contains('Submit verification code').click();
-							cy.contains('Incorrect code');
-							cy.url().should('include', '/register/code');
+						// attempt 2 - manual submit
+						cy.get('input[name=code]').type('000000');
+						cy.contains('Submit verification code').click();
+						cy.contains('Incorrect code');
+						cy.url().should('include', '/register/code');
 
-							// attempt 3
-							cy.get('input[name=code]').type('000000');
-							cy.contains('Submit verification code').click();
-							cy.contains('Incorrect code');
-							cy.url().should('include', '/register/code');
+						// attempt 3
+						cy.get('input[name=code]').type('000000');
+						cy.contains('Submit verification code').click();
+						cy.contains('Incorrect code');
+						cy.url().should('include', '/register/code');
 
-							// attempt 4
-							cy.get('input[name=code]').type('000000');
-							cy.contains('Submit verification code').click();
-							cy.contains('Incorrect code');
-							cy.url().should('include', '/register/code');
+						// attempt 4
+						cy.get('input[name=code]').type('000000');
+						cy.contains('Submit verification code').click();
+						cy.contains('Incorrect code');
+						cy.url().should('include', '/register/code');
 
-							// attempt 5
-							cy.get('input[name=code]').type('000000');
-							cy.contains('Submit verification code').click();
-							cy.url().should('include', '/register/email');
-							cy.contains('Your code has expired');
-						},
-					);
-				});
+						// attempt 5
+						cy.get('input[name=code]').type('000000');
+						cy.contains('Submit verification code').click();
+						cy.url().should('include', '/register/email');
+						cy.contains('Your code has expired');
+					},
+				);
+			});
 		});
 
 		context('ACTIVE user - with only password authenticator', () => {
