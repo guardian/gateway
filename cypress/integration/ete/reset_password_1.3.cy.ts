@@ -180,8 +180,8 @@ describe('Password reset flow in Okta - useOktaClassic', () => {
 
 					cy.get('form')
 						.should('have.attr', 'action')
-						.and('match', new RegExp(newReturnUrl))
-						.and('not.match', new RegExp(encodedReturnUrl));
+						.and('contain', newReturnUrl)
+						.and('not.contain', encodedReturnUrl);
 
 					//we are reloading here to make sure the params are persisted even on page refresh
 					cy.reload();
