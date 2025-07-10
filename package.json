@@ -117,9 +117,9 @@
 		"zod-to-json-schema": "^3.24.6"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.841.0",
-		"@aws-sdk/client-sesv2": "^3.840.0",
-		"@aws-sdk/credential-providers": "^3.840.0",
+		"@aws-sdk/client-cloudwatch": "^3.844.0",
+		"@aws-sdk/client-sesv2": "^3.844.0",
+		"@aws-sdk/credential-providers": "^3.844.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.0",
 		"@guardian/ab-core": "8.0.1",
@@ -127,7 +127,7 @@
 		"@guardian/source": "^10.2.0",
 		"@guardian/source-development-kitchen": "^18.0.0",
 		"@okta/jwt-verifier": "^4.0.1",
-		"@smithy/node-http-handler": "^4.0.6",
+		"@smithy/node-http-handler": "^4.1.0",
 		"awesome-debounce-promise": "^2.1.0",
 		"body-parser": "^2.2.0",
 		"bowser": "^2.11.0",
