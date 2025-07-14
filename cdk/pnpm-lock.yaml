@@ -15,8 +15,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.30.1)(typescript@5.8.3))(eslint@9.30.1))(eslint@9.30.1)(typescript@5.8.3)
       '@guardian/prettier':
-        specifier: 5.0.0
-        version: 5.0.0(prettier@3.6.2)(tslib@2.8.1)
+        specifier: 7.0.0
+        version: 7.0.0(prettier@3.6.2)(tslib@2.8.1)
       '@guardian/tsconfig':
         specifier: ^1.0.0
         version: 1.0.0
@@ -255,8 +255,8 @@ packages:
     resolution: {integrity: sha512-ETyHEk2VHHvl9b9jZP5IHPavHYk57EhanlRRuae9XCpb/j5bDCbPPMOBfCWhnl/7EDJz0jEMCi/RhccCE8r1+Q==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/types@7.28.0':
-    resolution: {integrity: sha512-jYnje+JyZG5YThjHiF28oT4SIZLnYOcSBb6+SDaFIyzDVSkXQmQQYclJ2R+YxcdmK0AX6x1E5OQNtuh3jHDrUg==}
+  '@babel/types@7.28.1':
+    resolution: {integrity: sha512-x0LvFTekgSX+83TI28Y9wYPUfzrnl2aT5+5QLnO6v7mSJYtEEevuDRN0F0uSHRk1G1IWZC43o00Y0xDDrpBGPQ==}
     engines: {node: '>=6.9.0'}
 
   '@bcoe/v8-coverage@0.2.3':
@@ -331,11 +331,11 @@ packages:
     peerDependencies:
       eslint: ^9.19.0
 
-  '@guardian/prettier@5.0.0':
-    resolution: {integrity: sha512-gJSQuuP7JVDOWQj4EUrwyJTnMt+frLkw0D2sLg70nHn76L3LmH2xTQtYMPUsqyqn37qocDPzgdvBdmATi50zRQ==}
+  '@guardian/prettier@7.0.0':
+    resolution: {integrity: sha512-07Cau6PiJqGhmMJSwWlFW1IXYE+cmA4Bagr+aTEZiSBN38hljatnQEOTlRJW0gEn/PjGz6/au8dPbOhtGwZbGg==}
     peerDependencies:
-      prettier: ^3.0.0
-      tslib: ^2.5.3
+      prettier: ^3.1.1
+      tslib: ^2.6.2
 
   '@guardian/tsconfig@1.0.0':
     resolution: {integrity: sha512-xgajw/jq4lEtQoN72vnmiXeRnejUcd3DgNFmH6TfAbWV6NRK4KC4hAjzKf0H69zBSJMxEfFVfGKP9wBzGII7qg==}
@@ -2874,7 +2874,7 @@ snapshots:
       '@babel/parser': 7.28.0
       '@babel/template': 7.27.2
       '@babel/traverse': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
       convert-source-map: 2.0.0
       debug: 4.4.1(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
@@ -2895,7 +2895,7 @@ snapshots:
   '@babel/generator@7.28.0':
     dependencies:
       '@babel/parser': 7.28.0
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
       '@jridgewell/gen-mapping': 0.3.12
       '@jridgewell/trace-mapping': 0.3.29
       jsesc: 3.1.0
@@ -2957,7 +2957,7 @@ snapshots:
 
   '@babel/parser@7.28.0':
     dependencies:
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
     optional: true
 
   '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@7.27.4)':
@@ -3070,7 +3070,7 @@ snapshots:
       '@babel/helper-globals': 7.28.0
       '@babel/parser': 7.28.0
       '@babel/template': 7.27.2
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
       debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
@@ -3081,7 +3081,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@babel/types@7.28.0':
+  '@babel/types@7.28.1':
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
@@ -3187,7 +3187,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@guardian/prettier@5.0.0(prettier@3.6.2)(tslib@2.8.1)':
+  '@guardian/prettier@7.0.0(prettier@3.6.2)(tslib@2.8.1)':
     dependencies:
       prettier: 3.6.2
       tslib: 2.8.1
@@ -4013,7 +4013,7 @@ snapshots:
   babel-plugin-jest-hoist@30.0.0:
     dependencies:
       '@babel/template': 7.27.2
-      '@babel/types': 7.28.0
+      '@babel/types': 7.28.1
       '@types/babel__core': 7.20.5
     optional: true
 
