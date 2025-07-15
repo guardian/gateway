@@ -60,10 +60,6 @@ export const RegistrationConsents = ({
 	});
 	// Show marketing consent if not showing Feast
 	const showMarketingConsent = (() => {
-		if (registrationNewsletter === RegistrationNewslettersFormFieldsMap.feast) {
-			return false;
-		}
-
 		if (isJobs) {
 			return false;
 		}

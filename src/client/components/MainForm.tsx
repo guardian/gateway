@@ -309,6 +309,10 @@ export const MainForm = ({
 					{additionalTerms && (
 						<InformationBoxText>{additionalTerms}</InformationBoxText>
 					)}
+					<InformationBoxText>
+						You can change your settings in the Data Privacy section of your
+						Guardian account at any time.
+					</InformationBoxText>
 					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
 				</InformationBox>
 			)}
