@@ -40,7 +40,10 @@ export const rateLimiterConfigurationSchema = z
 		settings: settingsConfigurationSchema.optional(),
 		defaultBuckets: routeBucketsConfigurationSchema,
 		routeBuckets: z
-			.record(z.enum(ValidRoutePathsArray), routeBucketsConfigurationSchema)
+			.partialRecord(
+				z.enum(ValidRoutePathsArray),
+				routeBucketsConfigurationSchema,
+			)
 			.optional(),
 	})
 	.strict();
