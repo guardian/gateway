@@ -126,7 +126,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 	);
 };
 
-describe('Registration flow - Split 1/2', () => {
+describe('Registration flow - Split 1/3', () => {
 	context('Registering with Okta', () => {
 		it('successfully registers using an email with no existing account using a passcode - passwordless user', () => {
 			const encodedReturnUrl =
