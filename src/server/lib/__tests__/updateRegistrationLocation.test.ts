@@ -48,8 +48,8 @@ describe('updateRegistrationLocationViaOkta', () => {
 		await updateRegistrationLocationViaOkta(getFakeRequest(undefined), {
 			claims: { sub: '123' },
 		} as Jwt);
-		expect(mockedGetUser).not.toBeCalled();
-		expect(mockedUpdateUser).not.toBeCalled();
+		expect(mockedGetUser).not.toHaveBeenCalled();
+		expect(mockedUpdateUser).not.toHaveBeenCalled();
 	});
 
 	test(`does not update location if user response already has location set `, async () => {
@@ -58,8 +58,8 @@ describe('updateRegistrationLocationViaOkta', () => {
 			claims: { sub: '123' },
 		} as Jwt);
 
-		expect(mockedGetUser).toBeCalled();
-		expect(mockedUpdateUser).not.toBeCalled();
+		expect(mockedGetUser).toHaveBeenCalled();
+		expect(mockedUpdateUser).not.toHaveBeenCalled();
 	});
 
 	test(`updates location if user response does not have location set `, async () => {
@@ -67,7 +67,7 @@ describe('updateRegistrationLocationViaOkta', () => {
 		await updateRegistrationLocationViaOkta(getFakeRequest('FR'), {
 			claims: { sub: '123' },
 		} as Jwt);
-		expect(mockedGetUser).toBeCalled();
-		expect(mockedUpdateUser).toBeCalled();
+		expect(mockedGetUser).toHaveBeenCalled();
+		expect(mockedUpdateUser).toHaveBeenCalled();
 	});
 });
