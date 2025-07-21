@@ -30,6 +30,7 @@ import {
 } from './commands/testUser';
 import { interceptRecaptcha } from './commands/recaptcha';
 import { oktaGetApps } from './commands/oktaManagementApi';
+import { sendEmailAndValidatePasscode } from './commands/sendEmailAndValidatePasscode';
 
 Cypress.Commands.add('mockNext', mockNext);
 Cypress.Commands.add('mockPattern', mockPattern); // unused, candidate for removal
@@ -62,3 +63,7 @@ Cypress.Commands.add('closeCurrentOktaSession', closeCurrentOktaSession);
 Cypress.Commands.add('sendConsentEmail', sendConsentEmail);
 Cypress.Commands.add('interceptRecaptcha', interceptRecaptcha);
 Cypress.Commands.add('oktaGetApps', oktaGetApps);
+Cypress.Commands.add(
+	'sendEmailAndValidatePasscode',
+	sendEmailAndValidatePasscode,
+);
