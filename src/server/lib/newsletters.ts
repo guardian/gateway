@@ -33,7 +33,6 @@ export const NewsletterMap = new Map<
 			Newsletters.HEADLINES_US,
 			Newsletters.THE_STAKES_US,
 			Newsletters.WELL_ACTUALLY,
-			Newsletters.TRUMP_ON_TRIAL_US,
 		],
 	],
 ]);

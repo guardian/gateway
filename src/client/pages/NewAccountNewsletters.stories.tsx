@@ -69,15 +69,6 @@ const US_NEWSLETTERS = [
 		name: 'Well Actually',
 		subscribed: false,
 	},
-	{
-		id: '6032',
-		nameId: 'trump-on-trial',
-		description:
-			'Stay up to date on all of Donald Trump’s trials. Guardian staff will send weekly updates each Wednesday – and more frequent editions during trial.',
-		frequency: 'Weekly, and more frequent editions during trial',
-		name: 'Trump on Trial',
-		subscribed: false,
-	},
 ];
 
 export default {
