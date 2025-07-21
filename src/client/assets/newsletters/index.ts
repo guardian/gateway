@@ -6,3 +6,4 @@ export { default as THE_CRUNCH_AU_SQUARE_IMAGE } from '@/client/assets/newslette
 export { default as HEADLINES_US_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
 export { default as THE_STAKES_US_SQUARE_IMAGE } from '@/client/assets/newsletters/us-the-stakes-square.jpg';
 export { default as WELL_ACTUALLY_SQUARE_IMAGE } from '@/client/assets/newsletters/well-actually-square.jpg';
+export { default as TECH_SCAPE_SQUARE_IMAGE } from '@/client/assets/newsletters/tech-scape-square.jpg';

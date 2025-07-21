@@ -69,6 +69,14 @@ const US_NEWSLETTERS = [
 		name: 'Well Actually',
 		subscribed: false,
 	},
+	{
+		id: '6013',
+		nameId: 'tech-scape',
+		description: 'A deeper look at how technology is shaping our lives',
+		frequency: 'Weekly',
+		name: 'TechScape',
+		subscribed: false,
+	},
 ];
 
 export default {

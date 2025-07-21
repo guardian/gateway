@@ -11,6 +11,7 @@ export interface NewsLetter {
 export const Newsletters = {
 	// General newsletters
 	WELL_ACTUALLY: '6039',
+	TECH_SCAPE: '6013',
 	// US newsletters
 	HEADLINES_US: '4152',
 	THE_STAKES_US: '6042',
@@ -36,7 +37,8 @@ export type NewslettersWithImages =
 	| typeof Newsletters.THE_CRUNCH_AU
 	| typeof Newsletters.HEADLINES_US
 	| typeof Newsletters.THE_STAKES_US
-	| typeof Newsletters.WELL_ACTUALLY;
+	| typeof Newsletters.WELL_ACTUALLY
+	| typeof Newsletters.TECH_SCAPE;
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
