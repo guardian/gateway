@@ -70,12 +70,11 @@ const US_NEWSLETTERS = [
 		subscribed: false,
 	},
 	{
-		id: '6032',
-		nameId: 'trump-on-trial',
-		description:
-			'Stay up to date on all of Donald Trump’s trials. Guardian staff will send weekly updates each Wednesday – and more frequent editions during trial.',
-		frequency: 'Weekly, and more frequent editions during trial',
-		name: 'Trump on Trial',
+		id: '6013',
+		nameId: 'tech-scape',
+		description: 'A deeper look at how technology is shaping our lives',
+		frequency: 'Weekly',
+		name: 'TechScape',
 		subscribed: false,
 	},
 ];
