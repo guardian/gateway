@@ -11,10 +11,10 @@ export interface NewsLetter {
 export const Newsletters = {
 	// General newsletters
 	WELL_ACTUALLY: '6039',
+	TECH_SCAPE: '6013',
 	// US newsletters
 	HEADLINES_US: '4152',
 	THE_STAKES_US: '6042',
-	TRUMP_ON_TRIAL_US: '6032',
 	// AUS newsletters
 	MORNING_MAIL_AU: '4148',
 	AFTERNOON_UPDATE_AU: '6023',
@@ -38,7 +38,7 @@ export type NewslettersWithImages =
 	| typeof Newsletters.HEADLINES_US
 	| typeof Newsletters.THE_STAKES_US
 	| typeof Newsletters.WELL_ACTUALLY
-	| typeof Newsletters.TRUMP_ON_TRIAL_US;
+	| typeof Newsletters.TECH_SCAPE;
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
