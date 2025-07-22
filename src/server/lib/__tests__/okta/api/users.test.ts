@@ -89,7 +89,7 @@ describe('okta#createUser', () => {
 			Promise.resolve({ ok: false, status: 400, json } as Response),
 		);
 
-		await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
+		await expect(createUser(userCreationRequest(userId))).rejects.toThrow(
 			new OktaError({ message: 'Api validation failed: login' }),
 		);
 	});
@@ -117,7 +117,7 @@ describe('okta#createUser', () => {
 			Promise.resolve({ ok: false, status: 400, json } as Response),
 		);
 
-		await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
+		await expect(createUser(userCreationRequest(userId))).rejects.toThrow(
 			new OktaError({ message: 'Api validation failed: login', causes }),
 		);
 	});
@@ -141,7 +141,7 @@ describe('okta#createUser', () => {
 			Promise.resolve({ ok: false, status: 400, json } as Response),
 		);
 
-		await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
+		await expect(createUser(userCreationRequest(userId))).rejects.toThrow(
 			new OktaError({ message: 'Api validation failed: login', causes }),
 		);
 	});
@@ -182,7 +182,7 @@ describe('okta#fetchUser', () => {
 			Promise.resolve({ ok: false, status: 404, json } as Response),
 		);
 
-		await expect(getUser(userId)).rejects.toThrowError(
+		await expect(getUser(userId)).rejects.toThrow(
 			new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
 		);
 	});
@@ -226,7 +226,7 @@ describe('okta#getUserGroups', () => {
 			Promise.resolve({ ok: false, status: 404, json } as Response),
 		);
 
-		await expect(getUserGroups(userId)).rejects.toThrowError(
+		await expect(getUserGroups(userId)).rejects.toThrow(
 			new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
 		);
 	});
@@ -268,7 +268,7 @@ describe('okta#activateUser', () => {
 			activateUser({
 				id: userId,
 			}),
-		).rejects.toThrowError(
+		).rejects.toThrow(
 			new OktaError({
 				message: 'Activation failed because the user is already active',
 			}),
