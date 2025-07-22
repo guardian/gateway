@@ -21,7 +21,16 @@ export const applyMiddleware = (server: Express): void => {
 	server.use(requestContextMiddleware);
 	// apply helmet before anything else
 	server.use(helmetMiddleware as RequestHandler);
-	server.use(urlencoded({ extended: true }) as RequestHandler);
+	server.use(urlencoded({ extended: true }));
+	// As of Express 5.x req.body is `undefined` by default if the body parser is not used.
+	// This regularly happens when the request is not a form submission, such as a GET request.
+	// We should consider enabling `@typescript-eslint/no-unsafe-assignment` in the future
+	// to force us to safely handle the `req.body` type.
+	server.use((req, _, next) => {
+		// eslint-disable-next-line functional/immutable-data -- Fix for express 5.x req.body being undefined
+		req.body = req.body ?? {};
+		next();
+	});
 	server.use(cookieParser(appSecret));
 	server.use(compression());
 
@@ -32,7 +41,6 @@ export const applyMiddleware = (server: Express): void => {
 
 	server.use(loggerMiddleware);
 	server.use(csrfMiddleware as RequestHandler);
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- express has its own way of handling async middleware
 	server.use(requestStateMiddleware);
 	server.use(routes);
 	server.use(fourZeroFourMiddleware);

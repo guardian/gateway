@@ -14,7 +14,7 @@ const router = Router();
 // user a link to /verify-email/:token, we support an optional token porameter in the URL,
 // but ignore it.
 router.get(
-	'/verify-email/:token?',
+	'/verify-email/{:token}',
 	(req: Request, res: ResponseWithRequestState) => {
 		// Track a metric to see how many users are hitting this page
 		trackMetric('VerifyEmailPage::Accessed');
