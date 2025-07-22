@@ -32,7 +32,7 @@ describe('okta#signOutUser', () => {
 			Promise.resolve({ ok: false, status: 404 } as Response),
 		);
 
-		await expect(getCurrentSession({ idx: sessionId })).rejects.toThrowError(
+		await expect(getCurrentSession({ idx: sessionId })).rejects.toThrow(
 			new OktaError({ message: 'Could not parse Okta error response' }),
 		);
 	});
