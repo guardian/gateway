@@ -493,10 +493,7 @@ const authenticationHandler = async (
 		if (
 			authState.queryParams.fromURI &&
 			// even if a fromURI is set we still want users to review their account settings
-			(authState.confirmationPage !== '/welcome/review' ||
-				// TODO: Confirm that Feast are happy with the Onboarding page
-				authState.data?.appLabel === 'ios_feast_app' ||
-				authState.data?.appLabel === 'android_feast_app')
+			authState.confirmationPage !== '/welcome/review'
 		) {
 			return res.redirect(303, authState.queryParams.fromURI);
 		}
