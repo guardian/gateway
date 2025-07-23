@@ -150,6 +150,6 @@ export const requestStateMiddleware = async (
 		return next();
 	} catch (error) {
 		logger.error('Error in requestStateMiddleware', error);
-		return next(error);
+		throw error;
 	}
 };

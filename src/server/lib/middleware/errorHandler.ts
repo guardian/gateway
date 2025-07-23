@@ -1,4 +1,4 @@
-import { NextFunction, Request } from 'express';
+import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
@@ -14,7 +14,6 @@ export const routeErrorHandler = (
 	err: any,
 	req: Request,
 	res: ResponseWithRequestState,
-	next: NextFunction,
 ) => {
 	if (err.code === 'EBADCSRFTOKEN') {
 		// handle CSRF token errors here
@@ -32,7 +31,7 @@ export const routeErrorHandler = (
 				},
 			),
 		);
-		return next(err);
+		throw err;
 	} else if (err.code === 'EBADRECAPTCHA') {
 		trackMetric('RecaptchaMiddleware::Failure');
 		logger.error('recaptcha error', err);
@@ -49,7 +48,7 @@ export const routeErrorHandler = (
 				},
 			),
 		);
-		return next(err);
+		throw err;
 	}
 
 	logger.error('unexpected error', err);
