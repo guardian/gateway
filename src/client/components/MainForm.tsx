@@ -69,7 +69,7 @@ export interface MainFormProps {
 	displayInline?: boolean;
 	submitButtonLink?: boolean;
 	hideRecaptchaMessage?: boolean;
-	additionalTerms?: ReactNode;
+	additionalTerms?: ReactNode[];
 	shortRequestId?: string;
 	disabled?: boolean;
 	formRef?: React.RefObject<HTMLFormElement | null>;
@@ -306,13 +306,12 @@ export const MainForm = ({
 				<InformationBox>
 					{hasGuardianTerms && <GuardianTerms />}
 					{hasJobsTerms && <JobsTerms />}
-					{additionalTerms && (
-						<InformationBoxText>{additionalTerms}</InformationBoxText>
-					)}
-					<InformationBoxText>
-						You can change your settings in the Data Privacy section of your
-						Guardian account at any time.
-					</InformationBoxText>
+					{additionalTerms &&
+						additionalTerms.map((specificTermsItem) => {
+							return (
+								<InformationBoxText>{specificTermsItem}</InformationBoxText>
+							);
+						})}
 					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
 				</InformationBox>
 			)}
