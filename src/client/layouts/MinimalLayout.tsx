@@ -27,7 +27,6 @@ interface MinimalLayoutProps {
 	pageHeader: string;
 	leadText?: React.ReactNode;
 	imageId?: DecorativeImageId;
-	centered?: boolean;
 	successOverride?: string;
 	errorOverride?: string;
 	errorContext?: React.ReactNode;
@@ -35,11 +34,11 @@ interface MinimalLayoutProps {
 	shortRequestId?: string;
 }
 
-const mainStyles = (wide: boolean, centered?: boolean) => css`
+const mainStyles = (wide: boolean) => css`
 	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
 	max-width: ${wide ? LAYOUT_WIDTH_WIDE : LAYOUT_WIDTH_NARROW}px;
 	width: 100%;
-	margin: ${!centered && '0'} auto;
+	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 	gap: ${CONTAINER_GAP};
@@ -60,7 +59,6 @@ export const MinimalLayout = ({
 	pageHeader,
 	leadText,
 	imageId,
-	centered,
 	successOverride,
 	errorOverride,
 	errorContext,
@@ -77,7 +75,7 @@ export const MinimalLayout = ({
 		<>
 			<Theme />
 			<MinimalHeader />
-			<main css={mainStyles(wide, centered)}>
+			<main css={mainStyles(wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				{pageHeader && (
 					<header>
