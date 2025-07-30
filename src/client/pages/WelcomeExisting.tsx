@@ -20,7 +20,10 @@ export const WelcomeExisting = ({
 	accountManagementUrl = 'https://manage.theguardian.com',
 }: WelcomeExistingProps) => {
 	return (
-		<MinimalLayout pageHeader="Welcome back. You're signed in!" centered={true}>
+		<MinimalLayout
+			pageHeader="Welcome back. You're signed in!"
+			imageId="welcome"
+		>
 			<MainBodyText>
 				We noticed you already have a Guardian account
 				{email && (
