@@ -77,14 +77,14 @@ describe('Content Security Policy headers', () => {
 			expect(splitCSPHeader).toContain(`${baseUri} 'none'`);
 			expect(splitCSPHeader).toContain("default-src 'none'");
 			expect(splitCSPHeader).toContain(
-				`script-src ${baseUri} www.google.com www.gstatic.com assets.guim.co.uk 'unsafe-eval'`,
+				`script-src 'self' ${baseUri} www.google.com www.gstatic.com assets.guim.co.uk 'unsafe-eval' 'unsafe-inline'`,
 			);
 			expect(splitCSPHeader).toContain(
 				`img-src ${baseUri} static.guim.co.uk ophan.theguardian.com www.google.com`,
 			);
 			expect(splitCSPHeader).toContain('font-src assets.guim.co.uk');
 			expect(splitCSPHeader).toContain(
-				`connect-src consent-logs.${apiDomain} api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com`,
+				`connect-src consent-logs.${apiDomain} api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com http://localhost:* https://localhost:*`,
 			);
 			expect(splitCSPHeader).toContain("object-src 'none'");
 			expect(splitCSPHeader).toContain("script-src-attr 'none'");
