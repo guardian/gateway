@@ -23,7 +23,23 @@ const CSP_VALID_URI = {
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 
+// Function to get allowed frame ancestors based on configuration
+const getAllowedFrameAncestors = (): string[] => {
+	// In production, you would read this from environment variables or configuration
+	const allowedDomains = process.env.ALLOWED_IFRAME_DOMAINS?.split(',') || [];
+
+	// For development, allow localhost
+	const developmentDomains =
+		stage === 'DEV' ? ['http://localhost:*', 'https://localhost:*'] : [];
+
+	const allDomains = [...allowedDomains, ...developmentDomains];
+
+	// If no domains are configured, block all iframes
+	return allDomains.length > 0 ? allDomains : [HELMET_OPTIONS.NONE];
+};
+
 const scriptSrc = [
+	HELMET_OPTIONS.SELF,
 	`${baseUri}`,
 	CSP_VALID_URI.GOOGLE_RECAPTCHA,
 	CSP_VALID_URI.GSTATIC_RECAPTCHA,
@@ -33,6 +49,8 @@ const scriptSrc = [
 if (stage === 'DEV') {
 	// eslint-disable-next-line functional/immutable-data -- used only in dev
 	scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
+	// eslint-disable-next-line functional/immutable-data -- used only in dev for iframe test functionality
+	scriptSrc.push(HELMET_OPTIONS.UNSAFE_INLINE);
 }
 
 const helmetConfig: HelmetOptions = {
@@ -40,7 +58,7 @@ const helmetConfig: HelmetOptions = {
 		directives: {
 			baseUri: [HELMET_OPTIONS.NONE],
 			defaultSrc: [HELMET_OPTIONS.NONE],
-			frameAncestors: [HELMET_OPTIONS.NONE],
+			frameAncestors: getAllowedFrameAncestors(),
 			styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
 			scriptSrc,
 			imgSrc: [
@@ -56,8 +74,12 @@ const helmetConfig: HelmetOptions = {
 				CSP_VALID_URI.HAVEIBEENPWNED,
 				idapiOrigin,
 				CSP_VALID_URI.GOOGLE_RECAPTCHA,
+				...getAllowedFrameAncestors(),
 			],
-			frameSrc: [CSP_VALID_URI.GOOGLE_RECAPTCHA],
+			frameSrc: [
+				CSP_VALID_URI.GOOGLE_RECAPTCHA,
+				...(stage === 'DEV' ? [HELMET_OPTIONS.SELF] : []),
+			],
 			formAction: null,
 		},
 	},

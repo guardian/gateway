@@ -147,6 +147,10 @@ const server = () => ({
 					from: 'pnpm-lock.yaml',
 					to: 'pnpm-lock.yaml',
 				},
+				{
+					from: 'src/client/static/iframe',
+					to: 'static/iframe',
+				},
 			],
 		}),
 	],

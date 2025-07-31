@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Guardian Gateway Iframe Test</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px;
+			}
+			.container {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 20px;
+				margin-top: 20px;
+			}
+			.iframe-container {
+				border: 2px solid #ccc;
+				border-radius: 8px;
+				overflow: hidden;
+			}
+			.iframe-header {
+				background: #f5f5f5;
+				padding: 10px;
+				border-bottom: 1px solid #ccc;
+				font-weight: bold;
+			}
+			iframe {
+				width: 100%;
+				height: 600px;
+				border: none;
+				display: block;
+			}
+			.instructions {
+				background: #e8f4f8;
+				padding: 15px;
+				border-radius: 8px;
+				margin-bottom: 20px;
+			}
+			.warning {
+				background: #fff3cd;
+				border: 1px solid #ffeaa7;
+				color: #856404;
+				padding: 12px;
+				border-radius: 4px;
+				margin-bottom: 20px;
+			}
+			.testing-section {
+				background: #f8f9fa;
+				border: 1px solid #dee2e6;
+				border-radius: 8px;
+				padding: 20px;
+				margin-top: 20px;
+			}
+			.test-button {
+				background: #007bff;
+				color: white;
+				border: none;
+				padding: 10px 20px;
+				border-radius: 4px;
+				cursor: pointer;
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+			.test-button:hover {
+				background: #0056b3;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Guardian Gateway Iframe Integration Test</h1>
+
+		<div class="warning">
+			<strong>Warning:</strong> This is a test page for iframe integration.
+			Ensure you have:
+			<ul>
+				<li>
+					Set the <code>ALLOWED_IFRAME_DOMAINS</code> environment variable
+				</li>
+				<li>Applied the iframe middleware changes</li>
+				<li>Started the Gateway server</li>
+			</ul>
+		</div>
+
+		<div class="instructions">
+			<h3>Testing Instructions:</h3>
+			<ol>
+				<li>
+					Set environment variable:
+					<code
+						>ALLOWED_IFRAME_DOMAINS=http://localhost:*,https://localhost:*</code
+					>
+				</li>
+				<li>Start the Guardian Gateway server: <code>make dev</code></li>
+				<li>
+					Visit:
+					<code>http://localhost:8861/static/iframe/iframe-test.html</code>
+				</li>
+				<li>Check if the iframes load correctly</li>
+				<li>Test authentication flows within the iframes</li>
+				<li>Verify cookies work correctly in iframe context</li>
+			</ol>
+		</div>
+
+		<div class="testing-section">
+			<h3>Automated Testing</h3>
+			<p>Run automated tests for iframe functionality:</p>
+			<button class="test-button" id="run-all-tests">Run All Tests</button>
+			<button class="test-button" id="test-headers">Test Headers</button>
+			<button class="test-button" id="test-csp">Test CSP</button>
+			<button class="test-button" id="test-loading">Test Loading</button>
+			<button class="test-button" id="test-cookies">Test Cookies</button>
+			<div
+				id="test-results"
+				style="
+					margin-top: 15px;
+					padding: 10px;
+					background: #f8f9fa;
+					border-radius: 4px;
+					min-height: 100px;
+				"
+			></div>
+		</div>
+
+		<div class="container">
+			<div class="iframe-container">
+				<div class="iframe-header">Sign In Page</div>
+				<iframe
+					src="/signin"
+					title="Guardian Gateway Sign In"
+					sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
+				>
+					<p>
+						Your browser does not support iframes. Please visit the
+						<a href="/signin">sign in page</a> directly.
+					</p>
+				</iframe>
+			</div>
+
+			<div class="iframe-container">
+				<div class="iframe-header">Registration Page</div>
+				<iframe
+					src="/register"
+					title="Guardian Gateway Registration"
+					sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
+				>
+					<p>
+						Your browser does not support iframes. Please visit the
+						<a href="/register">registration page</a>
+						directly.
+					</p>
+				</iframe>
+			</div>
+		</div>
+
+		<h3>Browser Console Debugging</h3>
+		<p>Open browser developer tools and check the console for:</p>
+		<ul>
+			<li>CSP violations (should see allowed frame ancestors)</li>
+			<li>Cookie warnings (should see SameSite=None for iframe requests)</li>
+			<li>
+				Network requests (check if iframe requests include proper headers)
+			</li>
+			<li>Any blocked third-party cookies</li>
+		</ul>
+
+		<h3>Testing Checklist</h3>
+		<ul>
+			<li>□ Iframes load without CSP violations</li>
+			<li>□ Forms submit correctly within iframes</li>
+			<li>□ CSRF tokens work in iframe context</li>
+			<li>□ Authentication cookies are set with SameSite=None</li>
+			<li>□ Social sign-in flows work (may require popup handling)</li>
+			<li>□ Email verification links work</li>
+			<li>□ Password reset flows function correctly</li>
+		</ul>
+
+		<!-- Load the testing script -->
+		<script src="/static/iframe/iframe-test-script.js"></script>
+
+		<script>
+			// Log iframe load events
+			document.querySelectorAll('iframe').forEach((iframe, index) => {
+				iframe.addEventListener('load', () => {
+					console.log(`Iframe ${index + 1} loaded successfully`);
+				});
+
+				iframe.addEventListener('error', (error) => {
+					console.error(`Iframe ${index + 1} failed to load:`, error);
+				});
+			});
+
+			// Listen for postMessage from iframes (if implemented)
+			window.addEventListener('message', (event) => {
+				console.log('Message from iframe:', event.data);
+				// Handle iframe messages here
+			});
+
+			// Override console methods to also display in test results
+			const testResults = document.getElementById('test-results');
+			const originalLog = console.log;
+			const originalError = console.error;
+
+			console.log = function (...args) {
+				originalLog.apply(console, args);
+				if (testResults) {
+					const div = document.createElement('div');
+					div.style.color = '#28a745';
+					div.textContent = args.join(' ');
+					testResults.appendChild(div);
+					testResults.scrollTop = testResults.scrollHeight;
+				}
+			};
+
+			console.error = function (...args) {
+				originalError.apply(console, args);
+				if (testResults) {
+					const div = document.createElement('div');
+					div.style.color = '#dc3545';
+					div.textContent = args.join(' ');
+					testResults.appendChild(div);
+					testResults.scrollTop = testResults.scrollHeight;
+				}
+			};
+
+			const runAllTestsButton = document.getElementById('run-all-tests');
+			runAllTestsButton.addEventListener(
+				'click',
+				window.iframeTests.runAllTests,
+			);
+
+			const testHeadersButton = document.getElementById('test-headers');
+			testHeadersButton.addEventListener(
+				'click',
+				window.iframeTests.testIframeHeaders,
+			);
+
+			const testCSPButton = document.getElementById('test-csp');
+			testCSPButton.addEventListener('click', window.iframeTests.testCSP);
+
+			const testLoadingButton = document.getElementById('test-loading');
+			testLoadingButton.addEventListener(
+				'click',
+				window.iframeTests.testIframeLoading,
+			);
+
+			const testCookiesButton = document.getElementById('test-cookies');
+			testCookiesButton.addEventListener(
+				'click',
+				window.iframeTests.testCookieBehavior,
+			);
+		</script>
+	</body>
+</html>

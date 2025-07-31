@@ -12,6 +12,10 @@ import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
 import { fourZeroFourMiddleware } from '@/server/lib/middleware/404';
 import { requestIdMiddleware } from './requestId';
 import { requestContextMiddleware } from './requestContext';
+import {
+	iframeCompatibilityMiddleware,
+	iframeCookieMiddleware,
+} from './iframe';
 
 const { appSecret, stage } = getConfiguration();
 
@@ -19,10 +23,14 @@ export const applyMiddleware = (server: Express): void => {
 	// add request id middleware
 	server.use(requestIdMiddleware);
 	server.use(requestContextMiddleware);
+	// add iframe detection middleware early in the chain
+	server.use(iframeCompatibilityMiddleware);
 	// apply helmet before anything else
 	server.use(helmetMiddleware as RequestHandler);
 	server.use(urlencoded({ extended: true }) as RequestHandler);
 	server.use(cookieParser(appSecret));
+	// add iframe cookie middleware after cookie parser
+	server.use(iframeCookieMiddleware);
 	server.use(compression());
 
 	// add the DEV okta middleware if state === DEV
