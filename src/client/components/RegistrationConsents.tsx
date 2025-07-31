@@ -58,18 +58,8 @@ export const RegistrationConsents = ({
 		appName,
 		isJobs,
 	});
-	// Show marketing consent if not showing Feast
-	const showMarketingConsent = (() => {
-		if (registrationNewsletter === RegistrationNewslettersFormFieldsMap.feast) {
-			return false;
-		}
 
-		if (isJobs) {
-			return false;
-		}
-
-		return true;
-	})();
+	const showMarketingConsent = !isJobs;
 
 	return (
 		<ToggleSwitchList>
@@ -102,3 +92,6 @@ export const RegistrationConsents = ({
 		</ToggleSwitchList>
 	);
 };
+
+export const marketingConsentTerms =
+	'You can change your settings in the Data Privacy section of your Guardian account at any time.';

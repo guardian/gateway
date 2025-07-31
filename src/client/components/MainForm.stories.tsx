@@ -110,7 +110,7 @@ export const WithAdditionalTerms = () => (
 	<MainForm
 		formAction=""
 		submitButtonText="Send me a link"
-		additionalTerms="These are some additional terms"
+		additionalTerms={['These are some additional terms']}
 	>
 		<EmailInput />
 	</MainForm>
