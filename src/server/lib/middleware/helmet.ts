@@ -30,6 +30,12 @@ const scriptSrc = [
 	CSP_VALID_URI.GUARDIAN_ASSETS,
 ];
 
+const frameAncestors = {
+	DEV: [`http://localhost:9000`],
+	CODE: [`https://m.code.dev-theguardian.com`, `http://localhost:9000`],
+	PROD: [`https://www.theguardian.com`, `https://theguardian.com`],
+} as const;
+
 if (stage === 'DEV') {
 	// eslint-disable-next-line functional/immutable-data -- used only in dev
 	scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
@@ -40,7 +46,7 @@ const helmetConfig: HelmetOptions = {
 		directives: {
 			baseUri: [HELMET_OPTIONS.NONE],
 			defaultSrc: [HELMET_OPTIONS.NONE],
-			frameAncestors: [HELMET_OPTIONS.NONE],
+			frameAncestors: frameAncestors[stage],
 			styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
 			scriptSrc,
 			imgSrc: [
