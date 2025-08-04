@@ -158,7 +158,7 @@ describe('getConfiguration', () => {
 		process.env = { PORT: '9001' };
 
 		const { getConfiguration } = await import('@/server/lib/getConfiguration');
-		expect(getConfiguration).toThrowError(
+		expect(getConfiguration).toThrow(
 			Error('Rate limiter configuration missing'),
 		);
 	});
@@ -182,15 +182,14 @@ describe('getConfiguration', () => {
 
 		const { getConfiguration } = await import('@/server/lib/getConfiguration');
 		expect(getConfiguration).toThrowErrorMatchingInlineSnapshot(`
-      "There was a problem parsing the rate limiter configuration [
-        {
-          code: 'invalid_type',
-          expected: 'object',
-          received: 'undefined',
-          path: [ 'defaultBuckets', 'globalBucket' ],
-          message: 'Required'
-        }
-      ]"
-    `);
+		"There was a problem parsing the rate limiter configuration [
+		  {
+		    expected: 'object',
+		    code: 'invalid_type',
+		    path: [ 'defaultBuckets', 'globalBucket' ],
+		    message: 'Invalid input: expected object, received undefined'
+		  }
+		]"
+	`);
 	});
 });

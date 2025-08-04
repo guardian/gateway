@@ -1,33 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-      day: monday
-      time: '07:00'
-    labels:
-      - 'dependencies'
-    groups:
-      dependencies:
-        dependency-type: 'production'
-        update-types: ['minor', 'patch']
-      devDependencies:
-        dependency-type: 'development'
-        update-types: ['minor', 'patch']
-  - package-ecosystem: 'npm'
-    directory: '/cdk'
-    schedule:
-      interval: 'weekly'
-      day: monday
-      time: '07:30'
-    labels:
-      - 'dependencies'
-    groups:
-      cdk:
-        update-types:
-          - 'minor'
-          - 'patch'
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
