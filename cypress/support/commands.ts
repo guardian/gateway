@@ -29,6 +29,8 @@ import {
 	sendConsentEmail,
 } from './commands/testUser';
 import { interceptRecaptcha } from './commands/recaptcha';
+import { failRecaptchaRequest } from './commands/recaptcha';
+import { reEnableRecaptchaRequest } from './commands/recaptcha';
 import { oktaGetApps } from './commands/oktaManagementApi';
 import { sendEmailAndValidatePasscode } from './commands/sendEmailAndValidatePasscode';
 
@@ -62,6 +64,8 @@ Cypress.Commands.add('getCurrentOktaSession', getCurrentOktaSession);
 Cypress.Commands.add('closeCurrentOktaSession', closeCurrentOktaSession);
 Cypress.Commands.add('sendConsentEmail', sendConsentEmail);
 Cypress.Commands.add('interceptRecaptcha', interceptRecaptcha);
+Cypress.Commands.add('failRecaptchaRequest', failRecaptchaRequest);
+Cypress.Commands.add('reEnableRecaptchaRequest', reEnableRecaptchaRequest);
 Cypress.Commands.add('oktaGetApps', oktaGetApps);
 Cypress.Commands.add(
 	'sendEmailAndValidatePasscode',
