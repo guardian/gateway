@@ -618,7 +618,7 @@ describe('Registration flow - Split 3/3', () => {
 					timeRequestWasMadeInitialEmail,
 				);
 
-				cy.interceptRecaptcha(3);
+				cy.failRecaptchaRequest();
 				cy.wait(1000); // wait for the send again button to be enabled
 				cy.contains('send again').click();
 				cy.contains('Google reCAPTCHA verification failed.');
@@ -626,6 +626,7 @@ describe('Registration flow - Split 3/3', () => {
 
 				const timeRequestWasMade = new Date();
 				cy.wait(1000); // wait for the send again button to be enabled
+				cy.reEnableRecaptchaRequest();
 				cy.contains('send again').click();
 
 				cy.contains('Google reCAPTCHA verification failed.').should(

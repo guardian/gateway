@@ -1,6 +1,10 @@
 import React from 'react';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { NewsLetter, NewslettersWithImages } from '@/shared/model/Newsletter';
+import {
+	NewsLetter,
+	newsletterAdditionalTerms,
+	NewslettersWithImages,
+} from '@/shared/model/Newsletter';
 import {
 	palette,
 	textSans14,
@@ -75,10 +79,7 @@ export const NewAccountNewsletters = ({
 						Our newsletters help you get closer to our quality, independent
 						journalism.
 					</MainBodyText>
-					<MainBodyText>
-						Newsletters may contain information about Guardian products,
-						services and chosen charities or online advertisements.
-					</MainBodyText>
+					<MainBodyText>{newsletterAdditionalTerms}</MainBodyText>
 				</>
 			}
 		>
