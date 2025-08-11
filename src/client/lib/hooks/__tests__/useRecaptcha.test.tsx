@@ -180,14 +180,11 @@ test('should receive an error back when the reCAPTCHA check is unsuccessful', as
 	}));
 
 	// Simulate recaptcha calling the "ready" callback once instantiated.
-	await waitFor(
-		() => {
-			expect(mockedGrecaptchaReady).toHaveBeenCalled();
-			const setCaptchaReadyState = mockedGrecaptchaReady.mock.calls[0][0];
-			setCaptchaReadyState();
-		},
-		{ interval: 50 },
-	);
+	await waitFor(() => {
+		expect(mockedGrecaptchaReady).toHaveBeenCalled();
+		const setCaptchaReadyState = mockedGrecaptchaReady.mock.calls[0][0];
+		setCaptchaReadyState();
+	});
 
 	await waitFor(
 		() => {
