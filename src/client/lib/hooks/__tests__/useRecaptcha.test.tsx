@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/preact';
 
 import type { RenderOptions } from '../useRecaptcha';
 import useRecaptcha from '../useRecaptcha';
@@ -31,7 +31,7 @@ test('should expect an empty token on successful initial load of useRecaptcha', 
 	const mockedGrecaptchaExecute = jest.fn();
 
 	// Begin test.
-	const { result, waitFor } = renderHook(() =>
+	const { result } = renderHook(() =>
 		useRecaptcha('public-recaptcha-token', 'render-element'),
 	);
 
@@ -43,7 +43,6 @@ test('should expect an empty token on successful initial load of useRecaptcha', 
 		reset: mockedGrecaptchaReset,
 	}));
 
-	// Mock recaptcha calling the ready callback once instantiated.
 	await waitFor(() => {
 		expect(mockedGrecaptchaReady).toHaveBeenCalled();
 		const setCaptchaReadyState = mockedGrecaptchaReady.mock.calls[0][0];
@@ -89,7 +88,7 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
 	});
 
 	// Begin test.
-	const { result, waitFor } = renderHook(() =>
+	const { result } = renderHook(() =>
 		useRecaptcha('public-recaptcha-token', 'render-element', 'invisible'),
 	);
 
@@ -138,18 +137,16 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
 	windowSpy.mockRestore();
 });
 
-test('should not be able to execute a call to reCAPTCHA if the script has not loaded yet', () => {
+test('should not be able to execute a call to reCAPTCHA if the script has not loaded yet', async () => {
 	// Begin test.
-	void act(async () => {
-		const { result, waitFor } = renderHook(() =>
-			useRecaptcha('public-recaptcha-token', 'render-element'),
-		);
+	const { result } = renderHook(() =>
+		useRecaptcha('public-recaptcha-token', 'render-element'),
+	);
 
-		await waitFor(() => {
-			// Request a token from recaptcha.
-			const recaptchaExecutionResult = result.current?.executeCaptcha();
-			expect(recaptchaExecutionResult).toBe(false);
-		});
+	await waitFor(() => {
+		// Request a token from recaptcha.
+		const recaptchaExecutionResult = result.current?.executeCaptcha();
+		expect(recaptchaExecutionResult).toBe(false);
 	});
 });
 
@@ -170,8 +167,8 @@ test('should receive an error back when the reCAPTCHA check is unsuccessful', as
 	});
 
 	// Begin test.
-	const { result, waitFor } = renderHook(() =>
-		useRecaptcha('public-recaptcha-token', 'render-element', 'invisible'),
+	const { result } = renderHook(() =>
+		useRecaptcha('public-recaptcha-token', 'render-element'),
 	);
 
 	// Simulate the grecaptcha object loading in after the hook is executed.
@@ -228,7 +225,7 @@ test('should not load and intialise the Google reCAPTCHA script again if the hoo
 	const mockedGrecaptchaExecute = jest.fn();
 
 	// Begin test.
-	const { result, waitFor } = renderHook(() =>
+	const { result } = renderHook(() =>
 		useRecaptcha('public-recaptcha-token', 'render-element'),
 	);
 
@@ -299,7 +296,7 @@ test('should expect an error state when the Google reCAPTCHA script fails to loa
 	const mockedGrecaptchaExecute = jest.fn();
 
 	// Deliberately set an invalid URL to check error state.
-	const { result, waitForNextUpdate } = renderHook(() =>
+	const { result } = renderHook(() =>
 		useRecaptcha(
 			'public-recaptcha-token',
 			'render-element',
@@ -316,11 +313,9 @@ test('should expect an error state when the Google reCAPTCHA script fails to loa
 		reset: mockedGrecaptchaReset,
 	}));
 
-	// wait for 2 updates to ensure the error state is set.
-	await waitForNextUpdate();
-	await waitForNextUpdate();
-
-	expect(result.current?.error).toBe(true);
+	await waitFor(() => {
+		expect(result.current?.error).toBe(true);
+	});
 
 	windowSpy.mockRestore();
 });
@@ -363,7 +358,7 @@ test('should try again successfully after an unsuccessful reCAPTCHA check and re
 	});
 
 	// Begin test.
-	const { result, waitFor } = renderHook(() =>
+	const { result } = renderHook(() =>
 		useRecaptcha('public-recaptcha-token', 'render-element', 'invisible'),
 	);
 

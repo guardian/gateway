@@ -93,7 +93,7 @@ test('calls the form submit override method if defined', async () => {
 	const submitButton = await findByText('Submit');
 
 	await waitFor(() => {
-		expect(mockedSubmitOverride).toBeCalledTimes(0);
+		expect(mockedSubmitOverride).toHaveBeenCalledTimes(0);
 	});
 
 	void act(() => {
@@ -101,7 +101,7 @@ test('calls the form submit override method if defined', async () => {
 	});
 
 	await waitFor(() => {
-		expect(mockedSubmitOverride).toBeCalledTimes(1);
+		expect(mockedSubmitOverride).toHaveBeenCalledTimes(1);
 	});
 });
 
@@ -223,11 +223,11 @@ test('sets error message and context and prevents form submission when the reCAP
 		// Ensure that the submit button is re-enabled if the recaptcha check fails.
 		expect(submitButton).not.toBeDisabled();
 
-		expect(setRecaptchaErrorMessage).toBeCalledTimes(1);
+		expect(setRecaptchaErrorMessage).toHaveBeenCalledTimes(1);
 		expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
 			'Google reCAPTCHA verification failed.',
 		);
-		expect(setRecaptchaErrorContext).toBeCalledTimes(1);
+		expect(setRecaptchaErrorContext).toHaveBeenCalledTimes(1);
 		expect(setRecaptchaErrorContext).toHaveBeenCalledWith(
 			expect.objectContaining({ type: DetailedRecaptchaError }),
 		);
@@ -245,11 +245,11 @@ test('sets error message and context and prevents form submission when the reCAP
 
 	// Check that second error message is shown and error context is rendered.
 	await waitFor(() => {
-		expect(setRecaptchaErrorMessage).toBeCalledTimes(2);
+		expect(setRecaptchaErrorMessage).toHaveBeenCalledTimes(2);
 		expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
 			'Google reCAPTCHA verification failed.',
 		);
-		expect(setRecaptchaErrorContext).toBeCalledTimes(2);
+		expect(setRecaptchaErrorContext).toHaveBeenCalledTimes(2);
 		expect(setRecaptchaErrorContext).toHaveBeenCalledWith(
 			expect.objectContaining({ type: DetailedRecaptchaError }),
 		);
