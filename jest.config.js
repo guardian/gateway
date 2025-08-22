@@ -9,12 +9,6 @@ module.exports = {
 		'@/([^\\.]*)$': '<rootDir>/src/$1',
 		'\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
 			'<rootDir>/__mocks__/fileMock.js',
-		// need to alias preact to itself in order to use the cjs version, same with testing-library
-		'^preact(/(.*)|$)': 'preact$1',
-		'^@testing-library/react$': '@testing-library/preact',
-		'^@testing-library/react-hooks$': '@testing-library/preact-hooks',
-		'^@testing-library/preact$': '@testing-library/preact',
-		'^@testing-library/preact-hooks$': '@testing-library/preact-hooks',
 	},
 	testPathIgnorePatterns: [
 		'<rootDir>/cypress/',
@@ -24,8 +18,16 @@ module.exports = {
 		// TODO: Shared Jest config between Gateway and CDK? Monorepo?
 		'cdk',
 	],
+	transformIgnorePatterns: [
+		// Don't try to transform any node_modules except Preact and @testing-library/preact
+		// Since updating to Jest 30 trying to import these dependencies has resulted in
+		// unsupported ESM getting imported instead of CJS. Possibly because due to
+		// some siginificant changes in how Jest handles ESM under the hood?
+		// See:  https://jestjs.io/docs/upgrading-to-jest30#esm-module-support-and-internal-restructuring
+		'/node_modules/.pnpm/(?!(preact|@testing-library))',
+	],
 	transform: {
-		'^.+\\.(t|j)sx?$': [
+		'^.+\\.(ts|tsx|jsx|mjs|module.js)?$': [
 			'@swc/jest',
 			{
 				...config.options,
