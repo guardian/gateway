@@ -294,6 +294,7 @@ Resources:
                   APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  GOOGLE_ONE_TAP_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/google-one-tap-client-id' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   REDIS_PASSWORD=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/redis-password' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
@@ -302,6 +303,7 @@ Resources:
                   OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  OKTA_TAC_AUTHENTICATOR_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaTacAuthenticatorId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
@@ -335,6 +337,7 @@ Resources:
               Environment=APP_SECRET=$APP_SECRET
               Environment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
               Environment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY
+              Environment=GOOGLE_ONE_TAP_CLIENT_ID=$GOOGLE_ONE_TAP_CLIENT_ID
               Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
               Environment=OKTA_ORG_URL=${OktaOrgUrl}
               Environment=OKTA_API_TOKEN=$OKTA_API_TOKEN
@@ -343,6 +346,7 @@ Resources:
               Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
               Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
               Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
+              Environment=OKTA_TAC_AUTHENTICATOR_ID=$OKTA_TAC_AUTHENTICATOR_ID
               Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
               Environment=REDIS_PASSWORD=$REDIS_PASSWORD
               Environment=REDIS_HOST=${RedisHost}

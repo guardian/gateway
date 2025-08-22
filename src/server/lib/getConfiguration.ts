@@ -197,6 +197,10 @@ export const getConfiguration = (): Configuration => {
 				'OKTA Google IDP id missing',
 			),
 		},
+		tacAuthenticatorId: getOrThrow(
+			process.env.OKTA_TAC_AUTHENTICATOR_ID,
+			'OKTA_TAC_AUTHENTICATOR_ID missing',
+		),
 	};
 
 	const githubRunNumber = getOrDefault(process.env.GITHUB_RUN_NUMBER, '0');
@@ -218,6 +222,11 @@ export const getConfiguration = (): Configuration => {
 				'DELETE_ACCOUNT_STEP_FUNCTION_API_KEY missing',
 			),
 		};
+
+	const googleOneTapClientId = getOrThrow(
+		process.env.GOOGLE_ONE_TAP_CLIENT_ID,
+		'GOOGLE_ONE_TAP_CLIENT_ID missing',
+	);
 
 	return {
 		port: +port,
@@ -246,5 +255,6 @@ export const getConfiguration = (): Configuration => {
 		userBenefitsApiUrl,
 		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
+		googleOneTapClientId,
 	};
 };

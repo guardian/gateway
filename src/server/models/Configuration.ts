@@ -31,6 +31,7 @@ export interface Configuration {
 		url: string;
 		apiKey: string;
 	};
+	googleOneTapClientId: string;
 }
 
 export interface Okta {
@@ -47,6 +48,7 @@ export interface Okta {
 		apple: string;
 		google: string;
 	};
+	tacAuthenticatorId: string;
 }
 
 export const GU_DOMAIN = {

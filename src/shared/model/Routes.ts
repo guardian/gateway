@@ -60,6 +60,7 @@ export const ValidRoutePathsArray = [
 	'/signin/code/resend',
 	'/signin/code/expired',
 	'/signin/password',
+	'/signin/google-one-tap',
 	'/signin/refresh',
 	'/signin/:social',
 	'/signin/email-sent',
@@ -122,6 +123,7 @@ type OktaApiRoutePaths =
 	| '/api/v1/users'
 	| '/api/v1/users/:id'
 	| '/api/v1/users/:id/credentials/forgot_password'
+	| '/api/v1/users/:id/authenticator-enrollments/tac'
 	| '/api/v1/users/:id/groups'
 	| '/api/v1/users/:id/lifecycle/activate'
 	| '/api/v1/users/:id/lifecycle/deactivate'

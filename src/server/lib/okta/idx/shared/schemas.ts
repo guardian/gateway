@@ -3,7 +3,11 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 
 // Define the authenticators that can be used with the IDX API
-export type Authenticators = 'email' | 'password';
+export type Authenticators =
+	| 'email'
+	| 'password'
+	| 'tac'
+	| 'temporary access code';
 
 // Schema to check the version of the IDX API, and warn if it's not 1.0.0
 const idxVersionSchema = z.string().refine((val) => {
