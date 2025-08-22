@@ -25,7 +25,13 @@ import {
 } from '@/server/lib/okta/oauth';
 import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
-import { getUser, getUserGroups } from '@/server/lib/okta/api/users';
+import {
+	activateUser,
+	createUser,
+	enrollTemporaryAccessCode,
+	getUser,
+	getUserGroups,
+} from '@/server/lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
@@ -54,6 +60,20 @@ import {
 	oktaSignInControllerErrorHandler,
 } from '@/server/controllers/signInControllers';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
+import { getRegistrationLocation } from '../lib/getRegistrationLocation';
+import {
+	identify,
+	validateIdentifyRemediation,
+} from '../lib/okta/idx/identify';
+import {
+	challenge,
+	challengeAnswer,
+	isChallengeAnswerCompleteLoginResponse,
+} from '../lib/okta/idx/challenge';
+import { getLoginRedirectUrl } from '../lib/okta/idx/shared/idxFetch';
+import { validateEmailAndPasswordSetSecurely } from '../lib/okta/validateEmail';
+import { findAuthenticatorId } from '../lib/okta/idx/shared/findAuthenticatorId';
+import { verifyGoogleOneTapToken } from '../lib/google';
 
 const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
 	getConfiguration();
@@ -579,6 +599,171 @@ router.get(
 		});
 		return res.type('html').send(html);
 	},
+);
+
+router.post(
+	'/signin/google-one-tap',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const [registrationLocation] = getRegistrationLocation(req);
+		const { token } = req.body;
+
+		/**
+		 * STEP 1: Validate the Google One Tap Token
+		 *
+		 * This will verify the token with Google and return the email address
+		 * associated with the token.
+		 * If the token is invalid, it will throw an error.
+		 */
+
+		const email = await verifyGoogleOneTapToken(token);
+
+		/**
+		 * STEP 2: Create the users account, or retrieve it if it exists.
+		 *
+		 * Attempt to get the user using the email from token, if the user doesn't exist
+		 * Okta will throw an error, which we can catch and create the user instead.
+		 */
+		const user = await getUser(email, req.ip).catch(async (err) => {
+			// If the error isn't a 404 (user doesn't exist) then we throw the error again
+			// as it is unexpected.
+			if (err instanceof OktaError === false || err.status !== 404) {
+				throw err;
+			}
+
+			return await createUser(
+				{
+					profile: {
+						email,
+						login: email,
+						isGuardianUser: true,
+						registrationPlatform: 'google-one-tap',
+						registrationLocation: registrationLocation,
+					},
+					groupIds: [okta.groupIds.GuardianUserAll],
+				},
+				req.ip,
+			);
+		});
+
+		// TODO: How to deal with user that signed up with Google One Tap, but then enabled another
+		// authenticator, such as email or password? Should we allow them to sign in with
+		// Google One Tap, or should we redirect them to another sign in flow?
+		if (
+			user.profile.registrationPlatform &&
+			user.profile.registrationPlatform !== 'google-one-tap'
+		) {
+			// TODO: Redirect to Passcode sign in if the user has an existing account
+			// and didn't sign up with Google One Tap
+			throw new ApiError({
+				message: 'User does not have Google One Tap registration platform',
+				status: 403,
+			});
+		}
+
+		/**
+		 * STEP 3: Activate the user if they are not already active
+		 *
+		 * Sadly TAC cannot be used as a profile enrollment authenticator,
+		 * meaning that we need to fallback to setting a placeholder password
+		 * in order to activate the users account.
+		 */
+		if (user.status === 'STAGED') {
+			await activateUser({
+				id: user.id,
+				ip: req.ip,
+			});
+
+			await validateEmailAndPasswordSetSecurely({
+				id: user.id,
+				ip: req.ip,
+				flagStatus: true,
+				updateEmail: true,
+				updatePassword: false,
+			});
+		}
+
+		/**
+		 * STEP 4: Enroll the user in a Temporary Access Code (TAC) authenticator
+		 *
+		 * This is a one-time use authenticator where the readers passcode is returned
+		 * in the response, instead of being sent to the user via email. This way we
+		 * can use the passcode to authenticate the reader in the next step and avoid sending
+		 * a confusing email to the reader.
+		 */
+		const authenticatorId = getConfiguration().okta.tacAuthenticatorId;
+		const tac = await enrollTemporaryAccessCode({
+			id: user.id,
+			body: {
+				authenticatorId,
+				profile: {
+					multiUse: false,
+					ttl: 10, // 10 minutes
+				},
+			},
+		});
+
+		/**
+		 * STEP 5: Start the IDX flow to authenticate the user with the TAC
+		 */
+		const [{ interaction_handle }] = await interact(req, res, {
+			confirmationPagePath: '/welcome/google',
+		});
+		const { stateHandle } = await introspect(
+			{
+				interactionHandle: interaction_handle,
+			},
+			req.ip,
+		);
+
+		const identifyResponse = await identify(stateHandle, email, req.ip);
+
+		// validate that the response from the identify endpoint is the "select-authenticator-authenticate" remediation
+		// which is what we expect when we want to authenticate the user
+		validateIdentifyRemediation(
+			identifyResponse,
+			'select-authenticator-authenticate',
+		);
+
+		// check for the "email" authenticator, we can authenticate with email (passcode)
+		// if this authenticator is present
+		const tacAuthenticatorId = findAuthenticatorId({
+			authenticator: 'temporary access code',
+			methodType: 'tac',
+			response: identifyResponse,
+			remediationName: 'select-authenticator-authenticate',
+		});
+
+		if (!tacAuthenticatorId) {
+			throw new OktaError({
+				code: 'E0000004',
+				message: 'User does not have TAC authenticator',
+			});
+		}
+
+		await challenge(
+			identifyResponse.stateHandle,
+			{
+				id: authenticatorId,
+				methodType: 'tac',
+			},
+			req.ip,
+		);
+
+		const challengeAnswerResponse = await challengeAnswer(
+			stateHandle,
+			{ passcode: tac },
+			req.ip,
+		);
+
+		if (!isChallengeAnswerCompleteLoginResponse(challengeAnswerResponse)) {
+			throw new OAuthError({
+				error: 'idx.invalid.response',
+				error_description: 'The response was not a complete login response',
+			});
+		}
+
+		return res.redirect(303, getLoginRedirectUrl(challengeAnswerResponse));
+	}),
 );
 
 router.get(

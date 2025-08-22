@@ -27,6 +27,7 @@ describe('getConfiguration', () => {
 		process.env.APP_SECRET = 'app-secret';
 		process.env.GOOGLE_RECAPTCHA_SITE_KEY = 'recaptcha-site';
 		process.env.GOOGLE_RECAPTCHA_SECRET_KEY = 'recaptcha-secret';
+		process.env.GOOGLE_ONE_TAP_CLIENT_ID = 'one-tap-client-id';
 		process.env.ENCRYPTION_SECRET_KEY =
 			'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32';
 		process.env.OKTA_ORG_URL = 'oktaorgurl';
@@ -34,6 +35,7 @@ describe('getConfiguration', () => {
 		process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customoauthserverid';
 		process.env.OKTA_CLIENT_ID = 'oktaclientid';
 		process.env.OKTA_CLIENT_SECRET = 'oktaclientsecret';
+		process.env.OKTA_TAC_AUTHENTICATOR_ID = 'okta-tac-authenticator-id';
 		process.env.GITHUB_RUN_NUMBER = '5';
 		process.env.REDIS_PASSWORD = 'redispassword';
 		process.env.REDIS_HOST = 'localhost:1234';
@@ -89,6 +91,7 @@ describe('getConfiguration', () => {
 				siteKey: 'recaptcha-site',
 				secretKey: 'recaptcha-secret',
 			},
+			googleOneTapClientId: 'one-tap-client-id',
 			encryptionSecretKey:
 				'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
 			oauthBaseUrl: 'http://localhost:5678',
@@ -99,6 +102,7 @@ describe('getConfiguration', () => {
 				authServerId: 'customoauthserverid',
 				clientId: 'oktaclientid',
 				clientSecret: 'oktaclientsecret',
+				tacAuthenticatorId: 'okta-tac-authenticator-id',
 				social: {
 					apple: 'okta-idp-apple',
 					google: 'okta-idp-google',

@@ -11,7 +11,8 @@ type Params = {
 		| 'select-authenticator-authenticate'
 		| 'select-authenticator-enroll'
 	>;
-	authenticator: Authenticators;
+	authenticator: Authenticators; // the authenticator type we are looking for, e.g. email, password, tac
+	methodType?: Authenticators;
 };
 
 /**
@@ -26,6 +27,7 @@ export const findAuthenticatorId = ({
 	response,
 	remediationName,
 	authenticator,
+	methodType,
 }: Params): string | undefined =>
 	response.remediation.value
 		.flatMap((remediation) => {
@@ -69,7 +71,7 @@ export const findAuthenticatorId = ({
 								if (option.label.toLowerCase() === authenticator) {
 									if (
 										option.value.form.value.some(
-											(v) => v.value === authenticator,
+											(v) => v.value === (methodType ?? authenticator),
 										)
 									) {
 										return [

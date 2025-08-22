@@ -31,6 +31,7 @@ const defaultEnv = {
 	APP_SECRET: 'app-secret',
 	GOOGLE_RECAPTCHA_SITE_KEY: 'recaptcha-site',
 	GOOGLE_RECAPTCHA_SECRET_KEY: 'recaptcha-secret',
+	GOOGLE_ONE_TAP_CLIENT_ID: 'one-tap-client-id',
 	ENCRYPTION_SECRET_KEY:
 		'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
 	OKTA_ORG_URL: 'oktaorgurl',
@@ -41,6 +42,7 @@ const defaultEnv = {
 	OKTA_IDP_APPLE: 'okta-idp-apple',
 	OKTA_IDP_GOOGLE: 'okta-idp-google',
 	OKTA_GUARDIAN_USERS_ALL_GROUP_ID: 'okta-guardian-users-group-id',
+	OKTA_TAC_AUTHENTICATOR_ID: 'okta-tac-authenticator-id',
 	GITHUB_RUN_NUMBER: '5',
 	REDIS_PASSWORD: 'redispassword',
 	REDIS_HOST: 'localhost:1234',

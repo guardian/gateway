@@ -15,6 +15,9 @@ import {
 	resetPasswordUrlResponseSchema,
 	ActivationTokenResponse,
 	ResetPasswordUrlResponse,
+	EnrollTemporaryAccessTokenRequest,
+	EnrollTemporaryAccessTokenResponse,
+	enrollTemporaryAccessTokenResponseSchema,
 } from '@/server/models/okta/User';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { OktaError } from '@/server/models/okta/Error';
@@ -381,6 +384,41 @@ export const forgotPassword = async (
 };
 
 /**
+ * Credential operations - Generate Temporary Access Code
+ *
+ * Generates a temporary access code (TAC) that can be used to login to the user's account.
+ *
+ * This operation can only be performed on users with an ACTIVE status.
+ *
+ * https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserAuthenticatorEnrollments/#tag/UserAuthenticatorEnrollments/operation/createTacAuthenticatorEnrollment
+ *
+ * @param id Okta user Id
+ * @param ip The IP address of the user
+ * @returns Promise<string>
+ */
+export const enrollTemporaryAccessCode = async ({
+	id,
+	body,
+	ip,
+}: {
+	id: string;
+	body: EnrollTemporaryAccessTokenRequest;
+	ip?: string;
+}): Promise<string> => {
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/authenticator-enrollments/tac',
+		{ id },
+		{},
+	);
+
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: { ...defaultHeaders(ip), ...authorizationHeader() },
+	}).then(handleEnrollTemporaryAccessCodeResponse);
+};
+
+/**
  * @name handleUserResponse
  * @description Handles the response from Okta's /users endpoint
  * and converts it to a UserResponse object
@@ -492,6 +530,35 @@ const handleResetPasswordUrlResponse = async (
 			logger.error(`Parsing error - resetPasswordUrlResponseSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta reset password url response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
+};
+
+/**
+ * @name handleEnrollTemporaryAccessCodeResponse
+ * @description Handles the response from Okta's /credentials/forgot_password endpoint
+ * It extracts the OTT from the resetPasswordUrl in the response and returns it
+ * @param response fetch response object
+ * @returns Promise<string>
+ */
+const handleEnrollTemporaryAccessCodeResponse = async (
+	response: Response,
+): Promise<string> => {
+	if (response.ok) {
+		try {
+			const {
+				profile: { tac },
+			}: EnrollTemporaryAccessTokenResponse =
+				enrollTemporaryAccessTokenResponseSchema.parse(await response.json());
+
+			return tac;
+		} catch (error) {
+			logger.error(`Parsing error - enrollTemporaryAccessTokenResponse`, error);
+			throw new OktaError({
+				message: 'Could not parse enroll TAC url response',
 			});
 		}
 	} else {

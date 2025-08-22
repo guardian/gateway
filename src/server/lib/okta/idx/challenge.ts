@@ -46,6 +46,9 @@ const challengeResponseSchema = idxBaseResponseSchema.merge(
 						name: z.literal('recover'),
 					}),
 				}),
+				z.object({
+					type: z.literal('tac'),
+				}),
 			]),
 		}),
 	}),

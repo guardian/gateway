@@ -116,6 +116,27 @@ export type ResetPasswordUrlResponse = z.infer<
 	typeof resetPasswordUrlResponseSchema
 >;
 
+// https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserAuthenticatorEnrollments/#tag/UserAuthenticatorEnrollments/operation/createTacAuthenticatorEnrollment
+const enrollTemporaryAccessTokenRequestSchema = z.object({
+	authenticatorId: z.string(),
+	profile: z.object({
+		multiUse: z.boolean(),
+		ttl: z.number(),
+	}),
+});
+export type EnrollTemporaryAccessTokenRequest = z.infer<
+	typeof enrollTemporaryAccessTokenRequestSchema
+>;
+
+export const enrollTemporaryAccessTokenResponseSchema = z.object({
+	profile: z.object({
+		tac: z.string(),
+	}),
+});
+export type EnrollTemporaryAccessTokenResponse = z.infer<
+	typeof enrollTemporaryAccessTokenResponseSchema
+>;
+
 // https://developer.okta.com/docs/reference/api/users/#user-status
 export const Status = {
 	STAGED: 'STAGED',
