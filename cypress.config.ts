@@ -23,7 +23,7 @@ export default defineConfig({
 	defaultCommandTimeout: 8000,
 	responseTimeout: 8000,
 	requestTimeout: 8000,
-
+	numTestsKeptInMemory: 1,
 	env: {
 		mockingEndpoint: 'localhost:9000/mock',
 	},

@@ -159,7 +159,7 @@ router.post(
 	handleRecaptcha,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		await OktaRegistration(req, res);
+		await oktaRegistrationOrSignin(req, res);
 	}),
 );
 
@@ -599,8 +599,8 @@ const oktaIdxCreateAccount = async (
 				return oktaIdxApiSignInPasscodeController({
 					req,
 					res,
-					emailSentPage: '/register/email-sent',
-					confirmationPagePath: '/welcome/existing',
+					emailSentPage: '/signin/code',
+					confirmationPagePath: '/welcome/existing', // TODO: check if setting this here is correct? Do we always want to visit this page?
 				});
 			}
 		}
@@ -611,7 +611,7 @@ const oktaIdxCreateAccount = async (
 	}
 };
 
-export const OktaRegistration = async (
+export const oktaRegistrationOrSignin = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
