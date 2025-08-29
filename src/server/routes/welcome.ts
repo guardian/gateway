@@ -22,7 +22,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
-	OktaRegistration,
+	oktaRegistrationOrSignin,
 	setEncryptedStateCookieForOktaRegistration,
 } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -484,7 +484,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	// if registration passcodes are enabled, we need to handle this differently
 	// by using the passcode registration flow
 	if (passcodesEnabled && !state.queryParams.useOktaClassic) {
-		return OktaRegistration(req, res);
+		return oktaRegistrationOrSignin(req, res);
 	}
 
 	const { email } = req.body;
