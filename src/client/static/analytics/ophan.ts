@@ -22,7 +22,7 @@ const addRefToOphanFollow = () => {
 
 addRefToOphanFollow();
 
-import 'ophan-tracker-js';
+import '@guardian/ophan-tracker-js';
 
 export const init = () => {
 	record({
