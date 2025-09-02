@@ -28,13 +28,16 @@ importers:
         version: 8.0.1(tslib@2.8.1)(typescript@5.9.2)
       '@guardian/libs':
         specifier: ^25.2.0
-        version: 25.2.0(@guardian/ophan-tracker-js@2.3.1)(tslib@2.8.1)(typescript@5.9.2)
+        version: 25.2.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.2)
+      '@guardian/ophan-tracker-js':
+        specifier: 2.0.3
+        version: 2.0.3
       '@guardian/source':
         specifier: ^11.1.0
         version: 11.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2)
       '@guardian/source-development-kitchen':
         specifier: ^21.0.0
-        version: 21.0.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@guardian/libs@25.2.0(@guardian/ophan-tracker-js@2.3.1)(tslib@2.8.1)(typescript@5.9.2))(@guardian/source@11.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2)
+        version: 21.0.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@guardian/libs@25.2.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.2))(@guardian/source@11.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2)
       '@okta/jwt-verifier':
         specifier: ^4.0.2
         version: 4.0.2
@@ -83,9 +86,6 @@ importers:
       openid-client:
         specifier: ^5.7.1
         version: 5.7.1
-      ophan-tracker-js:
-        specifier: ^2.0.2
-        version: 2.0.2
       preact:
         specifier: ^10.27.1
         version: 10.27.1
@@ -137,7 +137,7 @@ importers:
         version: 9.34.0
       '@guardian/eslint-config':
         specifier: 11.0.0
-        version: 11.0.0(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
+        version: 11.0.0(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
       '@guardian/prettier':
         specifier: ^8.0.1
         version: 8.0.1(prettier@3.6.2)(tslib@2.8.1)
@@ -1603,8 +1603,8 @@ packages:
       typescript:
         optional: true
 
-  '@guardian/ophan-tracker-js@2.3.1':
-    resolution: {integrity: sha512-AvxBTQMe2MC2ssLSuxCxEA8+1lAK3IEZaVOsjsZeX0l0orIc6tBmpuENFjdhd+NV61p0BJQRWqw7b8EQY2HfSA==}
+  '@guardian/ophan-tracker-js@2.0.3':
+    resolution: {integrity: sha512-Aatn3SWsXjVA2HNkJtam6p0FPaThO5IQ/WMMdaOz/6VLUc8yWCh7kqzr5b/Yf2x7AAI3DrZm7scNNmS+g/q41Q==}
     engines: {node: '>=16'}
 
   '@guardian/prettier@8.0.1':
@@ -1650,9 +1650,6 @@ packages:
         optional: true
       typescript:
         optional: true
-
-  '@guardian/tsconfig@1.0.0':
-    resolution: {integrity: sha512-xgajw/jq4lEtQoN72vnmiXeRnejUcd3DgNFmH6TfAbWV6NRK4KC4hAjzKf0H69zBSJMxEfFVfGKP9wBzGII7qg==}
 
   '@hapi/hoek@9.3.0':
     resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
@@ -6227,11 +6224,6 @@ packages:
   openid-client@5.7.1:
     resolution: {integrity: sha512-jDBPgSVfTnkIh71Hg9pRvtJc6wTwqjRkN88+gCFtYWrlP4Yx2Dsrow8uPi3qLr/aeymPF3o2+dS+wOpglK04ew==}
 
-  ophan-tracker-js@2.0.2:
-    resolution: {integrity: sha512-cAVIFZbMAUmAhRYSma2Q833DmbWsfH0hySh6BeuKrK2rcvkS8dB8v3AHudHQrASMIzrgHXjbsHB0A9AusFIg2Q==}
-    engines: {node: '>=16'}
-    deprecated: This package has been replaced by @guardian/ophan-tracker-js
-
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
@@ -9567,14 +9559,14 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
-  '@guardian/eslint-config@11.0.0(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)':
+  '@guardian/eslint-config@11.0.0(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.4.1(eslint@9.34.0(jiti@2.5.1))
       '@eslint/js': 9.19.0
       '@stylistic/eslint-plugin': 2.11.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
       eslint: 9.34.0(jiti@2.5.1)
       eslint-config-prettier: 9.1.0(eslint@9.34.0(jiti@2.5.1))
-      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1))
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1))
       eslint-plugin-import-x: 4.6.1(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.34.0(jiti@2.5.1))
       eslint-plugin-react: 7.37.2(eslint@9.34.0(jiti@2.5.1))
@@ -9588,25 +9580,23 @@ snapshots:
       - supports-color
       - typescript
 
-  '@guardian/libs@25.2.0(@guardian/ophan-tracker-js@2.3.1)(tslib@2.8.1)(typescript@5.9.2)':
+  '@guardian/libs@25.2.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.2)':
     dependencies:
-      '@guardian/ophan-tracker-js': 2.3.1
+      '@guardian/ophan-tracker-js': 2.0.3
       tslib: 2.8.1
     optionalDependencies:
       typescript: 5.9.2
 
-  '@guardian/ophan-tracker-js@2.3.1':
-    dependencies:
-      '@guardian/tsconfig': 1.0.0
+  '@guardian/ophan-tracker-js@2.0.3': {}
 
   '@guardian/prettier@8.0.1(prettier@3.6.2)(tslib@2.8.1)':
     dependencies:
       prettier: 3.6.2
       tslib: 2.8.1
 
-  '@guardian/source-development-kitchen@21.0.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@guardian/libs@25.2.0(@guardian/ophan-tracker-js@2.3.1)(tslib@2.8.1)(typescript@5.9.2))(@guardian/source@11.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2)':
+  '@guardian/source-development-kitchen@21.0.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@guardian/libs@25.2.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.2))(@guardian/source@11.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2)':
     dependencies:
-      '@guardian/libs': 25.2.0(@guardian/ophan-tracker-js@2.3.1)(tslib@2.8.1)(typescript@5.9.2)
+      '@guardian/libs': 25.2.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.2)
       '@guardian/source': 11.1.0(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12))(@preact/compat@18.3.1(preact@10.27.1))(@types/react@19.1.12)(tslib@2.8.1)(typescript@5.9.2)
       tslib: 2.8.1
     optionalDependencies:
@@ -9624,8 +9614,6 @@ snapshots:
       '@types/react': 19.1.12
       react: '@preact/compat@18.3.1(preact@10.27.1)'
       typescript: 5.9.2
-
-  '@guardian/tsconfig@1.0.0': {}
 
   '@hapi/hoek@9.3.0': {}
 
@@ -12837,7 +12825,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1)):
+  eslint-import-resolver-typescript@3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)))(eslint@9.34.0(jiti@2.5.1)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.1(supports-color@8.1.1)
@@ -12849,16 +12837,16 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1))
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1))
       eslint-plugin-import-x: 4.6.1(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0(jiti@2.5.1)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0(jiti@2.5.1)):
     dependencies:
       debug: 3.2.7(supports-color@8.1.1)
     optionalDependencies:
-      '@typescript-eslint/parser': 8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
+      '@typescript-eslint/parser': 8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
       eslint: 9.34.0(jiti@2.5.1)
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
@@ -12899,7 +12887,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint@9.34.0(jiti@2.5.1)):
     dependencies:
       array-includes: 3.1.9
       array.prototype.findlastindex: 1.2.6
@@ -12909,7 +12897,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.34.0(jiti@2.5.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0(jiti@2.5.1))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2))(eslint-import-resolver-node@0.3.9)(eslint@9.34.0(jiti@2.5.1))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -12920,7 +12908,7 @@ snapshots:
       semver: 6.3.1
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 8.22.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
+      '@typescript-eslint/parser': 8.41.0(eslint@9.34.0(jiti@2.5.1))(typescript@5.9.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -15334,8 +15322,6 @@ snapshots:
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.1.0
-
-  ophan-tracker-js@2.0.2: {}
 
   optionator@0.9.4:
     dependencies:
