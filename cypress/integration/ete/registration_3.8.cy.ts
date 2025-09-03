@@ -608,7 +608,7 @@ describe('Registration flow - Split 3/3', () => {
 
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 				cy.contains('send again');
 				cy.contains('try another address');
