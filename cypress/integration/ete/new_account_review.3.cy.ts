@@ -23,7 +23,7 @@ describe('New account review page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -111,7 +111,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -152,7 +152,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -195,7 +195,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -240,7 +240,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');

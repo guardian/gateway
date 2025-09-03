@@ -34,7 +34,7 @@ export const sendEmailAndValidatePasscode = ({
 	additionalTests?: 'passcode-incorrect' | 'resend-email' | 'change-email';
 }) => {
 	cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
-	cy.visit(`/signin?${params ? `${params}&` : ''}usePasscodeSignIn=true`);
+	cy.visit(`/signin?${params ? `${params}` : ''}`);
 	cy.get('input[name=email]').clear().type(emailAddress);
 
 	const timeRequestWasMade = new Date();
@@ -88,7 +88,7 @@ export const sendEmailAndValidatePasscode = ({
 					cy.url().should('include', '/signin');
 					break;
 				case 'passcode-incorrect':
-					cy.contains('Sign in');
+					cy.contains('Enter your one-time code');
 					cy.get('input[name=code]').type(`${+code! + 1}`);
 
 					cy.url().should('include', '/signin/code');
@@ -96,7 +96,7 @@ export const sendEmailAndValidatePasscode = ({
 					cy.contains('Incorrect code');
 					cy.get('input[name=code]').clear().type(code!);
 
-					cy.contains('Sign in').click();
+					cy.contains('Submit verification code').click();
 
 					cy.url().should('include', expectedReturnUrl);
 
@@ -106,7 +106,7 @@ export const sendEmailAndValidatePasscode = ({
 					});
 					break;
 				default: {
-					cy.contains('Sign in');
+					cy.contains('Enter your one-time code');
 					cy.get('input[name=code]').type(code!);
 
 					cy.url().should('include', expectedReturnUrl);
