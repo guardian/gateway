@@ -121,7 +121,7 @@ describe('Sign In flow, with passcode (part 1)', () => {
 
 		it('selects password option to sign in from passcode page and show correct error page on incorrect password', () => {
 			const emailAddress = randomMailosaurEmail();
-			cy.visit(`/signin?usePasscodeSignIn=true`);
+			cy.visit(`/signin`);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			// passcode page
@@ -194,32 +194,32 @@ describe('Sign In flow, with passcode (part 1)', () => {
 						cy.contains('Enter your one-time code');
 
 						// attempt 1
-						cy.contains('Sign in');
+						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(`${+code! + 1}`);
 						cy.url().should('include', '/signin/code');
 						cy.contains('Incorrect code');
 
 						// attempt 2
 						cy.get('input[name=code]').type(`${+code! + 1}`);
-						cy.contains('Sign in').click();
+						cy.contains('Submit verification code').click();
 						cy.url().should('include', '/signin/code');
 						cy.contains('Incorrect code');
 
 						// attempt 3
 						cy.get('input[name=code]').type(`${+code! + 1}`);
-						cy.contains('Sign in').click();
+						cy.contains('Submit verification code').click();
 						cy.url().should('include', '/signin/code');
 						cy.contains('Incorrect code');
 
 						// attempt 4
 						cy.get('input[name=code]').type(`${+code! + 1}`);
-						cy.contains('Sign in').click();
+						cy.contains('Submit verification code').click();
 						cy.url().should('include', '/signin/code');
 						cy.contains('Incorrect code');
 
 						// attempt 5
 						cy.get('input[name=code]').type(`${+code! + 1}`);
-						cy.contains('Sign in').click();
+						cy.contains('Submit verification code').click();
 						cy.url().should('include', '/signin');
 						cy.contains('Your code has expired');
 					},
@@ -240,7 +240,7 @@ describe('Sign In flow, with passcode (part 1)', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
