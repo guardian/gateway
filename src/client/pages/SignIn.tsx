@@ -168,7 +168,11 @@ export const SignIn = ({
 			shortRequestId={shortRequestId}
 			errorOverride={pageError}
 			errorContext={getErrorContext(pageError, queryParams)}
-			pageHeader={isReauthenticate ? 'Sign in' : 'Sign in or create an account'}
+			pageHeader={
+				isReauthenticate || !usePasscodeSignIn
+					? 'Sign in'
+					: 'Sign in or create an account'
+			}
 			leadText="One account to access all Guardian products."
 		>
 			{/* AuthProviderButtons component with show boolean */}

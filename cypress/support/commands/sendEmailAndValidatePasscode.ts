@@ -109,6 +109,9 @@ export const sendEmailAndValidatePasscode = ({
 					cy.contains('Enter your one-time code');
 					cy.get('input[name=code]').type(code!);
 
+					cy.url().should('include', 'welcome/existing');
+
+					cy.contains('a', 'Return to the Guardian').click();
 					cy.url().should('include', expectedReturnUrl);
 
 					cy.getTestOktaUser(emailAddress).then((user) => {
