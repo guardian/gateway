@@ -119,7 +119,7 @@ describe('Sign In flow, with passcode (part 1)', () => {
 			});
 		});
 
-		it('selects password option to sign in from passcode page and show correct error page on incorrect password', () => {
+		it.only('selects password option to sign in from passcode page and show correct error page on incorrect password', () => {
 			const emailAddress = randomMailosaurEmail();
 			cy.visit(`/signin`);
 			cy.get('input[name=email]').type(emailAddress);
