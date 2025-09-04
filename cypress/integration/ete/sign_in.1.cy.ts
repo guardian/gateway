@@ -91,10 +91,9 @@ describe('Sign in flow, Okta enabled', () => {
 		});
 		it('navigates to registration', () => {
 			cy.visit('/signin');
-			cy.contains('Create a free account').click();
 			cy.contains('Continue with Google');
 			cy.contains('Continue with Apple');
-			cy.contains('Continue with email');
+			cy.get('input[name=email]').should('exist');
 		});
 		it('removes encryptedEmail parameter from query string', () => {
 			const encryptedEmailParam = 'encryptedEmail=bhvlabgflbgyil';
@@ -107,17 +106,13 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					returnUrl,
-				)}&${encryptedEmailParam}&refViewId=12345`,
+				)}&${encryptedEmailParam}&refViewId=12345&clientId=jobs`,
 			);
 
 			cy.location('search').should('not.contain', encryptedEmailParam);
 			cy.location('search').should('contain', 'refViewId=12345');
+			cy.location('search').should('contain', 'clientId=jobs');
 			cy.location('search').should('contain', encodeURIComponent(returnUrl));
-		});
-		it('persists the clientId when navigating away', () => {
-			cy.visit('/signin?clientId=jobs');
-			cy.contains('Create a free account').click();
-			cy.url().should('contain', 'clientId=jobs');
 		});
 		it('applies form validation to email and password input fields', () => {
 			cy.visit('/signin?usePasswordSignIn=true');
@@ -387,7 +382,7 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
