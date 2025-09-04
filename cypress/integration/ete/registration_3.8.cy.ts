@@ -633,7 +633,7 @@ describe('Registration flow - Split 3/3', () => {
 					'not.exist',
 				);
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade);
