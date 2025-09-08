@@ -619,6 +619,16 @@ describe('Sign in flow, Okta enabled', () => {
 				`/signin/apple?returnUrl=${encodeURIComponent(returnUrl)}`,
 			);
 		});
+		it.only('redirects correctly for Google One Tap sign in', () => {
+			const googleAccountsUrl = 'https://accounts.google.com/**/*';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', googleAccountsUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit(`/signin/google?signInEmail=test@email.com`);
+			cy.url().should('include', 'login_hint=test%40email.com');
+		});
 		it('shows an error message and information paragraph when accountLinkingRequired error parameter is present', () => {
 			cy.visit('/signin?error=accountLinkingRequired');
 			cy.contains(

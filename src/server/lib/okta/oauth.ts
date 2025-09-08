@@ -92,6 +92,7 @@ export interface PerformAuthorizationCodeFlowOptions {
 	redirectUri: string;
 	scopes: Scopes[];
 	sessionToken?: string | null;
+	loginHint?: string;
 }
 
 /**
@@ -118,6 +119,7 @@ export const performAuthorizationCodeFlow = async (
 		scopes = ['openid'],
 		redirectUri,
 		extraData,
+		loginHint,
 	}: PerformAuthorizationCodeFlowOptions,
 ) => {
 	if (closeExistingSession) {
@@ -152,7 +154,7 @@ export const performAuthorizationCodeFlow = async (
 		// Prompt for 'login' if the idp is provided to make sure the user sees
 		// the social provider login page
 		// otherwise we'll use the prompt parameter provided
-		prompt: idp ? 'login' : prompt,
+		prompt: idp && !loginHint ? 'login' : prompt,
 		// The sessionToken from authentication to exchange for session cookie
 		sessionToken,
 		// we send the generated stateParam as the state parameter
@@ -163,6 +165,10 @@ export const performAuthorizationCodeFlow = async (
 		redirect_uri: redirectUri,
 		// the identity provider if doing social login
 		idp,
+		// Suggested email to login with, used in the Google One Tap sign in flow to automatically log the user into the correct google account.
+		// See https://support.google.com/a/answer/15544042
+		// "If the user associated with the hint already has an active session with Google, the server automatically signs them in, providing a seamless experience."
+		login_hint: loginHint,
 	});
 
 	// redirect the user to the /authorize endpoint
