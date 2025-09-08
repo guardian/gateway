@@ -17,6 +17,7 @@ export type UserFlow =
 	| 'social-registration'
 	| 'social-sign-in'
 	| 'social-authentication'
+	| 'google-one-tap'
 	| 'create-account'
 	| 'account-recovery';
 /**
