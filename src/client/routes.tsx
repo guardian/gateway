@@ -15,7 +15,6 @@ import { SignInPage } from '@/client/pages/SignInPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
 import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
-import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
 import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
 import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
@@ -41,8 +40,10 @@ import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
 import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
 import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
 import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
-import { SignInPasscodeEmailSentPage } from '@/client/pages/SignInPasscodeEmailSentPage';
 import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
+import { PasscodeEmailSentPage } from './pages/PasscodeEmailSentPage';
+import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
+import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -68,9 +69,21 @@ const routes: Array<{
 		),
 	},
 	{
+		path: '/passcode',
+		element: <PasscodeEmailSentPage />,
+	},
+	{
+		path: '/passcode-used-register',
+		element: <PasscodeUsedRegisterPage />,
+	},
+	{
 		path: '/signin/code',
 		element: <SignInPasscodeEmailSentPage />,
 	},
+	//{
+	//path: '/register/email-sent',
+	//element: <RegistrationEmailSentPage />,
+	//},
 	{
 		path: '/signin/password',
 		element: <SignInPage hideSocialButtons forcePasswordPage />,
@@ -92,10 +105,6 @@ const routes: Array<{
 	{
 		path: '/register/email',
 		element: <RegisterWithEmailPage />,
-	},
-	{
-		path: '/register/email-sent',
-		element: <RegistrationEmailSentPage />,
 	},
 	{
 		path: '/reset-password',
