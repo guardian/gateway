@@ -1,4 +1,4 @@
-import { NextFunction, Request } from 'express';
+import { Request } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import {
 	readEncryptedStateCookie,
