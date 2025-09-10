@@ -218,6 +218,7 @@ const authenticationHandler = async (
 		const isSocialRegistration =
 			!email_validated &&
 			user_groups?.some((group) => group === 'GuardianUser-EmailValidated');
+		const isGoogleOneTap = authState.data?.flow === 'google-one-tap';
 
 		// We're unable to set the user.emailValidated field in the Okta user profile
 		// for social users when they are created, but we are able to put them in the
@@ -234,7 +235,14 @@ const authenticationHandler = async (
 				// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 				// updated the user profile emailValidated to true
-				await updateUser(sub, { profile: { emailValidated: true } });
+				await updateUser(sub, {
+					profile: {
+						emailValidated: true,
+						// If the social registration is also via Google One Tap, we want to set the registrationPlatform
+						// so that we can keep track of how many users in total have registered via Google One Tap
+						...(isGoogleOneTap ? { registrationPlatform: 'googleOneTap' } : {}),
+					},
+				});
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
@@ -433,6 +441,10 @@ const authenticationHandler = async (
 					});
 					trackMetric(`UserFlow-social-sign-in-${idp}-${appLabel}`);
 				}
+			} else if (isGoogleOneTap) {
+				trackMetric(
+					`UserFlow-google-one-tap-${isSocialRegistration ? 'registration' : 'sign-in'}`,
+				);
 			} else {
 				// otherwise log the flow as is
 				logger.info('OAuth Authentication via Gateway flow', undefined, {

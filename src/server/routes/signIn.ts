@@ -618,6 +618,7 @@ router.get(
 				loginHint: signInEmail,
 				extraData: {
 					socialProvider: socialIdp,
+					flow: 'google-one-tap',
 				},
 			});
 		}
