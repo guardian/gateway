@@ -37,7 +37,7 @@ describe('New account review page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -125,7 +125,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -166,7 +166,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -209,7 +209,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -254,7 +254,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
