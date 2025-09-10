@@ -1,4 +1,21 @@
 import { defineConfig } from 'cypress';
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- No types exist for this package
+const webpackPreprocessor = require('@cypress/webpack-batteries-included-preprocessor');
+
+const webpackOptions = () => {
+	const options = webpackPreprocessor.getFullWebpackOptions();
+
+	return {
+		...options,
+		resolve: {
+			...options.resolve,
+			fallback: {
+				...options.resolve.fallback,
+				crypto: require.resolve('crypto-browserify'),
+			},
+		},
+	};
+};
 
 export default defineConfig({
 	video: false,
@@ -6,6 +23,7 @@ export default defineConfig({
 	defaultCommandTimeout: 8000,
 	responseTimeout: 8000,
 	requestTimeout: 8000,
+
 	env: {
 		mockingEndpoint: 'localhost:9000/mock',
 	},
@@ -24,6 +42,13 @@ export default defineConfig({
 					return null;
 				},
 			});
+			on(
+				'file:preprocessor',
+				webpackPreprocessor({
+					webpackOptions: webpackOptions(),
+					typescript: require.resolve('typescript'),
+				}),
+			);
 		},
 	},
 });
