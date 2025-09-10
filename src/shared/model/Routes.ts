@@ -28,6 +28,8 @@ export const ValidRoutePathsArray = [
 	'/oauth/authorization-code/callback',
 	'/oauth/authorization-code/delete-callback',
 	'/oauth/authorization-code/interaction-code-callback',
+	'/passcode',
+	'/passcode-used-register',
 	'/reauthenticate',
 	'/reauthenticate/password',
 	'/register',
