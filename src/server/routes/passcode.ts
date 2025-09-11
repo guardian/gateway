@@ -96,6 +96,8 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 			logger.error(`${req.method} ${req.originalUrl} Error`, error);
 			res.redirect(303, addQueryParamsToPath('/signin', state.queryParams));
 		}
+	} else {
+		res.send(403);
 	}
 });
 
