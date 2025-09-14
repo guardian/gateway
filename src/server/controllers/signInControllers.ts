@@ -671,7 +671,10 @@ export const oktaIdxApiSubmitPasscodeController = async ({
 }: {
 	req: Request;
 	res: ResponseWithRequestState;
-	emailSentPage?: Extract<RoutePaths, '/signin/code' | '/register/email-sent'>;
+	emailSentPage?: Extract<
+		RoutePaths,
+		'/signin/code' | '/register/email-sent' | '/passcode'
+	>;
 	expiredPage?: HandlePasscodeErrorParams['expiredPage'];
 }) => {
 	const { code } = req.body;
