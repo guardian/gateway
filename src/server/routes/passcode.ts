@@ -8,24 +8,37 @@ import { convertExpiresAtToExpiryTimeInMs } from '../lib/okta/idx/shared/convert
 import { logger } from '../lib/serverSideLogger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { handleAsyncErrors } from '../lib/expressWrappers';
-import { oktaIdxApiSubmitPasscodeController } from '../controllers/signInControllers';
+import {
+	oktaIdxApiSignInPasscodeController,
+	oktaIdxApiSubmitPasscodeController,
+} from '../controllers/signInControllers';
 import { getConfiguration } from '../lib/getConfiguration';
 import { getErrorMessageFromQueryParams } from './signIn';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { registerPasscodeHandler } from './register';
+import handleRecaptcha from '../lib/recaptcha';
 
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
-	if (encrypedCookieState?.email && encrypedCookieState.stateHandle) {
+	if (!encrypedCookieState?.email) {
+		return res.send(403);
+	}
+	const email = encrypedCookieState.email;
+	if (encrypedCookieState?.stateHandle) {
 		try {
-			const email = encrypedCookieState.email;
+			const queryParams = state.queryParams;
+			const { error, error_description } = queryParams;
+
+			const possibleError = getErrorMessageFromQueryParams(
+				error,
+				error_description,
+			);
+
 			if (encrypedCookieState.passcodeUsed) {
 				switch (encrypedCookieState.signInOrRegister) {
 					case 'SIGNIN': {
 						const { baseUri } = getConfiguration();
-						const queryParams = state.queryParams;
-						const { error, error_description } = queryParams;
 						const continueLink =
 							queryParams.clientId === 'jobs'
 								? `https://${baseUri}${addQueryParamsToPath(
@@ -55,10 +68,7 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 									signOutLink,
 								},
 								globalMessage: {
-									error: getErrorMessageFromQueryParams(
-										error,
-										error_description,
-									),
+									error: possibleError,
 								},
 							}),
 							pageTitle: 'Sign in',
@@ -71,6 +81,9 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 							requestState: mergeRequestState(state, {
 								pageData: {
 									email,
+								},
+								globalMessage: {
+									error: possibleError,
 								},
 							}),
 							pageTitle: 'Check Your Inbox',
@@ -87,6 +100,13 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 								encrypedCookieState.stateHandleExpiresAt,
 							),
 						},
+						queryParams: {
+							...res.locals.queryParams,
+							emailSentSuccess: true,
+						},
+						globalMessage: {
+							error: possibleError,
+						},
 					}),
 					pageTitle: 'Check Your Inbox',
 				});
@@ -97,7 +117,15 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 			res.redirect(303, addQueryParamsToPath('/signin', state.queryParams));
 		}
 	} else {
-		res.send(403);
+		const html = renderer('/passcode/resend', {
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email,
+				},
+			}),
+			pageTitle: 'Check Your Inbox',
+		});
+		res.type('html').send(html);
 	}
 });
 
@@ -113,6 +141,22 @@ router.post(
 			case 'REGISTER':
 				return await registerPasscodeHandler(req, res);
 		}
+	}),
+);
+
+router.post(
+	'/passcode/resend',
+	handleRecaptcha,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const encrypedCookieState = readEncryptedStateCookie(req);
+		await oktaIdxApiSignInPasscodeController({
+			req,
+			res,
+			confirmationPagePath:
+				encrypedCookieState?.signInOrRegister === 'REGISTER'
+					? '/welcome/review'
+					: undefined,
+		});
 	}),
 );
 

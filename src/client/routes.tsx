@@ -73,6 +73,10 @@ const routes: Array<{
 		element: <PasscodeEmailSentPage />,
 	},
 	{
+		path: '/passcode/resend',
+		element: <EmailSentPage formTrackingName="passcode-email-resend" />,
+	},
+	{
 		path: '/passcode-used-register',
 		element: <PasscodeUsedRegisterPage />,
 	},

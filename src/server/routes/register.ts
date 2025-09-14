@@ -256,7 +256,7 @@ router.post(
 				// redirect to the email sent page
 				return res.redirect(
 					303,
-					addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
+					addQueryParamsToPath('/passcode', res.locals.queryParams, {
 						emailSentSuccess: true,
 					}),
 				);
@@ -496,7 +496,7 @@ export const registerPasscodeHandler = async (
 				return oktaIdxApiSubmitPasscodeController({
 					req,
 					res,
-					emailSentPage: '/register/email-sent',
+					emailSentPage: '/passcode',
 					expiredPage: '/register/code/expired',
 				});
 			}
@@ -595,7 +595,7 @@ export const registerPasscodeHandler = async (
 				error,
 				req,
 				res,
-				emailSentPage: '/register/email-sent',
+				emailSentPage: '/passcode',
 				expiredPage: '/register/code/expired',
 			});
 
@@ -678,7 +678,7 @@ export const oktaRegistrationOrSignin = async (
 
 		return res.redirect(
 			303,
-			addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+			addQueryParamsToPath('/passcode', res.locals.queryParams),
 		);
 	} catch (error) {
 		logger.error('Okta Registration failure', error);
@@ -736,7 +736,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			setEncryptedStateCookieForOktaRegistration(res, user);
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
+				addQueryParamsToPath('/passcode', res.locals.queryParams, {
 					emailSentSuccess: true,
 				}),
 			);
@@ -751,7 +751,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 		trackMetric('OktaRegistrationResendEmail::Failure');
 
 		return res.type('html').send(
-			renderer('/register/email-sent', {
+			renderer('/passcode', {
 				pageTitle: 'Check Your Inbox',
 				requestState: mergeRequestState(res.locals, {
 					pageData: {
