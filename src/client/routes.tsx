@@ -163,11 +163,11 @@ const routes: Array<{
 	},
 	{
 		path: '/welcome/google',
-		element: <WelcomeSocialPage socialProvider="google" />,
+		element: <WelcomeSocialPage />,
 	},
 	{
 		path: '/welcome/apple',
-		element: <WelcomeSocialPage socialProvider="apple" />,
+		element: <WelcomeSocialPage />,
 	},
 	{
 		path: '/welcome/review',

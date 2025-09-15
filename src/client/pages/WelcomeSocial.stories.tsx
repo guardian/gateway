@@ -13,20 +13,14 @@ export default {
 		queryParams: {
 			returnUrl: 'https://www.theguardian.com/uk',
 		},
-		socialProvider: 'google',
 	},
 } as Meta<WelcomeSocialProps>;
 
-export const Google = (args: WelcomeSocialProps) => <WelcomeSocial {...args} />;
-Google.story = {
-	name: 'with Google',
-};
-
-export const Apple = (args: WelcomeSocialProps) => (
-	<WelcomeSocial {...args} socialProvider="apple" />
+export const Default = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} />
 );
-Apple.story = {
-	name: 'with Apple',
+Default.story = {
+	name: 'with defaults',
 };
 
 export const ReturnUrl = (args: WelcomeSocialProps) => (

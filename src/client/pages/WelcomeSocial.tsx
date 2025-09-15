@@ -3,7 +3,6 @@ import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { RegistrationProps } from '@/client/pages/Registration';
-import { SocialProvider } from '@/shared/model/Social';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import {
@@ -14,18 +13,7 @@ import { AppName } from '@/shared/lib/appNameUtils';
 import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
-const headerMessage = (socialProvider: SocialProvider) => {
-	if (socialProvider === 'google') {
-		return 'Google account verified';
-	}
-	if (socialProvider === 'apple') {
-		return 'Apple account verified';
-	}
-	return '';
-};
-
 export type WelcomeSocialProps = RegistrationProps & {
-	socialProvider: SocialProvider;
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	shortRequestId?: string;
@@ -34,7 +22,6 @@ export type WelcomeSocialProps = RegistrationProps & {
 export const WelcomeSocial = ({
 	queryParams,
 	formError,
-	socialProvider,
 	geolocation,
 	appName,
 	shortRequestId,
@@ -47,8 +34,9 @@ export const WelcomeSocial = ({
 
 	return (
 		<MinimalLayout
-			pageHeader={headerMessage(socialProvider)}
+			pageHeader="You're signed in! Welcome to the Guardian."
 			shortRequestId={shortRequestId}
+			imageId="welcome"
 		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/welcome/social', {}, queryParams)}
