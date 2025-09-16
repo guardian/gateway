@@ -714,25 +714,25 @@ describe('Registration flow - Split 1/3', () => {
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 2 - manual submit
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Submit verification code').click();
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 3
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Submit verification code').click();
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 4
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Submit verification code').click();
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 5
 						cy.get('input[name=code]').type('000000');
