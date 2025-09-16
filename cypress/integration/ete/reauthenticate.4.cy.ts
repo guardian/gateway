@@ -156,9 +156,9 @@ describe('Reauthenticate flow, Okta enabled, passcode default', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/signin/code');
+						cy.url().should('include', '/passcode');
 						cy.contains('Enter your one-time code');
-						cy.contains('Sign in');
+						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(code!);
 
 						cy.url().should('include', '/welcome/review');
@@ -263,9 +263,9 @@ describe('Reauthenticate flow, Okta enabled, passcode default', () => {
 							expect(code).to.match(/^\d{6}$/);
 
 							// passcode page
-							cy.url().should('include', '/signin/code');
+							cy.url().should('include', '/passcode');
 							cy.contains('Enter your one-time code');
-							cy.contains('Sign in');
+							cy.contains('Submit verification code');
 							cy.get('input[name=code]').type(code!);
 
 							cy.url().should('include', '/welcome/review');

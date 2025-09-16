@@ -417,7 +417,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -476,7 +476,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(

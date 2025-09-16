@@ -168,7 +168,11 @@ export const SignIn = ({
 			shortRequestId={shortRequestId}
 			errorOverride={pageError}
 			errorContext={getErrorContext(pageError, queryParams)}
-			pageHeader="Sign in"
+			pageHeader={
+				isReauthenticate || !usePasscodeSignIn
+					? 'Sign in'
+					: 'Sign in or create an account'
+			}
 			leadText="One account to access all Guardian products."
 		>
 			{/* AuthProviderButtons component with show boolean */}
@@ -187,7 +191,7 @@ export const SignIn = ({
 					queryParams,
 				)}
 				submitButtonText={
-					selectedView === 'passcode' ? 'Sign in with email' : 'Sign in'
+					selectedView === 'passcode' ? 'Continue with email' : 'Sign in'
 				}
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
@@ -246,7 +250,7 @@ export const SignIn = ({
 					</>
 				)
 			}
-			{!isReauthenticate && (
+			{!isReauthenticate && selectedView !== 'passcode' && (
 				<>
 					<Divider size="full" cssOverrides={divider} />
 					<MainBodyText>
