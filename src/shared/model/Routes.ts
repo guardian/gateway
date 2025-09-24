@@ -73,6 +73,7 @@ export const ValidRoutePathsArray = [
 	'/subscribe/:emailType/:data/:token',
 	'/subscribe/success',
 	'/subscribe/error',
+	'/tracking/anonymous/form-interaction',
 	'/verify-email',
 	'/welcome',
 	'/welcome/:token',
@@ -110,6 +111,7 @@ export type ApiRoutePaths =
 	| '/unsubscribe-all'
 	| '/users/me/consents'
 	| '/users/me/newsletters'
+	| '/user/type/:email'
 	| '/users/me/touch-braze';
 
 type OktaApiRoutePaths =
