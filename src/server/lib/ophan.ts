@@ -130,7 +130,7 @@ export const generateOphanComponentEvent = (
  * @param config The ophan configuration for this event
  * @returns void - This is a fire and forget call so no need to wait for a response
  */
-const record = (event: OphanEvent, config: OphanConfig = {}) => {
+export const record = (event: OphanEvent, config: OphanConfig = {}) => {
 	const { bwid, consentUUID, viewId } = config;
 
 	if (bwid && viewId) {
