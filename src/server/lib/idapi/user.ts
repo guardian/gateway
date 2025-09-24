@@ -80,6 +80,28 @@ export const changeEmail = async (token: string, ip: string | undefined) => {
 	}
 };
 
+export const getUserType = async (
+	email: string,
+): Promise<'sign-in' | 'register' | undefined> => {
+	try {
+		const response: { userType: 'guest' | 'current' | 'new' } =
+			await idapiFetch({
+				path: `/user/type/:email`,
+				tokenisationParam: { email },
+				options: APIAddClientAccessToken(APIGetOptions(), undefined),
+			});
+
+		if (response.userType === 'current') {
+			return 'sign-in';
+		} else {
+			return 'register';
+		}
+	} catch (error) {
+		logger.warn(`IDAPI Error user exists '/user/type/${email}'`, error);
+		return undefined;
+	}
+};
+
 export const getUserByEmailAddress = async (
 	email: string,
 	ip: string | undefined,
