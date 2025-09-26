@@ -217,7 +217,7 @@ describe('Sign in flow', () => {
 			cy.contains('Sign in with a different email');
 		});
 
-		it.only('loads the "signed in as" page if user is already authenticated and coming from jobs and oauth flow', function () {
+		it('loads the "signed in as" page if user is already authenticated and coming from jobs and oauth flow', function () {
 			cy.mockPattern(
 				200,
 				{
