@@ -294,7 +294,9 @@ export const oktaIdxApiSignInPasscodeController = async ({
 						userState: passwordAuthenticatorId
 							? 'ACTIVE_EMAIL_PASSWORD'
 							: 'ACTIVE_EMAIL_ONLY',
-						signInOrRegister: 'SIGNIN',
+						signInOrRegister: req.originalUrl.startsWith('/register')
+							? 'REGISTER'
+							: 'SIGNIN',
 					});
 
 					return res.redirect(

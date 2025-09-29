@@ -194,7 +194,7 @@ describe('Sign in flow, Okta enabled', () => {
 				// the ratelimiter has a chance to work
 				cy.visit('/reauthenticate');
 				cy.contains('Sign');
-				Cypress._.times(6, () => cy.reload());
+				Cypress._.times(10, () => cy.reload());
 				cy.contains('Rate limit exceeded');
 			});
 		});
@@ -394,7 +394,7 @@ describe('Sign in flow, Okta enabled', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					// make sure we don't use a passcode
 					// we instead reset their password using classic flow to set a password

@@ -361,7 +361,7 @@ describe('Registration flow - Split 3/3', () => {
 						cy.get('[data-cy="main-form-submit-button"]').click();
 
 						// Make sure that we don't get sent to the 'security reasons' page
-						cy.url().should('include', '/register/email-sent');
+						cy.url().should('include', '/passcode');
 						cy.contains(
 							'For security reasons we need you to change your password.',
 						).should('not.exist');

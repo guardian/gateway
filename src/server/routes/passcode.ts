@@ -18,6 +18,7 @@ import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
 
+
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
@@ -121,6 +122,8 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,
+					resendEmailAction: '/register/email-sent/resend',
+					changeEmailPage: '/signin',
 				},
 			}),
 			pageTitle: 'Check Your Inbox',

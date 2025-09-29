@@ -60,6 +60,7 @@ describe('Sign In flow, with passcode (part 1)', () => {
 					emailAddress,
 					expectedReturnUrl: fromURI,
 					params: `fromURI=${fromURI}&appClientId=${appClientId}`,
+					additionalTests: 'from-uri',
 				});
 			});
 		});
@@ -106,7 +107,7 @@ describe('Sign In flow, with passcode (part 1)', () => {
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
 				// passcode page
-				cy.url().should('include', '/signin/code');
+				cy.url().should('include', '/passcode');
 				cy.contains('Enter your one-time code');
 				cy.contains('sign in with a password instead').click();
 
@@ -119,13 +120,13 @@ describe('Sign In flow, with passcode (part 1)', () => {
 			});
 		});
 
-		it.only('selects password option to sign in from passcode page and show correct error page on incorrect password', () => {
+		it('selects password option to sign in from passcode page and show correct error page on incorrect password', () => {
 			const emailAddress = randomMailosaurEmail();
 			cy.visit(`/signin`);
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			// passcode page
-			cy.url().should('include', '/signin/code');
+			cy.url().should('include', '/passcode');
 			cy.contains('Enter your one-time code');
 			cy.contains('sign in with a password instead').click();
 
@@ -190,31 +191,31 @@ describe('Sign In flow, with passcode (part 1)', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/signin/code');
+						cy.url().should('include', '/passcode');
 						cy.contains('Enter your one-time code');
 
 						// attempt 1
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(`${+code! + 1}`);
-						cy.url().should('include', '/signin/code');
+						cy.url().should('include', '/passcode');
 						cy.contains('Incorrect code');
 
 						// attempt 2
 						cy.get('input[name=code]').type(`${+code! + 1}`);
 						cy.contains('Submit verification code').click();
-						cy.url().should('include', '/signin/code');
+						cy.url().should('include', '/passcode');
 						cy.contains('Incorrect code');
 
 						// attempt 3
 						cy.get('input[name=code]').type(`${+code! + 1}`);
 						cy.contains('Submit verification code').click();
-						cy.url().should('include', '/signin/code');
+						cy.url().should('include', '/passcode');
 						cy.contains('Incorrect code');
 
 						// attempt 4
 						cy.get('input[name=code]').type(`${+code! + 1}`);
 						cy.contains('Submit verification code').click();
-						cy.url().should('include', '/signin/code');
+						cy.url().should('include', '/passcode');
 						cy.contains('Incorrect code');
 
 						// attempt 5
@@ -252,7 +253,7 @@ describe('Sign In flow, with passcode (part 1)', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					// make sure we don't use a passcode
 					// we instead reset their password using classic flow to set a password

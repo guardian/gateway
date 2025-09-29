@@ -64,9 +64,11 @@ const existingUserSendEmailAndValidatePasscode = ({
 							cy.contains('Submit verification code');
 							cy.get('input[name=code]').type(code!);
 
-							cy.contains('Return to the Guardian')
-								.should('have.attr', 'href')
-								.and('include', expectedReturnUrl);
+							cy.contains("You're signed in! Welcome to the Guardian.");
+							cy.contains('Save and continue');
+
+							cy.get('[data-cy="main-form-submit-button"]').click();
+							cy.url().should('include', expectedReturnUrl);
 
 							cy.getTestOktaUser(emailAddress).then((user) => {
 								expect(user.status).to.eq('ACTIVE');
@@ -77,7 +79,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 					break;
 				case 'change-email': {
 					cy.contains('try another address').click();
-					cy.url().should('include', '/register/email');
+					cy.url().should('include', '/signin');
 					break;
 				}
 				case 'passcode-incorrect':
@@ -85,7 +87,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(`123456`);
 
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						cy.contains('Incorrect code');
 						cy.get('input[name=code]').clear().type(code!);

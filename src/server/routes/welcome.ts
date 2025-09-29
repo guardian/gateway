@@ -257,6 +257,7 @@ router.get(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		// eslint-disable-next-line functional/no-let -- the state will be updated depending on the outcome of the try/catch, TODO: potential for refactor to avoid let?
 		let state = res.locals;
+
 		if (!requestStateHasOAuthTokens(state)) {
 			return res.redirect(
 				303,
@@ -297,6 +298,7 @@ router.get(
 			pageTitle: 'Your data',
 			requestState: state,
 		});
+
 		return res.type('html').send(html);
 	}),
 );

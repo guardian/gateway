@@ -291,7 +291,7 @@ describe('Registration flow - Split 2/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
 

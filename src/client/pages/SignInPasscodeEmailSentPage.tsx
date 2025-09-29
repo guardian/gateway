@@ -34,7 +34,7 @@ export const SignInPasscodeEmailSentPage = () => {
 			email={email}
 			queryString={queryString}
 			changeEmailPage={buildUrl('/signin')}
-			passcodeAction={buildUrl('/signin/code')}
+			passcodeAction={buildUrl('/passcode')}
 			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}

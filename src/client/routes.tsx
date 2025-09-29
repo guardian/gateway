@@ -44,6 +44,7 @@ import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
 import { PasscodeEmailSentPage } from './pages/PasscodeEmailSentPage';
 import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
 import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
+import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -84,10 +85,10 @@ const routes: Array<{
 		path: '/signin/code',
 		element: <SignInPasscodeEmailSentPage />,
 	},
-	//{
-	//path: '/register/email-sent',
-	//element: <RegistrationEmailSentPage />,
-	//},
+	{
+		path: '/register/email-sent',
+		element: <RegistrationEmailSentPage />,
+	},
 	{
 		path: '/signin/password',
 		element: <SignInPage hideSocialButtons forcePasswordPage />,

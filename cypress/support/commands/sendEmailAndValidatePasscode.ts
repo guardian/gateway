@@ -31,7 +31,11 @@ export const sendEmailAndValidatePasscode = ({
 	expectedReturnUrl?: string;
 	params?: string;
 	expectedEmailBody?: 'Your one-time passcode' | 'Your verification code';
-	additionalTests?: 'passcode-incorrect' | 'resend-email' | 'change-email';
+	additionalTests?:
+		| 'passcode-incorrect'
+		| 'resend-email'
+		| 'change-email'
+		| 'from-uri';
 }) => {
 	cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
 	cy.visit(`/signin?${params ? `${params}` : ''}`);
@@ -50,7 +54,7 @@ export const sendEmailAndValidatePasscode = ({
 			expect(code).to.match(/^\d{6}$/);
 
 			// passcode page
-			cy.url().should('include', '/signin/code');
+			cy.url().should('include', '/passcode');
 			cy.contains('Enter your one-time code');
 
 			switch (additionalTests) {
@@ -70,7 +74,7 @@ export const sendEmailAndValidatePasscode = ({
 							const code = codes?.[0].value;
 							expect(code).to.match(/^\d{6}$/);
 
-							cy.contains('Sign in');
+							cy.contains('Enter your one-time code');
 							cy.get('input[name=code]').type(code!);
 
 							cy.url().should('include', expectedReturnUrl);
@@ -91,12 +95,26 @@ export const sendEmailAndValidatePasscode = ({
 					cy.contains('Enter your one-time code');
 					cy.get('input[name=code]').type(`${+code! + 1}`);
 
-					cy.url().should('include', '/signin/code');
+					cy.url().should('include', '/passcode');
 
 					cy.contains('Incorrect code');
 					cy.get('input[name=code]').clear().type(code!);
 
 					cy.contains('Submit verification code').click();
+
+					cy.url().should('include', '/welcome/existing');
+					cy.contains('Return to the Guardian').click();
+
+					cy.url().should('include', expectedReturnUrl);
+
+					cy.getTestOktaUser(emailAddress).then((user) => {
+						expect(user.status).to.eq('ACTIVE');
+						expect(user.profile.emailValidated).to.eq(true);
+					});
+					break;
+				case 'from-uri':
+					cy.contains('Enter your one-time code');
+					cy.get('input[name=code]').type(code!);
 
 					cy.url().should('include', expectedReturnUrl);
 
