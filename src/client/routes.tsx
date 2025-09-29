@@ -86,10 +86,10 @@ const routes: Array<{
 		path: '/signin/code',
 		element: <SignInPasscodeEmailSentPage />,
 	},
-	//{
-	//path: '/register/email-sent',
-	//element: <RegistrationEmailSentPage />,
-	//},
+	{
+		path: '/register/email-sent',
+		element: <RegistrationEmailSentPage />,
+	},
 	{
 		path: '/register/email-sent',
 		element: <RegistrationEmailSentPage />,
