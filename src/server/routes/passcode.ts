@@ -17,6 +17,7 @@ import { getErrorMessageFromQueryParams } from './signIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
 
+
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
