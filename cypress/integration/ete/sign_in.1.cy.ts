@@ -619,7 +619,7 @@ describe('Sign in flow, Okta enabled', () => {
 				`/signin/apple?returnUrl=${encodeURIComponent(returnUrl)}`,
 			);
 		});
-		it.only('redirects correctly for Google One Tap sign in', () => {
+		it('redirects correctly for Google One Tap sign in', () => {
 			const googleAccountsUrl = 'https://accounts.google.com/**/*';
 			// Intercept the external redirect page.
 			// We just want to check that the redirect happens, not that the page loads.
