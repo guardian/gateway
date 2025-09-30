@@ -73,6 +73,7 @@ export const ValidRoutePathsArray = [
 	'/subscribe/:emailType/:data/:token',
 	'/subscribe/success',
 	'/subscribe/error',
+	'/tracking/anonymous/form-interaction',
 	'/verify-email',
 	'/welcome',
 	'/welcome/:token',
