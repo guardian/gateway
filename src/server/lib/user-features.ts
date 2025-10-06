@@ -109,7 +109,7 @@ const persistUserBenefitsCookies = ({
 		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 1 });
 	}
 	// Ad free user cookie is set for 2 days
-	// https://github.com/guardian/frontend/blob/f17fe93c542fbd448392a0687d0b92f35796097a/static/src/javascripts/projects/common/modules/commercial/user-features.ts#L128
+	// https://github.com/guardian/dotcom-rendering/blob/d629dfc882b72b32114209345ccfa3e995397eb2/dotcom-rendering/src/client/userFeatures/user-features.ts#L59
 	if (userBenefits?.benefits?.includes('adFree')) {
 		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 2 });
 	}
