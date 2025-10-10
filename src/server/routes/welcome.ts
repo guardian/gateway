@@ -27,7 +27,10 @@ import {
 } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
+import {
+	CONSENTS_DATA_PAGE,
+	getRegistrationConsentsList,
+} from '@/shared/model/Consent';
 import {
 	getUserConsentsForPage,
 	update as updateConsents,

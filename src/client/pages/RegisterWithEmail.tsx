@@ -84,10 +84,16 @@ export const RegisterWithEmail = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
+<<<<<<< HEAD
 				additionalTerms={[
 					newsletterAdditionalTerms,
 					isJobs === false && changeSettingsTerms,
 				].filter(Boolean)}
+=======
+				additionalTerms={[newsletterAdditionalTerms, isJobs === false].filter(
+					Boolean,
+				)}
+>>>>>>> 7dd7eebe (add the welcome/complete-account route to the combined signin/register flow for people going through the registration journey in order for them to set consents and newsletter consents)
 				shortRequestId={shortRequestId}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
