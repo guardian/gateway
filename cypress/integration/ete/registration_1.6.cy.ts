@@ -183,6 +183,63 @@ describe('Registration flow - Split 1/3', () => {
 			);
 		});
 
+		it('successfully registers using an email with no existing account using a passcode - using the combined signin/register flow', () => {
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
+			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+			const refViewId = 'testRefViewId';
+			const clientId = 'jobs';
+
+			cy.visit(
+				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+			);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your one-time code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/passcode');
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(clientId));
+
+					cy.contains('Submit verification code');
+
+					cy.get('input[name=code]').type(code!);
+
+					// test the registration platform is set correctly
+					cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+						expect(oktaUser.status).to.eq(Status.ACTIVE);
+						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
+					});
+
+					cy.url().should('contain', '/welcome/complete-account');
+
+					cy.contains('Next').click();
+
+					cy.url().should('contain', '/welcome/review');
+				},
+			);
+		});
+
 		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI - passwordless user', () => {
 			const appClientId = 'appClientId1';
 			const fromURI = '/oauth2/v1/authorize';

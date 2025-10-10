@@ -92,7 +92,7 @@ const getErrorMessageFromQueryParams = (
 router.get(
 	'/register',
 	redirectIfLoggedIn,
-	(req: Request, res: ResponseWithRequestState) => {
+	(_: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const { error, error_description } = state.queryParams;
 
@@ -317,7 +317,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	const { email = '' } = req.body;
+	const { email = '', isCombinedSigninAndRegisterFlow = false } = req.body;
 
 	const {
 		queryParams: { appClientId },
@@ -333,7 +333,9 @@ const oktaIdxCreateAccountOrSignIn = async (
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath: '/welcome/review',
+				confirmationPagePath: isCombinedSigninAndRegisterFlow
+					? '/welcome/complete-account'
+					: '/welcome/review',
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,

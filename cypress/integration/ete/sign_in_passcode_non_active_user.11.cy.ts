@@ -1,5 +1,4 @@
 import { Status } from '../../../src/server/models/okta/User';
-import { randomMailosaurEmail } from '../../support/commands/testUser';
 
 describe('Sign In flow, with passcode (part 1)', () => {
 	// set up useful variables

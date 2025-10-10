@@ -201,6 +201,11 @@ export const SignIn = ({
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
 			>
+				<input
+					type="hidden"
+					name="isCombinedSigninAndRegisterFlow"
+					value="combined"
+				/>
 				<EmailInput
 					defaultValue={email}
 					onChange={(e) => setCurrentEmail(e.target.value)}

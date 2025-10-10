@@ -18,7 +18,6 @@ import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
 
-
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
@@ -51,7 +50,7 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 										'/signin/refresh',
 										queryParams,
 									)}`;
-						// the "Sign in" link is used to log in as a different user, so we add the parameters we need to the link
+						// the "Sign in" link is used to log in or register as a different user, so we add the parameters we need to the link
 						const signInLink = encodeURIComponent(
 							`https://${baseUri}${addQueryParamsToPath('/signin', state.queryParams)}`,
 						);

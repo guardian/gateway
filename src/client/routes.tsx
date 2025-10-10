@@ -45,6 +45,7 @@ import { PasscodeEmailSentPage } from './pages/PasscodeEmailSentPage';
 import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
 import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
 import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
+import { NewAccountConsentsPage } from './pages/NewAccountConsentsPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -182,6 +183,10 @@ const routes: Array<{
 	{
 		path: '/welcome/apple',
 		element: <WelcomeSocialPage />,
+	},
+	{
+		path: '/welcome/complete-account',
+		element: <NewAccountConsentsPage />,
 	},
 	{
 		path: '/welcome/review',

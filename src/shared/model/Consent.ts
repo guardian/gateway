@@ -1,3 +1,7 @@
+import { chooseNewsletter } from './Newsletter';
+import { GeoLocation } from './Geolocation';
+import { AppName } from '../lib/appNameUtils';
+
 export interface Consent {
 	id: string;
 	name: string;
@@ -31,4 +35,57 @@ export const RegistrationConsentsFormFields = {
 		label:
 			'Find your next job with the Guardian Jobs weekly email. Get the latest job listings, as well as tips and advice on taking your next career step. Toggle to opt out.',
 	},
+};
+
+interface RegistrationConsentsList {
+	id: string;
+	title?: string;
+	description: string;
+	consentOrNewsletter: 'CONSENT' | 'NEWSLETTER';
+}
+
+export const getRegistrationConsentsList = (
+	isJobs: boolean,
+	geolocation?: GeoLocation,
+	appName?: AppName,
+): Array<RegistrationConsentsList> => {
+	const consentsList: Array<RegistrationConsentsList> = [];
+
+	const registrationNewsletter = chooseNewsletter({
+		geolocation,
+		appName,
+		isJobs,
+	});
+	const showMarketingConsent = !isJobs;
+
+	if (isJobs) {
+		// eslint-disable-next-line functional/immutable-data -- this rule seems overly harsh in this instance
+		consentsList.push({
+			id: RegistrationConsentsFormFields.jobs.id,
+			title: RegistrationConsentsFormFields.jobs.title,
+			description: RegistrationConsentsFormFields.jobs.label,
+			consentOrNewsletter: 'CONSENT',
+		});
+	}
+
+	if (registrationNewsletter) {
+		// eslint-disable-next-line functional/immutable-data -- this rule seems overly harsh in this instance
+		consentsList.push({
+			id: registrationNewsletter.id,
+			title: registrationNewsletter.label,
+			description: registrationNewsletter.context,
+			consentOrNewsletter: 'NEWSLETTER',
+		});
+	}
+
+	if (showMarketingConsent) {
+		// eslint-disable-next-line functional/immutable-data -- this rule seems overly harsh in this instance
+		consentsList.push({
+			id: RegistrationConsentsFormFields.similarGuardianProducts.id,
+			description: RegistrationConsentsFormFields.similarGuardianProducts.label,
+			consentOrNewsletter: 'CONSENT',
+		});
+	}
+
+	return consentsList;
 };
