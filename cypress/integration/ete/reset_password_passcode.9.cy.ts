@@ -429,7 +429,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					// make sure we don't use a passcode
 					// we instead reset their password using to set a password
@@ -488,7 +488,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.STAGED);
