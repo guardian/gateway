@@ -14,7 +14,6 @@ import {
 } from '../controllers/signInControllers';
 import { getConfiguration } from '../lib/getConfiguration';
 import { getErrorMessageFromQueryParams } from './signIn';
-import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
 
@@ -133,7 +132,6 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
 	'/passcode',
-	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const encrypedCookieState = readEncryptedStateCookie(req);
 		switch (encrypedCookieState?.signInOrRegister) {
