@@ -6,7 +6,10 @@ import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphan
 import { RegistrationProps } from '@/client/pages/Registration';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { RegistrationConsents } from '@/client/components/RegistrationConsents';
+import {
+	changeSettingsTerms,
+	RegistrationConsents,
+} from '@/client/components/RegistrationConsents';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
@@ -80,9 +83,10 @@ export const RegisterWithEmail = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms={[newsletterAdditionalTerms, isJobs === false].filter(
-					Boolean,
-				)}
+				additionalTerms={[
+					newsletterAdditionalTerms,
+					isJobs === false && changeSettingsTerms,
+				].filter(Boolean)}
 				shortRequestId={shortRequestId}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />

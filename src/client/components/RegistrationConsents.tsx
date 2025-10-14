@@ -37,3 +37,6 @@ export const RegistrationConsents = ({
 		</ToggleSwitchList>
 	);
 };
+
+export const changeSettingsTerms =
+	'You can change your settings in the Data Privacy section of your Guardian account at any time.';
