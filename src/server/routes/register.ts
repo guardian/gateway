@@ -605,8 +605,6 @@ export const registerPasscodeHandler = async (
 			if (res.headersSent) {
 				return;
 			}
-
-			// at this point fall back to the legacy Okta registration flow
 		}
 	}
 
