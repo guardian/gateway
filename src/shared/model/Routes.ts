@@ -96,6 +96,19 @@ export const ValidRoutePathsArray = [
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];
 
+export const getRoutePathFromUrl = (
+	refUrl?: string,
+): RoutePaths | undefined => {
+	try {
+		const url = new URL(refUrl || '');
+		const urlPath = url.pathname;
+		if ((ValidRoutePathsArray as ReadonlyArray<string>).includes(urlPath)) {
+			return urlPath as RoutePaths;
+		}
+	} catch {
+		return;
+	}
+};
 /**
  * These are all valid paths for the Identity API
  * New routes should be added below

@@ -62,6 +62,7 @@ import {
 	oktaIdxApiSubmitPasscodeController,
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
+import { getRoutePathFromUrl } from '@/shared/model/Routes';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -608,10 +609,13 @@ export const registerPasscodeHandler = async (
 		}
 	}
 
-	// if we reach this point, redirect back to the email registration page, as something has gone wrong
+	// if we reach this point, redirect back to the email registration reference page
+	// (either /register/email or /signin), as something has gone wrong
+	const redirectPath =
+		getRoutePathFromUrl(res.locals.queryParams.ref) || '/signin';
 	return res.redirect(
 		303,
-		addQueryParamsToPath('/register/email', res.locals.queryParams),
+		addQueryParamsToPath(redirectPath, res.locals.queryParams),
 	);
 };
 
