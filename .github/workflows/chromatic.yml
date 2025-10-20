@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0 # 👈 Required to retrieve git history
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
