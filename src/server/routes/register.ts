@@ -468,7 +468,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 				return oktaIdxApiSignInPasscodeController({
 					req,
 					res,
-					confirmationPagePath: '/welcome/existing', // TODO: check if setting this here is correct? Do we always want to visit this page?
+					confirmationPagePath: '/welcome/existing',
 				});
 			}
 		}
