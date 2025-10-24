@@ -68,6 +68,10 @@ const routes: Array<{
 		),
 	},
 	{
+		path: '/print-promo',
+		element: <ResetPasswordPage />,
+	},
+	{
 		path: '/signin/code',
 		element: <SignInPasscodeEmailSentPage />,
 	},

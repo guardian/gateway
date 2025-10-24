@@ -239,6 +239,14 @@ router.get(
 	}),
 );
 
+router.get('/print-promo', (_: Request, res: ResponseWithRequestState) => {
+	const html = renderer('/print-promo', {
+		pageTitle: 'Sign in',
+		requestState: res.locals,
+	});
+	res.type('html').send(html);
+});
+
 router.get(
 	'/reauthenticate/password',
 	(req: Request, res: ResponseWithRequestState) => {
