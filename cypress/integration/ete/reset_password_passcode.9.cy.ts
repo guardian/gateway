@@ -417,7 +417,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -429,7 +429,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					// make sure we don't use a passcode
 					// we instead reset their password using to set a password
@@ -476,7 +476,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -488,7 +488,7 @@ describe('Password reset recovery flows - with Passcodes', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.STAGED);

@@ -1,27 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { MainForm } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { RegistrationProps } from '@/client/pages/Registration';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import {
-	changeSettingsTerms,
-	RegistrationConsents,
-} from '@/client/components/RegistrationConsents';
+import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { divider } from '@/client/styles/Shared';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
 
-type RegisterWithEmailProps = RegistrationProps & {
+type NewAccountConsentsProps = RegistrationProps & {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	shortRequestId?: string;
@@ -49,7 +43,7 @@ const getErrorContext = (pageError?: string) => {
 	}
 };
 
-export const RegisterWithEmail = ({
+export const NewAccountConsents = ({
 	email,
 	recaptchaSiteKey,
 	queryParams,
@@ -58,51 +52,78 @@ export const RegisterWithEmail = ({
 	appName,
 	shortRequestId,
 	pageError,
-}: RegisterWithEmailProps) => {
+}: NewAccountConsentsProps) => {
 	const formTrackingName = 'register';
+
+	const formRef = useRef(null);
+	const formSubmitMethodRef = useRef(null);
 
 	usePageLoadOphanInteraction(formTrackingName);
 
 	const isJobs = queryParams.clientId === 'jobs';
 
+	const handleConsentChange = () => {
+		const formSubmitMethodInput =
+			formSubmitMethodRef.current as HTMLInputElement | null;
+		if (formSubmitMethodInput) {
+			// eslint-disable-next-line functional/immutable-data -- we need to mutate the object here to distinguish between the different methods of submittng the form
+			formSubmitMethodInput.value = 'toggle-action';
+		}
+
+		const formEl = formRef.current as HTMLFormElement | null;
+		formEl?.submit();
+	};
+
 	return (
 		<MinimalLayout
-			pageHeader="Create your account"
+			pageHeader="Complete your account"
 			shortRequestId={shortRequestId}
 			errorContext={getErrorContext(pageError)}
 			errorOverride={pageError}
 		>
+			<MainBodyText>
+				<strong>{email}</strong>
+			</MainBodyText>
 			<MainForm
-				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
+				formRef={formRef}
+				formAction={buildUrlWithQueryParams(
+					'/welcome/complete-account',
+					{},
+					queryParams,
+				)}
 				submitButtonText="Next"
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
 				onSubmit={(e) => {
+					const formSubmitMethodInput =
+						formSubmitMethodRef.current as HTMLInputElement | null;
+					if (formSubmitMethodInput) {
+						// eslint-disable-next-line functional/immutable-data -- we need to mutate the object here to distinguish between the different methods of submittng the form
+						formSubmitMethodInput.value = 'submit-button';
+					}
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms={[
-					newsletterAdditionalTerms,
-					isJobs === false && changeSettingsTerms,
-				].filter(Boolean)}
+				additionalTerms={[newsletterAdditionalTerms, isJobs === false].filter(
+					Boolean,
+				)}
 				shortRequestId={shortRequestId}
 			>
-				<EmailInput defaultValue={email} autoComplete="off" />
+				<input
+					type="hidden"
+					name="formSubmitMethod"
+					value="submit-button"
+					ref={formSubmitMethodRef}
+				/>
 				<RegistrationConsents
 					geolocation={geolocation}
 					appName={appName}
 					isJobs={isJobs}
+					onChange={handleConsentChange}
 				/>
 			</MainForm>
-			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
-			<MainBodyText>
-				Already have an account?{' '}
-				<ThemedLink href={buildUrlWithQueryParams('/signin', {}, queryParams)}>
-					Sign in
-				</ThemedLink>
-			</MainBodyText>
 		</MinimalLayout>
 	);
 };

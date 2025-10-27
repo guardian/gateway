@@ -18,6 +18,7 @@ export type EmailSentProps = {
 	formError?: GatewayError;
 	instructionContext?: string;
 	shortRequestId?: string;
+	showSignInWithPasswordOption?: boolean;
 };
 
 export const EmailSent = ({
@@ -34,6 +35,7 @@ export const EmailSent = ({
 	formError,
 	instructionContext,
 	shortRequestId,
+	showSignInWithPasswordOption = false,
 }: PropsWithChildren<EmailSentProps>) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -84,6 +86,7 @@ export const EmailSent = ({
 				formError={formError}
 				queryString={queryString}
 				shortRequestId={shortRequestId}
+				showSignInWithPasswordOption={showSignInWithPasswordOption}
 			/>
 		</MinimalLayout>
 	);

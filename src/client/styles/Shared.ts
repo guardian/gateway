@@ -1,5 +1,10 @@
 import { css } from '@emotion/react';
-import { from, remSpace, space } from '@guardian/source/foundations';
+import {
+	from,
+	remSpace,
+	space,
+	textSansBold17,
+} from '@guardian/source/foundations';
 import { SECTION_GAP } from '@/client/models/Style';
 
 export const disableAutofillBackground = css`
@@ -98,4 +103,8 @@ export const successMessageStyles = css`
 	a {
 		color: var(--color-alert-success);
 	}
+`;
+
+export const subheadingStyles = css`
+	${textSansBold17};
 `;
