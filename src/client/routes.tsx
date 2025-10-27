@@ -65,6 +65,10 @@ const routes: Array<{
 		element: <SignInPage />,
 	},
 	{
+		path: '/print-promo',
+		element: <RegistrationPage />,
+	},
+	{
 		path: '/signin/email-sent',
 		element: (
 			<UnvalidatedEmailEmailSentPage formTrackingName="unvalidated-email-resend" />
