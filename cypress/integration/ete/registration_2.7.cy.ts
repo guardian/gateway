@@ -277,7 +277,7 @@ describe('Registration flow - Split 2/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your one-time code');
+			cy.contains('Enter your code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -291,7 +291,7 @@ describe('Registration flow - Split 2/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/passcode');
+					cy.url().should('include', '/register/email-sent');
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
 

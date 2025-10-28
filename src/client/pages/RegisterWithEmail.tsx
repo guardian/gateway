@@ -7,7 +7,7 @@ import { RegistrationProps } from '@/client/pages/Registration';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import {
-	changeSettingsTerms,
+	marketingConsentTerms,
 	RegistrationConsents,
 } from '@/client/components/RegistrationConsents';
 import { AppName } from '@/shared/lib/appNameUtils';
@@ -85,7 +85,7 @@ export const RegisterWithEmail = ({
 				}}
 				additionalTerms={[
 					newsletterAdditionalTerms,
-					isJobs === false && changeSettingsTerms,
+					isJobs === false && marketingConsentTerms,
 				].filter(Boolean)}
 				shortRequestId={shortRequestId}
 			>

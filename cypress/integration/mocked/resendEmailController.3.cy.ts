@@ -37,7 +37,7 @@ const baseIdxPasscodeRegistrationMocks = () => {
 };
 
 const verifyInPasscodeEmailSentPage = () => {
-	cy.contains('Enter your one-time code');
+	cy.contains('Enter your code');
 	cy.contains('send again');
 };
 userStatuses.forEach((status) => {

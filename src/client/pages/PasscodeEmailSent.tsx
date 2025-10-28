@@ -38,9 +38,8 @@ type Text = {
 const getText = (textType: TextType): Text => {
 	switch (textType) {
 		case 'verification':
-		case 'signin':
 			return {
-				title: 'Enter your one-time code',
+				title: 'Enter your code',
 				successOverride: 'Email with verification code sent',
 				sentTextWithEmail: 'We’ve sent a temporary verification code to',
 				sentTextWithoutEmail:
@@ -61,6 +60,17 @@ const getText = (textType: TextType): Text => {
 				securityText: 'For your security, the code will expire in 30 minutes.',
 				passcodeInputLabel: 'Verification code',
 				submitButtonText: 'Submit verification code',
+			};
+		case 'signin':
+			return {
+				title: 'Enter your one-time code to sign in',
+				successOverride: 'Email with one time code sent',
+				sentTextWithEmail: 'We’ve sent a 6-digit code to',
+				sentTextWithoutEmail:
+					'We’ve sent you a 6-digit code. Please check your inbox.',
+				securityText: 'For your security, the code will expire in 30 minutes.',
+				passcodeInputLabel: 'One-time code',
+				submitButtonText: 'Sign in',
 			};
 		case 'generic':
 		default:

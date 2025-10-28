@@ -194,15 +194,16 @@ export const oktaIdxApiSignInPasscodeController = async ({
 	req,
 	res,
 	loopDetectionFlag = false,
+	emailSentPage = '/signin/code',
 	confirmationPagePath,
 }: {
 	req: Request;
 	res: ResponseWithRequestState;
 	loopDetectionFlag?: boolean;
+	emailSentPage?: Extract<RoutePaths, '/signin/code' | '/register/email-sent'>;
 	confirmationPagePath?: StartIdxFlowParams['authorizationCodeFlowOptions']['confirmationPagePath'];
 }): Promise<void> => {
 	const { email = '' } = req.body;
-	const emailSentPage = '/passcode';
 
 	try {
 		// First we want to check the user status in Okta
@@ -294,9 +295,6 @@ export const oktaIdxApiSignInPasscodeController = async ({
 						userState: passwordAuthenticatorId
 							? 'ACTIVE_EMAIL_PASSWORD'
 							: 'ACTIVE_EMAIL_ONLY',
-						signInOrRegister: req.originalUrl.startsWith('/register')
-							? 'REGISTER'
-							: 'SIGNIN',
 					});
 
 					return res.redirect(
@@ -358,6 +356,7 @@ export const oktaIdxApiSignInPasscodeController = async ({
 						req,
 						res,
 						loopDetectionFlag: true,
+						emailSentPage,
 						confirmationPagePath,
 					});
 				} catch (error) {
@@ -673,10 +672,7 @@ export const oktaIdxApiSubmitPasscodeController = async ({
 }: {
 	req: Request;
 	res: ResponseWithRequestState;
-	emailSentPage?: Extract<
-		RoutePaths,
-		'/signin/code' | '/register/email-sent' | '/passcode'
-	>;
+	emailSentPage?: Extract<RoutePaths, '/signin/code' | '/register/email-sent'>;
 	expiredPage?: HandlePasscodeErrorParams['expiredPage'];
 }) => {
 	const { code } = req.body;

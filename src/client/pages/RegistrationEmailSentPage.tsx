@@ -59,7 +59,6 @@ export const RegistrationEmailSentPage = () => {
 				expiredPage={buildUrl('/welcome/expired')}
 				textType="verification"
 				sendAgainTimerInSeconds={passcodeSendAgainTimer}
-				showSignInWithPasswordOption
 			/>
 		);
 	}

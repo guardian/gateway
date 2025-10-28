@@ -1,7 +1,3 @@
-import { chooseNewsletter } from './Newsletter';
-import { GeoLocation } from './Geolocation';
-import { AppName } from '../lib/appNameUtils';
-
 export interface Consent {
 	id: string;
 	name: string;
@@ -35,56 +31,4 @@ export const RegistrationConsentsFormFields = {
 		label:
 			'Find your next job with the Guardian Jobs weekly email. Get the latest job listings, as well as tips and advice on taking your next career step. Toggle to opt out.',
 	},
-};
-
-interface RegistrationConsentsList {
-	id: string;
-	title?: string;
-	description: string;
-	consentOrNewsletter: 'CONSENT' | 'NEWSLETTER';
-}
-
-export const getRegistrationConsentsList = (
-	isJobs: boolean,
-	geolocation?: GeoLocation,
-	appName?: AppName,
-): Array<RegistrationConsentsList> => {
-	const registrationNewsletter = chooseNewsletter({
-		geolocation,
-		appName,
-		isJobs,
-	});
-	const showMarketingConsent = !isJobs;
-
-	const isRegistrationConsentsListItem = (
-		listItem: RegistrationConsentsList | false,
-	): listItem is RegistrationConsentsList => {
-		return (listItem as RegistrationConsentsList).id !== undefined;
-	};
-
-	return [
-		isJobs &&
-			({
-				id: RegistrationConsentsFormFields.jobs.id,
-				title: RegistrationConsentsFormFields.jobs.title,
-				description: RegistrationConsentsFormFields.jobs.label,
-				consentOrNewsletter: 'CONSENT',
-			} as const),
-		typeof registrationNewsletter === 'object' &&
-			({
-				id: registrationNewsletter.id,
-				title: registrationNewsletter.label,
-				description: registrationNewsletter.context,
-				consentOrNewsletter: 'NEWSLETTER',
-			} as const),
-		showMarketingConsent &&
-			({
-				id: RegistrationConsentsFormFields.similarGuardianProducts.id,
-				description:
-					RegistrationConsentsFormFields.similarGuardianProducts.label,
-				consentOrNewsletter: 'CONSENT',
-			} as const),
-	].filter((listItem) => {
-		return isRegistrationConsentsListItem(listItem);
-	});
 };

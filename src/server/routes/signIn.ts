@@ -54,7 +54,6 @@ import {
 	oktaSignInControllerErrorHandler,
 } from '@/server/controllers/signInControllers';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
-import { oktaRegistrationOrSignin } from './register';
 
 const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
 	getConfiguration();
@@ -364,13 +363,8 @@ const oktaSignInController = async ({
 	isReauthenticate?: boolean;
 	appClientId?: string;
 }) => {
-	const isPasswordSignin = !!req.body.password;
-
 	// get the email and password from the request body
 	const { email = '', password = '' } = req.body;
-	const {
-		queryParams: { useOktaClassic, componentEventParams },
-	} = res.locals;
 
 	// Okta Identity Engine session cookie is called `idx`
 	const oktaIdentityEngineSessionCookieId: string | undefined = req.cookies.idx;
@@ -396,18 +390,13 @@ const oktaSignInController = async ({
 
 	try {
 		// idx api flow
-		if (passcodesEnabled && !useOktaClassic) {
+		if (passcodesEnabled && !res.locals.queryParams.useOktaClassic) {
 			// try to start the IDX flow to sign in the user with a password
-
-			if (isPasswordSignin || isReauthenticate) {
-				await oktaIdxApiSignInController({
-					req,
-					res,
-					isReauthenticate,
-				});
-			} else {
-				await oktaRegistrationOrSignin(req, res);
-			}
+			await oktaIdxApiSignInController({
+				req,
+				res,
+				isReauthenticate,
+			});
 			// if successful, the user will be redirected
 			// so we need to check if the headers have been sent to prevent further processing
 			if (res.headersSent) {
@@ -438,9 +427,9 @@ const oktaSignInController = async ({
 		}
 
 		// fire ophan component event if applicable when a session is set
-		if (componentEventParams) {
+		if (res.locals.queryParams.componentEventParams) {
 			void sendOphanComponentEventFromQueryParamsServer(
-				componentEventParams,
+				res.locals.queryParams.componentEventParams,
 				'SIGN_IN',
 				'web',
 				res.locals.ophanConfig.consentUUID,

@@ -1,4 +1,5 @@
 import { Status } from '../../../src/server/models/okta/User';
+import { randomMailosaurEmail } from '../../support/commands/testUser';
 
 describe('Sign In flow, with passcode (part 1)', () => {
 	// set up useful variables
@@ -71,6 +72,73 @@ describe('Sign In flow, with passcode (part 1)', () => {
 					});
 				});
 			});
+		});
+
+		it('NON_EXISTENT user - should show email sent page with no email sent', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/signin?usePasscodeSignIn=true`);
+
+			cy.contains('Sign in');
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			// passcode page
+			cy.url().should('include', '/signin/code');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			cy.contains('Sign in');
+			cy.get('input[name=code]').clear().type('123456');
+
+			cy.url().should('include', '/signin/code');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			cy.contains('Incorrect code');
+		});
+
+		it('NON_EXISTENT user - should redirect with error when multiple passcode attempts fail', () => {
+			const emailAddress = randomMailosaurEmail();
+			cy.visit(`/signin?usePasscodeSignIn=true`);
+
+			cy.contains('Sign in');
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			// passcode page
+			cy.url().should('include', '/signin/code');
+			cy.contains('Enter your one-time code');
+			cy.contains('Don’t have an account?');
+
+			// attempt 1
+			cy.contains('Sign in');
+			cy.get('input[name=code]').type('123456');
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 2
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 3
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 4
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin/code');
+			cy.contains('Incorrect code');
+
+			// attempt 5
+			cy.get('input[name=code]').type('123456');
+			cy.contains('Sign in').click();
+			cy.url().should('include', '/signin');
+			cy.contains('Your code has expired');
 		});
 	});
 });

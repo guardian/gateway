@@ -91,9 +91,10 @@ describe('Sign in flow, Okta enabled', () => {
 		});
 		it('navigates to registration', () => {
 			cy.visit('/signin');
+			cy.contains('Create a free account').click();
 			cy.contains('Continue with Google');
 			cy.contains('Continue with Apple');
-			cy.get('input[name=email]').should('exist');
+			cy.contains('Continue with email');
 		});
 		it('removes encryptedEmail parameter from query string', () => {
 			const encryptedEmailParam = 'encryptedEmail=bhvlabgflbgyil';
@@ -106,13 +107,17 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.visit(
 				`/signin?returnUrl=${encodeURIComponent(
 					returnUrl,
-				)}&${encryptedEmailParam}&refViewId=12345&clientId=jobs`,
+				)}&${encryptedEmailParam}&refViewId=12345`,
 			);
 
 			cy.location('search').should('not.contain', encryptedEmailParam);
 			cy.location('search').should('contain', 'refViewId=12345');
-			cy.location('search').should('contain', 'clientId=jobs');
 			cy.location('search').should('contain', encodeURIComponent(returnUrl));
+		});
+		it('persists the clientId when navigating away', () => {
+			cy.visit('/signin?clientId=jobs');
+			cy.contains('Create a free account').click();
+			cy.url().should('contain', 'clientId=jobs');
 		});
 		it('applies form validation to email and password input fields', () => {
 			cy.visit('/signin?usePasswordSignIn=true');
@@ -194,7 +199,7 @@ describe('Sign in flow, Okta enabled', () => {
 				// the ratelimiter has a chance to work
 				cy.visit('/reauthenticate');
 				cy.contains('Sign');
-				Cypress._.times(10, () => cy.reload());
+				Cypress._.times(6, () => cy.reload());
 				cy.contains('Rate limit exceeded');
 			});
 		});
@@ -382,7 +387,7 @@ describe('Sign in flow, Okta enabled', () => {
 			cy.get('input[name=email]').type(emailAddress);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your one-time code');
+			cy.contains('Enter your code');
 			cy.contains(emailAddress);
 
 			cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -394,7 +399,7 @@ describe('Sign in flow, Okta enabled', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/passcode');
+					cy.url().should('include', '/register/email-sent');
 
 					// make sure we don't use a passcode
 					// we instead reset their password using classic flow to set a password

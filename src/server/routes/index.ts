@@ -17,7 +17,6 @@ import { default as changeEmail } from './changeEmail';
 import { default as subscriptions } from './subscriptions';
 import { default as consentToken } from './consentToken';
 import { default as deleteAccount } from './delete';
-import { default as passcode } from './passcode';
 
 const router = Router();
 const uncachedRoutes = Router();
@@ -72,9 +71,6 @@ uncachedRoutes.use(deleteAccount);
 
 // email template routes
 uncachedRoutes.use(emailTemplates);
-
-// request passcode routes
-uncachedRoutes.use(passcode);
 
 router.use(uncachedRoutes);
 
