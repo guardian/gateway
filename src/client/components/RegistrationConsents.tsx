@@ -1,5 +1,9 @@
 import React from 'react';
-import { getRegistrationConsentsList } from '@/shared/model/Consent';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
+import {
+	RegistrationNewsletterFormFields,
+	RegistrationNewslettersFormFieldsMap,
+} from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
@@ -9,34 +13,85 @@ interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	isJobs?: boolean;
-	onChange?: (id: string, checked: boolean) => void;
 }
+
+const chooseNewsletter = ({
+	geolocation,
+	appName,
+	isJobs,
+}: {
+	geolocation: GeoLocation | undefined;
+	appName: AppName | undefined;
+	isJobs?: boolean;
+}): RegistrationNewsletterFormFields | undefined => {
+	const isFeast = appName === 'Feast';
+
+	if (isFeast) {
+		return RegistrationNewslettersFormFieldsMap.feast;
+	}
+
+	if (isJobs) {
+		return RegistrationNewslettersFormFieldsMap.jobs;
+	}
+
+	switch (geolocation) {
+		case 'US':
+			return RegistrationNewslettersFormFieldsMap.usBundle;
+		case 'AU':
+			return RegistrationNewslettersFormFieldsMap.auBundle;
+		case 'GB':
+		case 'EU':
+		case 'ROW':
+		default:
+			// We want to show Saturday Edition even for an undefined location
+			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
+	}
+};
 
 export const RegistrationConsents = ({
 	geolocation,
 	appName,
 	isJobs,
-	onChange,
 }: RegistrationConsentsProps) => {
-	const consentList = getRegistrationConsentsList(
-		isJobs ?? false,
+	const registrationNewsletter = chooseNewsletter({
 		geolocation,
 		appName,
-	);
+		isJobs,
+	});
+
+	const showMarketingConsent = !isJobs;
+
 	return (
 		<ToggleSwitchList>
-			{consentList.map((consentItem) => (
+			{isJobs && (
 				<ToggleSwitchInput
-					id={consentItem.id}
-					title={consentItem.title}
-					description={consentItem.description}
+					id={RegistrationConsentsFormFields.jobs.id}
+					title={RegistrationConsentsFormFields.jobs.title}
+					description={RegistrationConsentsFormFields.jobs.label}
 					defaultChecked={true}
-					onChange={onChange}
 				/>
-			))}
+			)}
+
+			{registrationNewsletter && (
+				<ToggleSwitchInput
+					id={registrationNewsletter.id}
+					title={registrationNewsletter.label}
+					description={registrationNewsletter.context}
+					defaultChecked={true}
+				/>
+			)}
+			{showMarketingConsent && (
+				<ToggleSwitchInput
+					id={RegistrationConsentsFormFields.similarGuardianProducts.id}
+					description={
+						RegistrationConsentsFormFields.similarGuardianProducts.label
+					}
+					defaultChecked={true}
+				/>
+			)}
 		</ToggleSwitchList>
 	);
 };
 
-export const changeSettingsTerms =
+export const marketingConsentTerms =
 	'You can change your settings in the Data Privacy section of your Guardian account at any time.';

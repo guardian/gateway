@@ -31,14 +31,10 @@ export const sendEmailAndValidatePasscode = ({
 	expectedReturnUrl?: string;
 	params?: string;
 	expectedEmailBody?: 'Your one-time passcode' | 'Your verification code';
-	additionalTests?:
-		| 'passcode-incorrect'
-		| 'resend-email'
-		| 'change-email'
-		| 'from-uri';
+	additionalTests?: 'passcode-incorrect' | 'resend-email' | 'change-email';
 }) => {
 	cy.setCookie('cypress-mock-state', '1'); // passcode send again timer
-	cy.visit(`/signin?${params ? `${params}` : ''}`);
+	cy.visit(`/signin?${params ? `${params}&` : ''}usePasscodeSignIn=true`);
 	cy.get('input[name=email]').clear().type(emailAddress);
 
 	const timeRequestWasMade = new Date();
@@ -54,7 +50,7 @@ export const sendEmailAndValidatePasscode = ({
 			expect(code).to.match(/^\d{6}$/);
 
 			// passcode page
-			cy.url().should('include', '/passcode');
+			cy.url().should('include', '/signin/code');
 			cy.contains('Enter your one-time code');
 
 			switch (additionalTests) {
@@ -74,7 +70,7 @@ export const sendEmailAndValidatePasscode = ({
 							const code = codes?.[0].value;
 							expect(code).to.match(/^\d{6}$/);
 
-							cy.contains('Enter your one-time code');
+							cy.contains('Sign in');
 							cy.get('input[name=code]').type(code!);
 
 							cy.url().should('include', expectedReturnUrl);
@@ -92,29 +88,15 @@ export const sendEmailAndValidatePasscode = ({
 					cy.url().should('include', '/signin');
 					break;
 				case 'passcode-incorrect':
-					cy.contains('Enter your one-time code');
+					cy.contains('Sign in');
 					cy.get('input[name=code]').type(`${+code! + 1}`);
 
-					cy.url().should('include', '/passcode');
+					cy.url().should('include', '/signin/code');
 
 					cy.contains('Incorrect code');
 					cy.get('input[name=code]').clear().type(code!);
 
-					cy.contains('Submit verification code').click();
-
-					cy.url().should('include', '/welcome/existing');
-					cy.contains('Return to the Guardian').click();
-
-					cy.url().should('include', expectedReturnUrl);
-
-					cy.getTestOktaUser(emailAddress).then((user) => {
-						expect(user.status).to.eq('ACTIVE');
-						expect(user.profile.emailValidated).to.eq(true);
-					});
-					break;
-				case 'from-uri':
-					cy.contains('Enter your one-time code');
-					cy.get('input[name=code]').type(code!);
+					cy.contains('Sign in').click();
 
 					cy.url().should('include', expectedReturnUrl);
 
@@ -124,12 +106,9 @@ export const sendEmailAndValidatePasscode = ({
 					});
 					break;
 				default: {
-					cy.contains('Enter your one-time code');
+					cy.contains('Sign in');
 					cy.get('input[name=code]').type(code!);
 
-					cy.url().should('include', 'welcome/existing');
-
-					cy.contains('a', 'Return to the Guardian').click();
 					cy.url().should('include', expectedReturnUrl);
 
 					cy.getTestOktaUser(emailAddress).then((user) => {

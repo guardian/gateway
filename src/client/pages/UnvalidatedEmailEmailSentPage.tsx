@@ -59,7 +59,6 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 				textType="security"
 				shortRequestId={shortRequestId}
 				sendAgainTimerInSeconds={passcodeSendAgainTimer}
-				showSignInWithPasswordOption
 			/>
 		);
 	}
@@ -75,7 +74,6 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName={formTrackingName}
 			shortRequestId={shortRequestId}
-			showSignInWithPasswordOption
 		>
 			<MainBodyText>
 				For security reasons we need you to change your password.

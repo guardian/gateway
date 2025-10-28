@@ -5,7 +5,10 @@ import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphan
 import { RegistrationProps } from '@/client/pages/Registration';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { RegistrationConsents } from '@/client/components/RegistrationConsents';
+import {
+	marketingConsentTerms,
+	RegistrationConsents,
+} from '@/client/components/RegistrationConsents';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
@@ -46,9 +49,10 @@ export const WelcomeSocial = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms={[newsletterAdditionalTerms, isJobs === false].filter(
-					Boolean,
-				)}
+				additionalTerms={[
+					newsletterAdditionalTerms,
+					isJobs === false && marketingConsentTerms,
+				].filter(Boolean)}
 				shortRequestId={shortRequestId}
 			>
 				<RegistrationConsents
