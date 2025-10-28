@@ -109,17 +109,24 @@ router.get(
 	},
 );
 
-router.get('/print-promo', (req: Request, res: ResponseWithRequestState) => {
-	const state = res.locals;
-	const html = renderer('/print-promo', {
-		requestState: mergeRequestState(state, {
-			pageData: {},
-			queryParams: { ...state.queryParams, isPrintPromo: true },
-		}),
-		pageTitle: 'Register',
-	});
-	return res.type('html').send(html);
-});
+router.get(
+	'/print-promo',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const html = renderer('/print-promo', {
+			requestState: mergeRequestState(state, {
+				pageData: {},
+				queryParams: {
+					...state.queryParams,
+					clientId: 'printpromo',
+				},
+			}),
+			pageTitle: 'Register',
+		});
+		return res.type('html').send(html);
+	},
+);
 
 router.get(
 	'/register/email',
