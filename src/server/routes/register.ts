@@ -62,7 +62,7 @@ import {
 	oktaIdxApiSubmitPasscodeController,
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { getRoutePathFromUrl } from '@/shared/model/Routes';
+import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -340,7 +340,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const { email = '', isCombinedSigninAndRegisterFlow = false } = req.body;
 
 	const {
-		queryParams: { appClientId },
+		queryParams: { appClientId, clientId },
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -348,14 +348,24 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
+	const getConfirmationPagePath = (): RoutePaths => {
+		if (isCombinedSigninAndRegisterFlow) {
+			return '/welcome/complete-account';
+		}
+
+		if (clientId === 'printpromo') {
+			return '/welcome/print-promo';
+		}
+
+		return '/welcome/review';
+	};
+
 	try {
 		const introspectResponse = await startIdxFlow({
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath: isCombinedSigninAndRegisterFlow
-					? '/welcome/complete-account'
-					: '/welcome/review',
+				confirmationPagePath: getConfirmationPagePath(),
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
