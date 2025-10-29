@@ -285,14 +285,12 @@ router.post(
 				res,
 				'complete-account-post',
 			);
-			res
-				.status(200)
-				.json({ success: true, message: `consent () set to true|false` });
+			res.status(200).json({ success: true });
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 			res.status(500).json({
 				success: false,
-				message: 'Server error setting consent ()',
+				message: 'Server error setting consents',
 			});
 		}
 	}),
@@ -303,7 +301,6 @@ router.post(
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
-		const formSubmitMethod = req.body.formSubmitMethod;
 
 		try {
 			const registrationConsents = bodyFormFieldsToRegistrationConsents(
@@ -320,13 +317,11 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
-			if (formSubmitMethod === 'submit-button') {
-				// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-				return res.redirect(
-					303,
-					addQueryParamsToPath('/welcome/review', state.queryParams),
-				);
-			}
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/welcome/review', state.queryParams),
+			);
 		}
 	}),
 );

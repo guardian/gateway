@@ -185,7 +185,7 @@ export interface ToggleSwitchInputProps {
 	/**
 	 * Optional onChange handler to catch input changes
 	 */
-	onChange?: (id: string, checked: boolean) => void;
+	onChange?: (id: string, checked: boolean) => unknown;
 }
 
 export const ToggleSwitchInput = ({
