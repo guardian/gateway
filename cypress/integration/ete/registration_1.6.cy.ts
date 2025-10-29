@@ -41,8 +41,8 @@ const existingUserSendEmailAndValidatePasscode = ({
 			expect(code).to.match(/^\d{6}$/);
 
 			// passcode page
-			cy.url().should('include', '/register/email-sent');
-			cy.contains('Enter your code');
+			cy.url().should('include', '/passcode');
+			cy.contains('Enter your one-time code');
 
 			switch (additionalTests) {
 				case 'resend-email':
@@ -64,9 +64,11 @@ const existingUserSendEmailAndValidatePasscode = ({
 							cy.contains('Submit verification code');
 							cy.get('input[name=code]').type(code!);
 
-							cy.contains('Return to the Guardian')
-								.should('have.attr', 'href')
-								.and('include', expectedReturnUrl);
+							cy.contains("You're signed in! Welcome to the Guardian.");
+							cy.contains('Save and continue');
+
+							cy.get('[data-cy="main-form-submit-button"]').click();
+							cy.url().should('include', expectedReturnUrl);
 
 							cy.getTestOktaUser(emailAddress).then((user) => {
 								expect(user.status).to.eq('ACTIVE');
@@ -77,7 +79,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 					break;
 				case 'change-email': {
 					cy.contains('try another address').click();
-					cy.url().should('include', '/register/email');
+					cy.url().should('include', '/signin');
 					break;
 				}
 				case 'passcode-incorrect':
@@ -85,7 +87,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(`123456`);
 
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						cy.contains('Incorrect code');
 						cy.get('input[name=code]').clear().type(code!);
@@ -144,7 +146,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -158,7 +160,7 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.get('form')
 						.should('have.attr', 'action')
 						.and('match', new RegExp(encodedReturnUrl))
@@ -175,6 +177,63 @@ describe('Registration flow - Split 1/3', () => {
 						expect(oktaUser.status).to.eq(Status.ACTIVE);
 						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
 					});
+
+					cy.url().should('contain', '/welcome/review');
+				},
+			);
+		});
+
+		it('successfully registers using an email with no existing account using a passcode - using the combined signin/register flow', () => {
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
+			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+			const refViewId = 'testRefViewId';
+			const clientId = 'jobs';
+
+			cy.visit(
+				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+			);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your one-time code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/passcode');
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(clientId));
+
+					cy.contains('Submit verification code');
+
+					cy.get('input[name=code]').type(code!);
+
+					// test the registration platform is set correctly
+					cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+						expect(oktaUser.status).to.eq(Status.ACTIVE);
+						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
+					});
+
+					cy.url().should('contain', '/welcome/complete-account');
+
+					cy.contains('Next').click();
 
 					cy.url().should('contain', '/welcome/review');
 				},
@@ -209,7 +268,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -223,7 +282,7 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.get('form')
 						.should('have.attr', 'action')
 						.and('match', new RegExp(encodedReturnUrl))
@@ -277,7 +336,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -291,7 +350,7 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.get('form')
 						.should('have.attr', 'action')
 						.and('match', new RegExp(encodedReturnUrl))
@@ -329,7 +388,7 @@ describe('Registration flow - Split 1/3', () => {
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 
 			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
@@ -346,7 +405,7 @@ describe('Registration flow - Split 1/3', () => {
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 
 			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
@@ -365,7 +424,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -379,7 +438,7 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(code!);
 
@@ -403,7 +462,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -417,11 +476,11 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type(`${+code! + 1}`);
 
-					cy.url().should('include', '/register/code');
+					cy.url().should('include', '/passcode');
 
 					cy.contains('Incorrect code');
 
@@ -441,7 +500,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -461,7 +520,7 @@ describe('Registration flow - Split 1/3', () => {
 					cy.url().should('contain', '/welcome/review');
 
 					cy.go('back');
-					cy.url().should('contain', '/register/email');
+					cy.url().should('contain', '/passcode');
 					cy.contains('Email verified');
 					cy.contains('Complete creating account').click();
 
@@ -479,7 +538,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -495,7 +554,7 @@ describe('Registration flow - Split 1/3', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				const timeRequestWasMade2 = new Date();
 				cy.wait(1000); // wait for the send again button to be enabled
 				cy.contains('send again').click();
@@ -510,7 +569,7 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.contains('Email with verification code sent');
 
 					cy.contains('Submit verification code');
@@ -529,7 +588,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -543,10 +602,10 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 					cy.contains('try another address').click();
 
-					cy.url().should('include', '/register/email');
+					cy.url().should('include', '/signin');
 				},
 			);
 		});
@@ -559,7 +618,7 @@ describe('Registration flow - Split 1/3', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Enter your code');
+			cy.contains('Enter your one-time code');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -573,31 +632,31 @@ describe('Registration flow - Split 1/3', () => {
 					expect(code).to.match(/^\d{6}$/);
 
 					// passcode page
-					cy.url().should('include', '/register/email-sent');
+					cy.url().should('include', '/passcode');
 
 					// attempt 1 - auto submit
 					cy.contains('Submit verification code');
 					cy.get('input[name=code]').type('000000');
 					cy.contains('Incorrect code');
-					cy.url().should('include', '/register/code');
+					cy.url().should('include', '/passcode');
 
 					// attempt 2 - manual submit
 					cy.get('input[name=code]').type('000000');
 					cy.contains('Submit verification code').click();
 					cy.contains('Incorrect code');
-					cy.url().should('include', '/register/code');
+					cy.url().should('include', '/passcode');
 
 					// attempt 3
 					cy.get('input[name=code]').type('000000');
 					cy.contains('Submit verification code').click();
 					cy.contains('Incorrect code');
-					cy.url().should('include', '/register/code');
+					cy.url().should('include', '/passcode');
 
 					// attempt 4
 					cy.get('input[name=code]').type('000000');
 					cy.contains('Submit verification code').click();
 					cy.contains('Incorrect code');
-					cy.url().should('include', '/register/code');
+					cy.url().should('include', '/passcode');
 
 					// attempt 5
 					cy.get('input[name=code]').type('000000');
@@ -707,32 +766,32 @@ describe('Registration flow - Split 1/3', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/register/email-sent');
-						cy.contains('Enter your code');
+						cy.url().should('include', '/passcode');
+						cy.contains('Enter your one-time code');
 
 						// attempt 1 - auto submit
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 2 - manual submit
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Submit verification code').click();
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 3
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Submit verification code').click();
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 4
 						cy.get('input[name=code]').type('000000');
 						cy.contains('Submit verification code').click();
 						cy.contains('Incorrect code');
-						cy.url().should('include', '/register/code');
+						cy.url().should('include', '/passcode');
 
 						// attempt 5
 						cy.get('input[name=code]').type('000000');
@@ -756,7 +815,7 @@ describe('Registration flow - Split 1/3', () => {
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -768,7 +827,7 @@ describe('Registration flow - Split 1/3', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/register/email-sent');
+						cy.url().should('include', '/passcode');
 
 						// make sure we don't use a passcode
 						// we instead reset their password using classic flow to set a password
@@ -884,7 +943,7 @@ describe('Registration flow - Split 1/3', () => {
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -896,7 +955,7 @@ describe('Registration flow - Split 1/3', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/register/email-sent');
+						cy.url().should('include', '/passcode');
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(code!);
 
@@ -954,7 +1013,7 @@ describe('Registration flow - Split 1/3', () => {
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -966,7 +1025,7 @@ describe('Registration flow - Split 1/3', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/register/email-sent');
+						cy.url().should('include', '/passcode');
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(code!);
 

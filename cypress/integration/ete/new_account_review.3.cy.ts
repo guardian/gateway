@@ -23,7 +23,7 @@ describe('New account review page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -37,7 +37,7 @@ describe('New account review page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -111,7 +111,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -125,7 +125,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -152,7 +152,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -166,7 +166,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -195,7 +195,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -209,7 +209,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
@@ -240,7 +240,7 @@ describe('New account newsletters page', () => {
 		cy.get('input[name=email]').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your code');
+		cy.contains('Enter your one-time code');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -254,7 +254,7 @@ describe('New account newsletters page', () => {
 				expect(code).to.match(/^\d{6}$/);
 
 				// passcode page
-				cy.url().should('include', '/register/email-sent');
+				cy.url().should('include', '/passcode');
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 

@@ -1,11 +1,10 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
+import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
-import { SignedInAsPage } from './SignedInAsPage';
 
-export const SignInPasscodeEmailSentPage = () => {
+export const PasscodeEmailSentPage = () => {
 	const clientState = useClientState();
 	const {
 		pageData = {},
@@ -14,8 +13,7 @@ export const SignInPasscodeEmailSentPage = () => {
 		recaptchaConfig,
 		shortRequestId,
 	} = clientState;
-	const { email, fieldErrors, token, passcodeUsed, passcodeSendAgainTimer } =
-		pageData;
+	const { email, fieldErrors, token, passcodeSendAgainTimer } = pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -23,11 +21,6 @@ export const SignInPasscodeEmailSentPage = () => {
 	const queryString = buildQueryParamsString(queryParams, {
 		emailSentSuccess: true,
 	});
-
-	// if the passcode has already been used, show the signed in as page
-	if (passcodeUsed) {
-		return <SignedInAsPage />;
-	}
 
 	return (
 		<PasscodeEmailSent
@@ -38,15 +31,14 @@ export const SignInPasscodeEmailSentPage = () => {
 			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
-			formTrackingName="signin-passcode-resend"
+			formTrackingName="register-or-signin-resend"
 			fieldErrors={fieldErrors}
 			passcode={token}
-			expiredPage={buildUrl('/signin/code/expired')}
-			noAccountInfo
-			textType="signin"
 			shortRequestId={shortRequestId}
-			showSignInWithPasswordOption
+			expiredPage={buildUrl('/signin/code/expired')}
+			textType="verification"
 			sendAgainTimerInSeconds={passcodeSendAgainTimer}
+			showSignInWithPasswordOption
 		/>
 	);
 };
