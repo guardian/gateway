@@ -228,6 +228,40 @@ router.get(
 );
 
 router.post(
+	'/welcome/submit-consent',
+	loginMiddlewareOAuth,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			logger.warn('No OAuth tokens found for /welcome/submit-consent request');
+			return res.status(401).json({
+				success: false,
+				message: 'Unauthorized session',
+			});
+		}
+		try {
+			const registrationConsents = bodyFormFieldsToRegistrationConsents(
+				req.body,
+			);
+			await updateNewslettersAndConstents(
+				registrationConsents,
+				res,
+				'complete-account-post',
+			);
+			res
+				.status(200)
+				.json({ success: true, message: `consent () set to true|false` });
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+			res.status(500).json({
+				success: false,
+				message: 'Server error setting consent ()',
+			});
+		}
+	}),
+);
+
+router.post(
 	'/welcome/complete-account',
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
