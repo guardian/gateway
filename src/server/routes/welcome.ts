@@ -515,6 +515,25 @@ router.get(
 	},
 );
 
+router.get(
+	'/welcome/print-promo',
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+		const html = renderer('/welcome/print-promo', {
+			pageTitle: 'Review',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
+);
+
 // welcome page, check token and display set password page
 router.get(
 	'/welcome/:token',

@@ -46,6 +46,7 @@ import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
 import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
 import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
 import { NewAccountConsentsPage } from './pages/NewAccountConsentsPage';
+import { WelcomePrintPromoPage } from './pages/WelcomePrintPromoPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -195,6 +196,10 @@ const routes: Array<{
 	{
 		path: '/welcome/review',
 		element: <NewAccountReviewPage />,
+	},
+	{
+		path: '/welcome/print-promo',
+		element: <WelcomePrintPromoPage />,
 	},
 	{
 		path: '/welcome/newsletters',
