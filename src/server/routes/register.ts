@@ -119,7 +119,7 @@ router.get(
 				pageData: {},
 				queryParams: {
 					...state.queryParams,
-					clientId: 'printpromo',
+					appClientId: 'printpromo',
 				},
 			}),
 			pageTitle: 'Register',
@@ -340,7 +340,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const { email = '', isCombinedSigninAndRegisterFlow = false } = req.body;
 
 	const {
-		queryParams: { appClientId, clientId },
+		queryParams: { appClientId },
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -353,7 +353,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			return '/welcome/complete-account';
 		}
 
-		if (clientId === 'printpromo') {
+		if (appClientId === 'printpromo') {
 			return '/welcome/print-promo';
 		}
 

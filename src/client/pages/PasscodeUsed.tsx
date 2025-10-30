@@ -39,7 +39,7 @@ const getText = (path: PasswordRoutePath): Text => {
 
 export const PasscodeUsed = ({ path, queryParams, shortRequestId }: Props) => {
 	const { title, leadText, buttonText } = getText(path);
-	const { useSetPassword, clientId } = queryParams;
+	const { useSetPassword, appClientId } = queryParams;
 
 	/**
 	 * @summary If its a passwordless new account, we want to redirect to the review page
@@ -48,7 +48,7 @@ export const PasscodeUsed = ({ path, queryParams, shortRequestId }: Props) => {
 	 */
 	const getRedirectPath = (): AllRoutes => {
 		if (!useSetPassword && path === '/welcome') {
-			if (clientId === 'printpromo') {
+			if (appClientId === 'printpromo') {
 				return '/welcome/print-promo';
 			}
 			return '/welcome/review';
