@@ -193,7 +193,6 @@ export const ToggleSwitchInput = ({
 	title,
 	defaultChecked,
 	description,
-	onChange,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
 	const defaultId = useId();
 	const switchName = id ?? defaultId;
@@ -215,11 +214,6 @@ export const ToggleSwitchInput = ({
 				aria-labelledby={labelId}
 				onFocus={() => setFieldIsFocused(true)}
 				onBlur={() => setFieldIsFocused(false)}
-				onChange={(e) => {
-					if (onChange) {
-						onChange(switchName, e.target.checked);
-					}
-				}}
 			></input>
 			<span
 				aria-hidden="true"
