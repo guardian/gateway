@@ -27,10 +27,7 @@ import {
 } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import {
-	CONSENTS_DATA_PAGE,
-	getRegistrationConsentsList,
-} from '@/shared/model/Consent';
+import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
 import {
 	update as patchConsents,
 	getConsentValueFromRequestBody,
@@ -206,7 +203,7 @@ router.get(
 router.get(
 	'/welcome/complete-account',
 	loginMiddlewareOAuth,
-	async (req: Request, res: ResponseWithRequestState) => {
+	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 
 		if (!requestStateHasOAuthTokens(state)) {
@@ -214,39 +211,6 @@ router.get(
 				303,
 				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
 			);
-		}
-
-		const geolocation = state.pageData.geolocation;
-		const appName = state.pageData.appName;
-		const isJobs = state.queryParams.clientId === 'jobs';
-
-		const consentList = getRegistrationConsentsList(
-			isJobs ?? false,
-			geolocation,
-			appName,
-		);
-
-		try {
-			const registrationConsents: RegistrationConsents = {
-				consents: consentList
-					.filter(
-						(consentItem) => consentItem.consentOrNewsletter === 'CONSENT',
-					)
-					.map((consentItem) => ({ id: consentItem.id, consented: true })),
-				newsletters: consentList
-					.filter(
-						(consentItem) => consentItem.consentOrNewsletter === 'NEWSLETTER',
-					)
-					.map((consentItem) => ({ id: consentItem.id, subscribed: true })),
-			};
-			await updateNewslettersAndConstents(
-				registrationConsents,
-				res,
-				'complete-account-init',
-			);
-		} catch (error) {
-			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
-			logger.error(`GET ${req.method} ${req.originalUrl}  Error`, error);
 		}
 
 		const encrypedCookieState = readEncryptedStateCookie(req);
@@ -262,38 +226,6 @@ router.get(
 
 		return res.type('html').send(html);
 	},
-);
-
-router.post(
-	'/welcome/submit-consent',
-	loginMiddlewareOAuth,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		if (!requestStateHasOAuthTokens(state)) {
-			logger.warn('No OAuth tokens found for /welcome/submit-consent request');
-			return res.status(401).json({
-				success: false,
-				message: 'Unauthorized session',
-			});
-		}
-		try {
-			const registrationConsents = bodyFormFieldsToRegistrationConsents(
-				req.body,
-			);
-			await updateNewslettersAndConstents(
-				registrationConsents,
-				res,
-				'complete-account-post',
-			);
-			res.status(200).json({ success: true });
-		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-			res.status(500).json({
-				success: false,
-				message: 'Server error setting consents',
-			});
-		}
-	}),
 );
 
 router.post(

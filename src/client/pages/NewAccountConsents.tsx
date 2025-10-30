@@ -14,8 +14,6 @@ import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
-import useClientState from '../lib/hooks/useClientState';
-import { getRegistrationConsentsList } from '@/shared/model/Consent';
 
 type NewAccountConsentsProps = RegistrationProps & {
 	geolocation?: GeoLocation;
@@ -62,52 +60,6 @@ export const NewAccountConsents = ({
 	usePageLoadOphanInteraction(formTrackingName);
 
 	const isJobs = queryParams.clientId === 'jobs';
-	const clientState = useClientState();
-	const consentList = getRegistrationConsentsList(
-		isJobs ?? false,
-		geolocation,
-		appName,
-	);
-
-	const handleConsentChange = async () => {
-		try {
-			const csrfToken = clientState.csrf?.token;
-			if (!csrfToken) {
-				throw new Error('missing CSRF token for consent update fetch request');
-			}
-
-			const formEl = formRef.current as HTMLFormElement | null;
-			if (!formEl) {
-				throw new Error('error, could not locate existing consents form');
-			}
-			const formData = new FormData(formEl);
-
-			const requestFormData = new URLSearchParams();
-			requestFormData.append('_csrf', csrfToken);
-			Array.from(formData.entries()).forEach((formDataEntry) => {
-				const formDataEntryExistsInConsentsList = consentList.findIndex(
-					(consent) => consent.id === formDataEntry[0],
-				);
-				if (formDataEntryExistsInConsentsList !== -1) {
-					requestFormData.append(formDataEntry[0], 'on');
-				}
-			});
-			const response = await fetch('/welcome/submit-consent', {
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-				method: 'POST',
-				credentials: 'include',
-				body: requestFormData.toString(),
-			});
-			if (!response.ok) {
-				throw new Error('response status error');
-			}
-		} catch {
-			// the error is swallowed here as the server will report an error if one occurs
-			// and the client will show an error if the same consents fail when clicking on the submit button
-		}
-	};
 
 	return (
 		<MinimalLayout
@@ -144,7 +96,6 @@ export const NewAccountConsents = ({
 					geolocation={geolocation}
 					appName={appName}
 					isJobs={isJobs}
-					onChange={handleConsentChange}
 				/>
 			</MainForm>
 		</MinimalLayout>

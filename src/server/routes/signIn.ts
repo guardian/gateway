@@ -92,7 +92,7 @@ export const getErrorMessageFromQueryParams = (
 };
 
 /**
- * Controller to render the sign in page in both IDAPI and Okta
+ * Controller to render the sign in or create account page in both IDAPI and Okta
  */
 router.get(
 	'/signin',
