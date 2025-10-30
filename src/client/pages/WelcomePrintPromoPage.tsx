@@ -3,7 +3,12 @@ import useClientState from '@/client/lib/hooks/useClientState';
 
 export const WelcomePrintPromoPage = () => {
 	const clientState = useClientState();
-	const { shortRequestId } = clientState;
+	const { shortRequestId, pageData: { continueLink = '' } = {} } = clientState;
 
-	return <WelcomePrintPromo shortRequestId={shortRequestId} />;
+	return (
+		<WelcomePrintPromo
+			shortRequestId={shortRequestId}
+			continueLink={continueLink}
+		/>
+	);
 };

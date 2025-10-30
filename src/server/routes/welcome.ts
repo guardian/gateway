@@ -519,16 +519,15 @@ router.get(
 	'/welcome/print-promo',
 	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		const continueLink = state.queryParams.returnUrl || '/';
 
-		if (!requestStateHasOAuthTokens(state)) {
-			return res.redirect(
-				303,
-				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
-			);
-		}
 		const html = renderer('/welcome/print-promo', {
 			pageTitle: 'Review',
-			requestState: res.locals,
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					continueLink,
+				},
+			}),
 		});
 		res.type('html').send(html);
 	},
