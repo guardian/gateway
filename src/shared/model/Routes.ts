@@ -89,7 +89,6 @@ export const ValidRoutePathsArray = [
 	'/welcome/apple',
 	'/welcome/social',
 	'/welcome/complete-account',
-	'/welcome/submit-consent',
 	'/welcome/review',
 	'/welcome/newsletters',
 	'/welcome/password',
