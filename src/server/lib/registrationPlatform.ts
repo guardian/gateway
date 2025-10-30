@@ -18,6 +18,10 @@ export const getRegistrationPlatform = async (
 		return 'profile';
 	}
 
+	if (appClientId === 'printpromo') {
+		return 'printpromo';
+	}
+
 	// If an appClientId is provided, we use the app label to determine the platform
 	try {
 		const app = await getApp(appClientId);
