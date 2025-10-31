@@ -127,6 +127,38 @@ router.get(
 );
 
 router.get(
+	'/onboarding/signin',
+	redirectIfLoggedIn,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const { encryptedEmail, error, error_description, signInEmail } =
+			state.queryParams;
+
+		// first attempt to get email from IDAPI encryptedEmail if it exists
+		const decryptedEmail =
+			encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+		// followed by the gateway EncryptedState
+		// if it exists
+		const email = decryptedEmail || signInEmail || readEmailCookie(req);
+
+		const html = renderer('/onboarding/signin', {
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email,
+					focusPasswordField: !!email,
+				},
+				globalMessage: {
+					error: getErrorMessageFromQueryParams(error, error_description),
+				},
+			}),
+			pageTitle: 'Sign in',
+		});
+		return res.type('html').send(html);
+	}),
+);
+
+router.get(
 	'/signin/email-sent',
 	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;

@@ -63,6 +63,7 @@ import {
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl } from '@/shared/model/Routes';
+import { decrypt } from '../lib/idapi/decryptToken';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
