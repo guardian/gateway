@@ -24,7 +24,7 @@ describe('Password reset recovery flows', () => {
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -36,7 +36,7 @@ describe('Password reset recovery flows', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/register/email-sent');
+						cy.url().should('include', '/passcode');
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(code!);
 
@@ -93,7 +93,7 @@ describe('Password reset recovery flows', () => {
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Enter your code');
+				cy.contains('Enter your one-time code');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
@@ -105,7 +105,7 @@ describe('Password reset recovery flows', () => {
 						expect(code).to.match(/^\d{6}$/);
 
 						// passcode page
-						cy.url().should('include', '/register/email-sent');
+						cy.url().should('include', '/passcode');
 						cy.contains('Submit verification code');
 						cy.get('input[name=code]').type(code!);
 

@@ -1,4 +1,6 @@
 import { Literal } from '@/shared/types';
+import { GeoLocation } from './Geolocation';
+import { AppName } from '../lib/appNameUtils';
 export interface NewsLetter {
 	id: string;
 	nameId: string;
@@ -106,3 +108,36 @@ export const newsletterBundleToIndividualNewsletters = (
 
 export const newsletterAdditionalTerms =
 	'Newsletters may contain information about Guardian products, services and chosen charities or online advertisements.';
+
+export const chooseNewsletter = ({
+	geolocation,
+	appName,
+	isJobs,
+}: {
+	geolocation: GeoLocation | undefined;
+	appName: AppName | undefined;
+	isJobs?: boolean;
+}): RegistrationNewsletterFormFields | undefined => {
+	const isFeast = appName === 'Feast';
+
+	if (isFeast) {
+		return RegistrationNewslettersFormFieldsMap.feast;
+	}
+
+	if (isJobs) {
+		return RegistrationNewslettersFormFieldsMap.jobs;
+	}
+
+	switch (geolocation) {
+		case 'US':
+			return RegistrationNewslettersFormFieldsMap.usBundle;
+		case 'AU':
+			return RegistrationNewslettersFormFieldsMap.auBundle;
+		case 'GB':
+		case 'EU':
+		case 'ROW':
+		default:
+			// We want to show Saturday Edition even for an undefined location
+			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
+	}
+};

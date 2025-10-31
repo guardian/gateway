@@ -39,7 +39,7 @@ export const idxPasscodeExistingUserMocks = () => {
 };
 
 const verifyInPasscodeEmailSentPage = () => {
-	cy.contains('Enter your code');
+	cy.contains('Enter your one-time code');
 	cy.contains('send again');
 };
 
@@ -52,19 +52,22 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify("Then I should be shown the 'Enter your code' page", () => {
-						baseIdxPasscodeRegistrationMocks();
-						cy.mockNext(
-							idxEnrollNewSelectAuthenticatorResponse.code,
-							idxEnrollNewSelectAuthenticatorResponse.response,
-						);
-						cy.mockNext(
-							idxEnrollNewResponse.code,
-							idxEnrollNewResponse.response,
-						);
-						cy.get('button[type=submit]').click();
-						verifyInPasscodeEmailSentPage();
-					});
+					specify(
+						"Then I should be shown the 'Enter your one-time code' page",
+						() => {
+							baseIdxPasscodeRegistrationMocks();
+							cy.mockNext(
+								idxEnrollNewSelectAuthenticatorResponse.code,
+								idxEnrollNewSelectAuthenticatorResponse.response,
+							);
+							cy.mockNext(
+								idxEnrollNewResponse.code,
+								idxEnrollNewResponse.response,
+							);
+							cy.get('button[type=submit]').click();
+							verifyInPasscodeEmailSentPage();
+						},
+					);
 					break;
 				case 'ACTIVE':
 					specify(

@@ -22,7 +22,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
-	OktaRegistration,
+	oktaRegistrationOrSignin,
 	setEncryptedStateCookieForOktaRegistration,
 } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -49,6 +49,8 @@ import {
 import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
+import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -121,10 +123,6 @@ router.post(
 		}
 
 		try {
-			const registrationConsents = bodyFormFieldsToRegistrationConsents(
-				req.body,
-			);
-
 			// update the registration platform for social users, as we're not able to do this
 			// at the time of registration, as that happens in Okta
 			await updateRegistrationPlatform({
@@ -133,61 +131,12 @@ router.post(
 				ip: req.ip,
 			});
 
-			const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+			const registrationConsents = bodyFormFieldsToRegistrationConsents(
+				req.body,
+			);
+			await updateNewslettersAndConstents(registrationConsents, res, 'social');
 
 			// update the consents and go to the finally block
-			if (registrationConsents.consents?.length) {
-				try {
-					await updateConsents({
-						accessToken: state.oauthState.accessToken.toString(),
-						payload: registrationConsents.consents,
-					});
-
-					// since the CODE newsletters API isn't up to date with PROD newsletters API the
-					// review page will not show the correct newsletters on CODE.
-					// so when running in cypress we set a cookie to return the decrypted consents to cypress
-					// so we can check we at least got to the correct code path
-					if (runningInCypress) {
-						res.cookie(
-							'cypress-consent-response',
-							JSON.stringify(registrationConsents.consents),
-						);
-					}
-				} catch (error) {
-					logger.error(
-						'Error updating registration consents on welcome social',
-						{
-							error,
-						},
-					);
-				}
-			}
-
-			if (registrationConsents.newsletters?.length) {
-				try {
-					await updateNewsletters({
-						accessToken: state.oauthState.accessToken.toString(),
-						payload: registrationConsents.newsletters,
-					});
-					// since the CODE newsletters API isn't up to date with PROD newsletters API the
-					// review page will not show the correct newsletters on CODE.
-					// so when running in cypress we set a cookie to return the decrypted consents to cypress
-					// so we can check we at least got to the correct code path
-					if (runningInCypress) {
-						res.cookie(
-							'cypress-newsletter-response',
-							JSON.stringify(registrationConsents.newsletters),
-						);
-					}
-				} catch (error) {
-					logger.error(
-						'Error updating registration newsletters on welcome social',
-						{
-							error,
-						},
-					);
-				}
-			}
 		} catch (error) {
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -252,11 +201,70 @@ router.get(
 );
 
 router.get(
+	'/welcome/complete-account',
+	loginMiddlewareOAuth,
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
+		const encrypedCookieState = readEncryptedStateCookie(req);
+
+		const html = renderer('/welcome/complete-account', {
+			pageTitle: 'Complete your account',
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email: encrypedCookieState?.email,
+				},
+			}),
+		});
+
+		return res.type('html').send(html);
+	},
+);
+
+router.post(
+	'/welcome/complete-account',
+	loginMiddlewareOAuth,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+
+		try {
+			const registrationConsents = bodyFormFieldsToRegistrationConsents(
+				req.body,
+			);
+
+			// update the consents and go to the finally block
+			await updateNewslettersAndConstents(
+				registrationConsents,
+				res,
+				'complete-account-post',
+			);
+		} catch (error) {
+			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+		} finally {
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/welcome/review', state.queryParams),
+			);
+		}
+	}),
+);
+
+router.get(
 	'/welcome/review',
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		// eslint-disable-next-line functional/no-let -- the state will be updated depending on the outcome of the try/catch, TODO: potential for refactor to avoid let?
 		let state = res.locals;
+
 		if (!requestStateHasOAuthTokens(state)) {
 			return res.redirect(
 				303,
@@ -297,6 +305,7 @@ router.get(
 			pageTitle: 'Your data',
 			requestState: state,
 		});
+
 		return res.type('html').send(html);
 	}),
 );
@@ -484,7 +493,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	// if registration passcodes are enabled, we need to handle this differently
 	// by using the passcode registration flow
 	if (passcodesEnabled && !state.queryParams.useOktaClassic) {
-		return OktaRegistration(req, res);
+		return oktaRegistrationOrSignin(req, res);
 	}
 
 	const { email } = req.body;
@@ -532,6 +541,73 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 		});
 
 		return res.type('html').send(html);
+	}
+};
+
+const updateNewslettersAndConstents = async (
+	registrationConsents: RegistrationConsents,
+	res: ResponseWithRequestState,
+	loggingContext: string,
+) => {
+	const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+	const state = res.locals;
+
+	if (!state.oauthState) {
+		return;
+	}
+
+	if (registrationConsents.consents?.length) {
+		try {
+			await updateConsents({
+				accessToken: state.oauthState.accessToken.toString(),
+				payload: registrationConsents.consents,
+			});
+
+			// since the CODE newsletters API isn't up to date with PROD newsletters API the
+			// review page will not show the correct newsletters on CODE.
+			// so when running in cypress we set a cookie to return the decrypted consents to cypress
+			// so we can check we at least got to the correct code path
+			if (runningInCypress) {
+				res.cookie(
+					'cypress-consent-response',
+					JSON.stringify(registrationConsents.consents),
+				);
+			}
+		} catch (error) {
+			logger.error(
+				`Error updating registration consents on welcome ${loggingContext}`,
+				{
+					error,
+				},
+			);
+		}
+	}
+
+	if (registrationConsents.newsletters?.length) {
+		try {
+			await updateNewsletters({
+				accessToken: state.oauthState.accessToken.toString(),
+				payload: registrationConsents.newsletters,
+			});
+
+			// since the CODE newsletters API isn't up to date with PROD newsletters API the
+			// review page will not show the correct newsletters on CODE.
+			// so when running in cypress we set a cookie to return the decrypted consents to cypress
+			// so we can check we at least got to the correct code path
+			if (runningInCypress) {
+				res.cookie(
+					'cypress-newsletter-response',
+					JSON.stringify(registrationConsents.newsletters),
+				);
+			}
+		} catch (error) {
+			logger.error(
+				`Error updating registration newsletters on welcome ${loggingContext}`,
+				{
+					error,
+				},
+			);
+		}
 	}
 };
 

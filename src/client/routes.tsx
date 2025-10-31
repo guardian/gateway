@@ -15,7 +15,6 @@ import { SignInPage } from '@/client/pages/SignInPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
 import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
-import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
 import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
 import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
@@ -41,8 +40,12 @@ import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
 import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
 import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
 import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
-import { SignInPasscodeEmailSentPage } from '@/client/pages/SignInPasscodeEmailSentPage';
 import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
+import { PasscodeEmailSentPage } from './pages/PasscodeEmailSentPage';
+import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
+import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
+import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
+import { NewAccountConsentsPage } from './pages/NewAccountConsentsPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -68,8 +71,24 @@ const routes: Array<{
 		),
 	},
 	{
+		path: '/passcode',
+		element: <PasscodeEmailSentPage />,
+	},
+	{
+		path: '/passcode/resend',
+		element: <EmailSentPage formTrackingName="passcode-email-resend" />,
+	},
+	{
+		path: '/passcode-used-register',
+		element: <PasscodeUsedRegisterPage />,
+	},
+	{
 		path: '/signin/code',
 		element: <SignInPasscodeEmailSentPage />,
+	},
+	{
+		path: '/register/email-sent',
+		element: <RegistrationEmailSentPage />,
 	},
 	{
 		path: '/signin/password',
@@ -92,10 +111,6 @@ const routes: Array<{
 	{
 		path: '/register/email',
 		element: <RegisterWithEmailPage />,
-	},
-	{
-		path: '/register/email-sent',
-		element: <RegistrationEmailSentPage />,
 	},
 	{
 		path: '/reset-password',
@@ -168,6 +183,10 @@ const routes: Array<{
 	{
 		path: '/welcome/apple',
 		element: <WelcomeSocialPage />,
+	},
+	{
+		path: '/welcome/complete-account',
+		element: <NewAccountConsentsPage />,
 	},
 	{
 		path: '/welcome/review',

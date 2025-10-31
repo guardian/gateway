@@ -11,7 +11,7 @@ import {
 } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { remSpace, textSansBold17 } from '@guardian/source/foundations';
+import { remSpace } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
@@ -21,10 +21,7 @@ import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { trackFormSubmit } from '@/client/lib/ophan';
 import { MainForm } from '@/client/components/MainForm';
-
-const subheadingStyles = css`
-	${textSansBold17};
-`;
+import { subheadingStyles } from '../styles/Shared';
 
 const listStyles = css`
 	margin-top: 0;

@@ -165,7 +165,6 @@ export const createTestUser = ({
 					deleteAfterMinute,
 					isGuestUser,
 				} as IDAPITestUserOptions,
-				retryOnStatusCodeFailure: true,
 			})
 			.then((res) => {
 				const cookies = res.body.values as IDAPITestUserResponse;
