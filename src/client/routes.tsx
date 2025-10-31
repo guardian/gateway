@@ -46,6 +46,7 @@ import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
 import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
 import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
 import { NewAccountConsentsPage } from './pages/NewAccountConsentsPage';
+import { OnboardingSignInPage } from './pages/OnboardingSignInPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -159,6 +160,10 @@ const routes: Array<{
 	{
 		path: '/set-password/:token',
 		element: <SetPasswordPage />,
+	},
+	{
+		path: '/onboarding/signin',
+		element: <OnboardingSignInPage />,
 	},
 	{
 		path: '/welcome/resend',
