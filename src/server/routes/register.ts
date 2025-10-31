@@ -348,7 +348,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
-	const getConfirmationPagePath = (): RoutePaths => {
+	const getConfirmationPagePathForNewUser = (): RoutePaths => {
 		if (isCombinedSigninAndRegisterFlow) {
 			return '/welcome/complete-account';
 		}
@@ -365,7 +365,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath: getConfirmationPagePath(),
+				confirmationPagePath: getConfirmationPagePathForNewUser(),
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
@@ -493,11 +493,18 @@ const oktaIdxCreateAccountOrSignIn = async (
 				// will implement when full passwordless is implemented
 				trackMetric('ExistingUserInCreateAccountFlow');
 
+				const getConfirmationPagePathForExistingUser = (): RoutePaths => {
+					if (appClientId === 'printpromo') {
+						return '/welcome/print-promo';
+					}
+
+					return '/welcome/existing';
+				};
 				// instead we use the passcode sign in controller, and redirect to /welcome/existing at the end
 				return oktaIdxApiSignInPasscodeController({
 					req,
 					res,
-					confirmationPagePath: '/welcome/existing',
+					confirmationPagePath: getConfirmationPagePathForExistingUser(),
 				});
 			}
 		}
