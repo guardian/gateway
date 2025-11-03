@@ -54,6 +54,7 @@ import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { sendPrintPromoSignUpEmail } from '@/email/templates/PrintPromoSignUp/sendPrintPromoSignUpEmail';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -520,7 +521,16 @@ router.get(
 	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const continueLink = state.queryParams.returnUrl || '/';
-
+		const email = readEmailCookie(req);
+		if (email) {
+			sendPrintPromoSignUpEmail({
+				to: email,
+			}).catch((error) => {
+				logger.error('Error sending Print Promo Sign Up welcome email', {
+					error,
+				});
+			});
+		}
 		const html = renderer('/welcome/print-promo', {
 			pageTitle: 'Review',
 			requestState: mergeRequestState(res.locals, {
