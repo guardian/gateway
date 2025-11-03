@@ -768,6 +768,46 @@ describe('Registration flow - Split 3/3', () => {
 			cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
 		});
 	});
+
+	context('Print promo', () => {
+		it.only('shows the registration page and redirects to /register/email', () => {
+			// Load /print-promo Page
+			cy.visit('/print-promo');
+			cy.contains('Create a free account');
+			cy.contains('Continue with Google');
+			cy.contains('Continue with Apple');
+
+			// Click Continue with Email button and check redirect to /register/email with correct appClientId
+			cy.contains('Continue with email').click();
+			cy.url().should('contain', '/register/email');
+			cy.url().should('contain', 'appClientId=printpromo');
+
+			// Fill in email and submit on /register/email
+			const timeRequestWasMade = new Date();
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			// Check redirect to /passcode page
+			cy.url().should('contain', '/passcode');
+			cy.contains('Enter your one-time code');
+			cy.contains(unregisteredEmail);
+
+			// Check email received
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					cy.get('input[name=code]').type(code!);
+
+					cy.url().should('contain', '/welcome/print-promo');
+				},
+			);
+		});
+	});
 	it('persists the clientId when navigating away', () => {
 		cy.visit('/register?clientId=jobs');
 		cy.contains('Sign in').click();
