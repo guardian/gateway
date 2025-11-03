@@ -54,6 +54,7 @@ import {
 	oktaSignInControllerErrorHandler,
 } from '@/server/controllers/signInControllers';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
+import { oktaRegistrationOrSignin } from './register';
 
 const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
 	getConfiguration();
@@ -91,7 +92,7 @@ export const getErrorMessageFromQueryParams = (
 };
 
 /**
- * Controller to render the sign in page in both IDAPI and Okta
+ * Controller to render the sign in or create account page in both IDAPI and Okta
  */
 router.get(
 	'/signin',
@@ -363,8 +364,13 @@ const oktaSignInController = async ({
 	isReauthenticate?: boolean;
 	appClientId?: string;
 }) => {
+	const isPasswordSignin = !!req.body.password;
+
 	// get the email and password from the request body
 	const { email = '', password = '' } = req.body;
+	const {
+		queryParams: { useOktaClassic, componentEventParams },
+	} = res.locals;
 
 	// Okta Identity Engine session cookie is called `idx`
 	const oktaIdentityEngineSessionCookieId: string | undefined = req.cookies.idx;
@@ -390,13 +396,18 @@ const oktaSignInController = async ({
 
 	try {
 		// idx api flow
-		if (passcodesEnabled && !res.locals.queryParams.useOktaClassic) {
+		if (passcodesEnabled && !useOktaClassic) {
 			// try to start the IDX flow to sign in the user with a password
-			await oktaIdxApiSignInController({
-				req,
-				res,
-				isReauthenticate,
-			});
+
+			if (isPasswordSignin || isReauthenticate) {
+				await oktaIdxApiSignInController({
+					req,
+					res,
+					isReauthenticate,
+				});
+			} else {
+				await oktaRegistrationOrSignin(req, res);
+			}
 			// if successful, the user will be redirected
 			// so we need to check if the headers have been sent to prevent further processing
 			if (res.headersSent) {
@@ -427,9 +438,9 @@ const oktaSignInController = async ({
 		}
 
 		// fire ophan component event if applicable when a session is set
-		if (res.locals.queryParams.componentEventParams) {
+		if (componentEventParams) {
 			void sendOphanComponentEventFromQueryParamsServer(
-				res.locals.queryParams.componentEventParams,
+				componentEventParams,
 				'SIGN_IN',
 				'web',
 				res.locals.ophanConfig.consentUUID,

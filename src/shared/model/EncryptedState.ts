@@ -18,4 +18,6 @@ export interface EncryptedState {
 	userState?: InternalOktaUserState;
 	// Okta IDX API - Count of failed passcode attempts
 	passcodeFailedCount?: number;
+	// Flag to determine whether the passcode sign in process is a sign in attempt or an account registration
+	signInOrRegister?: 'SIGNIN' | 'REGISTER';
 }

@@ -28,6 +28,9 @@ export const ValidRoutePathsArray = [
 	'/oauth/authorization-code/callback',
 	'/oauth/authorization-code/delete-callback',
 	'/oauth/authorization-code/interaction-code-callback',
+	'/passcode',
+	'/passcode/resend',
+	'/passcode-used-register',
 	'/reauthenticate',
 	'/reauthenticate/password',
 	'/register',
@@ -85,6 +88,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/google',
 	'/welcome/apple',
 	'/welcome/social',
+	'/welcome/complete-account',
 	'/welcome/review',
 	'/welcome/newsletters',
 	'/welcome/password',
@@ -92,6 +96,19 @@ export const ValidRoutePathsArray = [
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];
 
+export const getRoutePathFromUrl = (
+	refUrl?: string,
+): RoutePaths | undefined => {
+	try {
+		const url = new URL(refUrl || '');
+		const urlPath = url.pathname;
+		if ((ValidRoutePathsArray as ReadonlyArray<string>).includes(urlPath)) {
+			return urlPath as RoutePaths;
+		}
+	} catch {
+		return;
+	}
+};
 /**
  * These are all valid paths for the Identity API
  * New routes should be added below
