@@ -207,7 +207,7 @@ router.get(
 router.get(
 	'/welcome/complete-account',
 	loginMiddlewareOAuth,
-	async (req: Request, res: ResponseWithRequestState) => {
+	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 
 		if (!requestStateHasOAuthTokens(state)) {
@@ -215,39 +215,6 @@ router.get(
 				303,
 				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
 			);
-		}
-
-		const geolocation = state.pageData.geolocation;
-		const appName = state.pageData.appName;
-		const isJobs = state.queryParams.clientId === 'jobs';
-
-		const consentList = getRegistrationConsentsList(
-			isJobs ?? false,
-			geolocation,
-			appName,
-		);
-
-		try {
-			const registrationConsents: RegistrationConsents = {
-				consents: consentList
-					.filter(
-						(consentItem) => consentItem.consentOrNewsletter === 'CONSENT',
-					)
-					.map((consentItem) => ({ id: consentItem.id, consented: true })),
-				newsletters: consentList
-					.filter(
-						(consentItem) => consentItem.consentOrNewsletter === 'NEWSLETTER',
-					)
-					.map((consentItem) => ({ id: consentItem.id, subscribed: true })),
-			};
-			await updateNewslettersAndConstents(
-				registrationConsents,
-				res,
-				'complete-account-init',
-			);
-		} catch (error) {
-			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
-			logger.error(`GET ${req.method} ${req.originalUrl}  Error`, error);
 		}
 
 		const encrypedCookieState = readEncryptedStateCookie(req);
@@ -270,7 +237,6 @@ router.post(
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
-		const formSubmitMethod = req.body.formSubmitMethod;
 
 		try {
 			const registrationConsents = bodyFormFieldsToRegistrationConsents(
@@ -287,13 +253,11 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
-			if (formSubmitMethod === 'submit-button') {
-				// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-				return res.redirect(
-					303,
-					addQueryParamsToPath('/welcome/review', state.queryParams),
-				);
-			}
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/welcome/review', state.queryParams),
+			);
 		}
 	}),
 );

@@ -56,23 +56,10 @@ export const NewAccountConsents = ({
 	const formTrackingName = 'register';
 
 	const formRef = useRef(null);
-	const formSubmitMethodRef = useRef(null);
 
 	usePageLoadOphanInteraction(formTrackingName);
 
 	const isJobs = queryParams.clientId === 'jobs';
-
-	const handleConsentChange = () => {
-		const formSubmitMethodInput =
-			formSubmitMethodRef.current as HTMLInputElement | null;
-		if (formSubmitMethodInput) {
-			// eslint-disable-next-line functional/immutable-data -- we need to mutate the object here to distinguish between the different methods of submittng the form
-			formSubmitMethodInput.value = 'toggle-action';
-		}
-
-		const formEl = formRef.current as HTMLFormElement | null;
-		formEl?.submit();
-	};
 
 	return (
 		<MinimalLayout
@@ -97,12 +84,6 @@ export const NewAccountConsents = ({
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
 				onSubmit={(e) => {
-					const formSubmitMethodInput =
-						formSubmitMethodRef.current as HTMLInputElement | null;
-					if (formSubmitMethodInput) {
-						// eslint-disable-next-line functional/immutable-data -- we need to mutate the object here to distinguish between the different methods of submittng the form
-						formSubmitMethodInput.value = 'submit-button';
-					}
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
@@ -111,17 +92,10 @@ export const NewAccountConsents = ({
 				)}
 				shortRequestId={shortRequestId}
 			>
-				<input
-					type="hidden"
-					name="formSubmitMethod"
-					value="submit-button"
-					ref={formSubmitMethodRef}
-				/>
 				<RegistrationConsents
 					geolocation={geolocation}
 					appName={appName}
 					isJobs={isJobs}
-					onChange={handleConsentChange}
 				/>
 			</MainForm>
 		</MinimalLayout>
