@@ -8,8 +8,8 @@ export const GuardianTerms = () => (
 		<ExternalLink href="https://www.theguardian.com/help/terms-of-service">
 			terms and conditions
 		</ExternalLink>
-		. For information about how we use your data, including the generation of
-		random identifiers based on your email address for advertising and
+		. For more information about how we use your data, including the generation
+		of random identifiers based on your email address for advertising and
 		marketing, visit our{' '}
 		<ExternalLink href="https://www.theguardian.com/help/privacy-policy">
 			privacy policy

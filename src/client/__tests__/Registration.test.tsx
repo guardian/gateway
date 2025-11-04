@@ -44,7 +44,7 @@ test('Default terms and conditions in document when clientId not set', async () 
 	};
 
 	const defaultTerms = queryByTextContent(
-		'By proceeding, you agree to our terms and conditions. For information about how we use your data, including the generation of random identifiers based on your email address for advertising and marketing, visit our privacy policy.',
+		'By proceeding, you agree to our terms and conditions. For more information about how we use your data, including the generation of random identifiers based on your email address for advertising and marketing, visit our privacy policy.',
 	);
 	const jobsTerms = queryByTextContent(
 		'By proceeding, you agree to our Guardian Jobs terms and conditions.',
