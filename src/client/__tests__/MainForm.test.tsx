@@ -29,7 +29,7 @@ beforeEach(() => {
 test('terms and conditions in the document when hasGuardianTerms is true', async () => {
 	const { queryByText } = setup({ hasGuardianTerms: true });
 	const terms = queryByText(
-		'For information about how we use your data, see our',
+		'For information about how we use your data, including the generation of random identifiers',
 		{ exact: false },
 	);
 	await waitFor(() => {
@@ -40,7 +40,7 @@ test('terms and conditions in the document when hasGuardianTerms is true', async
 test('terms and conditions not in the document when hasGuardianTerms is false', async () => {
 	const { queryByText } = setup({ hasGuardianTerms: false });
 	const terms = queryByText(
-		'For information about how we use your data, see our',
+		'For information about how we use your data, including the generation of random identifiers',
 		{ exact: false },
 	);
 	await waitFor(() => {
