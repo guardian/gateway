@@ -9,14 +9,12 @@ interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	isJobs?: boolean;
-	onChange?: (id: string, checked: boolean) => void;
 }
 
 export const RegistrationConsents = ({
 	geolocation,
 	appName,
 	isJobs,
-	onChange,
 }: RegistrationConsentsProps) => {
 	const consentList = getRegistrationConsentsList(
 		isJobs ?? false,
@@ -31,7 +29,6 @@ export const RegistrationConsents = ({
 					title={consentItem.title}
 					description={consentItem.description}
 					defaultChecked={true}
-					onChange={onChange}
 				/>
 			))}
 		</ToggleSwitchList>
