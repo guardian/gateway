@@ -24,7 +24,6 @@ import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
-
 export type SignInProps = {
 	queryParams: QueryParams;
 	email?: string;
@@ -252,6 +251,24 @@ export const SignIn = ({
 								Sign in with a password instead
 							</ThemedLink>
 						</MainBodyText>
+						<details>
+							<summary css={[resetPassword, { marginBottom: remSpace[2] }]}>
+								Cookies in the browser:
+							</summary>
+							<MainBodyText>
+								When we make the Guardian available for you online, we use
+								cookies and similar technologies to help us to do this. Some are
+								necessary to help our website work properly and can’t be
+								switched off, and some are optional but may support your
+								experience in other ways or help support the Guardian, including
+								through personalised advertising. If you read the Guardian ad
+								free or subscribe to Guardian Ad-Lite, you can manage the use of
+								cookies on our site for personalised advertising, and disable
+								the sharing of data with partners for personalised advertising
+								purposes by clicking below or on the "Privacy settings" link in
+								the footer of every page of our site.
+							</MainBodyText>
+						</details>
 					</>
 				)
 			}
