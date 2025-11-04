@@ -27,8 +27,8 @@ importers:
         specifier: 8.0.2
         version: 8.0.2(tslib@2.8.1)(typescript@5.9.3)
       '@guardian/libs':
-        specifier: ^25.3.0
-        version: 25.3.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3)
+        specifier: ^26.1.0
+        version: 26.1.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3)
       '@guardian/ophan-tracker-js':
         specifier: 2.0.3
         version: 2.0.3
@@ -37,7 +37,7 @@ importers:
         version: 11.3.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3)
       '@guardian/source-development-kitchen':
         specifier: ^22.0.1
-        version: 22.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@guardian/libs@25.3.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3))(@guardian/source@11.3.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3)
+        version: 22.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@guardian/libs@26.1.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3))(@guardian/source@11.3.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3)
       '@okta/jwt-verifier':
         specifier: ^4.0.2
         version: 4.0.2
@@ -1640,8 +1640,8 @@ packages:
     peerDependencies:
       eslint: ^9.19.0
 
-  '@guardian/libs@25.3.0':
-    resolution: {integrity: sha512-PbbUvgv+wACMq0FlbgsOdwrDApoblSD1Md55YZaEq9YooolWt3p0jhaGlIKOfGovT52o2XVSRfCcLJqlGpRENQ==}
+  '@guardian/libs@26.1.0':
+    resolution: {integrity: sha512-7giFn9lqkxNd7NrQ/nzpmb52qpw+wfN853M16vcJYbrFhmo3/h9ldoEpQh+GWS2jiKKNBMMu9wKSKvFLkjqEWw==}
     peerDependencies:
       '@guardian/ophan-tracker-js': ^2.2.10
       tslib: ^2.6.2
@@ -10006,7 +10006,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@guardian/libs@25.3.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3)':
+  '@guardian/libs@26.1.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3)':
     dependencies:
       '@guardian/ophan-tracker-js': 2.0.3
       tslib: 2.8.1
@@ -10020,9 +10020,9 @@ snapshots:
       prettier: 3.6.2
       tslib: 2.8.1
 
-  '@guardian/source-development-kitchen@22.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@guardian/libs@25.3.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3))(@guardian/source@11.3.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3)':
+  '@guardian/source-development-kitchen@22.0.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@guardian/libs@26.1.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3))(@guardian/source@11.3.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3)':
     dependencies:
-      '@guardian/libs': 25.3.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3)
+      '@guardian/libs': 26.1.0(@guardian/ophan-tracker-js@2.0.3)(tslib@2.8.1)(typescript@5.9.3)
       '@guardian/source': 11.3.1(@emotion/react@11.14.0(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2))(@preact/compat@18.3.1(preact@10.27.2))(@types/react@19.2.2)(tslib@2.8.1)(typescript@5.9.3)
       tslib: 2.8.1
     optionalDependencies:
