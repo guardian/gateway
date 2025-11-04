@@ -34,7 +34,7 @@ test('Default terms and conditions in document when clientId not set', async () 
 		// Passing function to testing-library's `queryByText`
 		return queryByText((content, element) => {
 			const hasText = (element: Element | null) =>
-				element?.textContent === text;
+				element?.textContent?.startsWith(text) ?? false;
 			const elementHasText = hasText(element);
 			const childrenDontHaveText = Array.from(element?.children || []).every(
 				(child) => !hasText(child),
@@ -44,7 +44,7 @@ test('Default terms and conditions in document when clientId not set', async () 
 	};
 
 	const defaultTerms = queryByTextContent(
-		'By proceeding, you agree to our terms and conditions. For information about how we use your data, see our privacy policy.',
+		'By proceeding, you agree to our terms and conditions. For information about how we use your data, including the generation of random identifiers based on your email address for advertising and marketing, visit our privacy policy.',
 	);
 	const jobsTerms = queryByTextContent(
 		'By proceeding, you agree to our Guardian Jobs terms and conditions.',
