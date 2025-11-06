@@ -734,7 +734,9 @@ describe('Registration flow - Split 3/3', () => {
 				req.reply(200);
 			});
 			cy.visit('/register');
-			cy.contains('For information about how we use your data')
+			cy.contains(
+				'For more information about how we use your data, including the generation of random identifiers',
+			)
 				.contains('privacy policy')
 				.click();
 			cy.url().should('eq', guardianPrivacyPolicyUrl);
