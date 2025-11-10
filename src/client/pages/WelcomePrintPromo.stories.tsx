@@ -13,6 +13,14 @@ export default {
 export const Default = (args: WelcomePrintPromoProps) => (
 	<WelcomePrintPromo {...args} />
 );
+
+export const Registering = (args: WelcomePrintPromoProps) => (
+	<WelcomePrintPromo {...args} isRegistering={true} />
+);
+
+Registering.story = {
+	name: 'when registering',
+};
 Default.story = {
-	name: 'default',
+	name: 'when signing in',
 };

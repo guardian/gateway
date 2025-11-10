@@ -492,11 +492,14 @@ router.get(
 				});
 			});
 		}
+
+		const encryptedCookieState = readEncryptedStateCookie(req);
 		const html = renderer('/welcome/print-promo', {
-			pageTitle: 'Review',
+			pageTitle: 'Welcome',
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					continueLink,
+					isRegistering: encryptedCookieState?.signInOrRegister === 'REGISTER',
 				},
 			}),
 		});
