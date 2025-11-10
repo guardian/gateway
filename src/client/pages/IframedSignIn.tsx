@@ -16,14 +16,13 @@ import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { remSpace } from '@guardian/source/foundations';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
-import { MainBodyText } from '@/client/components/MainBodyText';
 import { InformationBox } from '@/client/components/InformationBox';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
 
-export type OnboardingSignInProps = {
+export type IframedSignInProps = {
 	queryParams: QueryParams;
 	email?: string;
 	// An error to be displayed at the top of the page
@@ -130,7 +129,7 @@ const showAuthProviderButtons = (
 	}
 };
 
-export const OnboardingSignIn = ({
+export const IframedSignIn = ({
 	email,
 	pageError,
 	formError,
@@ -139,9 +138,7 @@ export const OnboardingSignIn = ({
 	isReauthenticate = false,
 	shortRequestId,
 	hideSocialButtons = false,
-}: OnboardingSignInProps) => {
-	const [currentEmail, setCurrentEmail] = React.useState(email);
-
+}: IframedSignInProps) => {
 	const formTrackingName = 'sign-in';
 
 	// The page level error is equivalent to this enum if social signin has been blocked.
@@ -154,11 +151,13 @@ export const OnboardingSignIn = ({
 
 	return (
 		<MinimalLayout
-			shortRequestId={shortRequestId}
-			errorOverride={pageError}
 			errorContext={getErrorContext(pageError, queryParams)}
-			pageHeader="Sign in"
-			leadText="One account to access all Guardian products."
+			errorOverride={pageError}
+			leadText="This unlocks your premium experience, online and in the app."
+			pageHeader="Sign in to your account"
+			shortRequestId={shortRequestId}
+			showGuardianHeader={false}
+			subduedHeadingStyle={true}
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{!hideSocialButtons &&
@@ -175,7 +174,7 @@ export const OnboardingSignIn = ({
 					{},
 					queryParams,
 				)}
-				submitButtonText="Continue with email"
+				submitButtonText="Sign in"
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
@@ -189,26 +188,9 @@ export const OnboardingSignIn = ({
 					name="isCombinedSigninAndRegisterFlow"
 					value="combined"
 				/>
-				<EmailInput
-					defaultValue={email}
-					onChange={(e) => setCurrentEmail(e.target.value)}
-				/>
+				<EmailInput defaultValue={email} />
 				<input type="hidden" name="passcode" value="passcode" />
 			</MainForm>
-			<MainBodyText>
-				<ThemedLink
-					href={buildUrlWithQueryParams(
-						isReauthenticate ? '/reauthenticate/password' : '/signin/password',
-						{},
-						queryParams,
-						{
-							signInEmail: currentEmail,
-						},
-					)}
-				>
-					Sign in with a password instead
-				</ThemedLink>
-			</MainBodyText>
 		</MinimalLayout>
 	);
 };

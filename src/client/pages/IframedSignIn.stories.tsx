@@ -1,12 +1,15 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { SignIn, SignInProps } from '@/client/pages/SignIn';
+import {
+	IframedSignIn,
+	IframedSignInProps,
+} from '@/client/pages/IframedSignIn';
 import { PasscodeErrors, SignInErrors } from '@/shared/model/Errors';
 
 export default {
-	title: 'Pages/SignIn',
-	component: SignIn,
+	title: 'Pages/IframedSignIn',
+	component: IframedSignIn,
 	args: {
 		recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
 		oauthBaseUrl: 'https://oauth.theguardian.com/',
@@ -15,29 +18,35 @@ export default {
 		},
 		isReauthenticate: false,
 	},
-} as Meta<SignInProps>;
+} as Meta<IframedSignInProps>;
 
-export const Default = (args: SignInProps) => <SignIn {...args} />;
+export const Default = (args: IframedSignInProps) => (
+	<IframedSignIn {...args} />
+);
 Default.story = {
 	name: 'with defaults',
 };
 
-export const WithEmail = (args: SignInProps) => (
-	<SignIn email="test@example.com" {...args} />
+export const WithEmail = (args: IframedSignInProps) => (
+	<IframedSignIn email="test@example.com" {...args} />
 );
 WithEmail.story = {
 	name: 'with email',
 };
 
-export const WithPageLevelError = (args: SignInProps) => (
-	<SignIn pageError="This is an error" shortRequestId="123e4567" {...args} />
+export const WithPageLevelError = (args: IframedSignInProps) => (
+	<IframedSignIn
+		pageError="This is an error"
+		shortRequestId="123e4567"
+		{...args}
+	/>
 );
 WithPageLevelError.story = {
 	name: 'with page level error',
 };
 
-export const WithPageLevelErrorAndEmail = (args: SignInProps) => (
-	<SignIn
+export const WithPageLevelErrorAndEmail = (args: IframedSignInProps) => (
+	<IframedSignIn
 		pageError="This is an error"
 		email="test@example.com"
 		shortRequestId="123e4567"
@@ -48,8 +57,8 @@ WithPageLevelErrorAndEmail.story = {
 	name: 'with page level error and email',
 };
 
-export const SocialSigninBlocked = (args: SignInProps) => (
-	<SignIn
+export const SocialSigninBlocked = (args: IframedSignInProps) => (
+	<IframedSignIn
 		{...args}
 		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
 		email="someone@theguardian.com"
@@ -59,15 +68,19 @@ SocialSigninBlocked.story = {
 	name: 'social sign-in blocked',
 };
 
-export const WithFormLevelError = (args: SignInProps) => (
-	<SignIn formError="This is an error" shortRequestId="123e4567" {...args} />
+export const WithFormLevelError = (args: IframedSignInProps) => (
+	<IframedSignIn
+		formError="This is an error"
+		shortRequestId="123e4567"
+		{...args}
+	/>
 );
 WithFormLevelError.story = {
 	name: 'with form level error',
 };
 
-export const WithFormLevelErrorAndEmail = (args: SignInProps) => (
-	<SignIn
+export const WithFormLevelErrorAndEmail = (args: IframedSignInProps) => (
+	<IframedSignIn
 		formError="This is an error"
 		email="test@example.com"
 		shortRequestId="123e4567"
@@ -78,8 +91,10 @@ WithFormLevelErrorAndEmail.story = {
 	name: 'with form level error and email',
 };
 
-export const WithFormLevelErrorAndSocialSigninBlocked = (args: SignInProps) => (
-	<SignIn
+export const WithFormLevelErrorAndSocialSigninBlocked = (
+	args: IframedSignInProps,
+) => (
+	<IframedSignIn
 		{...args}
 		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
 		formError="This is an error"
@@ -91,15 +106,19 @@ WithFormLevelErrorAndSocialSigninBlocked.story = {
 	name: 'form level error and social sign-in blocked',
 };
 
-export const InvalidRecaptcha = (args: SignInProps) => (
-	<SignIn {...args} recaptchaSiteKey="invalid-key" shortRequestId="123e4567" />
+export const InvalidRecaptcha = (args: IframedSignInProps) => (
+	<IframedSignIn
+		{...args}
+		recaptchaSiteKey="invalid-key"
+		shortRequestId="123e4567"
+	/>
 );
 InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
 
-export const WithJobs = (args: SignInProps) => (
-	<SignIn
+export const WithJobs = (args: IframedSignInProps) => (
+	<IframedSignIn
 		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
 	/>
 );
@@ -107,8 +126,8 @@ WithJobs.story = {
 	name: 'with Jobs terms',
 };
 
-export const WithJobsAndSocialSigninBlocked = (args: SignInProps) => (
-	<SignIn
+export const WithJobsAndSocialSigninBlocked = (args: IframedSignInProps) => (
+	<IframedSignIn
 		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
 		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
 		email="someone@theguardian.com"
@@ -119,22 +138,22 @@ WithJobsAndSocialSigninBlocked.story = {
 	name: 'with Jobs terms and social sign-in blocked',
 };
 
-export const IsReauthenticate = (args: SignInProps) => (
-	<SignIn {...{ ...args, isReauthenticate: true }} />
+export const IsReauthenticate = (args: IframedSignInProps) => (
+	<IframedSignIn {...{ ...args, isReauthenticate: true }} />
 );
 IsReauthenticate.story = {
 	name: 'showing /reauthenticate page',
 };
 
-export const SignInWithPasscode = (args: SignInProps) => (
-	<SignIn {...{ ...args, usePasscodeSignIn: true }} />
+export const SignInWithPasscode = (args: IframedSignInProps) => (
+	<IframedSignIn {...{ ...args, usePasscodeSignIn: true }} />
 );
 SignInWithPasscode.story = {
 	name: 'sign in with passcode',
 };
 
-export const SignInWithPasscodeError = (args: SignInProps) => (
-	<SignIn
+export const SignInWithPasscodeError = (args: IframedSignInProps) => (
+	<IframedSignIn
 		{...{
 			...args,
 			usePasscodeSignIn: true,
@@ -146,15 +165,15 @@ SignInWithPasscodeError.story = {
 	name: 'sign in with passcode error',
 };
 
-export const NoSocialButtons = (args: SignInProps) => (
-	<SignIn {...{ ...args, hideSocialButtons: true }} />
+export const NoSocialButtons = (args: IframedSignInProps) => (
+	<IframedSignIn {...{ ...args, hideSocialButtons: true }} />
 );
 NoSocialButtons.story = {
 	name: 'no social buttons',
 };
 
-export const NoSocialButtonsEmail = (args: SignInProps) => (
-	<SignIn
+export const NoSocialButtonsEmail = (args: IframedSignInProps) => (
+	<IframedSignIn
 		{...{ ...args, hideSocialButtons: true, email: 'test@example.com' }}
 	/>
 );

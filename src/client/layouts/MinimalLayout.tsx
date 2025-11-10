@@ -1,7 +1,13 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import MinimalHeader from '@/client/components/MinimalHeader';
-import { from, headlineBold28, remSpace } from '@guardian/source/foundations';
+import {
+	from,
+	headlineBold28,
+	headlineMedium28,
+	remSpace,
+	space,
+} from '@guardian/source/foundations';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
@@ -24,7 +30,9 @@ import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
 	wide?: boolean;
+	showGuardianHeader?: boolean;
 	pageHeader: string;
+	subduedHeadingStyle?: boolean;
 	leadText?: React.ReactNode;
 	imageId?: DecorativeImageId;
 	successOverride?: string;
@@ -47,16 +55,25 @@ const mainStyles = (wide: boolean) => css`
 	}
 `;
 
-const pageHeaderStyles = css`
+const mainStylesStretch = css`
+	padding: ${space[3]}px ${space[3]}px ${space[6]}px;
+	display: flex;
+	flex-direction: column;
+	gap: ${CONTAINER_GAP};
+`;
+
+const pageHeaderStyles = (subduedHeadingStyle: boolean) => css`
 	color: var(--color-heading);
-	${headlineBold28};
+	${subduedHeadingStyle ? headlineMedium28 : headlineBold28};
 	margin: 0;
 `;
 
 export const MinimalLayout = ({
 	children,
 	wide = false,
+	showGuardianHeader = true,
 	pageHeader,
+	subduedHeadingStyle = false,
 	leadText,
 	imageId,
 	successOverride,
@@ -74,12 +91,12 @@ export const MinimalLayout = ({
 	return (
 		<>
 			<Theme />
-			<MinimalHeader />
-			<main css={mainStyles(wide)}>
+			{showGuardianHeader && <MinimalHeader />}
+			<main css={showGuardianHeader ? mainStyles(wide) : mainStylesStretch}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				{pageHeader && (
 					<header>
-						<h1 css={pageHeaderStyles}>{pageHeader}</h1>
+						<h1 css={pageHeaderStyles(subduedHeadingStyle)}>{pageHeader}</h1>
 					</header>
 				)}
 				{leadText && typeof leadText === 'string' ? (

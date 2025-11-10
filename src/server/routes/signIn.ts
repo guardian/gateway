@@ -127,7 +127,7 @@ router.get(
 );
 
 router.get(
-	'/onboarding/signin',
+	'/iframed/signin',
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
@@ -142,7 +142,7 @@ router.get(
 		// if it exists
 		const email = decryptedEmail || signInEmail || readEmailCookie(req);
 
-		const html = renderer('/onboarding/signin', {
+		const html = renderer('/iframed/signin', {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,

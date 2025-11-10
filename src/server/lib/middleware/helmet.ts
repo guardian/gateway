@@ -60,6 +60,7 @@ const helmetConfig: HelmetOptions = {
 			],
 			fontSrc: [CSP_VALID_URI.GUARDIAN_ASSETS],
 			connectSrc: [
+				HELMET_OPTIONS.SELF,
 				`${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
 				CSP_VALID_URI.GUARDIAN_API,
 				CSP_VALID_URI.HAVEIBEENPWNED,
