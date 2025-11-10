@@ -51,13 +51,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
       - name: Download build
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
       - name: Get pnpm cache directory path
@@ -134,7 +134,7 @@ jobs:
           browser: chrome
           spec: cypress/integration/ete/**/*.cy.ts
           config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete/**/*.${{ matrix.group }}.cy.ts"]}}'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: cypress-screenshots
