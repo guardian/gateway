@@ -37,6 +37,10 @@ import locations from '@/shared/lib/locations';
 import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 import { NoScript } from './NoScript';
 
+interface SubmitHandlerErrorObject {
+	errorOccurred: boolean;
+}
+
 export interface MainFormProps {
 	wideLayout?: boolean;
 	formAction: string;
@@ -57,11 +61,9 @@ export interface MainFormProps {
 	formErrorContextFromParent?: ReactNode;
 	hasGuardianTerms?: boolean;
 	hasJobsTerms?: boolean;
-	onSubmit?: (e: React.FormEvent<HTMLFormElement>) =>
-		| {
-				errorOccurred: boolean;
-		  }
-		| undefined;
+	onSubmit?: (
+		e: React.FormEvent<HTMLFormElement>,
+	) => SubmitHandlerErrorObject | Promise<void> | undefined;
 	onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
 	formTrackingName?: string;
 	disableOnSubmit?: boolean;
@@ -138,6 +140,15 @@ export const MainForm = ({
 
 	const showFormLevelReportUrl = !!formLevelErrorContext;
 
+	const submitHandlerResponseIsErrorObject = (
+		submitHandler: SubmitHandlerErrorObject | Promise<void> | undefined,
+	): submitHandler is SubmitHandlerErrorObject => {
+		if (!submitHandler) {
+			return false;
+		}
+		return !!(submitHandler as SubmitHandlerErrorObject)?.errorOccurred;
+	};
+
 	/**
 	 * Executes the reCAPTCHA check and form submit tracking.
 	 * Prevents the form from submitting until the reCAPTCHA check is complete.
@@ -150,7 +161,9 @@ export const MainForm = ({
 				trackFormSubmit(formTrackingName);
 			}
 
-			const errorInSubmitHandler = onSubmit?.(event)?.errorOccurred;
+			const submitHandler = onSubmit?.(event);
+			const errorInSubmitHandler =
+				submitHandlerResponseIsErrorObject(submitHandler);
 
 			if (disableOnSubmit) {
 				if (errorInSubmitHandler === undefined) {

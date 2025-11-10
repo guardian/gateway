@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
-import { OnboardingSignIn } from './OnboardingSignIn';
+import { IframedSignIn } from './IframedSignIn';
 
 interface Props {
 	isReauthenticate?: boolean;
 	hideSocialButtons?: boolean;
 }
 
-export const OnboardingSignInPage = ({
+export const IframedSignInPage = ({
 	isReauthenticate = false,
 	hideSocialButtons = true,
 }: Props) => {
@@ -26,8 +26,20 @@ export const OnboardingSignInPage = ({
 	// we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
 	useRemoveEncryptedEmailParam();
 
+	useEffect(() => {
+		const height = document.body.scrollHeight;
+		window.parent.postMessage(
+			{
+				context: 'supporterOnboarding',
+				type: 'iframeHeightChange',
+				value: height,
+			},
+			'*',
+		);
+	}, []);
+
 	return (
-		<OnboardingSignIn
+		<IframedSignIn
 			email={email}
 			pageError={pageError}
 			formError={formError}
