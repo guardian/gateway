@@ -770,7 +770,7 @@ describe('Registration flow - Split 3/3', () => {
 	});
 
 	context('Print promo', () => {
-		it.only('shows the registration page and redirects to /register/email', () => {
+		it('shows the registration page and redirects to /register/email', () => {
 			// Load /print-promo Page
 			cy.visit('/print-promo');
 			cy.contains('Create a free account');
