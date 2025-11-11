@@ -301,7 +301,7 @@ describe('Registration flow - Split 1/3', () => {
 					});
 
 					cy.url().should('include', '/welcome/review');
-					cy.get('button[type="submit"]').click();
+					cy.get('a').contains('Continue').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
@@ -372,7 +372,7 @@ describe('Registration flow - Split 1/3', () => {
 					});
 
 					cy.url().should('include', '/welcome/review');
-					cy.get('button[type="submit"]').click();
+					cy.get('a').contains('Continue').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},

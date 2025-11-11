@@ -130,7 +130,7 @@ describe('New account newsletters page', () => {
 				cy.get('input[name=code]').type(code!);
 
 				cy.url().should('contain', '/welcome/review');
-				cy.get('button[type="submit"]').click();
+				cy.get('a').contains('Continue').click();
 				cy.contains(
 					'Our newsletters help you get closer to our quality, independent journalism.',
 				).should('not.exist');
@@ -171,7 +171,7 @@ describe('New account newsletters page', () => {
 				cy.get('input[name=code]').type(code!);
 
 				cy.url().should('contain', '/welcome/review');
-				cy.get('button[type="submit"]').click();
+				cy.get('a').contains('Continue').click();
 				cy.url().should('contain', '/welcome/newsletters');
 				cy.contains(
 					'Our newsletters help you get closer to our quality, independent journalism.',
@@ -214,7 +214,7 @@ describe('New account newsletters page', () => {
 				cy.get('input[name=code]').type(code!);
 
 				cy.url().should('contain', '/welcome/review');
-				cy.get('button[type="submit"]').click();
+				cy.get('a').contains('Continue').click();
 				cy.url().should('contain', '/welcome/newsletters');
 				cy.contains(
 					'Our newsletters help you get closer to our quality, independent journalism.',
