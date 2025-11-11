@@ -10,9 +10,7 @@ export default {
 	title: 'Pages/NewAccountReview',
 	component: NewAccountReview,
 	args: {
-		queryParams: {
-			returnUrl: 'https://www.theguardian.com/uk',
-		},
+		nextPage: 'https://www.theguardian.com/uk',
 	},
 } as Meta<NewAccountReviewProps>;
 export const Default = (args: NewAccountReviewProps) => (

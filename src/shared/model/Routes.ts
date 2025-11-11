@@ -90,6 +90,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/social',
 	'/welcome/complete-account',
 	'/welcome/review',
+	'/welcome/continue',
 	'/welcome/newsletters',
 	'/welcome/password',
 ] as const;

@@ -1,18 +1,17 @@
 import React from 'react';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
-import { QueryParams } from '@/shared/model/QueryParams';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { primaryButtonStyles } from '../styles/Shared';
 
 export interface NewAccountReviewProps {
-	queryParams: QueryParams;
 	shortRequestId?: string;
+	nextPage: string;
 }
 
 export const NewAccountReview = ({
-	queryParams,
 	shortRequestId,
+	nextPage,
 }: NewAccountReviewProps) => {
 	const formTrackingName = 'new-account-review';
 	usePageLoadOphanInteraction(formTrackingName);
@@ -23,10 +22,7 @@ export const NewAccountReview = ({
 			pageHeader="You're signed in! Welcome to the Guardian."
 			imageId="welcome"
 		>
-			<ExternalLinkButton
-				cssOverrides={primaryButtonStyles()}
-				href={queryParams.returnUrl}
-			>
+			<ExternalLinkButton cssOverrides={primaryButtonStyles()} href={nextPage}>
 				Continue
 			</ExternalLinkButton>
 		</MinimalLayout>
