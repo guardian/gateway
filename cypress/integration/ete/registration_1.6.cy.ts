@@ -802,6 +802,8 @@ describe('Registration flow - Split 1/3', () => {
 		});
 
 		context('ACTIVE user - with only password authenticator', () => {
+			// TODO - this is one of the flakey tests and quite often fails getting correct auth state cookie property
+			// 'authState.confirmationPage' back from okta after the /login/token/redirect enpoint
 			it('should sign in with passcode', () => {
 				/**
 				 * START - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR
