@@ -53,7 +53,9 @@ describe('Sign in flow, Okta enabled', () => {
 				req.reply(200);
 			});
 			cy.visit('/signin');
-			cy.contains('For information about how we use your data')
+			cy.contains(
+				'For more information about how we use your data, including the generation of random identifiers',
+			)
 				.contains('privacy policy')
 				.click();
 			cy.url().should('eq', guardianPrivacyPolicyUrl);
