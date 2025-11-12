@@ -499,7 +499,9 @@ router.get(
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					continueLink,
-					isRegistering: encryptedCookieState?.signInOrRegister === 'REGISTER',
+					isRegistering:
+						encryptedCookieState?.userState === 'NOT_ACTIVE' ||
+						encryptedCookieState?.userState === 'NON_EXISTENT',
 				},
 			}),
 		});
