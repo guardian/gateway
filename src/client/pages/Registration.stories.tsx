@@ -26,3 +26,15 @@ export const WithJobs = (args: RegistrationProps) => (
 WithJobs.story = {
 	name: 'with Jobs terms',
 };
+
+export const WithPrintPromo = (args: RegistrationProps) => (
+	<Registration
+		{...{
+			...args,
+			queryParams: { ...args.queryParams, appClientId: 'printpromo' },
+		}}
+	/>
+);
+WithPrintPromo.story = {
+	name: 'with Print Promo lead text',
+};
