@@ -41,7 +41,7 @@
 		"@babel/preset-react": "^7.28.5",
 		"@babel/preset-typescript": "^7.28.5",
 		"@chromatic-com/storybook": "^3.2.6",
-		"@cypress/webpack-batteries-included-preprocessor": "^4.0.2",
+		"@cypress/webpack-batteries-included-preprocessor": "^4.0.3",
 		"@emotion/babel-preset-css-prop": "^11.12.0",
 		"@eslint/js": "^9.39.1",
 		"@guardian/eslint-config": "11.0.0",
@@ -54,7 +54,7 @@
 		"@storybook/addon-webpack5-compiler-babel": "^3.0.6",
 		"@storybook/preact-webpack5": "^8.6.14",
 		"@storybook/react": "^9.1.10",
-		"@swc/core": "^1.15.0",
+		"@swc/core": "^1.15.1",
 		"@swc/jest": "^0.2.39",
 		"@swc/plugin-emotion": "^13.0.0",
 		"@testing-library/cypress": "^10.1.0",
@@ -69,9 +69,9 @@
 		"@types/jest": "^30.0.0",
 		"@types/mjml": "^4.7.4",
 		"@types/ms": "^2.1.0",
-		"@types/node": "^24.10.0",
-		"@types/react": "^19.2.2",
-		"@types/react-dom": "^19.2.2",
+		"@types/node": "^24.10.1",
+		"@types/react": "^19.2.4",
+		"@types/react-dom": "^19.2.3",
 		"@types/serialize-javascript": "^5.0.4",
 		"@types/supertest": "^6.0.3",
 		"assets-webpack-plugin": "^7.1.1",
@@ -79,7 +79,7 @@
 		"chalk-rainbow": "^1.0.0",
 		"copy-webpack-plugin": "^13.0.1",
 		"crypto-browserify": "^3.12.1",
-		"cypress": "15.5.0",
+		"cypress": "15.6.0",
 		"cypress-axe": "^1.7.0",
 		"cypress-mailosaur": "2.17.0",
 		"dotenv-webpack": "^8.1.1",
@@ -97,8 +97,8 @@
 		"jest": "^30.2.0",
 		"jest-environment-jsdom": "^30.2.0",
 		"jest-mock": "^30.2.0",
-		"knip": "^5.67.1",
-		"nodemon": "^3.1.10",
+		"knip": "^5.69.1",
+		"nodemon": "^3.1.11",
 		"prettier": "^3.6.2",
 		"react-docgen-typescript-plugin": "^1.0.8",
 		"sharp": "^0.34.4",
@@ -107,8 +107,8 @@
 		"terser-webpack-plugin": "^5.3.14",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.46.3",
-		"wait-on": "^9.0.1",
+		"typescript-eslint": "^8.46.4",
+		"wait-on": "^9.0.3",
 		"webpack": "^5.102.1",
 		"webpack-bundle-analyzer": "^4.10.2",
 		"webpack-cli": "^6.0.1",
@@ -117,9 +117,9 @@
 		"zod-to-json-schema": "^3.24.6"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.922.0",
-		"@aws-sdk/client-sesv2": "^3.922.0",
-		"@aws-sdk/credential-providers": "^3.922.0",
+		"@aws-sdk/client-cloudwatch": "^3.930.0",
+		"@aws-sdk/client-sesv2": "^3.930.0",
+		"@aws-sdk/credential-providers": "^3.930.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.3",
 		"@guardian/ab-core": "8.0.2",
@@ -150,7 +150,7 @@
 		"serialize-javascript": "^7.0.0",
 		"supertest": "^7.1.4",
 		"tslib": "^2.8.1",
-		"winston": "^3.17.0",
+		"winston": "^3.18.3",
 		"zod": "^4.1.12"
 	},
 	"pnpm": {
@@ -161,5 +161,5 @@
 			"sharp"
 		]
 	},
-	"packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd"
+	"packageManager": "pnpm@10.22.0+sha512.bf049efe995b28f527fd2b41ae0474ce29186f7edcb3bf545087bd61fbbebb2bf75362d1307fda09c2d288e1e499787ac12d4fcb617a974718a6051f2eee741c"
 }

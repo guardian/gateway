@@ -47,13 +47,6 @@ const config = tseslint.config(
 				ecmaFeatures: {
 					jsx: true,
 				},
-
-				// list of all tsconfig files that should be used for type checking
-				project: [
-					'./tsconfig.json',
-					'./cypress/tsconfig.json',
-					'./scripts/okta/tsconfig.json',
-				],
 			},
 		},
 
