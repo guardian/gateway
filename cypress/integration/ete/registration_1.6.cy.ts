@@ -65,9 +65,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 							cy.get('input[name=code]').type(code!);
 
 							cy.contains("You're signed in! Welcome to the Guardian.");
-							cy.contains('Save and continue');
-
-							cy.get('[data-cy="main-form-submit-button"]').click();
+							cy.get('a').contains('Continue').click();
 							cy.url().should('include', expectedReturnUrl);
 
 							cy.getTestOktaUser(emailAddress).then((user) => {
@@ -301,7 +299,7 @@ describe('Registration flow - Split 1/3', () => {
 					});
 
 					cy.url().should('include', '/welcome/review');
-					cy.get('button[type="submit"]').click();
+					cy.get('a').contains('Continue').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
@@ -372,7 +370,7 @@ describe('Registration flow - Split 1/3', () => {
 					});
 
 					cy.url().should('include', '/welcome/review');
-					cy.get('button[type="submit"]').click();
+					cy.get('a').contains('Continue').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
@@ -804,6 +802,8 @@ describe('Registration flow - Split 1/3', () => {
 		});
 
 		context('ACTIVE user - with only password authenticator', () => {
+			// TODO - this is one of the flakey tests and quite often fails getting correct auth state cookie property
+			// 'authState.confirmationPage' back from okta after the /login/token/redirect enpoint
 			it('should sign in with passcode', () => {
 				/**
 				 * START - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR
