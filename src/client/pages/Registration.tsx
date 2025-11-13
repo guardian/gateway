@@ -1,6 +1,9 @@
 import React from 'react';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
+import {
+	AuthButtonProvider,
+	AuthProviderButtons,
+} from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
@@ -34,22 +37,33 @@ export const Registration = ({
 }: RegistrationProps) => {
 	const formTrackingName = 'register';
 
-	const { clientId } = queryParams;
+	const { clientId, appClientId } = queryParams;
 	const isJobs = clientId === 'jobs';
+	const isPrintPromo = appClientId === 'printpromo';
+
+	const providers = (): AuthButtonProvider[] => {
+		if (isPrintPromo) {
+			return ['email'];
+		}
+		return ['social', 'email'];
+	};
 
 	usePageLoadOphanInteraction(formTrackingName);
 
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
-			pageHeader="Create a free account"
-			leadText="One account to access all Guardian products."
+			pageHeader={
+				isPrintPromo ? 'Register for your reward' : 'Create a free account'
+			}
+			leadText={
+				isPrintPromo
+					? 'Create your account to receive your reward and access free Guardian newsletters.'
+					: 'One account to access all Guardian products.'
+			}
 		>
 			<RegistrationTerms isJobs={isJobs} />
-			<AuthProviderButtons
-				queryParams={queryParams}
-				providers={['social', 'email']}
-			/>
+			<AuthProviderButtons queryParams={queryParams} providers={providers()} />
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 			<MainBodyText>
 				Already have an account?{' '}

@@ -42,6 +42,7 @@ export interface PageData {
 	isNativeApp?: IsNativeApp;
 	accountManagementUrl?: string;
 	appName?: AppName;
+	isRegistering?: boolean;
 
 	// token
 	token?: string;
