@@ -29,8 +29,6 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
 import {
-	update as patchConsents,
-	getConsentValueFromRequestBody,
 	getUserConsentsForPage,
 	update as updateConsents,
 } from '@/server/lib/idapi/consents';
@@ -41,12 +39,10 @@ import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
 import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 
-import { updateRegistrationLocationViaOkta } from '@/server/lib/updateRegistrationLocation';
 import {
 	NewsletterMap,
 	getUserNewsletterSubscriptions,
 } from '@/server/lib/newsletters';
-import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
@@ -343,55 +339,6 @@ router.get(
 		});
 		res.type('html').send(html);
 	},
-);
-
-router.post(
-	'/welcome/review',
-	loginMiddlewareOAuth,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { returnUrl, fromURI } = state.queryParams;
-		if (!requestStateHasOAuthTokens(state)) {
-			return res.redirect(
-				303,
-				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
-			);
-		}
-
-		try {
-			// Attempt to update location for consented users.
-			await updateRegistrationLocationViaOkta(
-				req,
-				state.oauthState.accessToken,
-			);
-
-			const consents = CONSENTS_DATA_PAGE.map((id) => ({
-				id,
-				consented: getConsentValueFromRequestBody(id, req.body),
-			}));
-
-			await patchConsents({
-				accessToken: state.oauthState.accessToken.toString(),
-				payload: consents,
-			});
-
-			trackMetric('NewAccountReviewSubmit::Success');
-		} catch (error) {
-			// Never block the user at this point, so we'll just log the error
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-
-			trackMetric('NewAccountReviewSubmit::Failure');
-		} finally {
-			const nextPage = getNextWelcomeFlowPage({
-				geolocation: state.pageData.geolocation,
-				fromURI,
-				returnUrl,
-				queryParams: state.queryParams,
-			});
-			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-			return res.redirect(303, nextPage);
-		}
-	}),
 );
 
 router.post(
