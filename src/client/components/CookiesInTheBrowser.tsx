@@ -6,7 +6,7 @@ const styledText = css`
 	${textSans15}
 `;
 
-export const mainBodyTextMarginTopStyles = css`
+const mainBodyTextMarginTopStyles = css`
 	margin-top: ${remSpace[2]};
 `;
 
