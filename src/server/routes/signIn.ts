@@ -55,6 +55,7 @@ import {
 } from '@/server/controllers/signInControllers';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import { oktaRegistrationOrSignin } from './register';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
 	getConfiguration();
@@ -94,8 +95,9 @@ export const getErrorMessageFromQueryParams = (
 /**
  * Controller to render the sign in or create account page in both IDAPI and Okta
  */
+const signinRoutes: RoutePaths[] = ['/signin', '/iframed/signin'];
 router.get(
-	'/signin',
+	signinRoutes,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
@@ -110,39 +112,8 @@ router.get(
 		// if it exists
 		const email = decryptedEmail || signInEmail || readEmailCookie(req);
 
-		const html = renderer('/signin', {
-			requestState: mergeRequestState(state, {
-				pageData: {
-					email,
-					focusPasswordField: !!email,
-				},
-				globalMessage: {
-					error: getErrorMessageFromQueryParams(error, error_description),
-				},
-			}),
-			pageTitle: 'Sign in',
-		});
-		return res.type('html').send(html);
-	}),
-);
-
-router.get(
-	'/iframed/signin',
-	redirectIfLoggedIn,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { encryptedEmail, error, error_description, signInEmail } =
-			state.queryParams;
-
-		// first attempt to get email from IDAPI encryptedEmail if it exists
-		const decryptedEmail =
-			encryptedEmail && (await decrypt(encryptedEmail, req.ip));
-
-		// followed by the gateway EncryptedState
-		// if it exists
-		const email = decryptedEmail || signInEmail || readEmailCookie(req);
-
-		const html = renderer('/iframed/signin', {
+		const getPath = req.originalUrl as RoutePaths;
+		const html = renderer(getPath, {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,

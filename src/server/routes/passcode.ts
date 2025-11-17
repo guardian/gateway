@@ -179,7 +179,7 @@ router.get(
 			const errorRedirectPath =
 				encrypedCookieState.userState === 'NON_EXISTENT' ||
 				encrypedCookieState.userState === 'NOT_ACTIVE'
-					? '/iframed/register'
+					? '/iframed/register/email'
 					: '/iframed/signin';
 			res.redirect(
 				303,

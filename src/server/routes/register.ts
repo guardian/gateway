@@ -62,7 +62,7 @@ import {
 	oktaIdxApiSubmitPasscodeController,
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { getRoutePathFromUrl } from '@/shared/model/Routes';
+import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -109,14 +109,19 @@ router.get(
 	},
 );
 
-router.get(
+const emailRegisterRoutes: RoutePaths[] = [
 	'/register/email',
+	'/iframed/register/email',
+];
+router.get(
+	emailRegisterRoutes,
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const { error, error_description } = state.queryParams;
 
-		const html = renderer('/register/email', {
+		const getPath = req.originalUrl as RoutePaths;
+		const html = renderer(getPath, {
 			pageTitle: 'Register With Email',
 			requestState: mergeRequestState(state, {
 				pageData: {
@@ -452,10 +457,16 @@ const oktaIdxCreateAccountOrSignIn = async (
 
 		trackMetric('OktaIDXRegister::Success');
 
+		const referrerUrl = new URL(req.body.ref);
+		const referrerPath = referrerUrl.pathname;
+		const emailSentPage = referrerPath.includes('/iframed')
+			? '/iframed/passcode'
+			: '/passcode';
+
 		// redirect to the email sent page
 		return res.redirect(
 			303,
-			addQueryParamsToPath('/passcode', res.locals.queryParams),
+			addQueryParamsToPath(emailSentPage, res.locals.queryParams),
 		);
 	} catch (error) {
 		if (error instanceof OAuthError) {

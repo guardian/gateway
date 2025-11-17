@@ -30,7 +30,7 @@ export const ValidRoutePathsArray = [
 	'/oauth/authorization-code/interaction-code-callback',
 	'/iframed/signin',
 	'/iframed/passcode',
-	'/iframed/register',
+	'/iframed/register/email',
 	'/passcode',
 	'/passcode/resend',
 	'/passcode-used-register',
