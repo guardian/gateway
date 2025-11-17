@@ -48,6 +48,7 @@ import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
 import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
 import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { parse } from '@/shared/lib/regexparam';
+import { IframedRegisterWithEmailPage } from './pages/IframedRegisterWithEmailPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -165,6 +166,10 @@ const routes: Array<{
 	{
 		path: '/iframed/signin',
 		element: <IframedSignInPage />,
+	},
+	{
+		path: '/iframed/register/email',
+		element: <IframedRegisterWithEmailPage />,
 	},
 	{
 		path: '/iframed/passcode',
