@@ -14,7 +14,6 @@ export const IframedPasscodeEmailSentPage = () => {
 		shortRequestId,
 	} = clientState;
 	const { email, fieldErrors, token, passcodeSendAgainTimer } = pageData;
-	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -39,7 +38,6 @@ export const IframedPasscodeEmailSentPage = () => {
 			email={email}
 			queryString={queryString}
 			passcodeAction={buildUrl('/passcode')}
-			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName="register-or-signin-resend"

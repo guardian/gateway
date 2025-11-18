@@ -26,7 +26,6 @@ type IframedPasscodeEmailSentProps = EmailSentProps & Props;
 
 type Text = {
 	title: string;
-	successOverride: string;
 	sentTextWithEmail: string;
 	sentTextWithoutEmail: string;
 	securityText: string;
@@ -35,8 +34,7 @@ type Text = {
 };
 
 const text: Text = {
-	title: 'Enter your one-time code asd',
-	successOverride: 'Email with verification code sent',
+	title: 'Enter your code',
 	sentTextWithEmail: 'We’ve sent a temporary verification code to',
 	sentTextWithoutEmail:
 		'We’ve sent you a temporary verification code. Please check your inbox.',
@@ -74,12 +72,10 @@ export const IframedPasscodeEmailSent = ({
 	passcodeAction,
 	queryString,
 	recaptchaSiteKey,
-	showSuccess,
 	timeUntilTokenExpiry,
 	expiredPage,
 	shortRequestId,
 	noAccountInfo,
-	showSignInWithPasswordOption,
 	sendAgainTimerInSeconds,
 }: IframedPasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
@@ -176,7 +172,6 @@ export const IframedPasscodeEmailSent = ({
 			shortRequestId={shortRequestId}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
-			successOverride={showSuccess ? text.successOverride : undefined}
 		>
 			{email ? (
 				<MainBodyText>
@@ -215,7 +210,7 @@ export const IframedPasscodeEmailSent = ({
 				shortRequestId={shortRequestId}
 				noAccountInfo={noAccountInfo}
 				sendAgainTimerInSeconds={sendAgainTimerInSeconds}
-				showSignInWithPasswordOption={showSignInWithPasswordOption}
+				theme="secondary"
 			/>
 		</MinimalLayout>
 	);

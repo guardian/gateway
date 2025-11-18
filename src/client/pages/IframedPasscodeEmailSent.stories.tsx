@@ -100,11 +100,7 @@ WithRecaptchaError.story = {
 };
 
 export const WithSuccessMessage = () => (
-	<IframedPasscodeEmailSent
-		passcodeAction="#"
-		expiredPage="#"
-		showSuccess={true}
-	/>
+	<IframedPasscodeEmailSent passcodeAction="#" expiredPage="#" />
 );
 WithSuccessMessage.story = {
 	name: 'with success message - generic',
@@ -200,11 +196,7 @@ WithRecaptchaErrorVerification.story = {
 };
 
 export const WithSuccessMessageVerification = () => (
-	<IframedPasscodeEmailSent
-		passcodeAction="#"
-		expiredPage="#"
-		showSuccess={true}
-	/>
+	<IframedPasscodeEmailSent passcodeAction="#" expiredPage="#" />
 );
 WithSuccessMessageVerification.story = {
 	name: 'with success message - verification',
@@ -296,11 +288,7 @@ WithRecaptchaErrorVerification.story = {
 };
 
 export const WithSuccessMessageSignIn = () => (
-	<IframedPasscodeEmailSent
-		passcodeAction="#"
-		expiredPage="#"
-		showSuccess={true}
-	/>
+	<IframedPasscodeEmailSent passcodeAction="#" expiredPage="#" />
 );
 WithSuccessMessageVerification.story = {
 	name: 'with success message - signin',

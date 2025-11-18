@@ -41,6 +41,8 @@ interface SubmitHandlerErrorObject {
 	errorOccurred: boolean;
 }
 
+type TermsStyle = 'primary' | 'secondary';
+
 export interface MainFormProps {
 	wideLayout?: boolean;
 	formAction: string;
@@ -73,6 +75,7 @@ export interface MainFormProps {
 	hideRecaptchaMessage?: boolean;
 	additionalTerms?: ReactNode[];
 	primaryTermsPosition?: boolean;
+	termsStyle?: TermsStyle;
 	shortRequestId?: string;
 	disabled?: boolean;
 	formRef?: React.RefObject<HTMLFormElement | null>;
@@ -116,6 +119,7 @@ export const MainForm = ({
 	hideRecaptchaMessage,
 	additionalTerms,
 	primaryTermsPosition = true,
+	termsStyle = 'primary',
 	shortRequestId,
 	disabled = false,
 	// eslint-disable-next-line react-hooks/rules-of-hooks -- allow a formRef to be passed in or use a default value, either way a ref will be defined
@@ -278,26 +282,29 @@ export const MainForm = ({
 		setRecaptchaErrorMessage,
 	]);
 
-	const Terms = () => (
-		<>
-			{(additionalTerms ||
-				hasGuardianTerms ||
-				hasJobsTerms ||
-				(recaptchaEnabled && !hideRecaptchaMessage)) && (
-				<InformationBox>
-					{hasGuardianTerms && <GuardianTerms />}
-					{hasJobsTerms && <JobsTerms />}
-					{additionalTerms &&
-						additionalTerms.map((specificTermsItem) => {
-							return (
-								<InformationBoxText>{specificTermsItem}</InformationBoxText>
-							);
-						})}
-					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
-				</InformationBox>
-			)}
-		</>
-	);
+	const Terms = ({ theme }: { theme: TermsStyle }) => {
+		const BoxContainer = theme === 'primary' ? InformationBox : 'div';
+		return (
+			<>
+				{(additionalTerms ||
+					hasGuardianTerms ||
+					hasJobsTerms ||
+					(recaptchaEnabled && !hideRecaptchaMessage)) && (
+					<BoxContainer>
+						{hasGuardianTerms && <GuardianTerms />}
+						{hasJobsTerms && <JobsTerms />}
+						{additionalTerms &&
+							additionalTerms.map((specificTermsItem) => {
+								return (
+									<InformationBoxText>{specificTermsItem}</InformationBoxText>
+								);
+							})}
+						{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
+					</BoxContainer>
+				)}
+			</>
+		);
+	};
 
 	return (
 		<form
@@ -335,7 +342,7 @@ export const MainForm = ({
 			<CsrfFormField />
 			<RefTrackingFormFields />
 			{children}
-			{primaryTermsPosition && <Terms />}
+			{primaryTermsPosition && <Terms theme={termsStyle} />}
 
 			{submitButtonLink ? (
 				<ButtonLink
@@ -365,7 +372,7 @@ export const MainForm = ({
 					{submitButtonText}
 				</Button>
 			)}
-			{!primaryTermsPosition && <Terms />}
+			{!primaryTermsPosition && <Terms theme={termsStyle} />}
 		</form>
 	);
 };

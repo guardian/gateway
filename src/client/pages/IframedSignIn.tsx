@@ -153,8 +153,8 @@ export const IframedSignIn = ({
 		<MinimalLayout
 			errorContext={getErrorContext(pageError, queryParams)}
 			errorOverride={pageError}
-			leadText="This unlocks your premium experience, online and in the app."
 			pageHeader="Sign in to your account"
+			leadText="This unlocks your premium experience, online and in the app."
 			shortRequestId={shortRequestId}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
@@ -183,6 +183,7 @@ export const IframedSignIn = ({
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
 				primaryTermsPosition={false}
+				termsStyle="secondary"
 			>
 				<input
 					type="hidden"
