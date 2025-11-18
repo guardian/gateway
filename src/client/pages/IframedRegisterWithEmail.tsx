@@ -5,8 +5,6 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { RegistrationProps } from '@/client/pages/Registration';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { changeSettingsTerms } from '@/client/components/RegistrationConsents';
-import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
@@ -47,15 +45,14 @@ export const IframedRegisterWithEmail = ({
 	shortRequestId,
 	pageError,
 }: RegisterWithEmailProps) => {
-	const formTrackingName = 'register';
+	const formTrackingName = 'register-iframed';
 
 	usePageLoadOphanInteraction(formTrackingName);
-
-	const isJobs = queryParams.clientId === 'jobs';
 
 	return (
 		<MinimalLayout
 			pageHeader="Create your account"
+			leadText="Unlock your premium experience, online and in the app."
 			shortRequestId={shortRequestId}
 			errorContext={getErrorContext(pageError)}
 			errorOverride={pageError}
@@ -73,14 +70,15 @@ export const IframedRegisterWithEmail = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms={[
-					newsletterAdditionalTerms,
-					isJobs === false && changeSettingsTerms,
-				].filter(Boolean)}
+				termsStyle="secondary"
 				primaryTermsPosition={false}
 				shortRequestId={shortRequestId}
 			>
-				<EmailInput defaultValue={email} autoComplete="off" />
+				<EmailInput
+					label="Email address"
+					defaultValue={email}
+					autoComplete="off"
+				/>
 			</MainForm>
 		</MinimalLayout>
 	);

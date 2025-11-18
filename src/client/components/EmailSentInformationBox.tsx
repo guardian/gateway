@@ -14,6 +14,8 @@ import ThemedLink from '@/client/components/ThemedLink';
 import { EmailSentProps } from '@/client/pages/EmailSent';
 import { useCountdownTimer } from '@/client/lib/hooks/useCountdownTimer';
 
+type EmailSentInformationBoxTheme = 'primary' | 'secondary';
+
 type EmailSentInformationBoxProps = Pick<
 	EmailSentProps,
 	| 'email'
@@ -32,6 +34,7 @@ type EmailSentInformationBoxProps = Pick<
 	setRecaptchaErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 	sendAgainTimerInSeconds?: number;
 	showSignInWithPasswordOption?: boolean;
+	theme?: EmailSentInformationBoxTheme;
 };
 
 const sendAgainFormWrapperStyles = css`
@@ -52,11 +55,13 @@ export const EmailSentInformationBox = ({
 	shortRequestId,
 	sendAgainTimerInSeconds,
 	showSignInWithPasswordOption,
+	theme = 'primary',
 }: EmailSentInformationBoxProps) => {
 	const timer = useCountdownTimer(sendAgainTimerInSeconds || 0);
 
+	const BoxContainer = theme === 'primary' ? InformationBox : 'div';
 	return (
-		<InformationBox>
+		<BoxContainer>
 			<InformationBoxText>
 				Didn’t get the email? Check your spam&#8288;
 				{email && resendEmailAction && (
@@ -123,6 +128,6 @@ export const EmailSentInformationBox = ({
 					{SUPPORT_EMAIL}
 				</ExternalLink>
 			</InformationBoxText>
-		</InformationBox>
+		</BoxContainer>
 	);
 };
