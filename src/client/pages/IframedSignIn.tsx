@@ -182,13 +182,14 @@ export const IframedSignIn = ({
 				// instead of being handled by showAuthProviderButtons(), above.
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
+				primaryTermsPosition={false}
 			>
 				<input
 					type="hidden"
 					name="isCombinedSigninAndRegisterFlow"
 					value="combined"
 				/>
-				<EmailInput defaultValue={email} />
+				<EmailInput label="Email address" defaultValue={email} />
 				<input type="hidden" name="passcode" value="passcode" />
 			</MainForm>
 		</MinimalLayout>

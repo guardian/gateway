@@ -77,6 +77,7 @@ export const IframedRegisterWithEmail = ({
 					newsletterAdditionalTerms,
 					isJobs === false && changeSettingsTerms,
 				].filter(Boolean)}
+				primaryTermsPosition={false}
 				shortRequestId={shortRequestId}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
