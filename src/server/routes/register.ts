@@ -109,29 +109,41 @@ router.get(
 	},
 );
 
-const emailRegisterRoutes: RoutePaths[] = [
-	'/register/email',
-	'/iframed/register/email',
-];
+const handleRegisterByPasscode = (
+	req: Request,
+	res: ResponseWithRequestState,
+): string => {
+	const state = res.locals;
+	const { error, error_description } = state.queryParams;
+
+	const getPath = req.originalUrl as RoutePaths;
+	const html = renderer(getPath, {
+		pageTitle: 'Register With Email',
+		requestState: mergeRequestState(state, {
+			pageData: {
+				email: readEmailCookie(req),
+			},
+			globalMessage: {
+				error: getErrorMessageFromQueryParams(error, error_description),
+			},
+		}),
+	});
+	return html;
+};
 router.get(
-	emailRegisterRoutes,
+	'/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { error, error_description } = state.queryParams;
+		const html = handleRegisterByPasscode(req, res);
+		res.type('html').send(html);
+	},
+);
 
-		const getPath = req.originalUrl as RoutePaths;
-		const html = renderer(getPath, {
-			pageTitle: 'Register With Email',
-			requestState: mergeRequestState(state, {
-				pageData: {
-					email: readEmailCookie(req),
-				},
-				globalMessage: {
-					error: getErrorMessageFromQueryParams(error, error_description),
-				},
-			}),
-		});
+router.get(
+	'/iframed/register/email',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const html = handleRegisterByPasscode(req, res);
 		res.type('html').send(html);
 	},
 );
