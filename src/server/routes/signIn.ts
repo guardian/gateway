@@ -95,36 +95,52 @@ export const getErrorMessageFromQueryParams = (
 /**
  * Controller to render the sign in or create account page in both IDAPI and Okta
  */
-const signinRoutes: RoutePaths[] = ['/signin', '/iframed/signin'];
+const handleSigninRender = async (
+	req: Request,
+	res: ResponseWithRequestState,
+): Promise<string> => {
+	const state = res.locals;
+	const { encryptedEmail, error, error_description, signInEmail } =
+		state.queryParams;
+
+	// first attempt to get email from IDAPI encryptedEmail if it exists
+	const decryptedEmail =
+		encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+	// followed by the gateway EncryptedState
+	// if it exists
+	const email = decryptedEmail || signInEmail || readEmailCookie(req);
+
+	const getPath = req.originalUrl as RoutePaths;
+	const html = renderer(getPath, {
+		requestState: mergeRequestState(state, {
+			pageData: {
+				email,
+				focusPasswordField: !!email,
+			},
+			globalMessage: {
+				error: getErrorMessageFromQueryParams(error, error_description),
+			},
+		}),
+		pageTitle: 'Sign in',
+	});
+	return html;
+};
+
 router.get(
-	signinRoutes,
+	'/signin',
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { encryptedEmail, error, error_description, signInEmail } =
-			state.queryParams;
+		const html = await handleSigninRender(req, res);
+		return res.type('html').send(html);
+	}),
+);
 
-		// first attempt to get email from IDAPI encryptedEmail if it exists
-		const decryptedEmail =
-			encryptedEmail && (await decrypt(encryptedEmail, req.ip));
-
-		// followed by the gateway EncryptedState
-		// if it exists
-		const email = decryptedEmail || signInEmail || readEmailCookie(req);
-
-		const getPath = req.originalUrl as RoutePaths;
-		const html = renderer(getPath, {
-			requestState: mergeRequestState(state, {
-				pageData: {
-					email,
-					focusPasswordField: !!email,
-				},
-				globalMessage: {
-					error: getErrorMessageFromQueryParams(error, error_description),
-				},
-			}),
-			pageTitle: 'Sign in',
-		});
+router.get(
+	'/iframed/signin',
+	redirectIfLoggedIn,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const html = await handleSigninRender(req, res);
 		return res.type('html').send(html);
 	}),
 );
