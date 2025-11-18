@@ -16,7 +16,6 @@ import { getConfiguration } from '../lib/getConfiguration';
 import { getErrorMessageFromQueryParams } from './signIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
-import { getRoutePathFromUrl } from '@/shared/model/Routes';
 
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
@@ -194,11 +193,11 @@ router.post(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const encrypedCookieState = readEncryptedStateCookie(req);
 
-		const refPath = getRoutePathFromUrl(res.locals.queryParams.ref);
-
-		if (refPath?.startsWith('/iframed')) {
-			return await oktaIdxApiSubmitPasscodeController({ req, res });
-		}
+		//const refPath = getRoutePathFromUrl(res.locals.queryParams.ref);
+		//if (refPath?.startsWith('/iframed')) {
+		//return await oktaIdxApiSubmitPasscodeController({ req, res });
+		//}
+		//TODO : is a 'register' from the supporter onboarding journey really a register or a sign in?
 
 		switch (encrypedCookieState?.signInOrRegister) {
 			case 'REGISTER':

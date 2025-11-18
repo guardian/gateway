@@ -72,6 +72,7 @@ export interface MainFormProps {
 	submitButtonLink?: boolean;
 	hideRecaptchaMessage?: boolean;
 	additionalTerms?: ReactNode[];
+	primaryTermsPosition?: boolean;
 	shortRequestId?: string;
 	disabled?: boolean;
 	formRef?: React.RefObject<HTMLFormElement | null>;
@@ -114,6 +115,7 @@ export const MainForm = ({
 	submitButtonLink,
 	hideRecaptchaMessage,
 	additionalTerms,
+	primaryTermsPosition = true,
 	shortRequestId,
 	disabled = false,
 	// eslint-disable-next-line react-hooks/rules-of-hooks -- allow a formRef to be passed in or use a default value, either way a ref will be defined
@@ -276,6 +278,27 @@ export const MainForm = ({
 		setRecaptchaErrorMessage,
 	]);
 
+	const Terms = () => (
+		<>
+			{(additionalTerms ||
+				hasGuardianTerms ||
+				hasJobsTerms ||
+				(recaptchaEnabled && !hideRecaptchaMessage)) && (
+				<InformationBox>
+					{hasGuardianTerms && <GuardianTerms />}
+					{hasJobsTerms && <JobsTerms />}
+					{additionalTerms &&
+						additionalTerms.map((specificTermsItem) => {
+							return (
+								<InformationBoxText>{specificTermsItem}</InformationBoxText>
+							);
+						})}
+					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
+				</InformationBox>
+			)}
+		</>
+	);
+
 	return (
 		<form
 			css={formStyles(displayInline)}
@@ -312,22 +335,7 @@ export const MainForm = ({
 			<CsrfFormField />
 			<RefTrackingFormFields />
 			{children}
-			{(additionalTerms ||
-				hasGuardianTerms ||
-				hasJobsTerms ||
-				(recaptchaEnabled && !hideRecaptchaMessage)) && (
-				<InformationBox>
-					{hasGuardianTerms && <GuardianTerms />}
-					{hasJobsTerms && <JobsTerms />}
-					{additionalTerms &&
-						additionalTerms.map((specificTermsItem) => {
-							return (
-								<InformationBoxText>{specificTermsItem}</InformationBoxText>
-							);
-						})}
-					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
-				</InformationBox>
-			)}
+			{primaryTermsPosition && <Terms />}
 
 			{submitButtonLink ? (
 				<ButtonLink
@@ -357,6 +365,7 @@ export const MainForm = ({
 					{submitButtonText}
 				</Button>
 			)}
+			{!primaryTermsPosition && <Terms />}
 		</form>
 	);
 };
