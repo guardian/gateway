@@ -143,7 +143,6 @@ router.get(
 			return res.send(403);
 		}
 		try {
-			//////////////
 			const queryParams = state.queryParams;
 			const { error, error_description } = queryParams;
 
@@ -171,8 +170,6 @@ router.get(
 				pageTitle: 'Check Your Inbox',
 			});
 			return res.type('html').send(html);
-
-			//////////////
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl} Error`, error);
 			const errorRedirectPath =

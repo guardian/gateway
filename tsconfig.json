@@ -1,51 +1,37 @@
 {
-    "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "jsx": "preserve",
-        "module": "commonjs",
-        "noUnusedLocals": true,
-        "outDir": "build",
-        "strict": true,
-        "target": "ES2022",
-        "types": [
-            "@emotion/react",
-            "jest",
-            "@testing-library/jest-dom"
-        ],
-        "baseUrl": "src",
-        "paths": {
-            "@/*": [
-                "*"
-            ],
-            "react": [
-                "./node_modules/preact/compat/"
-            ],
-            "react-dom": [
-                "./node_modules/preact/compat/"
-            ]
-        },
-        "lib": [
-            "ES2022",
-            "DOM",
-            "dom.iterable"
-        ],
-        "importHelpers": true,
-        "allowJs": true,
-        "isolatedModules": true
-    },
-    "include": [
-        "src",
-        ".storybook/*",
-        "__mocks__/*",
-        "util/*",
-        "scripts/*.js",
-        "scripts/generate-rate-limit-schema.ts",
-        "knip.ts",
-        ".swcrc.config.js",
-        "babel.config.js",
-        "jest.config.js",
-        "webpack.config.js",
-        "webpack.development.js"
-    ]
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"jsx": "preserve",
+		"module": "commonjs",
+		"noUnusedLocals": true,
+		"outDir": "build",
+		"strict": true,
+		"target": "ES2022",
+		"types": ["@emotion/react", "jest", "@testing-library/jest-dom"],
+		"baseUrl": "src",
+		"paths": {
+			"@/*": ["*"],
+			"react": ["./node_modules/preact/compat/"],
+			"react-dom": ["./node_modules/preact/compat/"]
+		},
+		"lib": ["ES2022", "DOM", "dom.iterable"],
+		"importHelpers": true,
+		"allowJs": true,
+		"isolatedModules": true
+	},
+	"include": [
+		"src",
+		".storybook/*",
+		"__mocks__/*",
+		"util/*",
+		"scripts/*.js",
+		"scripts/generate-rate-limit-schema.ts",
+		"knip.ts",
+		".swcrc.config.js",
+		"babel.config.js",
+		"jest.config.js",
+		"webpack.config.js",
+		"webpack.development.js"
+	]
 }
