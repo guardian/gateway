@@ -186,6 +186,7 @@ export const IframedPasscodeEmailSent = ({
 				formAction={formAction}
 				submitButtonText={text.submitButtonText}
 				onSubmit={handleFormSubmit}
+				disableOnSubmit={true}
 				shortRequestId={shortRequestId}
 				formRef={formRef}
 			>
