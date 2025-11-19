@@ -12,7 +12,7 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { Theme } from '@/client/styles/Theme';
+import { DarkTheme, LightTheme, Theme } from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -40,6 +40,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
+	overrideTheme?: 'light' | 'dark';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -81,6 +82,7 @@ export const MinimalLayout = ({
 	errorContext,
 	showErrorReportUrl = false,
 	shortRequestId,
+	overrideTheme,
 }: MinimalLayoutProps) => {
 	const clientState = useClientState();
 	const { globalMessage: { error, success } = {} } = clientState;
@@ -88,9 +90,19 @@ export const MinimalLayout = ({
 	const successMessage = successOverride || success;
 	const errorMessage = errorOverride || error;
 
+	const getTheme = () => {
+		if (overrideTheme === 'light') {
+			return <LightTheme />;
+		}
+		if (overrideTheme === 'dark') {
+			return <DarkTheme />;
+		}
+		return <Theme />;
+	};
+
 	return (
 		<>
-			<Theme />
+			{getTheme()}
 			{showGuardianHeader && <MinimalHeader />}
 			<main css={showGuardianHeader ? mainStyles(wide) : mainStylesStretch}>
 				{imageId && <MinimalLayoutImage id={imageId} />}

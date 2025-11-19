@@ -100,3 +100,35 @@ export const Theme = () => {
 		/>
 	);
 };
+
+export const LightTheme = () => {
+	return (
+		<Global
+			styles={css`
+				:root {
+					${lightTheme}
+				}
+
+				body {
+					background: var(--color-background);
+				}
+			`}
+		/>
+	);
+};
+
+export const DarkTheme = () => {
+	return (
+		<Global
+			styles={css`
+				:root {
+					${darkTheme}
+				}
+
+				body {
+					background: var(--color-background);
+				}
+			`}
+		/>
+	);
+};

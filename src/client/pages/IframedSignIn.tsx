@@ -158,6 +158,7 @@ export const IframedSignIn = ({
 			shortRequestId={shortRequestId}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
+			overrideTheme="light"
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{!hideSocialButtons &&
