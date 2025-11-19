@@ -58,6 +58,7 @@ export const IframedRegisterWithEmail = ({
 			errorOverride={pageError}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
+			overrideTheme="light"
 		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
