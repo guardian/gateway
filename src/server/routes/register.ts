@@ -112,6 +112,7 @@ router.get(
 const handleRegisterByPasscode = (
 	req: Request,
 	res: ResponseWithRequestState,
+	overrideEmailAddress?: string | null,
 ): string => {
 	const state = res.locals;
 	const { error, error_description } = state.queryParams;
@@ -121,7 +122,7 @@ const handleRegisterByPasscode = (
 		pageTitle: 'Register With Email',
 		requestState: mergeRequestState(state, {
 			pageData: {
-				email: readEmailCookie(req),
+				email: overrideEmailAddress || readEmailCookie(req),
 			},
 			globalMessage: {
 				error: getErrorMessageFromQueryParams(error, error_description),
@@ -143,7 +144,15 @@ router.get(
 	'/iframed/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
-		const html = handleRegisterByPasscode(req, res);
+		const params = new URLSearchParams(
+			req.url.substring(req.url.indexOf('?'), req.url.length),
+		);
+		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulatedEmail = prepopulatedEmailParamEncoded
+			? decodeURIComponent(prepopulatedEmailParamEncoded)
+			: null;
+
+		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
 		res.type('html').send(html);
 	},
 );

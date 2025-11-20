@@ -21,6 +21,8 @@ import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
+import IframeThemedEmailInput from '../components/IframeThemedEmailInput';
+import { disableAutofillBackground } from '../styles/Shared';
 
 export type IframedSignInProps = {
 	queryParams: QueryParams;
@@ -158,7 +160,7 @@ export const IframedSignIn = ({
 			shortRequestId={shortRequestId}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
-			overrideTheme="light"
+			overrideTheme="iframe-light"
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{!hideSocialButtons &&
@@ -191,7 +193,21 @@ export const IframedSignIn = ({
 					name="isCombinedSigninAndRegisterFlow"
 					value="combined"
 				/>
-				<EmailInput label="Email address" defaultValue={email} />
+				{email ? (
+					<IframeThemedEmailInput
+						label="Email address"
+						name="email"
+						type="email"
+						autoComplete="email"
+						defaultValue={email}
+						cssOverrides={disableAutofillBackground}
+						readOnly
+						aria-readonly
+					/>
+				) : (
+					<EmailInput label="Email address" defaultValue={email} />
+				)}
+
 				<input type="hidden" name="passcode" value="passcode" />
 			</MainForm>
 		</MinimalLayout>
