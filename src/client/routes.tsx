@@ -310,8 +310,12 @@ interface Props {
 }
 
 export const GatewayRoutes = ({ location }: Props) => {
+	const locationWithoutParams = location.includes('?')
+		? location.substring(0, location.indexOf('?'))
+		: location;
+
 	for (const route of routes) {
-		if (parse(route.path).pattern.test(location)) {
+		if (parse(route.path).pattern.test(locationWithoutParams)) {
 			return route.element;
 		}
 	}
