@@ -12,7 +12,7 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { DarkTheme, LightTheme, Theme } from '@/client/styles/Theme';
+import { IframeLightTheme, Theme } from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -40,7 +40,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'light' | 'dark';
+	overrideTheme?: 'iframe-light';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -91,11 +91,8 @@ export const MinimalLayout = ({
 	const errorMessage = errorOverride || error;
 
 	const getTheme = () => {
-		if (overrideTheme === 'light') {
-			return <LightTheme />;
-		}
-		if (overrideTheme === 'dark') {
-			return <DarkTheme />;
+		if (overrideTheme === 'iframe-light') {
+			return <IframeLightTheme />;
 		}
 		return <Theme />;
 	};

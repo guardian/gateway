@@ -98,6 +98,7 @@ export const getErrorMessageFromQueryParams = (
 const handleSigninRender = async (
 	req: Request,
 	res: ResponseWithRequestState,
+	overrideEmailAddress?: string | null,
 ): Promise<string> => {
 	const state = res.locals;
 	const { encryptedEmail, error, error_description, signInEmail } =
@@ -115,7 +116,7 @@ const handleSigninRender = async (
 	const html = renderer(getPath, {
 		requestState: mergeRequestState(state, {
 			pageData: {
-				email,
+				email: overrideEmailAddress || email,
 				focusPasswordField: !!email,
 			},
 			globalMessage: {
@@ -140,7 +141,15 @@ router.get(
 	'/iframed/signin',
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const html = await handleSigninRender(req, res);
+		const params = new URLSearchParams(
+			req.url.substring(req.url.indexOf('?'), req.url.length),
+		);
+		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulatedEmail = prepopulatedEmailParamEncoded
+			? decodeURIComponent(prepopulatedEmailParamEncoded)
+			: null;
+
+		const html = await handleSigninRender(req, res, prepopulatedEmail);
 		return res.type('html').send(html);
 	}),
 );

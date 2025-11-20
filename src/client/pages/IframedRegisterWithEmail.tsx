@@ -10,6 +10,8 @@ import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
+import IframeThemedEmailInput from '../components/IframeThemedEmailInput';
+import { disableAutofillBackground } from '../styles/Shared';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	shortRequestId?: string;
@@ -58,7 +60,7 @@ export const IframedRegisterWithEmail = ({
 			errorOverride={pageError}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
-			overrideTheme="light"
+			overrideTheme="iframe-light"
 		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
@@ -75,11 +77,24 @@ export const IframedRegisterWithEmail = ({
 				primaryTermsPosition={false}
 				shortRequestId={shortRequestId}
 			>
-				<EmailInput
-					label="Email address"
-					defaultValue={email}
-					autoComplete="off"
-				/>
+				{email ? (
+					<IframeThemedEmailInput
+						label="Email address"
+						name="email"
+						type="email"
+						autoComplete="email"
+						defaultValue={email}
+						cssOverrides={disableAutofillBackground}
+						readOnly
+						aria-readonly
+					/>
+				) : (
+					<EmailInput
+						label="Email address"
+						defaultValue={email}
+						autoComplete="off"
+					/>
+				)}
 			</MainForm>
 		</MinimalLayout>
 	);

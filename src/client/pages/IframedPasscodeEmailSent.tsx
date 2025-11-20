@@ -172,7 +172,7 @@ export const IframedPasscodeEmailSent = ({
 			shortRequestId={shortRequestId}
 			showGuardianHeader={false}
 			subduedHeadingStyle={true}
-			overrideTheme="light"
+			overrideTheme="iframe-light"
 		>
 			{email ? (
 				<MainBodyText>
