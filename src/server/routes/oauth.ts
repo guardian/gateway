@@ -505,7 +505,8 @@ const authenticationHandler = async (
 		if (
 			authState.queryParams.fromURI &&
 			// even if a fromURI is set we still want users to review their account settings
-			authState.confirmationPage !== '/welcome/review'
+			authState.confirmationPage !== '/welcome/review' &&
+			authState.confirmationPage !== '/welcome/complete-account'
 		) {
 			return res.redirect(303, authState.queryParams.fromURI);
 		}
