@@ -20,6 +20,8 @@ import { RegistrationPasscode } from './RegistrationPasscode/RegistrationPasscod
 import { RegistrationPasscodeText } from './RegistrationPasscode/RegistrationPasscodeText';
 import { EmailChallengePasscodeText } from './EmailChallengePasscode/EmailChallengePasscodeText';
 import { EmailChallengePasscode } from './EmailChallengePasscode/EmailChallengePasscode';
+import { PrintPromoSignUp } from './PrintPromoSignUp/PrintPromoSignUp';
+import { PrintPromoSignUpText } from './PrintPromoSignUp/PrintPromoSignUpText';
 
 type EmailRenderResult = {
 	plain: string;
@@ -74,4 +76,9 @@ export const renderedRegistrationPasscode = {
 export const renderedEmailChallengePasscode = {
 	plain: EmailChallengePasscodeText(),
 	html: render(EmailChallengePasscode({})).html,
+};
+
+export const renderedPrintPromoSignUp = {
+	plain: PrintPromoSignUpText(),
+	html: render(PrintPromoSignUp()).html,
 };
