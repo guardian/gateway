@@ -168,6 +168,11 @@ export const getConfiguration = (): Configuration => {
 		'User Benefits API URL missing.',
 	);
 
+	const printPromoUrl = getOrThrow(
+		process.env.PRINT_PROMO_URL,
+		'Print Promo URL missing.',
+	);
+
 	const okta: Okta = {
 		enabled: true,
 		orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
@@ -244,6 +249,7 @@ export const getConfiguration = (): Configuration => {
 		rateLimiter,
 		membersDataApiUrl,
 		userBenefitsApiUrl,
+		printPromoUrl,
 		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
 	};

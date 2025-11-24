@@ -44,6 +44,7 @@ describe('getConfiguration', () => {
 			'okta-guardian-users-group-id';
 		process.env.MEMBERS_DATA_API_URL = 'members-data-api-url';
 		process.env.USER_BENEFITS_API_URL = 'user-benefits-api-url';
+		process.env.PRINT_PROMO_URL = 'print-promo-url';
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_URL =
 			'delete-account-step-function-url';
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY = 'delete-account-api-key';
