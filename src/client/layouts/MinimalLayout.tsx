@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import MinimalHeader from '@/client/components/MinimalHeader';
 import {
@@ -63,6 +63,12 @@ const mainStylesStretch = css`
 	gap: ${CONTAINER_GAP};
 `;
 
+const iframeThemeWrapperStyles = css`
+	display: flex;
+	flex-direction: column;
+	gap: ${remSpace[2]};
+`;
+
 const pageHeaderStyles = (subduedHeadingStyle: boolean) => css`
 	color: var(--color-heading);
 	${subduedHeadingStyle ? headlineMedium28 : headlineBold28};
@@ -97,22 +103,35 @@ export const MinimalLayout = ({
 		return <Theme />;
 	};
 
+	const ConditionalIframeThemeWrapper = ({
+		children,
+	}: {
+		children: ReactNode | ReactElement;
+	}) =>
+		overrideTheme?.includes('iframe') ? (
+			<section css={iframeThemeWrapperStyles}>{children}</section>
+		) : (
+			children
+		);
+
 	return (
 		<>
 			{getTheme()}
 			{showGuardianHeader && <MinimalHeader />}
 			<main css={showGuardianHeader ? mainStyles(wide) : mainStylesStretch}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
-				{pageHeader && (
-					<header>
-						<h1 css={pageHeaderStyles(subduedHeadingStyle)}>{pageHeader}</h1>
-					</header>
-				)}
-				{leadText && typeof leadText === 'string' ? (
-					<MainBodyText>{leadText}</MainBodyText>
-				) : (
-					leadText
-				)}
+				<ConditionalIframeThemeWrapper>
+					{pageHeader && (
+						<header>
+							<h1 css={pageHeaderStyles(subduedHeadingStyle)}>{pageHeader}</h1>
+						</header>
+					)}
+					{leadText && typeof leadText === 'string' ? (
+						<MainBodyText>{leadText}</MainBodyText>
+					) : (
+						leadText
+					)}
+				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
 					{errorMessage && (
 						<GatewayErrorSummary
