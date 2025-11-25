@@ -9,7 +9,11 @@ const textInputTheme = {
 };
 
 const IframeThemedEmailInput = (props: Omit<TextInputProps, 'theme'>) => {
-	return <TextInput {...props} theme={textInputTheme} />;
+	return (
+		<div>
+			<TextInput {...props} theme={textInputTheme} />
+		</div>
+	);
 };
 
 export default IframeThemedEmailInput;

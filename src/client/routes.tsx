@@ -94,10 +94,6 @@ const routes: Array<{
 		element: <RegistrationEmailSentPage />,
 	},
 	{
-		path: '/register/email-sent',
-		element: <RegistrationEmailSentPage />,
-	},
-	{
 		path: '/signin/password',
 		element: <SignInPage hideSocialButtons forcePasswordPage />,
 	},
