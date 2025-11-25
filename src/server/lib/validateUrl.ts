@@ -8,7 +8,7 @@ const validHostnames = [
 ];
 
 // valid subdomains
-const validSubdomains = ['profile.', 'support.'];
+const validSubdomains = ['profile.', 'support.', 'observer.'];
 
 // invalid paths for profile subdomain
 const invalidPaths = ['/signout'];
