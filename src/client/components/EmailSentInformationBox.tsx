@@ -35,6 +35,7 @@ type EmailSentInformationBoxProps = Pick<
 	sendAgainTimerInSeconds?: number;
 	showSignInWithPasswordOption?: boolean;
 	theme?: EmailSentInformationBoxTheme;
+	isIframed?: boolean;
 };
 
 const sendAgainFormWrapperStyles = css`
@@ -56,6 +57,7 @@ export const EmailSentInformationBox = ({
 	sendAgainTimerInSeconds,
 	showSignInWithPasswordOption,
 	theme = 'primary',
+	isIframed = false,
 }: EmailSentInformationBoxProps) => {
 	const timer = useCountdownTimer(sendAgainTimerInSeconds || 0);
 
@@ -88,6 +90,7 @@ export const EmailSentInformationBox = ({
 								hideRecaptchaMessage
 								shortRequestId={shortRequestId}
 								disabled={!!(sendAgainTimerInSeconds && !timer.isComplete)}
+								isIframed={isIframed}
 							>
 								<EmailInput defaultValue={email} hidden hideLabel />
 							</MainForm>

@@ -160,6 +160,20 @@ export const MainForm = ({
 		return !!(submitHandler as SubmitHandlerErrorObject)?.errorOccurred;
 	};
 
+	useEffect(() => {
+		if (isIframed) {
+			const height = document.body.scrollHeight;
+			window.parent.postMessage(
+				{
+					context: 'supporterOnboarding',
+					type: 'iframeHeightChange',
+					value: height,
+				},
+				'*',
+			);
+		}
+	}, [isIframed, disabled]);
+
 	/**
 	 * Executes the reCAPTCHA check and form submit tracking.
 	 * Prevents the form from submitting until the reCAPTCHA check is complete.

@@ -217,6 +217,7 @@ export const IframedPasscodeEmailSent = ({
 					label={text.passcodeInputLabel}
 					formRef={formRef}
 					autoFocus
+					isIframed={true}
 				/>
 			</MainForm>
 			<EmailSentInformationBox
@@ -233,6 +234,7 @@ export const IframedPasscodeEmailSent = ({
 				noAccountInfo={noAccountInfo}
 				sendAgainTimerInSeconds={sendAgainTimerInSeconds}
 				theme="secondary"
+				isIframed={true}
 			/>
 		</MinimalLayout>
 	);

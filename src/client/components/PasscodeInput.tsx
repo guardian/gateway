@@ -9,6 +9,7 @@ interface PasscodeInputProps extends TextInputProps {
 	passcode?: string;
 	fieldErrors?: FieldError[];
 	formRef: React.RefObject<HTMLFormElement | null>;
+	isIframed?: boolean;
 }
 
 const passcodeInputStyles = css`
@@ -22,6 +23,7 @@ export const PasscodeInput = ({
 	fieldErrors,
 	formRef,
 	autoFocus,
+	isIframed = false,
 }: PasscodeInputProps) => {
 	/**
 	 * In gateway we normally avoid using client side javascript, but in this case
@@ -62,7 +64,18 @@ export const PasscodeInput = ({
 				button?.dispatchEvent(new MouseEvent('click'));
 			}
 		}
-	}, [fieldErrors, formRef, input.value, userInteracted]);
+		if (isIframed) {
+			const height = document.body.scrollHeight;
+			window.parent.postMessage(
+				{
+					context: 'supporterOnboarding',
+					type: 'iframeHeightChange',
+					value: height,
+				},
+				'*',
+			);
+		}
+	}, [fieldErrors, formRef, input.value, userInteracted, isIframed]);
 
 	// Update the input value on user input
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
