@@ -60,6 +60,12 @@ const mainStylesStretch = css`
 	gap: ${CONTAINER_GAP};
 `;
 
+const iframeThemeWrapperStyles = css`
+	display: flex;
+	flex-direction: column;
+	gap: ${remSpace[2]};
+`;
+
 const pageHeaderStyles = (subduedHeadingStyle: boolean) => css`
 	color: var(--color-heading);
 	${subduedHeadingStyle ? headlineMedium28 : headlineBold28};
@@ -101,7 +107,7 @@ export const MinimalLayout = ({
 		children: ReactNode | ReactElement;
 	}) =>
 		overrideTheme?.includes('iframe') ? (
-			<section>{children}</section>
+			<section css={iframeThemeWrapperStyles}>{children}</section>
 		) : (
 			children
 		);

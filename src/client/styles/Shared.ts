@@ -5,7 +5,7 @@ import {
 	space,
 	textSansBold17,
 } from '@guardian/source/foundations';
-import { SECTION_GAP } from '@/client/models/Style';
+import { CONTAINER_GAP, SECTION_GAP } from '@/client/models/Style';
 
 export const disableAutofillBackground = css`
 	:-webkit-autofill {
@@ -41,6 +41,12 @@ export const mainSectionStyles = css`
 	display: flex;
 	flex-direction: column;
 	gap: ${SECTION_GAP};
+`;
+
+export const mainSectionStylesLargerGap = css`
+	display: flex;
+	flex-direction: column;
+	gap: ${CONTAINER_GAP};
 `;
 
 type ButtonWidth = 'full' | 'half';

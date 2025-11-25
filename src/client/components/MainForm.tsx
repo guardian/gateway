@@ -34,6 +34,7 @@ import {
 } from '@/client/components/InformationBox';
 import {
 	mainSectionStyles,
+	mainSectionStylesLargerGap,
 	primaryButtonStyles,
 	secondaryButtonStyles,
 } from '@/client/styles/Shared';
@@ -82,8 +83,8 @@ export interface MainFormProps {
 	formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-const formStyles = (displayInline: boolean) => css`
-	${mainSectionStyles};
+const formStyles = (displayInline: boolean, largeGap: boolean) => css`
+	${largeGap ? mainSectionStylesLargerGap : mainSectionStyles};
 	a {
 		${textSansBold15};
 	}
@@ -332,7 +333,7 @@ export const MainForm = ({
 
 	return (
 		<form
-			css={formStyles(displayInline)}
+			css={formStyles(displayInline, isIframed)}
 			method="post"
 			action={formAction}
 			onSubmit={handleSubmit}
