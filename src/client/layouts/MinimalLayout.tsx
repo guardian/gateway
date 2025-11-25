@@ -6,7 +6,6 @@ import {
 	headlineBold28,
 	headlineMedium28,
 	remSpace,
-	space,
 } from '@guardian/source/foundations';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
@@ -30,7 +29,6 @@ import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
 	wide?: boolean;
-	showGuardianHeader?: boolean;
 	pageHeader: string;
 	subduedHeadingStyle?: boolean;
 	leadText?: React.ReactNode;
@@ -57,7 +55,6 @@ const mainStyles = (wide: boolean) => css`
 `;
 
 const mainStylesStretch = css`
-	padding: ${space[3]}px ${space[3]}px ${space[6]}px;
 	display: flex;
 	flex-direction: column;
 	gap: ${CONTAINER_GAP};
@@ -78,7 +75,6 @@ const pageHeaderStyles = (subduedHeadingStyle: boolean) => css`
 export const MinimalLayout = ({
 	children,
 	wide = false,
-	showGuardianHeader = true,
 	pageHeader,
 	subduedHeadingStyle = false,
 	leadText,
@@ -103,6 +99,8 @@ export const MinimalLayout = ({
 		return <Theme />;
 	};
 
+	const amIIframed = overrideTheme?.includes('iframe');
+
 	const ConditionalIframeThemeWrapper = ({
 		children,
 	}: {
@@ -117,8 +115,8 @@ export const MinimalLayout = ({
 	return (
 		<>
 			{getTheme()}
-			{showGuardianHeader && <MinimalHeader />}
-			<main css={showGuardianHeader ? mainStyles(wide) : mainStylesStretch}>
+			{!amIIframed && <MinimalHeader />}
+			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				<ConditionalIframeThemeWrapper>
 					{pageHeader && (

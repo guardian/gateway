@@ -312,7 +312,6 @@ router.post(
 		const {
 			queryParams: { appClientId },
 		} = res.locals;
-		// if okta feature switch enabled, use okta authentication
 		return oktaSignInController({
 			req,
 			res,

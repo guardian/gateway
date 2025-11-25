@@ -58,7 +58,6 @@ export const IframedRegisterWithEmail = ({
 			shortRequestId={shortRequestId}
 			errorContext={getErrorContext(pageError)}
 			errorOverride={pageError}
-			showGuardianHeader={false}
 			subduedHeadingStyle={true}
 			overrideTheme="iframe-light"
 		>
@@ -68,6 +67,7 @@ export const IframedRegisterWithEmail = ({
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
+				isIframed={true}
 				formErrorMessageFromParent={formError}
 				onSubmit={(e) => {
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);

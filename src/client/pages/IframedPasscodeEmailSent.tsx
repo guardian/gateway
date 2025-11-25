@@ -9,6 +9,7 @@ import { EmailSentInformationBox } from '@/client/components/EmailSentInformatio
 import { EmailSentProps } from '@/client/pages/EmailSent';
 import useClientState from '../lib/hooks/useClientState';
 import { record, trackFormSubmit } from '../lib/ophan';
+import { SubmitHandlerErrorObject } from '@/shared/model/Errors';
 
 type Props = {
 	passcodeAction: string;
@@ -84,6 +85,9 @@ export const IframedPasscodeEmailSent = ({
 	const formRef = useRef<HTMLFormElement>(null);
 	const clientState = useClientState();
 	const formAction = `${passcodeAction}${queryString}`;
+	const [clientErrorOverride, setClientErrorOverride] = useState<FieldError[]>(
+		[],
+	);
 
 	useEffect(() => {
 		// we only want this to run in the browser as window is not
@@ -106,7 +110,9 @@ export const IframedPasscodeEmailSent = ({
 		}
 	}, [timeUntilTokenExpiry, expiredPage, queryString]);
 
-	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleFormSubmit = async (
+		e: React.FormEvent<HTMLFormElement>,
+	): Promise<SubmitHandlerErrorObject> => {
 		e.preventDefault();
 		try {
 			const csrfToken = clientState.csrf?.token;
@@ -144,6 +150,16 @@ export const IframedPasscodeEmailSent = ({
 				throw new Error('response status error');
 			}
 			const userStatus = deriveStatusFromResponseUrl(response.url);
+			setClientErrorOverride(
+				userStatus === 'authError'
+					? [
+							{
+								field: 'code',
+								message: 'Invalid code',
+							},
+						]
+					: [],
+			);
 
 			window.parent.postMessage(
 				{
@@ -155,10 +171,12 @@ export const IframedPasscodeEmailSent = ({
 			);
 
 			trackFormSubmit('passcode-submit');
+			return { errorOccurred: userStatus === 'authError' };
 		} catch (e) {
 			record({
 				experiences: 'passcode-submit-failure',
 			});
+			return { errorOccurred: true };
 		}
 	};
 
@@ -170,7 +188,6 @@ export const IframedPasscodeEmailSent = ({
 			}
 			pageHeader={text.title}
 			shortRequestId={shortRequestId}
-			showGuardianHeader={false}
 			subduedHeadingStyle={true}
 			overrideTheme="iframe-light"
 		>
@@ -188,12 +205,15 @@ export const IframedPasscodeEmailSent = ({
 				submitButtonText={text.submitButtonText}
 				onSubmit={handleFormSubmit}
 				disableOnSubmit={true}
+				isIframed={true}
 				shortRequestId={shortRequestId}
 				formRef={formRef}
 			>
 				<PasscodeInput
 					passcode={passcode}
-					fieldErrors={fieldErrors}
+					fieldErrors={
+						clientErrorOverride.length ? clientErrorOverride : fieldErrors
+					}
 					label={text.passcodeInputLabel}
 					formRef={formRef}
 					autoFocus

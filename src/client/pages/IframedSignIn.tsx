@@ -158,7 +158,6 @@ export const IframedSignIn = ({
 			pageHeader="Sign in to your account"
 			leadText="This unlocks your premium experience, online and in the app."
 			shortRequestId={shortRequestId}
-			showGuardianHeader={false}
 			subduedHeadingStyle={true}
 			overrideTheme="iframe-light"
 		>
@@ -181,6 +180,7 @@ export const IframedSignIn = ({
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
+				isIframed={true}
 				// If social signin is blocked, terms and conditions appear inside MainForm
 				// instead of being handled by showAuthProviderButtons(), above.
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
