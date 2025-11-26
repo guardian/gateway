@@ -65,9 +65,8 @@ const existingUserSendEmailAndValidatePasscode = ({
 							cy.get('input[name=code]').type(code!);
 
 							cy.contains("You're signed in! Welcome to the Guardian.");
-							cy.contains('Save and continue');
+							cy.contains('Continue').click();
 
-							cy.get('[data-cy="main-form-submit-button"]').click();
 							cy.url().should('include', expectedReturnUrl);
 
 							cy.getTestOktaUser(emailAddress).then((user) => {
