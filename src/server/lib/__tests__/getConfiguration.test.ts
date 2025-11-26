@@ -76,6 +76,7 @@ describe('getConfiguration', () => {
 
 		const expected = {
 			port: 9000,
+			printPromoUrl: 'print-promo-url',
 			idapiClientAccessToken: 'idapi_api_key',
 			idapiBaseUrl: 'http://localhost:1234',
 			baseUri: 'base-uri',
