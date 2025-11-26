@@ -19,7 +19,11 @@ import {
 	RecaptchaWrapper,
 	UseRecaptchaReturnValue,
 } from '@/client/lib/hooks/useRecaptcha';
-import { CaptchaErrors, GatewayError } from '@/shared/model/Errors';
+import {
+	CaptchaErrors,
+	GatewayError,
+	SubmitHandlerErrorObject,
+} from '@/shared/model/Errors';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
@@ -30,12 +34,15 @@ import {
 } from '@/client/components/InformationBox';
 import {
 	mainSectionStyles,
+	mainSectionStylesLargerGap,
 	primaryButtonStyles,
 	secondaryButtonStyles,
 } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
 import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 import { NoScript } from './NoScript';
+
+type TermsStyle = 'primary' | 'secondary';
 
 export interface MainFormProps {
 	wideLayout?: boolean;
@@ -57,26 +64,27 @@ export interface MainFormProps {
 	formErrorContextFromParent?: ReactNode;
 	hasGuardianTerms?: boolean;
 	hasJobsTerms?: boolean;
-	onSubmit?: (e: React.FormEvent<HTMLFormElement>) =>
-		| {
-				errorOccurred: boolean;
-		  }
-		| undefined;
+	onSubmit?: (
+		e: React.FormEvent<HTMLFormElement>,
+	) => SubmitHandlerErrorObject | Promise<SubmitHandlerErrorObject> | undefined;
 	onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
 	formTrackingName?: string;
 	disableOnSubmit?: boolean;
+	isIframed?: boolean;
 	largeFormMarginTop?: boolean;
 	displayInline?: boolean;
 	submitButtonLink?: boolean;
 	hideRecaptchaMessage?: boolean;
 	additionalTerms?: ReactNode[];
+	primaryTermsPosition?: boolean;
+	termsStyle?: TermsStyle;
 	shortRequestId?: string;
 	disabled?: boolean;
 	formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-const formStyles = (displayInline: boolean) => css`
-	${mainSectionStyles};
+const formStyles = (displayInline: boolean, largeGap: boolean) => css`
+	${largeGap ? mainSectionStylesLargerGap : mainSectionStyles};
 	a {
 		${textSansBold15};
 	}
@@ -106,12 +114,15 @@ export const MainForm = ({
 	onInvalid,
 	formTrackingName,
 	disableOnSubmit = false,
+	isIframed = false,
 	formErrorMessageFromParent,
 	formErrorContextFromParent,
 	displayInline = false,
 	submitButtonLink,
 	hideRecaptchaMessage,
 	additionalTerms,
+	primaryTermsPosition = true,
+	termsStyle = 'primary',
 	shortRequestId,
 	disabled = false,
 	// eslint-disable-next-line react-hooks/rules-of-hooks -- allow a formRef to be passed in or use a default value, either way a ref will be defined
@@ -138,6 +149,32 @@ export const MainForm = ({
 
 	const showFormLevelReportUrl = !!formLevelErrorContext;
 
+	const submitHandlerResponseIsErrorObject = (
+		submitHandler:
+			| SubmitHandlerErrorObject
+			| Promise<SubmitHandlerErrorObject>
+			| undefined,
+	): submitHandler is SubmitHandlerErrorObject => {
+		if (!submitHandler) {
+			return false;
+		}
+		return !!(submitHandler as SubmitHandlerErrorObject)?.errorOccurred;
+	};
+
+	useEffect(() => {
+		if (isIframed) {
+			const height = document.body.scrollHeight;
+			window.parent.postMessage(
+				{
+					context: 'supporterOnboarding',
+					type: 'iframeHeightChange',
+					value: height,
+				},
+				'*',
+			);
+		}
+	}, [isIframed, disabled]);
+
 	/**
 	 * Executes the reCAPTCHA check and form submit tracking.
 	 * Prevents the form from submitting until the reCAPTCHA check is complete.
@@ -149,23 +186,49 @@ export const MainForm = ({
 			if (formTrackingName) {
 				trackFormSubmit(formTrackingName);
 			}
+			if (isIframed) {
+				setIsFormDisabled(disableOnSubmit);
+				void (async () => {
+					const submitHandler = await onSubmit?.(event);
+					const errorInSubmitHandler =
+						submitHandlerResponseIsErrorObject(submitHandler);
 
-			const errorInSubmitHandler = onSubmit?.(event)?.errorOccurred;
-
-			if (disableOnSubmit) {
-				if (errorInSubmitHandler === undefined) {
-					if (!isFormDisabled) {
-						setIsFormDisabled(true);
+					if (disableOnSubmit) {
+						if (!errorInSubmitHandler) {
+							if (!isFormDisabled) {
+								setIsFormDisabled(true);
+							}
+						} else {
+							const formSubmitSuccess = !errorInSubmitHandler;
+							setIsFormDisabled(formSubmitSuccess);
+						}
 					}
-				} else {
-					const formSubmitSuccess = !errorInSubmitHandler;
-					setIsFormDisabled(formSubmitSuccess);
-				}
-			}
 
-			if (recaptchaEnabled && !recaptchaState?.token) {
-				event.preventDefault();
-				recaptchaState?.executeCaptcha();
+					if (recaptchaEnabled && !recaptchaState?.token) {
+						event.preventDefault();
+						recaptchaState?.executeCaptcha();
+					}
+				})();
+			} else {
+				const submitHandler = onSubmit?.(event);
+				const errorInSubmitHandler =
+					submitHandlerResponseIsErrorObject(submitHandler);
+
+				if (disableOnSubmit) {
+					if (errorInSubmitHandler === undefined) {
+						if (!isFormDisabled) {
+							setIsFormDisabled(true);
+						}
+					} else {
+						const formSubmitSuccess = !errorInSubmitHandler;
+						setIsFormDisabled(formSubmitSuccess);
+					}
+				}
+
+				if (recaptchaEnabled && !recaptchaState?.token) {
+					event.preventDefault();
+					recaptchaState?.executeCaptcha();
+				}
 			}
 		},
 		[
@@ -175,6 +238,7 @@ export const MainForm = ({
 			recaptchaEnabled,
 			recaptchaState,
 			isFormDisabled,
+			isIframed,
 		],
 	);
 
@@ -263,9 +327,35 @@ export const MainForm = ({
 		setRecaptchaErrorMessage,
 	]);
 
+	const Terms = ({ theme }: { theme: TermsStyle }) => {
+		const BoxContainer = theme === 'primary' ? InformationBox : 'div';
+		return (
+			<>
+				{(additionalTerms ||
+					hasGuardianTerms ||
+					hasJobsTerms ||
+					(recaptchaEnabled && !hideRecaptchaMessage)) && (
+					<BoxContainer>
+						{hasGuardianTerms && <GuardianTerms />}
+						{hasJobsTerms && <JobsTerms />}
+						{additionalTerms &&
+							additionalTerms.map((specificTermsItem) => {
+								return (
+									<InformationBoxText>{specificTermsItem}</InformationBoxText>
+								);
+							})}
+						{recaptchaEnabled && !hideRecaptchaMessage && (
+							<RecaptchaTerms isIframed={isIframed} />
+						)}
+					</BoxContainer>
+				)}
+			</>
+		);
+	};
+
 	return (
 		<form
-			css={formStyles(displayInline)}
+			css={formStyles(displayInline, isIframed)}
 			method="post"
 			action={formAction}
 			onSubmit={handleSubmit}
@@ -299,22 +389,7 @@ export const MainForm = ({
 			<CsrfFormField />
 			<RefTrackingFormFields />
 			{children}
-			{(additionalTerms ||
-				hasGuardianTerms ||
-				hasJobsTerms ||
-				(recaptchaEnabled && !hideRecaptchaMessage)) && (
-				<InformationBox>
-					{hasGuardianTerms && <GuardianTerms />}
-					{hasJobsTerms && <JobsTerms />}
-					{additionalTerms &&
-						additionalTerms.map((specificTermsItem) => {
-							return (
-								<InformationBoxText>{specificTermsItem}</InformationBoxText>
-							);
-						})}
-					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
-				</InformationBox>
-			)}
+			{primaryTermsPosition && <Terms theme={termsStyle} />}
 
 			{submitButtonLink ? (
 				<ButtonLink
@@ -344,6 +419,7 @@ export const MainForm = ({
 					{submitButtonText}
 				</Button>
 			)}
+			{!primaryTermsPosition && <Terms theme={termsStyle} />}
 		</form>
 	);
 };

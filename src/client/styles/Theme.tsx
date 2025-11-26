@@ -72,6 +72,13 @@ const darkTheme = css`
 	--color-alert-success: ${palette.success[500]};
 `;
 
+const iframeLightTheme = css`
+	${lightTheme}
+	--color-heading: ${palette.neutral[7]};
+	--color-input-text: ${palette.neutral[7]};
+	--color-input-label: ${palette.neutral[7]};
+`;
+
 export const Theme = () => {
 	return (
 		<Global
@@ -91,6 +98,22 @@ export const Theme = () => {
 				}
 				html.dark-theme {
 					${darkTheme}
+				}
+
+				body {
+					background: var(--color-background);
+				}
+			`}
+		/>
+	);
+};
+
+export const IframeLightTheme = () => {
+	return (
+		<Global
+			styles={css`
+				:root {
+					${iframeLightTheme}
 				}
 
 				body {
