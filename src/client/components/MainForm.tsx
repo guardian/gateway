@@ -186,10 +186,31 @@ export const MainForm = ({
 			if (formTrackingName) {
 				trackFormSubmit(formTrackingName);
 			}
-			setIsFormDisabled(disableOnSubmit);
+			if (isIframed) {
+				setIsFormDisabled(disableOnSubmit);
+				void (async () => {
+					const submitHandler = await onSubmit?.(event);
+					const errorInSubmitHandler =
+						submitHandlerResponseIsErrorObject(submitHandler);
 
-			void (async () => {
-				const submitHandler = await onSubmit?.(event);
+					if (disableOnSubmit) {
+						if (!errorInSubmitHandler) {
+							if (!isFormDisabled) {
+								setIsFormDisabled(true);
+							}
+						} else {
+							const formSubmitSuccess = !errorInSubmitHandler;
+							setIsFormDisabled(formSubmitSuccess);
+						}
+					}
+
+					if (recaptchaEnabled && !recaptchaState?.token) {
+						event.preventDefault();
+						recaptchaState?.executeCaptcha();
+					}
+				})();
+			} else {
+				const submitHandler = onSubmit?.(event);
 				const errorInSubmitHandler =
 					submitHandlerResponseIsErrorObject(submitHandler);
 
@@ -208,7 +229,7 @@ export const MainForm = ({
 					event.preventDefault();
 					recaptchaState?.executeCaptcha();
 				}
-			})();
+			}
 		},
 		[
 			formTrackingName,
@@ -217,6 +238,7 @@ export const MainForm = ({
 			recaptchaEnabled,
 			recaptchaState,
 			isFormDisabled,
+			isIframed,
 		],
 	);
 
