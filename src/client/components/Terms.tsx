@@ -44,7 +44,7 @@ const handleIframedLinkClick =
 			'*',
 		);
 	};
-//export const RecaptchaTerms = (isIframed?: boolean = false) => (
+
 export const RecaptchaTerms = ({
 	isIframed = false,
 }: {
