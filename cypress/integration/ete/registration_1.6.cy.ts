@@ -295,10 +295,10 @@ describe('Registration flow - Split 1/3', () => {
 					cy.get('input[name=code]').type(code!);
 
 					cy.url().should('include', '/welcome/complete-account');
-					cy.contains('Guardian jobs newsletter');
-					cy.get('a').contains('Continue').click();
+					cy.contains('Guardian Jobs newsletter');
+					cy.contains('Next').click();
 
-					cy.url().should('contain', decodeURIComponent(fromURI));
+					cy.url().should('include', encodeURIComponent(fromURI));
 				},
 			);
 		});
