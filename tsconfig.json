@@ -15,7 +15,7 @@
 			"react": ["./node_modules/preact/compat/"],
 			"react-dom": ["./node_modules/preact/compat/"]
 		},
-		"lib": ["ES2022", "DOM"],
+		"lib": ["ES2022", "DOM", "dom.iterable"],
 		"importHelpers": true,
 		"allowJs": true,
 		"isolatedModules": true

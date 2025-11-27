@@ -29,6 +29,8 @@ export const App = (props: Props) => {
 		ABTestAPI.registerCompleteEvents(allRunnableTests);
 	}, [ABTestAPI]);
 
+	const isPageIframed = props.location.startsWith('/iframed/');
+
 	return (
 		<>
 			<Global
@@ -37,6 +39,7 @@ export const App = (props: Props) => {
 					html {
 						height: 100%;
 						box-sizing: border-box;
+						${isPageIframed ? 'overflow: hidden;' : ''}
 					}
 					body {
 						height: 100%;

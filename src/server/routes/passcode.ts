@@ -132,10 +132,64 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	}
 });
 
+router.get(
+	'/iframed/passcode',
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const encrypedCookieState = readEncryptedStateCookie(req);
+		const email = encrypedCookieState?.email;
+
+		if (!encrypedCookieState || !email) {
+			return res.send(403);
+		}
+		try {
+			const queryParams = state.queryParams;
+			const { error, error_description } = queryParams;
+
+			const possibleError = getErrorMessageFromQueryParams(
+				error,
+				error_description,
+			);
+
+			const html = renderer('/iframed/passcode', {
+				requestState: mergeRequestState(state, {
+					pageData: {
+						email,
+						timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+							encrypedCookieState.stateHandleExpiresAt,
+						),
+					},
+					queryParams: {
+						...res.locals.queryParams,
+						emailSentSuccess: true,
+					},
+					globalMessage: {
+						error: possibleError,
+					},
+				}),
+				pageTitle: 'Check Your Inbox',
+			});
+			return res.type('html').send(html);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl} Error`, error);
+			const errorRedirectPath =
+				encrypedCookieState.userState === 'NON_EXISTENT' ||
+				encrypedCookieState.userState === 'NOT_ACTIVE'
+					? '/iframed/register/email'
+					: '/iframed/signin';
+			res.redirect(
+				303,
+				addQueryParamsToPath(errorRedirectPath, state.queryParams),
+			);
+		}
+	},
+);
+
 router.post(
 	'/passcode',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const encrypedCookieState = readEncryptedStateCookie(req);
+
 		switch (encrypedCookieState?.signInOrRegister) {
 			case 'REGISTER':
 				return await registerPasscodeHandler(req, res);

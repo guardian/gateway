@@ -32,14 +32,39 @@ export const JobsTerms = () => (
 	</InformationBoxText>
 );
 
-export const RecaptchaTerms = () => (
+const handleIframedLinkClick =
+	(linkID: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+		event.preventDefault();
+		window.parent.postMessage(
+			{
+				context: 'supporterOnboarding',
+				type: 'iframedLinkClicked',
+				value: linkID,
+			},
+			'*',
+		);
+	};
+
+export const RecaptchaTerms = ({
+	isIframed = false,
+}: {
+	isIframed?: boolean;
+}) => (
 	<InformationBoxText>
 		This service is protected by reCAPTCHA and the Google{' '}
-		<ExternalLink href="https://policies.google.com/privacy">
+		<ExternalLink
+			href="https://policies.google.com/privacy"
+			onClick={
+				isIframed ? handleIframedLinkClick('recaptchaPrivacyPolicy') : undefined
+			}
+		>
 			privacy policy
 		</ExternalLink>{' '}
 		and{' '}
-		<ExternalLink href="https://policies.google.com/terms">
+		<ExternalLink
+			href="https://policies.google.com/terms"
+			onClick={isIframed ? handleIframedLinkClick('recaptchaTerms') : undefined}
+		>
 			terms of service
 		</ExternalLink>{' '}
 		apply.

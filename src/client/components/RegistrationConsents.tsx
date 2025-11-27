@@ -9,6 +9,7 @@ interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	isJobs?: boolean;
+	onChange?: (id: string, checked: boolean) => void;
 }
 
 export const RegistrationConsents = ({

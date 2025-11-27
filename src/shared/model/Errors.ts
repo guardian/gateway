@@ -100,6 +100,10 @@ export const SubscribeErrors = {
 	GENERIC: 'There was a problem subscribing, please try again.',
 } as const;
 
+export interface SubmitHandlerErrorObject {
+	errorOccurred: boolean;
+}
+
 export interface StructuredGatewayError {
 	message: string;
 	severity: 'BAU' | 'CSRF' | 'UNEXPECTED';

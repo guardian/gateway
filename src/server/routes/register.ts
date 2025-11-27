@@ -62,7 +62,7 @@ import {
 	oktaIdxApiSubmitPasscodeController,
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { getRoutePathFromUrl } from '@/shared/model/Routes';
+import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -109,24 +109,50 @@ router.get(
 	},
 );
 
+const handleRegisterByPasscode = (
+	req: Request,
+	res: ResponseWithRequestState,
+	overrideEmailAddress?: string | null,
+): string => {
+	const state = res.locals;
+	const { error, error_description } = state.queryParams;
+
+	const getPath = req.originalUrl as RoutePaths;
+	const html = renderer(getPath, {
+		pageTitle: 'Register With Email',
+		requestState: mergeRequestState(state, {
+			pageData: {
+				email: overrideEmailAddress || readEmailCookie(req),
+			},
+			globalMessage: {
+				error: getErrorMessageFromQueryParams(error, error_description),
+			},
+		}),
+	});
+	return html;
+};
 router.get(
 	'/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { error, error_description } = state.queryParams;
+		const html = handleRegisterByPasscode(req, res);
+		res.type('html').send(html);
+	},
+);
 
-		const html = renderer('/register/email', {
-			pageTitle: 'Register With Email',
-			requestState: mergeRequestState(state, {
-				pageData: {
-					email: readEmailCookie(req),
-				},
-				globalMessage: {
-					error: getErrorMessageFromQueryParams(error, error_description),
-				},
-			}),
-		});
+router.get(
+	'/iframed/register/email',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const params = new URLSearchParams(
+			req.url.substring(req.url.indexOf('?'), req.url.length),
+		);
+		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulatedEmail = prepopulatedEmailParamEncoded
+			? decodeURIComponent(prepopulatedEmailParamEncoded)
+			: null;
+
+		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
 		res.type('html').send(html);
 	},
 );
@@ -452,10 +478,16 @@ const oktaIdxCreateAccountOrSignIn = async (
 
 		trackMetric('OktaIDXRegister::Success');
 
+		const referrerUrl = new URL(req.body.ref);
+		const referrerPath = referrerUrl.pathname;
+		const emailSentPage = referrerPath.includes('/iframed')
+			? '/iframed/passcode'
+			: '/passcode';
+
 		// redirect to the email sent page
 		return res.redirect(
 			303,
-			addQueryParamsToPath('/passcode', res.locals.queryParams),
+			addQueryParamsToPath(emailSentPage, res.locals.queryParams),
 		);
 	} catch (error) {
 		if (error instanceof OAuthError) {
