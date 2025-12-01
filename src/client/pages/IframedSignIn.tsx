@@ -158,7 +158,6 @@ export const IframedSignIn = ({
 			pageHeader="Sign in to your account"
 			leadText="This unlocks your premium experience, online and in the app."
 			shortRequestId={shortRequestId}
-			subduedHeadingStyle={true}
 			overrideTheme="iframe-light"
 		>
 			{/* AuthProviderButtons component with show boolean */}
