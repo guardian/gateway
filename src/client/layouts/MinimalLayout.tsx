@@ -71,7 +71,7 @@ const pageHeaderStyles = (amIIframed: boolean) => css`
 	${amIIframed
 		? `
             ${headlineMedium24};
-            ${from.tablet} {
+            ${from.mobileLandscape} {
                 ${headlineMedium28};
             }
         `
