@@ -24,7 +24,7 @@ jobs:
           - 6379:6379
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup OS, Nginx, and Certs
         run: |
           sudo apt-get update -y
@@ -41,14 +41,14 @@ jobs:
           sudo cp ./scripts/nginx.conf /etc/nginx/nginx.conf
           sudo dev-nginx restart-nginx
       - name: Download build
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
       - uses: pnpm/action-setup@v4
       - name: Setup node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
       - name: Get pnpm cache directory path
@@ -125,7 +125,7 @@ jobs:
           spec: cypress/integration/mocked/*.cy.ts
           config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/mocked/**/*.${{ matrix.group }}.cy.ts"]}}'
       - name: Upload screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: cypress-screenshots-mocked
