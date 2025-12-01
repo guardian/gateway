@@ -41,6 +41,7 @@ import {
 import locations from '@/shared/lib/locations';
 import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 import { NoScript } from './NoScript';
+import { CONTAINER_GAP } from '../models/Style';
 
 type TermsStyle = 'primary' | 'secondary';
 
@@ -382,6 +383,7 @@ export const MainForm = ({
 			)}
 			{recaptchaEnabled && (
 				<RecaptchaWrapper
+					overrideGapCounteract={isIframed ? CONTAINER_GAP : undefined}
 					recaptchaSiteKey={recaptchaSiteKey}
 					setRecaptchaState={setRecaptchaState}
 				/>

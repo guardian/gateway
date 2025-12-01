@@ -187,7 +187,8 @@ export const RecaptchaWrapper: React.FC<{
 	setRecaptchaState: React.Dispatch<
 		React.SetStateAction<UseRecaptchaReturnValue | undefined>
 	>;
-}> = ({ recaptchaSiteKey, setRecaptchaState }) => {
+	overrideGapCounteract?: number | string;
+}> = ({ recaptchaSiteKey, setRecaptchaState, overrideGapCounteract }) => {
 	const { error, executeCaptcha, expired, requestCount, token, widgetId } =
 		useRecaptcha(recaptchaSiteKey, 'recaptcha');
 	React.useEffect(() => {
@@ -208,26 +209,36 @@ export const RecaptchaWrapper: React.FC<{
 		token,
 		widgetId,
 	]);
-	return <RecaptchaElement id="recaptcha" />;
+	return (
+		<RecaptchaElement
+			id="recaptcha"
+			gapCountractValue={overrideGapCounteract ?? SECTION_GAP}
+		/>
+	);
 };
 
 /**
  * Provides a standardised way to bind Recaptcha to your page.
  */
+interface RecaptchaElementProps extends React.HTMLProps<HTMLDivElement> {
+	gapCountractValue: number | string;
+}
+
 const RecaptchaElement = React.forwardRef<
 	HTMLDivElement,
-	React.HTMLProps<HTMLDivElement>
+	RecaptchaElementProps
 >(function RecaptchaElement(props, ref) {
+	const { gapCountractValue, ...otherProps } = props;
 	return (
 		<div
 			ref={ref}
 			className="g-recaptcha"
-			{...props}
+			{...otherProps}
 			// TODO: This is a fix for when the reCAPTCHA badge is not visible in the DOM.
 			// In these cases, the wrapper is still visible, which means it gets affected
 			// by the `gap` spacing applied to its parent flex container in `MainForm`.
 			// We set a negative margin here to counteract what looks like an overly large gap.
-			css={{ marginTop: `-${SECTION_GAP}` }}
+			css={{ marginTop: `-${gapCountractValue}` }}
 		></div>
 	);
 });

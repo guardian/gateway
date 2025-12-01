@@ -4,6 +4,7 @@ import MinimalHeader from '@/client/components/MinimalHeader';
 import {
 	from,
 	headlineBold28,
+	headlineMedium24,
 	headlineMedium28,
 	remSpace,
 } from '@guardian/source/foundations';
@@ -30,7 +31,6 @@ interface MinimalLayoutProps {
 	children?: React.ReactNode;
 	wide?: boolean;
 	pageHeader: string;
-	subduedHeadingStyle?: boolean;
 	leadText?: React.ReactNode;
 	imageId?: DecorativeImageId;
 	successOverride?: string;
@@ -66,9 +66,16 @@ const iframeThemeWrapperStyles = css`
 	gap: ${remSpace[2]};
 `;
 
-const pageHeaderStyles = (subduedHeadingStyle: boolean) => css`
+const pageHeaderStyles = (amIIframed: boolean) => css`
 	color: var(--color-heading);
-	${subduedHeadingStyle ? headlineMedium28 : headlineBold28};
+	${amIIframed
+		? `
+            ${headlineMedium24};
+            ${from.tablet} {
+                ${headlineMedium28};
+            }
+        `
+		: headlineBold28};
 	margin: 0;
 `;
 
@@ -76,7 +83,6 @@ export const MinimalLayout = ({
 	children,
 	wide = false,
 	pageHeader,
-	subduedHeadingStyle = false,
 	leadText,
 	imageId,
 	successOverride,
@@ -99,7 +105,7 @@ export const MinimalLayout = ({
 		return <Theme />;
 	};
 
-	const amIIframed = overrideTheme?.includes('iframe');
+	const amIIframed = !!overrideTheme?.includes('iframe');
 
 	const ConditionalIframeThemeWrapper = ({
 		children,
@@ -121,11 +127,11 @@ export const MinimalLayout = ({
 				<ConditionalIframeThemeWrapper>
 					{pageHeader && (
 						<header>
-							<h1 css={pageHeaderStyles(subduedHeadingStyle)}>{pageHeader}</h1>
+							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
 						</header>
 					)}
 					{leadText && typeof leadText === 'string' ? (
-						<MainBodyText>{leadText}</MainBodyText>
+						<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
 					) : (
 						leadText
 					)}
