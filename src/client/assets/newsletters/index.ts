@@ -1,8 +1,8 @@
 export { default as SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters/saturday-edition-small-square.jpg';
-export { default as MORNING_MAIL_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-morning-mail-square.png';
-export { default as BREAKING_NEWS_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-morning-mail-square.png';
-export { default as FIVE_GREAT_READS_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-morning-mail-square.png';
-export { default as CLEAR_AIR_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-morning-mail-square.png';
+export { default as MORNING_MAIL_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-morning-mail-square.jpg';
+export { default as BREAKING_NEWS_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-breaking-news.jpg';
+export { default as FIVE_GREAT_READS_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-five-great-reads-square.png';
+export { default as CLEAR_AIR_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-clear-air.png';
 export { default as AFTERNOON_UPDATE_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-afternoon-update-square.png';
 export { default as SAVED_FOR_LATER_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-saved-for-later-square.jpg';
 export { default as THE_CRUNCH_AU_SQUARE_IMAGE } from '@/client/assets/newsletters/au-the-crunch-square.jpg';
