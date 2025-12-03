@@ -58,7 +58,6 @@ export const IframedRegisterWithEmail = ({
 			shortRequestId={shortRequestId}
 			errorContext={getErrorContext(pageError)}
 			errorOverride={pageError}
-			subduedHeadingStyle={true}
 			overrideTheme="iframe-light"
 		>
 			<MainForm
