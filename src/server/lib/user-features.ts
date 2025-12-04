@@ -97,13 +97,13 @@ const persistUserBenefitsCookies = ({
 	createCookie({
 		name: USER_BENEFITS_EXPIRY_COOKIE,
 		res,
-		daysTillExpiry: USER_BENEFITS_COOKIE_EXPIRATION_IN_DAYS,
+		daysTillExpiry: 1,
 	});
 	if (userBenefits?.benefits?.includes('hideSupportMessaging')) {
 		createCookie({
 			name: HIDE_SUPPORT_MESSAGING_COOKIE,
 			res,
-			daysTillExpiry: 1,
+			daysTillExpiry: USER_BENEFITS_COOKIE_EXPIRATION_IN_DAYS,
 		});
 	}
 	// Allow reject all cookie
