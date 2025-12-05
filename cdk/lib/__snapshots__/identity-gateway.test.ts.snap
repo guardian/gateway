@@ -102,6 +102,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "The url for members-data-api",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
+    "MembershipAccountId": {
+      "Description": "AWS Account ID for the Membership account",
+      "Type": "String",
+    },
     "OauthBaseUrl": {
       "Description": "The base url for social sign-in with google or apple",
       "Type": "AWS::SSM::Parameter::Value<String>",
@@ -591,6 +595,25 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
               "Version": "2012-10-17",
             },
             "PolicyName": "SendEmailSES",
+          },
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "sqs:SendMessage",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:aws:sqs:\${AWS::Region}:\${AWS::MembershipAccountId}:braze-emails-*",
+                    },
+                  ],
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "SendSQSToMembership",
           },
           {
             "PolicyDocument": {
@@ -1106,6 +1129,7 @@ while true; do
     OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     PRINT_PROMO_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/print-promo-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+    MEMBERSHIP_BRAZE_SQS_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/membership-braze-sqs-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     then break
@@ -1152,6 +1176,7 @@ Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=\${MembersDataApiUrl}
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
 Environment=PRINT_PROMO_URL=$PRINT_PROMO_URL
+Environment=MEMBERSHIP_BRAZE_SQS_URL=$MEMBERSHIP_BRAZE_SQS_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 

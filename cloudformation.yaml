@@ -170,7 +170,7 @@ Resources:
               - Effect: Allow
                 Action: ses:SendEmail
                 Resource: '*'
-        - Policy: SendSQSToMembership
+        - PolicyName: SendSQSToMembership
           PolicyDocument:
             Version: 2012-10-17
             Statement:

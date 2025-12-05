@@ -137,6 +137,7 @@ describe('getConfiguration', () => {
 				},
 			},
 			membersDataApiUrl: 'members-data-api-url',
+			membershipBrazeSqsUrl: 'membership-braze-sqs-url',
 			userBenefitsApiUrl: 'user-benefits-api-url',
 			passcodesEnabled: true,
 			deleteAccountStepFunction: {
