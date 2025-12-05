@@ -173,6 +173,11 @@ export const getConfiguration = (): Configuration => {
 		'Print Promo URL missing.',
 	);
 
+	const membershipBrazeSqsUrl = getOrThrow(
+		process.env.MEMBERSHIP_BRAZE_SQS_URL,
+		'Membership Braze SQS URL missing.',
+	);
+
 	const okta: Okta = {
 		enabled: true,
 		orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
@@ -252,5 +257,6 @@ export const getConfiguration = (): Configuration => {
 		printPromoUrl,
 		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
+		membershipBrazeSqsUrl,
 	};
 };

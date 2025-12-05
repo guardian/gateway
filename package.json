@@ -119,6 +119,7 @@
 	"dependencies": {
 		"@aws-sdk/client-cloudwatch": "^3.922.0",
 		"@aws-sdk/client-sesv2": "^3.922.0",
+		"@aws-sdk/client-sqs": "^3.943.0",
 		"@aws-sdk/credential-providers": "^3.922.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.3",

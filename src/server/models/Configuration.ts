@@ -28,6 +28,7 @@ export interface Configuration {
 	userBenefitsApiUrl: string;
 	printPromoUrl: string;
 	passcodesEnabled: boolean;
+	membershipBrazeSqsUrl: string;
 	deleteAccountStepFunction: {
 		url: string;
 		apiKey: string;
