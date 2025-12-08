@@ -103,6 +103,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "MembershipAccountId": {
+      "Default": "123456789012",
       "Description": "AWS Account ID for the Membership account",
       "Type": "String",
     },
@@ -606,7 +607,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                   "Effect": "Allow",
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:sqs:\${AWS::Region}:\${AWS::MembershipAccountId}:braze-emails-*",
+                      "Fn::Sub": "arn:aws:sqs:\${AWS::Region}:\${MembershipAccountId}:braze-emails-*",
                     },
                   ],
                 },

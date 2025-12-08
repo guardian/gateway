@@ -74,6 +74,7 @@ Parameters:
   MembershipAccountId:
     Description: AWS Account ID for the Membership account
     Type: String
+    Default: '123456789012'
 Mappings:
   StageVariables:
     CODE:
@@ -178,7 +179,7 @@ Resources:
                 Action:
                   - sqs:SendMessage
                 Resource:
-                  - !Sub arn:aws:sqs:${AWS::Region}:${AWS::MembershipAccountId}:braze-emails-*
+                  - !Sub arn:aws:sqs:${AWS::Region}:${MembershipAccountId}:braze-emails-*
         - PolicyName: SSMTunnel
           PolicyDocument:
             Version: 2012-10-17
