@@ -107,6 +107,11 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "AWS Account ID for the Membership account",
       "Type": "String",
     },
+    "MembershipBrazeSqsUrl": {
+      "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-url",
+      "Description": "The url for membership braze SQS",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
     "OauthBaseUrl": {
       "Description": "The base url for social sign-in with google or apple",
       "Type": "AWS::SSM::Parameter::Value<String>",
@@ -1175,7 +1180,7 @@ Environment=REDIS_HOST=\${RedisHost}
 Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=\${MembersDataApiUrl}
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
-Environment=MEMBERSHIP_BRAZE_SQS_URL=$MEMBERSHIP_BRAZE_SQS_URL
+Environment=MEMBERSHIP_BRAZE_SQS_URL=\${MembershipBrazeSqsUrl}
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 

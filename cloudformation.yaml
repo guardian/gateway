@@ -23,6 +23,10 @@ Parameters:
   MembersDataApiUrl:
     Description: The url for members-data-api
     Type: AWS::SSM::Parameter::Value<String>
+  MembershipBrazeSqsUrl:
+    Description: The url for membership braze SQS
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /identity/identity-gateway/CODE/membership-braze-sqs-url
   RedisHost:
     Description: The Redis server URL, used for rate limiting.
     Type: AWS::SSM::Parameter::Value<String>
@@ -363,7 +367,7 @@ Resources:
               Environment=REDIS_SSL_ON=true
               Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
               Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
-              Environment=MEMBERSHIP_BRAZE_SQS_URL=$MEMBERSHIP_BRAZE_SQS_URL
+              Environment=MEMBERSHIP_BRAZE_SQS_URL=${MembershipBrazeSqsUrl}
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 
