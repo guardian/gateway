@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import MinimalHeader from '@/client/components/MinimalHeader';
-import { from, headlineBold28, remSpace } from '@guardian/source/foundations';
+import {
+	from,
+	headlineBold28,
+	headlineMedium24,
+	headlineMedium28,
+	remSpace,
+} from '@guardian/source/foundations';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { Theme } from '@/client/styles/Theme';
+import { IframeLightTheme, Theme } from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -32,6 +38,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
+	overrideTheme?: 'iframe-light';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -47,9 +54,28 @@ const mainStyles = (wide: boolean) => css`
 	}
 `;
 
-const pageHeaderStyles = css`
+const mainStylesStretch = css`
+	display: flex;
+	flex-direction: column;
+	gap: ${CONTAINER_GAP};
+`;
+
+const iframeThemeWrapperStyles = css`
+	display: flex;
+	flex-direction: column;
+	gap: ${remSpace[2]};
+`;
+
+const pageHeaderStyles = (amIIframed: boolean) => css`
 	color: var(--color-heading);
-	${headlineBold28};
+	${amIIframed
+		? `
+            ${headlineMedium24};
+            ${from.mobileLandscape} {
+                ${headlineMedium28};
+            }
+        `
+		: headlineBold28};
 	margin: 0;
 `;
 
@@ -64,6 +90,7 @@ export const MinimalLayout = ({
 	errorContext,
 	showErrorReportUrl = false,
 	shortRequestId,
+	overrideTheme,
 }: MinimalLayoutProps) => {
 	const clientState = useClientState();
 	const { globalMessage: { error, success } = {} } = clientState;
@@ -71,22 +98,44 @@ export const MinimalLayout = ({
 	const successMessage = successOverride || success;
 	const errorMessage = errorOverride || error;
 
+	const getTheme = () => {
+		if (overrideTheme === 'iframe-light') {
+			return <IframeLightTheme />;
+		}
+		return <Theme />;
+	};
+
+	const amIIframed = !!overrideTheme?.includes('iframe');
+
+	const ConditionalIframeThemeWrapper = ({
+		children,
+	}: {
+		children: ReactNode | ReactElement;
+	}) =>
+		overrideTheme?.includes('iframe') ? (
+			<section css={iframeThemeWrapperStyles}>{children}</section>
+		) : (
+			children
+		);
+
 	return (
 		<>
-			<Theme />
-			<MinimalHeader />
-			<main css={mainStyles(wide)}>
+			{getTheme()}
+			{!amIIframed && <MinimalHeader />}
+			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
-				{pageHeader && (
-					<header>
-						<h1 css={pageHeaderStyles}>{pageHeader}</h1>
-					</header>
-				)}
-				{leadText && typeof leadText === 'string' ? (
-					<MainBodyText>{leadText}</MainBodyText>
-				) : (
-					leadText
-				)}
+				<ConditionalIframeThemeWrapper>
+					{pageHeader && (
+						<header>
+							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
+						</header>
+					)}
+					{leadText && typeof leadText === 'string' ? (
+						<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
+					) : (
+						leadText
+					)}
+				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
 					{errorMessage && (
 						<GatewayErrorSummary

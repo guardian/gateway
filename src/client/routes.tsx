@@ -1,51 +1,54 @@
 import React from 'react';
-import { parse } from '@/shared/lib/regexparam';
-import { RoutePaths } from '@/shared/model/Routes';
-import { RegistrationPage } from '@/client/pages/RegistrationPage';
-import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
-import { EmailSentPage } from '@/client/pages/EmailSentPage';
-import { UnvalidatedEmailEmailSentPage } from '@/client/pages/UnvalidatedEmailEmailSentPage';
-import { NotFoundPage } from '@/client/pages/NotFoundPage';
-import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
+import { ChangeEmailCompletePage } from '@/client/pages/ChangeEmailCompletePage';
+import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
-import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
-import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
+import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ClientState } from '@/shared/model/ClientState';
-import { SignInPage } from '@/client/pages/SignInPage';
-import { WelcomePage } from '@/client/pages/WelcomePage';
-import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
-import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
+import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPage';
+import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
+import { DeleteAccountEmailPasswordValidationPage } from '@/client/pages/DeleteAccountEmailPasswordValidationPage';
+import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
+import { EmailSentPage } from '@/client/pages/EmailSentPage';
+import { IframedPasscodeEmailSentPage } from './pages/IframedPasscodeEmailSentPage';
+import { IframedSignInPage } from './pages/IframedSignInPage';
+import { JobsTermsPage } from '@/client/pages/JobsTermsAcceptPage';
+import { MaintenancePage } from '@/client/pages/MaintenancePage';
+import { NewAccountConsentsPage } from './pages/NewAccountConsentsPage';
+import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
+import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
+import { NotFoundPage } from '@/client/pages/NotFoundPage';
+import { PasscodeEmailSentPage } from './pages/PasscodeEmailSentPage';
+import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
+import { RegisterWithEmailPage } from '@/client/pages/RegisterWithEmailPage';
+import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
+import { RegistrationPage } from '@/client/pages/RegistrationPage';
+import { ResendConsentEmailPage } from '@/client/pages/ResendConsentEmailPage';
+import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
+import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
+import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
-import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
+import { ReturnToAppPage } from '@/client/pages/ReturnToAppPage';
+import { RoutePaths } from '@/shared/model/Routes';
+import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
 import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
-import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
-import { MaintenancePage } from '@/client/pages/MaintenancePage';
-import { JobsTermsPage } from '@/client/pages/JobsTermsAcceptPage';
-import { SignedInAsPage } from '@/client/pages/SignedInAsPage';
-import { ChangeEmailCompletePage } from '@/client/pages/ChangeEmailCompletePage';
-import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
-import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
-import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
-import { ResendConsentEmailPage } from '@/client/pages/ResendConsentEmailPage';
-import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPage';
-import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
-import { DeleteAccountEmailPasswordValidationPage } from '@/client/pages/DeleteAccountEmailPasswordValidationPage';
-import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
-import { RegisterWithEmailPage } from '@/client/pages/RegisterWithEmailPage';
-import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
-import { ReturnToAppPage } from '@/client/pages/ReturnToAppPage';
-import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
-import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
-import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
-import { ResetPasswordEmailSentPage } from '@/client/pages/ResetPasswordEmailSentPage';
-import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
-import { PasscodeEmailSentPage } from './pages/PasscodeEmailSentPage';
-import { PasscodeUsedRegisterPage } from './pages/PasscodeUsedRegisterPage';
+import { SignInPage } from '@/client/pages/SignInPage';
 import { SignInPasscodeEmailSentPage } from './pages/SignInPasscodeEmailSentPage';
-import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
-import { NewAccountConsentsPage } from './pages/NewAccountConsentsPage';
+import { SignedInAsPage } from '@/client/pages/SignedInAsPage';
+import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
+import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
+import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
+import { UnvalidatedEmailEmailSentPage } from '@/client/pages/UnvalidatedEmailEmailSentPage';
+import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
+import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
+import { WelcomePage } from '@/client/pages/WelcomePage';
+import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
+import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
+import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
+import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
+import { parse } from '@/shared/lib/regexparam';
+import { IframedRegisterWithEmailPage } from './pages/IframedRegisterWithEmailPage';
 import { WelcomePrintPromoPage } from './pages/WelcomePrintPromoPage';
 
 export type RoutingConfig = {
@@ -160,6 +163,18 @@ const routes: Array<{
 	{
 		path: '/set-password/:token',
 		element: <SetPasswordPage />,
+	},
+	{
+		path: '/iframed/signin',
+		element: <IframedSignInPage />,
+	},
+	{
+		path: '/iframed/register/email',
+		element: <IframedRegisterWithEmailPage />,
+	},
+	{
+		path: '/iframed/passcode',
+		element: <IframedPasscodeEmailSentPage />,
 	},
 	{
 		path: '/welcome/resend',
@@ -300,8 +315,12 @@ interface Props {
 }
 
 export const GatewayRoutes = ({ location }: Props) => {
+	const locationWithoutParams = location.includes('?')
+		? location.substring(0, location.indexOf('?'))
+		: location;
+
 	for (const route of routes) {
-		if (parse(route.path).pattern.test(location)) {
+		if (parse(route.path).pattern.test(locationWithoutParams)) {
 			return route.element;
 		}
 	}

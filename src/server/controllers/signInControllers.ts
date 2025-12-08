@@ -202,7 +202,11 @@ export const oktaIdxApiSignInPasscodeController = async ({
 	confirmationPagePath?: StartIdxFlowParams['authorizationCodeFlowOptions']['confirmationPagePath'];
 }): Promise<void> => {
 	const { email = '' } = req.body;
-	const emailSentPage = '/passcode';
+	const referrerUrl = new URL(req.body.ref);
+	const referrerPath = referrerUrl.pathname;
+	const emailSentPage = referrerPath.includes('/iframed')
+		? '/iframed/passcode'
+		: '/passcode';
 
 	try {
 		// First we want to check the user status in Okta

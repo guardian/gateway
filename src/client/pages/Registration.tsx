@@ -15,6 +15,7 @@ import ThemedLink from '@/client/components/ThemedLink';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
 import { GatewayError } from '@/shared/model/Errors';
+import { CookiesInTheBrowser } from '../components/CookiesInTheBrowser';
 
 export type RegistrationProps = {
 	email?: string;
@@ -71,6 +72,7 @@ export const Registration = ({
 					Sign in
 				</ThemedLink>
 			</MainBodyText>
+			<CookiesInTheBrowser />
 		</MinimalLayout>
 	);
 };

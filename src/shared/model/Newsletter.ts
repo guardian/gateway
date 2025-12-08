@@ -22,6 +22,9 @@ export const Newsletters = {
 	AFTERNOON_UPDATE_AU: '6023',
 	THE_CRUNCH_AU: '6034',
 	SAVED_FOR_LATER_AU: '6003',
+	BREAKING_NEWS_AU: '6048',
+	FIVE_GREAT_READS_AU: '6019',
+	CLEAR_AIR_AU: '6055',
 	// Registration newsletters
 	SATURDAY_EDITION: '6031',
 	FEAST: '6002',
@@ -34,6 +37,9 @@ export const Newsletters = {
 
 export type NewslettersWithImages =
 	| typeof Newsletters.MORNING_MAIL_AU
+	| typeof Newsletters.BREAKING_NEWS_AU
+	| typeof Newsletters.FIVE_GREAT_READS_AU
+	| typeof Newsletters.CLEAR_AIR_AU
 	| typeof Newsletters.AFTERNOON_UPDATE_AU
 	| typeof Newsletters.SAVED_FOR_LATER_AU
 	| typeof Newsletters.THE_CRUNCH_AU

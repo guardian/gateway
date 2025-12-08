@@ -4,27 +4,16 @@ import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { RegistrationProps } from '@/client/pages/Registration';
-import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import {
-	changeSettingsTerms,
-	RegistrationConsents,
-} from '@/client/components/RegistrationConsents';
-import { AppName } from '@/shared/lib/appNameUtils';
-import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { divider } from '@/client/styles/Shared';
-import { MainBodyText } from '@/client/components/MainBodyText';
 import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
-import { CookiesInTheBrowser } from '../components/CookiesInTheBrowser';
+import IframeThemedEmailInput from '../components/IframeThemedEmailInput';
+import { disableAutofillBackground } from '../styles/Shared';
 
 type RegisterWithEmailProps = RegistrationProps & {
-	geolocation?: GeoLocation;
-	appName?: AppName;
 	shortRequestId?: string;
 	pageError?: string;
 };
@@ -50,61 +39,62 @@ const getErrorContext = (pageError?: string) => {
 	}
 };
 
-export const RegisterWithEmail = ({
+export const IframedRegisterWithEmail = ({
 	email,
 	recaptchaSiteKey,
 	queryParams,
 	formError,
-	geolocation,
-	appName,
 	shortRequestId,
 	pageError,
 }: RegisterWithEmailProps) => {
-	const formTrackingName = 'register';
+	const formTrackingName = 'register-iframed';
 
 	usePageLoadOphanInteraction(formTrackingName);
-
-	const isJobs = queryParams.clientId === 'jobs';
 
 	return (
 		<MinimalLayout
 			pageHeader="Create your account"
+			leadText="Unlock your premium experience, online and in the app."
 			shortRequestId={shortRequestId}
 			errorContext={getErrorContext(pageError)}
 			errorOverride={pageError}
+			overrideTheme="iframe-light"
 		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
-				submitButtonText="Next"
+				submitButtonText="Create your account"
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
+				isIframed={true}
 				formErrorMessageFromParent={formError}
 				onSubmit={(e) => {
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms={[
-					newsletterAdditionalTerms,
-					isJobs === false && changeSettingsTerms,
-				].filter(Boolean)}
+				termsStyle="secondary"
+				primaryTermsPosition={false}
 				shortRequestId={shortRequestId}
 			>
-				<EmailInput defaultValue={email} autoComplete="off" />
-				<RegistrationConsents
-					geolocation={geolocation}
-					appName={appName}
-					isJobs={isJobs}
-				/>
+				{email ? (
+					<IframeThemedEmailInput
+						label="Email address"
+						name="email"
+						type="email"
+						autoComplete="email"
+						defaultValue={email}
+						cssOverrides={disableAutofillBackground}
+						readOnly
+						aria-readonly
+					/>
+				) : (
+					<EmailInput
+						label="Email address"
+						defaultValue={email}
+						autoComplete="off"
+					/>
+				)}
 			</MainForm>
-			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
-			<MainBodyText>
-				Already have an account?{' '}
-				<ThemedLink href={buildUrlWithQueryParams('/signin', {}, queryParams)}>
-					Sign in
-				</ThemedLink>
-			</MainBodyText>
-			<CookiesInTheBrowser />
 		</MinimalLayout>
 	);
 };

@@ -65,9 +65,8 @@ const existingUserSendEmailAndValidatePasscode = ({
 							cy.get('input[name=code]').type(code!);
 
 							cy.contains("You're signed in! Welcome to the Guardian.");
-							cy.contains('Save and continue');
+							cy.contains('Continue').click();
 
-							cy.get('[data-cy="main-form-submit-button"]').click();
 							cy.url().should('include', expectedReturnUrl);
 
 							cy.getTestOktaUser(emailAddress).then((user) => {
@@ -240,6 +239,70 @@ describe('Registration flow - Split 1/3', () => {
 			);
 		});
 
+		it('successfully registers using an email with no existing account using a passcode - passwordless jobs user - using the combined signin/register flow', () => {
+			const appClientId = 'appClientId1';
+			const clientId = 'jobs';
+			const fromURI = '/oauth2/v1/authorize';
+
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept(
+				'GET',
+				`https://${Cypress.env('BASE_URI')}${decodeURIComponent(fromURI)}`,
+				(req) => {
+					req.reply(200);
+				},
+			);
+
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
+			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+			const refViewId = 'testRefViewId';
+
+			cy.visit(
+				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+			);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your one-time code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/passcode');
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(appClientId))
+						.and('match', new RegExp(encodeURIComponent(fromURI)));
+
+					cy.contains('Submit verification code');
+					cy.get('input[name=code]').type(code!);
+
+					cy.url().should('include', '/welcome/complete-account');
+					cy.contains('Guardian Jobs newsletter');
+					cy.contains('Next').click();
+
+					cy.url().should('include', encodeURIComponent(fromURI));
+				},
+			);
+		});
+
 		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI - passwordless user', () => {
 			const appClientId = 'appClientId1';
 			const fromURI = '/oauth2/v1/authorize';
@@ -301,7 +364,7 @@ describe('Registration flow - Split 1/3', () => {
 					});
 
 					cy.url().should('include', '/welcome/review');
-					cy.get('button[type="submit"]').click();
+					cy.get('a').contains('Continue').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
@@ -372,7 +435,7 @@ describe('Registration flow - Split 1/3', () => {
 					});
 
 					cy.url().should('include', '/welcome/review');
-					cy.get('button[type="submit"]').click();
+					cy.get('a').contains('Continue').click();
 
 					cy.url().should('contain', decodeURIComponent(fromURI));
 				},
@@ -804,6 +867,8 @@ describe('Registration flow - Split 1/3', () => {
 		});
 
 		context('ACTIVE user - with only password authenticator', () => {
+			// TODO - this is one of the flakey tests and quite often fails getting correct auth state cookie property
+			// 'authState.confirmationPage' back from okta after the /login/token/redirect enpoint
 			it('should sign in with passcode', () => {
 				/**
 				 * START - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR

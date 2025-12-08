@@ -55,6 +55,7 @@ import {
 } from '@/server/controllers/signInControllers';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import { oktaRegistrationOrSignin } from './register';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const { okta, accountManagementUrl, defaultReturnUri, passcodesEnabled } =
 	getConfiguration();
@@ -94,34 +95,61 @@ export const getErrorMessageFromQueryParams = (
 /**
  * Controller to render the sign in or create account page in both IDAPI and Okta
  */
+const handleSigninRender = async (
+	req: Request,
+	res: ResponseWithRequestState,
+	overrideEmailAddress?: string | null,
+): Promise<string> => {
+	const state = res.locals;
+	const { encryptedEmail, error, error_description, signInEmail } =
+		state.queryParams;
+
+	// first attempt to get email from IDAPI encryptedEmail if it exists
+	const decryptedEmail =
+		encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+	// followed by the gateway EncryptedState
+	// if it exists
+	const email = decryptedEmail || signInEmail || readEmailCookie(req);
+
+	const getPath = req.originalUrl as RoutePaths;
+	const html = renderer(getPath, {
+		requestState: mergeRequestState(state, {
+			pageData: {
+				email: overrideEmailAddress || email,
+				focusPasswordField: !!email,
+			},
+			globalMessage: {
+				error: getErrorMessageFromQueryParams(error, error_description),
+			},
+		}),
+		pageTitle: 'Sign in',
+	});
+	return html;
+};
+
 router.get(
 	'/signin',
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { encryptedEmail, error, error_description, signInEmail } =
-			state.queryParams;
+		const html = await handleSigninRender(req, res);
+		return res.type('html').send(html);
+	}),
+);
 
-		// first attempt to get email from IDAPI encryptedEmail if it exists
-		const decryptedEmail =
-			encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+router.get(
+	'/iframed/signin',
+	redirectIfLoggedIn,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const params = new URLSearchParams(
+			req.url.substring(req.url.indexOf('?'), req.url.length),
+		);
+		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulatedEmail = prepopulatedEmailParamEncoded
+			? decodeURIComponent(prepopulatedEmailParamEncoded)
+			: null;
 
-		// followed by the gateway EncryptedState
-		// if it exists
-		const email = decryptedEmail || signInEmail || readEmailCookie(req);
-
-		const html = renderer('/signin', {
-			requestState: mergeRequestState(state, {
-				pageData: {
-					email,
-					focusPasswordField: !!email,
-				},
-				globalMessage: {
-					error: getErrorMessageFromQueryParams(error, error_description),
-				},
-			}),
-			pageTitle: 'Sign in',
-		});
+		const html = await handleSigninRender(req, res, prepopulatedEmail);
 		return res.type('html').send(html);
 	}),
 );
@@ -284,7 +312,6 @@ router.post(
 		const {
 			queryParams: { appClientId },
 		} = res.locals;
-		// if okta feature switch enabled, use okta authentication
 		return oktaSignInController({
 			req,
 			res,

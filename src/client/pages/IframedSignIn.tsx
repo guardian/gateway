@@ -11,22 +11,20 @@ import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { EmailInput } from '@/client/components/EmailInput';
-import { PasswordInput } from '@/client/components/PasswordInput';
 import { css } from '@emotion/react';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
-import { remSpace, textSans15 } from '@guardian/source/foundations';
+import { remSpace } from '@guardian/source/foundations';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { divider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
-import { MainBodyText } from '@/client/components/MainBodyText';
 import { InformationBox } from '@/client/components/InformationBox';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
-import { CookiesInTheBrowser } from '../components/CookiesInTheBrowser';
+import IframeThemedEmailInput from '../components/IframeThemedEmailInput';
+import { disableAutofillBackground } from '../styles/Shared';
 
-export type SignInProps = {
+export type IframedSignInProps = {
 	queryParams: QueryParams;
 	email?: string;
 	// An error to be displayed at the top of the page
@@ -41,10 +39,6 @@ export type SignInProps = {
 	hideSocialButtons?: boolean;
 	focusPasswordField?: boolean;
 };
-
-const resetPassword = css`
-	${textSans15}
-`;
 
 const socialButtonDivider = css`
 	margin-top: ${remSpace[2]};
@@ -137,7 +131,7 @@ const showAuthProviderButtons = (
 	}
 };
 
-export const SignIn = ({
+export const IframedSignIn = ({
 	email,
 	pageError,
 	formError,
@@ -145,15 +139,8 @@ export const SignIn = ({
 	recaptchaSiteKey,
 	isReauthenticate = false,
 	shortRequestId,
-	usePasscodeSignIn = false,
 	hideSocialButtons = false,
-	focusPasswordField = false,
-}: SignInProps) => {
-	const [currentEmail, setCurrentEmail] = React.useState(email);
-
-	// status of the OTP checkbox
-	const selectedView = usePasscodeSignIn ? 'passcode' : 'password';
-
+}: IframedSignInProps) => {
 	const formTrackingName = 'sign-in';
 
 	// The page level error is equivalent to this enum if social signin has been blocked.
@@ -166,15 +153,12 @@ export const SignIn = ({
 
 	return (
 		<MinimalLayout
-			shortRequestId={shortRequestId}
-			errorOverride={pageError}
 			errorContext={getErrorContext(pageError, queryParams)}
-			pageHeader={
-				isReauthenticate || !usePasscodeSignIn
-					? 'Sign in'
-					: 'Sign in or create an account'
-			}
-			leadText="One account to access all Guardian products."
+			errorOverride={pageError}
+			pageHeader="Sign in to your account"
+			leadText="This unlocks your premium experience, online and in the app."
+			shortRequestId={shortRequestId}
+			overrideTheme="iframe-light"
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{!hideSocialButtons &&
@@ -191,85 +175,40 @@ export const SignIn = ({
 					{},
 					queryParams,
 				)}
-				submitButtonText={
-					selectedView === 'passcode' ? 'Continue with email' : 'Sign in'
-				}
+				submitButtonText="Sign in"
 				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
+				isIframed={true}
 				// If social signin is blocked, terms and conditions appear inside MainForm
 				// instead of being handled by showAuthProviderButtons(), above.
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
+				primaryTermsPosition={false}
+				termsStyle="secondary"
 			>
 				<input
 					type="hidden"
 					name="isCombinedSigninAndRegisterFlow"
 					value="combined"
 				/>
-				<EmailInput
-					defaultValue={email}
-					onChange={(e) => setCurrentEmail(e.target.value)}
-				/>
-				{selectedView === 'password' && (
-					<>
-						<PasswordInput
-							label="Password"
-							autoComplete="current-password"
-							autoFocus={!!(focusPasswordField && email)}
-						/>
-						<ThemedLink
-							href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
-							cssOverrides={resetPassword}
-						>
-							Reset password
-						</ThemedLink>
-					</>
+				{email ? (
+					<IframeThemedEmailInput
+						label="Email address"
+						name="email"
+						type="email"
+						autoComplete="email"
+						defaultValue={email}
+						cssOverrides={disableAutofillBackground}
+						readOnly
+						aria-readonly
+					/>
+				) : (
+					<EmailInput label="Email address" defaultValue={email} />
 				)}
-				{
-					// Hidden input to determine whether passcode view is selected
-					selectedView === 'passcode' && (
-						<input type="hidden" name="passcode" value="passcode" />
-					)
-				}
+
+				<input type="hidden" name="passcode" value="passcode" />
 			</MainForm>
-			{
-				// Hidden input to determine whether passcode view is selected
-				selectedView === 'passcode' && (
-					<>
-						<MainBodyText>
-							<ThemedLink
-								href={buildUrlWithQueryParams(
-									isReauthenticate
-										? '/reauthenticate/password'
-										: '/signin/password',
-									{},
-									queryParams,
-									{
-										signInEmail: currentEmail,
-									},
-								)}
-							>
-								Sign in with a password instead
-							</ThemedLink>
-						</MainBodyText>
-						<CookiesInTheBrowser />
-					</>
-				)
-			}
-			{!isReauthenticate && selectedView !== 'passcode' && (
-				<>
-					<Divider size="full" cssOverrides={divider} />
-					<MainBodyText>
-						Not signed in before?{' '}
-						<ThemedLink
-							href={buildUrlWithQueryParams('/register', {}, queryParams)}
-						>
-							Create a free account
-						</ThemedLink>
-					</MainBodyText>
-				</>
-			)}
 		</MinimalLayout>
 	);
 };

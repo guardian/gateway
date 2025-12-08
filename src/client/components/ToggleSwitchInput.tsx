@@ -181,6 +181,11 @@ export interface ToggleSwitchInputProps {
 	 * Long description of the context of the switch. Appears below the title, if provided.
 	 */
 	description?: string;
+
+	/**
+	 * Optional onChange handler to catch input changes
+	 */
+	onChange?: (id: string, checked: boolean) => void;
 }
 
 export const ToggleSwitchInput = ({
