@@ -26,7 +26,6 @@ export interface Configuration {
 	rateLimiter: RateLimiterConfiguration;
 	membersDataApiUrl: string;
 	userBenefitsApiUrl: string;
-	printPromoUrl: string;
 	passcodesEnabled: boolean;
 	membershipBrazeSqsUrl: string;
 	deleteAccountStepFunction: {

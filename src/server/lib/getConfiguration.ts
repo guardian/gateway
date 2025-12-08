@@ -168,11 +168,6 @@ export const getConfiguration = (): Configuration => {
 		'User Benefits API URL missing.',
 	);
 
-	const printPromoUrl = getOrThrow(
-		process.env.PRINT_PROMO_URL,
-		'Print Promo URL missing.',
-	);
-
 	const membershipBrazeSqsUrl = getOrThrow(
 		process.env.MEMBERSHIP_BRAZE_SQS_URL,
 		'Membership Braze SQS URL missing.',
@@ -254,7 +249,6 @@ export const getConfiguration = (): Configuration => {
 		rateLimiter,
 		membersDataApiUrl,
 		userBenefitsApiUrl,
-		printPromoUrl,
 		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
 		membershipBrazeSqsUrl,

@@ -84,7 +84,6 @@ jobs:
           OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
           MEMBERS_DATA_API_URL: http://localhost:9000
           USER_BENEFITS_API_URL: http://localhost:9000
-          PRINT_PROMO_URL: http://localhost:9000
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
           IS_HTTPS: true
           APP_SECRET: devsecret

@@ -26,7 +26,6 @@ const defaultEnv = {
 	SIGN_IN_PAGE_URL: 'sign-in-page-url',
 	MEMBERS_DATA_API_URL: 'members-data-api-url',
 	USER_BENEFITS_API_URL: 'user-benefits-api-url',
-	PRINT_PROMO_URL: 'print-promo-url',
 	MEMBERSHIP_BRAZE_SQS_URL: 'membership-braze-sqs-url',
 	STAGE: 'DEV',
 	IS_HTTPS: 'true',

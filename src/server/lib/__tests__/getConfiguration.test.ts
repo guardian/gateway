@@ -44,11 +44,9 @@ describe('getConfiguration', () => {
 			'okta-guardian-users-group-id';
 		process.env.MEMBERS_DATA_API_URL = 'members-data-api-url';
 		process.env.USER_BENEFITS_API_URL = 'user-benefits-api-url';
-		process.env.PRINT_PROMO_URL = 'print-promo-url';
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_URL =
 			'delete-account-step-function-url';
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY = 'delete-account-api-key';
-		process.env.PRINT_PROMO_URL = 'print-promo-url';
 		process.env.MEMBERSHIP_BRAZE_SQS_URL = 'membership-braze-sqs-url';
 		const rateLimiterConfig = `{
       "enabled": true,
@@ -77,7 +75,6 @@ describe('getConfiguration', () => {
 
 		const expected = {
 			port: 9000,
-			printPromoUrl: 'print-promo-url',
 			idapiClientAccessToken: 'idapi_api_key',
 			idapiBaseUrl: 'http://localhost:1234',
 			baseUri: 'base-uri',
