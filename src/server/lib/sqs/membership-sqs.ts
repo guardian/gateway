@@ -17,14 +17,27 @@ const awsConfig = {
 
 const client = new SQSClient(awsConfig);
 
-interface MembershipMessage {
-	orderId: string;
-	status: string;
-}
+// interface MembershipMessage {
+// 	orderId: string;
+// 	status: string;
+// }
 
-export const sendToMembershipQueueForPrintPromo = async (
-	body: MembershipMessage,
-) => {
+export const sendToMembershipQueueForPrintPromo = async () => {
+	const body = {
+		To: {
+			Address: 'akinsola.lawanson@guardian.co.uk',
+			ContactAttributes: {
+				SubscriberAttributes: {
+					first_name: 'Akinsola',
+					last_name: 'Lawanson',
+					payment_method: 'card',
+					product_type: 'Guardian Weekly',
+				},
+			},
+		},
+		DataExtensionName: 'payment-method-changed-email',
+		IdentityUserId: '200093367',
+	};
 	const command = new SendMessageCommand({
 		QueueUrl: queueUrl,
 		MessageBody: JSON.stringify(body),
