@@ -75,10 +75,10 @@ Parameters:
   IdentityConfigBucket:
     Description: S3 Bucket to read identity config from
     Type: String
-  MembershipAccountId:
-    Description: AWS Account ID for the Membership account
-    Type: String
-    Default: '123456789012'
+  MembershipSNSRoleToAssume:
+    Description: The ARN of the role in membership account that allows access to SQS braze-emails-stage queue
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /identity/identity-gateway/CODE/membership-braze-sqs-url
 Mappings:
   StageVariables:
     CODE:
@@ -175,15 +175,13 @@ Resources:
               - Effect: Allow
                 Action: ses:SendEmail
                 Resource: '*'
-        - PolicyName: SendSQSToMembership
+        - PolicyName: AssumeMembershipSNSPolicy
           PolicyDocument:
-            Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action:
-                  - sqs:SendMessage
+                Action: sts:AssumeRole
                 Resource:
-                  - !Sub arn:aws:sqs:${AWS::Region}:${MembershipAccountId}:braze-emails-*
+                  Ref: MembershipSNSRoleToAssume
         - PolicyName: SSMTunnel
           PolicyDocument:
             Version: 2012-10-17

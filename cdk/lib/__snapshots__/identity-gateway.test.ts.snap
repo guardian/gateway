@@ -102,14 +102,14 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "The url for members-data-api",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "MembershipAccountId": {
-      "Default": "123456789012",
-      "Description": "AWS Account ID for the Membership account",
-      "Type": "String",
-    },
     "MembershipBrazeSqsUrl": {
       "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-url",
       "Description": "The url for membership braze SQS",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "MembershipSNSRoleToAssume": {
+      "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-url",
+      "Description": "The ARN of the role in membership account that allows access to SQS braze-emails-stage queue",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "OauthBaseUrl": {
@@ -606,20 +606,15 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
             "PolicyDocument": {
               "Statement": [
                 {
-                  "Action": [
-                    "sqs:SendMessage",
-                  ],
+                  "Action": "sts:AssumeRole",
                   "Effect": "Allow",
-                  "Resource": [
-                    {
-                      "Fn::Sub": "arn:aws:sqs:\${AWS::Region}:\${MembershipAccountId}:braze-emails-*",
-                    },
-                  ],
+                  "Resource": {
+                    "Ref": "MembershipSNSRoleToAssume",
+                  },
                 },
               ],
-              "Version": "2012-10-17",
             },
-            "PolicyName": "SendSQSToMembership",
+            "PolicyName": "AssumeMembershipSNSPolicy",
           },
           {
             "PolicyDocument": {
