@@ -117,6 +117,7 @@ jobs:
           # Used to tell Gateway server we're running in Cypress
           RUNNING_IN_CYPRESS: true
           RUNNING_IN_CYPRESS_MOCKED: true
+          MEMBERSHIP_BRAZE_SQS_URL: ${{ secrets.MEMBERSHIP_BRAZE_SQS_URL }}
         with:
           start: pnpm start, pnpm run mock-server
           wait-on: 'https://profile.thegulocal.com/healthcheck, http://localhost:9000/healthcheck'

@@ -205,13 +205,20 @@ router.post(
 	handleRecaptcha,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const encrypedCookieState = readEncryptedStateCookie(req);
+		const { appClientId } = res.locals.queryParams;
+		const getConfirmationPagePath = () => {
+			if (encrypedCookieState?.signInOrRegister === 'REGISTER') {
+				if (appClientId === 'printpromo') {
+					return '/welcome/print-promo';
+				}
+				return '/welcome/review';
+			}
+			return undefined;
+		};
 		await oktaIdxApiSignInPasscodeController({
 			req,
 			res,
-			confirmationPagePath:
-				encrypedCookieState?.signInOrRegister === 'REGISTER'
-					? '/welcome/review'
-					: undefined,
+			confirmationPagePath: getConfirmationPagePath(),
 		});
 	}),
 );

@@ -49,6 +49,7 @@ import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredP
 import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { parse } from '@/shared/lib/regexparam';
 import { IframedRegisterWithEmailPage } from './pages/IframedRegisterWithEmailPage';
+import { WelcomePrintPromoPage } from './pages/WelcomePrintPromoPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -66,6 +67,10 @@ const routes: Array<{
 	{
 		path: '/signin',
 		element: <SignInPage />,
+	},
+	{
+		path: '/print-promo',
+		element: <RegistrationPage />,
 	},
 	{
 		path: '/signin/email-sent',
@@ -206,6 +211,10 @@ const routes: Array<{
 	{
 		path: '/welcome/review',
 		element: <NewAccountReviewPage />,
+	},
+	{
+		path: '/welcome/print-promo',
+		element: <WelcomePrintPromoPage />,
 	},
 	{
 		path: '/welcome/newsletters',

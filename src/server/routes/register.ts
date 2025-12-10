@@ -132,6 +132,25 @@ const handleRegisterByPasscode = (
 	return html;
 };
 router.get(
+	'/print-promo',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const html = renderer('/print-promo', {
+			requestState: mergeRequestState(state, {
+				pageData: {},
+				queryParams: {
+					...state.queryParams,
+					appClientId: 'printpromo',
+				},
+			}),
+			pageTitle: 'Register',
+		});
+		return res.type('html').send(html);
+	},
+);
+
+router.get(
 	'/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
@@ -355,14 +374,24 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
+	const getConfirmationPagePathForNewUser = (): RoutePaths => {
+		if (isCombinedSigninAndRegisterFlow) {
+			return '/welcome/complete-account';
+		}
+
+		if (appClientId === 'printpromo') {
+			return '/welcome/print-promo';
+		}
+
+		return '/welcome/review';
+	};
+
 	try {
 		const introspectResponse = await startIdxFlow({
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath: isCombinedSigninAndRegisterFlow
-					? '/welcome/complete-account'
-					: '/welcome/review',
+				confirmationPagePath: getConfirmationPagePathForNewUser(),
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
@@ -496,11 +525,18 @@ const oktaIdxCreateAccountOrSignIn = async (
 				// will implement when full passwordless is implemented
 				trackMetric('ExistingUserInCreateAccountFlow');
 
+				const getConfirmationPagePathForExistingUser = (): RoutePaths => {
+					if (appClientId === 'printpromo') {
+						return '/welcome/print-promo';
+					}
+
+					return '/welcome/existing';
+				};
 				// instead we use the passcode sign in controller, and redirect to /welcome/existing at the end
 				return oktaIdxApiSignInPasscodeController({
 					req,
 					res,
-					confirmationPagePath: '/welcome/existing',
+					confirmationPagePath: getConfirmationPagePathForExistingUser(),
 				});
 			}
 		}

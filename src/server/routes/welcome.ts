@@ -47,6 +47,8 @@ import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { sendPrintPromoSignUpEmail } from '@/email/templates/PrintPromoSignUp/sendPrintPromoSignUpEmail';
+import { sendToMembershipQueueForPrintPromo } from '../lib/sqs/membership-sqs';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -420,6 +422,51 @@ router.get(
 			pageTitle: 'Welcome back',
 		});
 		return res.type('html').send(html);
+	},
+);
+
+router.get(
+	'/welcome/print-promo',
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const continueLink = state.queryParams.returnUrl || '/';
+		const email = readEmailCookie(req);
+		if (email) {
+			sendPrintPromoSignUpEmail({
+				to: email,
+			}).catch((error) => {
+				logger.error('Error sending Print Promo Sign Up welcome email', {
+					error,
+				});
+			});
+		}
+
+		sendToMembershipQueueForPrintPromo()
+			.then(() => {
+				logger.info(
+					'Successfully sent message to Membership SQS queue for Print Promo sign up',
+				);
+			})
+			.catch((error) => {
+				logger.error(
+					'Error sending message to Membership SQS queue for Print Promo sign up',
+					{ error },
+				);
+			});
+
+		const encryptedCookieState = readEncryptedStateCookie(req);
+		const html = renderer('/welcome/print-promo', {
+			pageTitle: 'Welcome',
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					continueLink,
+					isRegistering:
+						encryptedCookieState?.userState === 'NOT_ACTIVE' ||
+						encryptedCookieState?.userState === 'NON_EXISTENT',
+				},
+			}),
+		});
+		res.type('html').send(html);
 	},
 );
 

@@ -47,7 +47,7 @@ describe('getConfiguration', () => {
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_URL =
 			'delete-account-step-function-url';
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY = 'delete-account-api-key';
-
+		process.env.MEMBERSHIP_BRAZE_SQS_URL = 'membership-braze-sqs-url';
 		const rateLimiterConfig = `{
       "enabled": true,
       "settings": {
@@ -134,6 +134,7 @@ describe('getConfiguration', () => {
 				},
 			},
 			membersDataApiUrl: 'members-data-api-url',
+			membershipBrazeSqsUrl: 'membership-braze-sqs-url',
 			userBenefitsApiUrl: 'user-benefits-api-url',
 			passcodesEnabled: true,
 			deleteAccountStepFunction: {

@@ -23,6 +23,10 @@ Parameters:
   MembersDataApiUrl:
     Description: The url for members-data-api
     Type: AWS::SSM::Parameter::Value<String>
+  MembershipBrazeSqsUrl:
+    Description: The url for membership braze SQS
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /identity/identity-gateway/CODE/membership-braze-sqs-url
   RedisHost:
     Description: The Redis server URL, used for rate limiting.
     Type: AWS::SSM::Parameter::Value<String>
@@ -71,6 +75,10 @@ Parameters:
   IdentityConfigBucket:
     Description: S3 Bucket to read identity config from
     Type: String
+  MembershipAccountId:
+    Description: AWS Account ID for the Membership account
+    Type: String
+    Default: '123456789012'
 Mappings:
   StageVariables:
     CODE:
@@ -167,6 +175,15 @@ Resources:
               - Effect: Allow
                 Action: ses:SendEmail
                 Resource: '*'
+        - PolicyName: SendSQSToMembership
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                Resource:
+                  - !Sub arn:aws:sqs:${AWS::Region}:${MembershipAccountId}:braze-emails-*
         - PolicyName: SSMTunnel
           PolicyDocument:
             Version: 2012-10-17
@@ -304,6 +321,7 @@ Resources:
                   OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  MEMBERSHIP_BRAZE_SQS_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/membership-braze-sqs-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   then break
@@ -349,6 +367,7 @@ Resources:
               Environment=REDIS_SSL_ON=true
               Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
               Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
+              Environment=MEMBERSHIP_BRAZE_SQS_URL=${MembershipBrazeSqsUrl}
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 
