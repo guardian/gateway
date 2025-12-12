@@ -13,29 +13,28 @@ const router = Router();
 // To provide backwards compatibility with old systems, such as User Admin, which send the
 // user a link to /verify-email/:token, we support an optional token porameter in the URL,
 // but ignore it.
-router.get(
-	'/verify-email/:token?',
-	(req: Request, res: ResponseWithRequestState) => {
-		// Track a metric to see how many users are hitting this page
-		trackMetric('VerifyEmailPage::Accessed');
+const verifyEmail = (req: Request, res: ResponseWithRequestState) => {
+	// Track a metric to see how many users are hitting this page
+	trackMetric('VerifyEmailPage::Accessed');
+	// If the user has a token in the URL, redirect them to the page without the token
+	if (req.params.token) {
+		res.redirect('/verify-email');
+		return;
+	}
 
-		// If the user has a token in the URL, redirect them to the page without the token
-		if (req.params.token) {
-			res.redirect('/verify-email');
-			return;
-		}
+	const html = renderer('/verify-email', {
+		pageTitle: 'Verify Email',
+		requestState: mergeRequestState(res.locals, {
+			pageData: {
+				email: readEmailCookie(req),
+			},
+		}),
+	});
 
-		const html = renderer('/verify-email', {
-			pageTitle: 'Verify Email',
-			requestState: mergeRequestState(res.locals, {
-				pageData: {
-					email: readEmailCookie(req),
-				},
-			}),
-		});
+	return res.type('html').send(html);
+};
 
-		return res.type('html').send(html);
-	},
-);
+router.get('/verify-email', verifyEmail);
+router.get('/verify-email/:token', verifyEmail);
 
 export default router;
