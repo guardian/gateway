@@ -234,6 +234,7 @@ const authenticationHandler = async (
 		if (tokenSet.id_token) {
 			if (isSocialRegistration) {
 				const [registrationLocation] = getRegistrationLocation(req);
+				const registrationPlatform = authState.data?.appLabel ?? 'profile';
 
 				// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
@@ -243,7 +244,9 @@ const authenticationHandler = async (
 						emailValidated: true,
 						// If the social registration is also via Google One Tap, we want to set the registrationPlatform
 						// so that we can keep track of how many users in total have registered via Google One Tap
-						...(isGoogleOneTap ? { registrationPlatform: 'googleOneTap' } : {}),
+						registrationPlatform: isGoogleOneTap
+							? 'googleOneTap'
+							: registrationPlatform,
 						registrationLocation,
 					},
 				});
