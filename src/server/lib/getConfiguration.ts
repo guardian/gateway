@@ -173,6 +173,11 @@ export const getConfiguration = (): Configuration => {
 		'Membership Braze SQS URL missing.',
 	);
 
+	const membershipSqsRoleArn = getOrThrow(
+		process.env.MEMBERSHIP_SQS_ROLE_ARN,
+		'Membership SQS Role ARN missing.',
+	);
+
 	const okta: Okta = {
 		enabled: true,
 		orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
@@ -252,5 +257,6 @@ export const getConfiguration = (): Configuration => {
 		passcodesEnabled: passcodesEnabled,
 		deleteAccountStepFunction,
 		membershipBrazeSqsUrl,
+		membershipSqsRoleArn,
 	};
 };

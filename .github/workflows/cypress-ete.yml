@@ -95,6 +95,7 @@ jobs:
           MEMBERS_DATA_API_URL: https://members-data-api.code.dev-theguardian.com
           USER_BENEFITS_API_URL: https://user-benefits.code.dev-guardianapis.com
           MEMBERSHIP_BRAZE_SQS_URL: ${{ secrets.MEMBERSHIP_BRAZE_SQS_URL }}
+          MEMBERSHIP_SQS_ROLE_ARN: ${{ secrets.MEMBERSHIP_SQS_ROLE_ARN }}
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
           IS_HTTPS: true
           APP_SECRET: ${{ secrets.APP_SECRET }}

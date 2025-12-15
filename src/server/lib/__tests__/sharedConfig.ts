@@ -27,6 +27,7 @@ const defaultEnv = {
 	MEMBERS_DATA_API_URL: 'members-data-api-url',
 	USER_BENEFITS_API_URL: 'user-benefits-api-url',
 	MEMBERSHIP_BRAZE_SQS_URL: 'membership-braze-sqs-url',
+	MEMBERSHIP_SQS_ROLE_ARN: 'arn:aws:iam::123456789012:role/membership-sqs-role',
 	STAGE: 'DEV',
 	IS_HTTPS: 'true',
 	APP_SECRET: 'app-secret',

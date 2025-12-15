@@ -1,12 +1,14 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
-import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 
 const AWS_REGION = 'eu-west-1';
 const PROFILE = 'membership';
 
 const queueUrl = process.env.MEMBERSHIP_BRAZE_SQS_URL;
-const CREDENTIAL_PROVIDER = fromNodeProviderChain({
-	profile: PROFILE,
+const CREDENTIAL_PROVIDER = fromTemporaryCredentials({
+	params: {
+		RoleArn: process.env.MEMBERSHIP_SQS_ROLE_ARN!,
+	},
 });
 
 const awsConfig = {
