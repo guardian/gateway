@@ -41,6 +41,7 @@ import {
 } from '@/server/lib/idapi/newsletters';
 import { RoutePaths } from '@/shared/model/Routes';
 import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
+import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -232,6 +233,8 @@ const authenticationHandler = async (
 		// there is no other trivial way to do this.
 		if (tokenSet.id_token) {
 			if (isSocialRegistration) {
+				const [registrationLocation] = getRegistrationLocation(req);
+
 				// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 				// updated the user profile emailValidated to true
@@ -241,6 +244,7 @@ const authenticationHandler = async (
 						// If the social registration is also via Google One Tap, we want to set the registrationPlatform
 						// so that we can keep track of how many users in total have registered via Google One Tap
 						...(isGoogleOneTap ? { registrationPlatform: 'googleOneTap' } : {}),
+						registrationLocation,
 					},
 				});
 
