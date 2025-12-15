@@ -46,7 +46,7 @@ app.get('/mock/purge', (_, res) => {
 // Push mock onto mock stack
 app.post('/mock', (req, res) => {
 	responses.unshift({
-		status: req.get('X-status'),
+		status: parseInt(req.get('X-status'), 10),
 		payload: req.body,
 	});
 	res.sendStatus(204);
@@ -54,14 +54,18 @@ app.post('/mock', (req, res) => {
 
 // Mock an endpoint with a pattern
 app.post('/mock/permanent-pattern', (req, res) => {
-	permanentPatterns.push(req.body);
+	const pattern = req.body || {};
+	if (pattern.status) {
+		pattern.status = parseInt(pattern.status, 10);
+	}
+	permanentPatterns.push(pattern);
 	res.sendStatus(204);
 });
 
 // Always mock supplied endpoint
 app.post('/mock/permanent', (req, res) => {
-	const { path, body: payload, status = 200 } = req.body;
-	permanent.set(path, { payload, status });
+	const { path, body: payload, status = 200 } = req.body || {};
+	permanent.set(path, { payload, status: parseInt(status, 10) });
 	res.sendStatus(204);
 });
 
@@ -76,7 +80,7 @@ app.get('/mock/payloads', (_, res) => {
 });
 
 // For any request, if permanent, return permanent mock, otherwise pop from mock stack.
-app.all('/*catchAll', (req, res) => {
+app.all('/{*catchAll}', (req, res) => {
 	const origin = req.header('Origin');
 	if (origin) {
 		res.set('Access-Control-Allow-Origin', origin);
