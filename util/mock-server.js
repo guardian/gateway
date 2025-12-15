@@ -76,7 +76,7 @@ app.get('/mock/payloads', (_, res) => {
 });
 
 // For any request, if permanent, return permanent mock, otherwise pop from mock stack.
-app.all('*', (req, res) => {
+app.all('/*catchAll', (req, res) => {
 	const origin = req.header('Origin');
 	if (origin) {
 		res.set('Access-Control-Allow-Origin', origin);
