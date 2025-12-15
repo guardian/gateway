@@ -48,7 +48,7 @@ export const rateLimiterMiddleware = async (
 	}
 
 	// Look for an email in form submissions and the encrypted email cookie
-	const { email: formEmail = '' } = req.body;
+	const { email: formEmail = '' } = req.body || {};
 	const encryptedStateEmail = readEmailCookie(req);
 
 	const rateLimitData = {

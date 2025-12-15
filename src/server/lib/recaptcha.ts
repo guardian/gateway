@@ -45,7 +45,7 @@ const handleRecaptcha = async (
 	_: Response,
 	next: NextFunction,
 ): Promise<void> => {
-	const recaptchaToken = req.body['g-recaptcha-response'];
+	const recaptchaToken = req.body?.['g-recaptcha-response'];
 	// If the recaptcha response is missing entirely, throw an error which will be shown to the user.
 	if (!recaptchaToken) {
 		return next(recaptchaError);

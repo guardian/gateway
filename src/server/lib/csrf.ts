@@ -113,7 +113,7 @@ const validateRequest = (req: Request) => {
 	const [csrfToken, csrfTokenHash] = csrfCookie.split('|');
 
 	// csrf token from the request body, as thats the only place we currently accept it
-	const csrfTokenFromRequest = req.body._csrf;
+	const csrfTokenFromRequest = req.body?._csrf;
 
 	// If the token from the request body is missing, return false
 	if (!csrfTokenFromRequest) {
