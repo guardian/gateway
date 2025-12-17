@@ -21,7 +21,7 @@ const defaultEnv = {
 	IDAPI_CLIENT_ACCESS_TOKEN: 'idapi_api_key',
 	IDAPI_BASE_URL: 'http://localhost:1234',
 	OAUTH_BASE_URL: 'http://localhost:5678',
-	BASE_URI: 'base-uri',
+	BASE_URI: 'http://localhost:9000',
 	DEFAULT_RETURN_URI: 'default-return-uri',
 	SIGN_IN_PAGE_URL: 'sign-in-page-url',
 	MEMBERS_DATA_API_URL: 'members-data-api-url',

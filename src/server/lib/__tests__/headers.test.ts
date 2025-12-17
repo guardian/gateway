@@ -74,7 +74,7 @@ describe('Content Security Policy headers', () => {
 				response.header['content-security-policy'].split(';');
 			// Does the CSP header match what we expect it to be? If the CSP settings
 			// in Helmet are updated, we expect to need to update these tests.
-			expect(splitCSPHeader).toContain(`${baseUri} 'none'`);
+			expect(splitCSPHeader).toContain("base-uri 'none'");
 			expect(splitCSPHeader).toContain("default-src 'none'");
 			expect(splitCSPHeader).toContain(
 				`script-src ${baseUri} www.google.com www.gstatic.com assets.guim.co.uk 'unsafe-eval'`,

@@ -1,4 +1,4 @@
-import { Express, RequestHandler, urlencoded } from 'express';
+import { Express, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { helmetMiddleware } from '@/server/lib/middleware/helmet';
@@ -20,8 +20,8 @@ export const applyMiddleware = (server: Express): void => {
 	server.use(requestIdMiddleware);
 	server.use(requestContextMiddleware);
 	// apply helmet before anything else
-	server.use(helmetMiddleware as RequestHandler);
-	server.use(urlencoded({ extended: true }) as RequestHandler);
+	server.use(helmetMiddleware);
+	server.use(urlencoded({ extended: true }));
 	server.use(cookieParser(appSecret));
 	server.use(compression());
 
@@ -31,7 +31,7 @@ export const applyMiddleware = (server: Express): void => {
 	}
 
 	server.use(loggerMiddleware);
-	server.use(csrfMiddleware as RequestHandler);
+	server.use(csrfMiddleware);
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- express has its own way of handling async middleware
 	server.use(requestStateMiddleware);
 	server.use(routes);
