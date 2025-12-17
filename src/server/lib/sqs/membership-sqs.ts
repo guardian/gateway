@@ -19,15 +19,16 @@ const awsConfig = {
 
 const client = new SQSClient(awsConfig);
 
-// interface MembershipMessage {
-// 	orderId: string;
-// 	status: string;
-// }
+interface MembershipQueueMessage {
+	email: string;
+}
 
-export const sendToMembershipQueueForPrintPromo = async () => {
+export const sendToMembershipQueueForPrintPromo = async ({
+	email,
+}: MembershipQueueMessage) => {
 	const body = {
 		To: {
-			Address: 'akinsola.lawanson@guardian.co.uk',
+			Address: email,
 			ContactAttributes: {
 				SubscriberAttributes: {
 					first_name: 'Akinsola',
