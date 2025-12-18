@@ -49,6 +49,7 @@ import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredP
 import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { parse } from '@/shared/lib/regexparam';
 import { IframedRegisterWithEmailPage } from './pages/IframedRegisterWithEmailPage';
+import { SubscriptionReviewPage } from './pages/SubscriptionReviewPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -236,12 +237,20 @@ const routes: Array<{
 		element: <ChangeEmailErrorPage />,
 	},
 	{
+		path: '/unsubscribe/review',
+		element: <SubscriptionReviewPage action={'unsubscribe'} />,
+	},
+	{
 		path: '/unsubscribe/success',
 		element: <SubscriptionSuccessPage action={'unsubscribe'} />,
 	},
 	{
 		path: '/unsubscribe/error',
 		element: <SubscriptionErrorPage action={'unsubscribe'} />,
+	},
+	{
+		path: '/subscribe/review',
+		element: <SubscriptionReviewPage action={'subscribe'} />,
 	},
 	{
 		path: '/subscribe/success',

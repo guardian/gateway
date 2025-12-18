@@ -34,7 +34,46 @@ const buildPageData = (emailType: EmailType, emailId: string) => {
 	};
 };
 
-const handler = (action: SubscriptionAction) =>
+const reviewHandler =
+	(action: SubscriptionAction) =>
+	(req: Request, res: ResponseWithRequestState) => {
+		try {
+			const { emailType, encodedSubscriptionData, token } = req.params;
+			if (!isValidEmailType(emailType)) {
+				throw new Error('Invalid email type');
+			}
+			const subscriptionData = parseSubscriptionData(encodedSubscriptionData);
+			const html = renderer(`/${action}/review`, {
+				requestState: mergeRequestState(res.locals, {
+					pageData: {
+						...buildPageData(emailType, subscriptionData.emailId),
+						emailType,
+						encodedSubscriptionData,
+						token,
+					},
+				}),
+				pageTitle: `${subscriptionActionName(action)} Review`,
+			});
+
+			return res.type('html').send(html);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl} Error:`, error);
+			trackMetric(`${subscriptionActionName(action)}::Failure`);
+
+			const html = renderer(`/${action}/error`, {
+				requestState: mergeRequestState(res.locals, {
+					pageData: {
+						accountManagementUrl,
+					},
+				}),
+				pageTitle: `${subscriptionActionName(action)} Error`,
+			});
+
+			return res.type('html').send(html);
+		}
+	};
+
+const confirmHandler = (action: SubscriptionAction) =>
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { emailType, data, token } = req.params;
 
@@ -81,8 +120,12 @@ const handler = (action: SubscriptionAction) =>
 		}
 	});
 
-router.get('/unsubscribe/:emailType/:data/:token', handler('unsubscribe'));
-router.get('/subscribe/:emailType/:data/:token', handler('subscribe'));
+router.get(
+	'/unsubscribe/:emailType/:data/:token',
+	confirmHandler('unsubscribe'),
+);
+router.get('/subscribe/:emailType/:data/:token', reviewHandler('subscribe'));
+router.post('/subscribe/:emailType/:data/:token', confirmHandler('subscribe'));
 
 router.post(
 	'/unsubscribe-all/:data/:token',

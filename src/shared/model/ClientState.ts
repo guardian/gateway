@@ -70,6 +70,8 @@ export interface PageData {
 
 	// subscription specific
 	newsletterId?: string;
+	emailType?: string;
+	encodedSubscriptionData?: string;
 
 	// delete specific
 	contentAccess?: UserAttributesResponse['contentAccess'];
