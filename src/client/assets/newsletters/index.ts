@@ -10,3 +10,14 @@ export { default as HEADLINES_US_SQUARE_IMAGE } from '@/client/assets/newsletter
 export { default as THE_STAKES_US_SQUARE_IMAGE } from '@/client/assets/newsletters/us-the-stakes-square.jpg';
 export { default as WELL_ACTUALLY_SQUARE_IMAGE } from '@/client/assets/newsletters/well-actually-square.jpg';
 export { default as TECH_SCAPE_SQUARE_IMAGE } from '@/client/assets/newsletters/tech-scape-square.jpg';
+
+export { default as FIRST_EDITION_SQUARE_IMAGE } from '@/client/assets/newsletters/tech-scape-square.jpg';
+export { default as HEADLINES_UK_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+export { default as FEAST_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+export { default as THE_GUIDE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+
+export { default as THE_LONG_WAVE_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+export { default as THIS_WEEK_IN_TRUMPLAND_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+
+export { default as THIS_IS_EUROPE_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+export { default as HEADLINES_EU_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
