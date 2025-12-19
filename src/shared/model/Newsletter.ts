@@ -14,6 +14,7 @@ export const Newsletters = {
 	// General newsletters
 	WELL_ACTUALLY: '6039',
 	TECH_SCAPE: '6013',
+	FIRST_EDITION: '4156',
 	// US newsletters
 	HEADLINES_US: '4152',
 	THE_STAKES_US: '6042',
@@ -25,6 +26,15 @@ export const Newsletters = {
 	BREAKING_NEWS_AU: '6048',
 	FIVE_GREAT_READS_AU: '6019',
 	CLEAR_AIR_AU: '6055',
+	//UK
+	THE_GUIDE: '6006',
+	HEADLINES_UK: '4151',
+	// ROW
+	THE_LONG_WAVE: '6051',
+	THIS_WEEK_IN_TRUMPLAND: '6042',
+	// Europe
+	THIS_IS_EUROPE: '4234',
+	HEADLINES_EUROPE: '6033',
 	// Registration newsletters
 	SATURDAY_EDITION: '6031',
 	FEAST: '6002',
@@ -46,7 +56,15 @@ export type NewslettersWithImages =
 	| typeof Newsletters.HEADLINES_US
 	| typeof Newsletters.THE_STAKES_US
 	| typeof Newsletters.WELL_ACTUALLY
-	| typeof Newsletters.TECH_SCAPE;
+	| typeof Newsletters.TECH_SCAPE
+	| typeof Newsletters.FIRST_EDITION
+	| typeof Newsletters.HEADLINES_UK
+	| typeof Newsletters.FEAST
+	| typeof Newsletters.THE_GUIDE
+	| typeof Newsletters.THE_LONG_WAVE
+	// | typeof Newsletters.THIS_WEEK_IN_TRUMPLAND
+	| typeof Newsletters.THIS_IS_EUROPE
+	| typeof Newsletters.HEADLINES_EUROPE;
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
