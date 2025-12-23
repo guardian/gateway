@@ -6,6 +6,7 @@ import {
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import useClientState from '../lib/hooks/useClientState';
 
 type UnsubscribeSuccessProps = {
 	action: SubscriptionAction;
@@ -20,21 +21,34 @@ export const SubscriptionSuccess = ({
 	accountManagementUrl = 'https://manage.theguardian.com',
 	shortRequestId,
 }: UnsubscribeSuccessProps) => {
+	const clientState = useClientState();
+	const { pageData = {} } = clientState;
+	const { emailTitle } = pageData;
 	const subscribeOrUnsubscribe = subscriptionActionName(action);
+
+	const getLeadText = () => {
+		if (emailTitle && action === 'subscribe') {
+			return (
+				<MainBodyText>You're now subscribed to {emailTitle}.</MainBodyText>
+			);
+		} else if (action === 'unsubscribe') {
+			return (
+				<MainBodyText>
+					You have been unsubscribed. These changes can take up to 24 hours to
+					take effect.
+				</MainBodyText>
+			);
+		}
+	};
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
 			pageHeader={
-				subscribeOrUnsubscribe === 'Subscribe'
-					? 'You’re signed up!'
+				action === 'subscribe'
+					? "You're signed up!"
 					: `${subscribeOrUnsubscribe} Confirmation`
 			}
-			leadText={
-				<MainBodyText>
-					You have been {action}d. These changes can take up to 24 hours to take
-					effect.
-				</MainBodyText>
-			}
+			leadText={getLeadText()}
 		>
 			<MainBodyText>
 				<ExternalLink href={`${accountManagementUrl}/email-prefs`}>
