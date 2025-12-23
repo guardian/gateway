@@ -27,7 +27,7 @@ const inputStyles = css`
 	${visuallyHidden};
 `;
 
-const labelStyles = (hasFocus: boolean) => css`
+const labelStyles = (hasFocus: boolean, hasImage: boolean) => css`
 	user-select: none;
 	position: relative;
 	${textSans15};
@@ -39,10 +39,10 @@ const labelStyles = (hasFocus: boolean) => css`
 	border: ${switchVariables.border}px solid
 		var(--color-toggle-inactive-background);
 	display: grid;
-	grid-template-columns:
-		calc(100% - ${switchComputedWidth}px)
-		${switchComputedWidth}px;
-
+	grid-template-columns: ${hasImage
+		? `80px calc(100% - ${switchComputedWidth}px - 80px) ${remSpace[2]}`
+		: `calc(100% - ${switchComputedWidth}px) ${switchComputedWidth}px`};
+	gap: ${remSpace[2]};
 	/*
 	 * FOCUS LOGIC
 	 * Modern browsers which support :has
@@ -100,6 +100,7 @@ const switchStyles = css`
 	flex: 0 0 auto;
 	border: none;
 	margin: 0px 0px 0px ${switchVariables.marginLeft}px;
+	margin: 0px;
 	padding: 0px;
 	display: inline-block;
 	text-align: center;
@@ -161,6 +162,17 @@ const descriptionStyles = css`
 	display: flex;
 	align-items: center;
 `;
+const imageStyles = (imagePath: string) => css`
+	align-self: flex-start;
+	width: 80px;
+	height: 80px;
+	margin-right: ${remSpace[2]};
+	background-image: url('${imagePath}');
+	background-repeat: no-repeat;
+	background-size: cover;
+	flex-shrink: 0;
+	border-radius: 4px;
+`;
 
 export interface ToggleSwitchInputProps {
 	/**
@@ -182,6 +194,8 @@ export interface ToggleSwitchInputProps {
 	 */
 	description?: string;
 
+	imagePath?: string;
+
 	/**
 	 * Optional onChange handler to catch input changes
 	 */
@@ -193,6 +207,7 @@ export const ToggleSwitchInput = ({
 	title,
 	defaultChecked,
 	description,
+	imagePath,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
 	const defaultId = useId();
 	const switchName = id ?? defaultId;
@@ -200,7 +215,11 @@ export const ToggleSwitchInput = ({
 	const [fieldIsFocused, setFieldIsFocused] = useState(false);
 
 	return (
-		<label id={labelId} css={[labelStyles(fieldIsFocused), siblingStyles]}>
+		<label
+			id={labelId}
+			css={[labelStyles(fieldIsFocused, Boolean(imagePath)), siblingStyles]}
+		>
+			{imagePath && <div css={imageStyles(imagePath)} />}
 			<div css={labelTextContainerStyles}>
 				{title && <span css={titleStyles}>{title}</span>}
 				{description && <span css={descriptionStyles}>{description}</span>}

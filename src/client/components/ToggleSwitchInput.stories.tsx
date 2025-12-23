@@ -5,6 +5,7 @@ import {
 	ToggleSwitchInput,
 	ToggleSwitchInputProps,
 } from '@/client/components/ToggleSwitchInput';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 
 export default {
 	title: 'Components/ToggleSwitchInput',
@@ -51,3 +52,15 @@ export const WithTitleAndDescription = (
 );
 
 WithTitleAndDescription.storyName = 'With title and description';
+
+export const WithImage = (props: Partial<ToggleSwitchInputProps>) => (
+	<ToggleSwitchInput
+		title="A toggle switch with an image"
+		description="A longer piece of descriptive text which can go over multiple lines, each more descriptive than the last."
+		imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+		defaultChecked
+		{...props}
+	/>
+);
+
+WithImage.storyName = 'With image';
