@@ -36,11 +36,11 @@ export const NewAccountNewsletters = ({
 	const formTrackingName = 'new-account-newsletters';
 	usePageLoadOphanInteraction(formTrackingName);
 
-	const [checkboxesChecked, setCheckboxesChecked] = React.useState<string[]>(
-		[],
-	);
+	const [toggleSwitchesChecked, setToggleSwitchesChecked] = React.useState<
+		string[]
+	>([]);
 
-	const handleCheckboxChange = ({
+	const handleToggleSwitchChange = ({
 		checked,
 		name,
 	}: {
@@ -48,9 +48,11 @@ export const NewAccountNewsletters = ({
 		name: string;
 	}) => {
 		if (checked) {
-			setCheckboxesChecked([...checkboxesChecked, name]);
+			setToggleSwitchesChecked([...toggleSwitchesChecked, name]);
 		} else {
-			setCheckboxesChecked(checkboxesChecked.filter((item) => item !== name));
+			setToggleSwitchesChecked(
+				toggleSwitchesChecked.filter((item) => item !== name),
+			);
 		}
 	};
 
@@ -77,7 +79,9 @@ export const NewAccountNewsletters = ({
 					queryParams,
 				)}
 				submitButtonText={
-					checkboxesChecked.length ? 'Subscribe and continue' : 'Maybe later'
+					toggleSwitchesChecked.length
+						? 'Subscribe and continue'
+						: 'Maybe later'
 				}
 				onSubmit={({ target: form }) => {
 					newslettersFormSubmitOphanTracking(
@@ -102,7 +106,7 @@ export const NewAccountNewsletters = ({
 									NEWSLETTER_IMAGES[newsletter.id as NewslettersWithImages]
 								}
 								onChange={(id, checked) => {
-									handleCheckboxChange({
+									handleToggleSwitchChange({
 										checked,
 										name: id,
 									});

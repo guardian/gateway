@@ -18,6 +18,8 @@ const switchVariables = {
 	marginLeft: space[3],
 };
 
+const imageSize = 100;
+
 const switchComputedWidth =
 	switchVariables.width +
 	switchVariables.marginLeft +
@@ -40,9 +42,8 @@ const labelStyles = (hasFocus: boolean, hasImage: boolean) => css`
 		var(--color-toggle-inactive-background);
 	display: grid;
 	grid-template-columns: ${hasImage
-		? `80px calc(100% - ${switchComputedWidth}px - 80px) ${remSpace[2]}`
+		? `${imageSize}px calc(100% - ${switchComputedWidth}px - ${imageSize}px) ${switchComputedWidth}px`
 		: `calc(100% - ${switchComputedWidth}px) ${switchComputedWidth}px`};
-	gap: ${remSpace[2]};
 	/*
 	 * FOCUS LOGIC
 	 * Modern browsers which support :has
@@ -57,10 +58,11 @@ const labelStyles = (hasFocus: boolean, hasImage: boolean) => css`
 	`}
 `;
 
-const labelTextContainerStyles = css`
+const labelTextContainerStyles = (isFirstItem: boolean) => css`
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	margin-left: ${isFirstItem ? remSpace[2] : '0'};
 `;
 
 const siblingStyles = css`
@@ -100,7 +102,6 @@ const switchStyles = css`
 	flex: 0 0 auto;
 	border: none;
 	margin: 0px 0px 0px ${switchVariables.marginLeft}px;
-	margin: 0px;
 	padding: 0px;
 	display: inline-block;
 	text-align: center;
@@ -156,17 +157,16 @@ const titleStyles = css`
 	align-items: center;
 `;
 
-const descriptionStyles = css`
+const descriptionStyles = (hasImage: boolean) => css`
 	flex: 1;
 	color: var(--color-toggle-text);
 	display: flex;
-	align-items: center;
+	align-items: ${hasImage ? 'start' : 'center'};
 `;
 const imageStyles = (imagePath: string) => css`
 	align-self: flex-start;
-	width: 80px;
-	height: 80px;
-	margin-right: ${remSpace[2]};
+	width: ${imageSize}px;
+	height: ${imageSize}px;
 	background-image: url('${imagePath}');
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -194,6 +194,9 @@ export interface ToggleSwitchInputProps {
 	 */
 	description?: string;
 
+	/**
+	 * Optional image to display to the left of the text.
+	 */
 	imagePath?: string;
 
 	/**
@@ -214,15 +217,19 @@ export const ToggleSwitchInput = ({
 	const labelId = descriptionId(switchName);
 	const [fieldIsFocused, setFieldIsFocused] = useState(false);
 
+	const hasImage = Boolean(imagePath);
+
 	return (
 		<label
 			id={labelId}
-			css={[labelStyles(fieldIsFocused, Boolean(imagePath)), siblingStyles]}
+			css={[labelStyles(fieldIsFocused, hasImage), siblingStyles]}
 		>
 			{imagePath && <div css={imageStyles(imagePath)} />}
-			<div css={labelTextContainerStyles}>
+			<div css={labelTextContainerStyles(hasImage)}>
 				{title && <span css={titleStyles}>{title}</span>}
-				{description && <span css={descriptionStyles}>{description}</span>}
+				{description && (
+					<span css={descriptionStyles(hasImage)}>{description}</span>
+				)}
 			</div>
 			<input
 				css={inputStyles}
