@@ -20,10 +20,15 @@ export const SubscriptionSuccess = ({
 	accountManagementUrl = 'https://manage.theguardian.com',
 	shortRequestId,
 }: UnsubscribeSuccessProps) => {
+	const subscribeOrUnsubscribe = subscriptionActionName(action);
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
-			pageHeader={`${subscriptionActionName(action)} Confirmation`}
+			pageHeader={
+				subscribeOrUnsubscribe === 'Subscribe'
+					? 'You’re signed up!'
+					: `${subscribeOrUnsubscribe} Confirmation`
+			}
 			leadText={
 				<MainBodyText>
 					You have been {action}d. These changes can take up to 24 hours to take

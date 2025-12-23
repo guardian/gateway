@@ -70,6 +70,7 @@ export interface PageData {
 
 	// subscription specific
 	newsletterId?: string;
+	emailTitle?: string;
 	emailType?: string;
 	encodedSubscriptionData?: string;
 

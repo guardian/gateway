@@ -11,7 +11,7 @@ interface Props {
 export const SubscriptionReviewPage = ({ action }: Props) => {
 	const clientState = useClientState();
 	const { pageData = {}, shortRequestId } = clientState;
-	const { returnUrl, accountManagementUrl, newsletterId } = pageData;
+	const { newsletterId } = pageData;
 
 	useEffect(() => {
 		if (action === 'subscribe' && newsletterId) {
@@ -25,12 +25,5 @@ export const SubscriptionReviewPage = ({ action }: Props) => {
 		}
 	}, [action, newsletterId]);
 
-	return (
-		<SubscriptionReview
-			returnUrl={returnUrl}
-			accountManagementUrl={accountManagementUrl}
-			action={action}
-			shortRequestId={shortRequestId}
-		/>
-	);
+	return <SubscriptionReview action={action} shortRequestId={shortRequestId} />;
 };

@@ -19,14 +19,20 @@ import {
 	SubscriptionAction,
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
+import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 
 const { accountManagementUrl } = getConfiguration();
 
-const buildPageData = (emailType: EmailType, emailId: string) => {
+const buildPageData = (
+	emailType: EmailType,
+	emailId: string,
+	emailTitle?: string,
+) => {
 	if (emailType === 'newsletter') {
 		return {
 			accountManagementUrl,
 			newsletterId: emailId,
+			newsletterTitle: emailTitle,
 		};
 	}
 	return {
@@ -34,19 +40,40 @@ const buildPageData = (emailType: EmailType, emailId: string) => {
 	};
 };
 
+const getPossibleNewsletterTile = async (newsletterId: string) => {
+	try {
+		const allNewsletters = await getNewsletters();
+		return allNewsletters.find((newsletter) => newsletter.id === newsletterId)
+			?.name;
+	} catch {
+		logger.error(
+			"Couldn't retrieve the newsletter from the emailId for the newsletter subcribe/unsubscribe page.",
+		);
+		return;
+	}
+};
+
 const reviewHandler =
 	(action: SubscriptionAction) =>
-	(req: Request, res: ResponseWithRequestState) => {
+	async (req: Request, res: ResponseWithRequestState) => {
 		try {
 			const { emailType, encodedSubscriptionData, token } = req.params;
 			if (!isValidEmailType(emailType)) {
 				throw new Error('Invalid email type');
 			}
 			const subscriptionData = parseSubscriptionData(encodedSubscriptionData);
+			const newsLetterTitle = await getPossibleNewsletterTile(
+				subscriptionData.emailId,
+			);
+
 			const html = renderer(`/${action}/review`, {
 				requestState: mergeRequestState(res.locals, {
 					pageData: {
-						...buildPageData(emailType, subscriptionData.emailId),
+						...buildPageData(
+							emailType,
+							subscriptionData.emailId,
+							newsLetterTitle,
+						),
 						emailType,
 						encodedSubscriptionData,
 						token,
@@ -121,6 +148,10 @@ const confirmHandler = (action: SubscriptionAction) =>
 	});
 
 router.get(
+	'/unsubscribe/:emailType/:data/:token',
+	reviewHandler('unsubscribe'),
+);
+router.post(
 	'/unsubscribe/:emailType/:data/:token',
 	confirmHandler('unsubscribe'),
 );

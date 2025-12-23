@@ -1,52 +1,58 @@
 import React from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import {
-	SubscriptionAction,
-	subscriptionActionName,
-} from '@/shared/lib/subscriptions';
+import { SubscriptionAction } from '@/shared/lib/subscriptions';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { MainForm } from '../components/MainForm';
 import useClientState from '../lib/hooks/useClientState';
 
 type SubscriptionReviewProps = {
 	action: SubscriptionAction;
-	accountManagementUrl?: string;
 	shortRequestId?: string;
 };
 
 export const SubscriptionReview = ({
 	action,
-	accountManagementUrl = 'https://manage.theguardian.com',
 	shortRequestId,
 }: SubscriptionReviewProps) => {
 	const clientState = useClientState();
 	const { pageData = {} } = clientState;
-	const { emailType, encodedSubscriptionData, token, newsletterId } = pageData;
+	const { emailType, encodedSubscriptionData, token, emailTitle } = pageData;
+
+	const subscribePageTitle = emailTitle
+		? `Confirm your subscription to ${emailTitle}`
+		: 'Confirm your subscription';
+
+	const unsubscribePageTitle = 'Confirm unsubscribe';
+
+	const leadText =
+		action === 'subscribe'
+			? 'Click below to complete your newsletter sign up'
+			: 'Please click below to complete your unsubscribe from this list:';
 
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
-			pageHeader={`${subscriptionActionName(action)} Review`}
-			leadText={
-				<MainBodyText>Are you sure you would like to {action}?</MainBodyText>
+			pageHeader={
+				action === 'subscribe' ? subscribePageTitle : unsubscribePageTitle
 			}
+			leadText={<MainBodyText>{leadText}</MainBodyText>}
 		>
-			<MainForm
-				formAction={`/subscribe/${emailType}/${encodedSubscriptionData}/${token}`}
-				submitButtonText="Confirm Subscription"
-				submitButtonPriority="primary"
-				disableOnSubmit={true}
-			>
-				<h2>Confirm your subscription</h2>
-				<p>Please review and confirm your subscription details:</p>
-				{newsletterId && <p>Newsletter ID: {newsletterId}</p>}
-				<p>By clicking confirm, you agree to subscribe to this newsletter.</p>
-				<p>
-					<a href={accountManagementUrl}>
-						Cancel and return to account management page.
-					</a>
-				</p>
-			</MainForm>
+			{action === 'subscribe' && (
+				<MainForm
+					formAction={`/subscribe/${emailType}/${encodedSubscriptionData}/${token}`}
+					submitButtonText="Confirm Subscription"
+					submitButtonPriority="primary"
+					disableOnSubmit={true}
+				></MainForm>
+			)}
+			{action === 'unsubscribe' && (
+				<MainForm
+					formAction={`/unsubscribe/${emailType}/${encodedSubscriptionData}/${token}`}
+					submitButtonText="Confirm unsubscribe"
+					submitButtonPriority="primary"
+					disableOnSubmit={true}
+				></MainForm>
+			)}
 		</MinimalLayout>
 	);
 };
