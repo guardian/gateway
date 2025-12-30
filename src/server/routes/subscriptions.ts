@@ -57,11 +57,11 @@ const reviewHandler =
 	(action: SubscriptionAction) =>
 	async (req: Request, res: ResponseWithRequestState) => {
 		try {
-			const { emailType, encodedSubscriptionData, token } = req.params;
+			const { emailType, data, token } = req.params;
 			if (!isValidEmailType(emailType)) {
 				throw new Error('Invalid email type');
 			}
-			const subscriptionData = parseSubscriptionData(encodedSubscriptionData);
+			const subscriptionData = parseSubscriptionData(data);
 			const newsLetterTitle = await getPossibleNewsletterTile(
 				subscriptionData.emailId,
 			);
@@ -75,7 +75,7 @@ const reviewHandler =
 							newsLetterTitle,
 						),
 						emailType,
-						encodedSubscriptionData,
+						encodedSubscriptionData: data,
 						token,
 					},
 				}),
