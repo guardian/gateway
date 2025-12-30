@@ -1,0 +1,13 @@
+{
+	"code": 200,
+	"response": {
+		"id": "12345",
+		"status": "SUCCESS",
+		"profile": {
+			"login": "test@example.com",
+			"email": "test@example.com",
+			"isGuardianUser": true
+		},
+		"credentials": {}
+	}
+}

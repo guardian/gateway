@@ -10,6 +10,7 @@ type AsyncHandler = (
 export const handleAsyncErrors = (handler: AsyncHandler) => {
 	return (req: Request, res: ResponseWithRequestState, next: NextFunction) => {
 		return handler(req, res, next).catch((error) => {
+			console.log('Async error caught, ', req.url);
 			next(error);
 		});
 	};

@@ -82,6 +82,19 @@ cypress-ete-dev: clear
 	$(call log, "opening cypress 🌲")
 	@(./cypress-ete.sh)
 
+playwright-mocked: clear
+	$(call log, "opening playwright using mocks 🌲")
+	@(./playwright-mocked.sh)
+
+playwright-ete: clear
+	$(call log, "opening playwright 🌲")
+	@(./playwright-ete.sh)
+
+playwright-ete-dev: export DEV_MODE = true
+playwright-ete-dev: clear
+	$(call log, "opening playwright 🌲")
+	@(./playwright-ete.sh)
+
 storybook: clear
 	$(call log, "opening storybook 📖")
 	@pnpm run storybook

@@ -19,13 +19,47 @@ const app = express();
 const responses = [];
 const permanent = new Map();
 let permanentPatterns = [];
+let permanentBodyMocks = [];
 
+// return the last matching pattern (most recently registered) so that you can override mocks
 const findPattern = (path) =>
-	permanentPatterns.find(({ pattern }) => new RegExp(pattern).test(path));
+	[...permanentPatterns]
+		.reverse()
+		.find(({ pattern }) => new RegExp(pattern).test(path));
+
+// Helper to check if request body matches the bodyMatch propert(y/ies)
+const matchesBody = (requestBody, bodyMatch) => {
+	if (!bodyMatch || typeof bodyMatch !== 'object') return false;
+
+	const checkMatch = (actual, expected) => {
+		if (typeof expected !== 'object' || expected === null) {
+			return actual === expected;
+		}
+		if (typeof actual !== 'object' || actual === null) {
+			return false;
+		}
+		return Object.keys(expected).every((key) =>
+			checkMatch(actual[key], expected[key]),
+		);
+	};
+
+	return checkMatch(requestBody, bodyMatch);
+};
+
+// Find a body mock that matches both path and request body
+const findBodyMock = (path, requestBody) =>
+	permanentBodyMocks.find(
+		(mock) => mock.path === path && matchesBody(requestBody, mock.bodyMatch),
+	);
 
 const payloads = [];
 
-app.use(bodyParser.json({ strict: false }));
+app.use(
+	bodyParser.json({
+		strict: false,
+		type: ['application/json', 'application/ion+json', 'application/*+json'],
+	}),
+);
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/healthcheck', (_, res) => {
@@ -39,15 +73,24 @@ app.get('/mock/purge', (_, res) => {
 	responses.length = 0;
 	permanent.clear();
 	permanentPatterns = [];
+	permanentBodyMocks = [];
 	payloads.length = 0;
 	res.sendStatus(204);
 });
 
 // Push mock onto mock stack
 app.post('/mock', (req, res) => {
+	const headers = {};
+	Object.keys(req.headers).forEach((key) => {
+		if (key.startsWith('x-header-')) {
+			const headerName = key.replace('x-header-', '');
+			headers[headerName] = req.headers[key];
+		}
+	});
 	responses.unshift({
-		status: parseInt(req.get('X-status'), 10),
+		status: parseInt(req.get('X-status', 10)),
 		payload: req.body,
+		headers: Object.keys(headers).length > 0 ? headers : undefined,
 	});
 	res.sendStatus(204);
 });
@@ -65,7 +108,26 @@ app.post('/mock/permanent-pattern', (req, res) => {
 // Always mock supplied endpoint
 app.post('/mock/permanent', (req, res) => {
 	const { path, body: payload, status = 200 } = req.body || {};
+	console.log(
+		`[MOCK SERVER] Registering permanent mock for path: "${path}" with status: ${status}`,
+	);
 	permanent.set(path, { payload, status: parseInt(status, 10) });
+	res.sendStatus(204);
+});
+
+// Mock endpoint with path + request body matching
+app.post('/mock/permanent-body', (req, res) => {
+	const { path, bodyMatch, body: payload, status = 200 } = req.body || {};
+	console.log(
+		`[MOCK SERVER] Registering permanent-body mock for path: "${path}" with bodyMatch:`,
+		JSON.stringify(bodyMatch),
+	);
+	permanentBodyMocks.push({
+		path,
+		bodyMatch,
+		payload,
+		status: parseInt(status, 10),
+	});
 	res.sendStatus(204);
 });
 
@@ -91,29 +153,41 @@ app.all('/{*catchAll}', (req, res) => {
 		payloads.push(req.body);
 	}
 
+	const bodyMock = findBodyMock(req.path, req.body);
+	if (bodyMock) {
+		const { status, payload } = bodyMock;
+		res.status(status).json(payload);
+		console.log(`Mocking (body match) for ${req.path}: ${status}`);
+		return;
+	}
+
 	if (permanent.has(req.path)) {
 		const { status, payload } = permanent.get(req.path);
 		res.status(status).json(payload);
-		// console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
+		console.log(`Mocking: ${req.originalUrl}: ${status}`);
 		return;
 	}
 
 	const patternResponse = findPattern(req.path);
 	if (patternResponse) {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { status, body, pattern } = patternResponse;
 		res.status(status).json(body);
-		// console.log(
-		//   `Mocking for pattern ${pattern}: ${req.originalUrl}: ${status} ${body}`,
-		// );
+		console.log(`Mocking pattern (${pattern}): ${req.originalUrl}: ${status}`);
 		return;
 	}
 
 	if (responses.length === 0) {
+		console.log(`No mock found for ${req.path}, returning default 500 error`);
 		res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
 	} else {
-		const { status, payload } = responses.pop();
-		// console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
+		const response = responses.pop();
+		const { status, payload, headers } = response;
+		if (headers) {
+			Object.entries(headers).forEach(([key, value]) => {
+				res.set(key, value);
+			});
+		}
+		console.log(`Stack-based mock matched for ${req.path}: ${status}`);
 		res.status(status).json(payload);
 	}
 });

@@ -1,0 +1,6 @@
+{
+	"code": 200,
+	"response": {
+		"interaction_handle": "someInteractionHandle"
+	}
+}

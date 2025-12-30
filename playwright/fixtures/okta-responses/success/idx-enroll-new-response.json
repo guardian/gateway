@@ -1,0 +1,123 @@
+{
+	"code": 200,
+	"response": {
+		"version": "1.0.0",
+		"stateHandle": "02.id.state~c.handle",
+		"expiresAt": "2099-12-31T23:59:59.000Z",
+		"remediation": {
+			"type": "array",
+			"value": [
+				{
+					"rel": ["create-form"],
+					"name": "enroll-authenticator",
+					"relatesTo": ["$.currentAuthenticator"],
+					"href": "https://profile.code.dev-theguardian.com/idp/idx/challenge/answer",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "credentials",
+							"type": "object",
+							"form": {
+								"value": [
+									{
+										"name": "passcode",
+										"label": "Enter code"
+									}
+								]
+							},
+							"required": true
+						},
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				{
+					"rel": ["create-form"],
+					"name": "select-authenticator-enroll",
+					"href": "https://profile.code.dev-theguardian.com/idp/idx/credential/enroll",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "authenticator",
+							"type": "object",
+							"options": [
+								{
+									"label": "Email",
+									"value": {
+										"form": {
+											"value": [
+												{
+													"name": "id",
+													"required": true,
+													"value": "id",
+													"mutable": false
+												},
+												{
+													"name": "methodType",
+													"required": false,
+													"value": "email",
+													"mutable": false
+												}
+											]
+										}
+									},
+									"relatesTo": "$.authenticators.value[0]"
+								}
+							]
+						},
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				}
+			]
+		},
+		"currentAuthenticator": {
+			"type": "object",
+			"value": {
+				"resend": {
+					"rel": ["create-form"],
+					"name": "resend",
+					"href": "https://profile.code.dev-theguardian.com/idp/idx/challenge/resend",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				"contextualData": {
+					"useEmailMagicLink": false
+				},
+				"type": "email",
+				"key": "okta_email",
+				"id": "emailId",
+				"displayName": "Email",
+				"methods": [
+					{
+						"type": "email"
+					}
+				]
+			}
+		}
+	}
+}
