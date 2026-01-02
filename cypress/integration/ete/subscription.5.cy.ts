@@ -14,7 +14,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			.digest('hex');
 
 	const subscribe = (
-		type: 'newsletter' | 'marketing' | 'fake',
+		type: 'newsletter' | 'marketing',
 		data: string,
 		expectSuccess = true,
 	) => {
@@ -29,8 +29,32 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		}
 	};
 
+	const subscribeWithFakeEmailType = (data: string) => {
+		cy.visit(
+			`/subscribe/fake/${encodeURIComponent(data)}/${createToken(data)}`,
+		);
+		cy.contains('Unable to subscribe.');
+	};
+
+	const subscribeWithInvalidData = (type: 'newsletter' | 'marketing') => {
+		const data = 'data-is-invalid:yes-123';
+		cy.visit(
+			`/subscribe/${type}/${encodeURIComponent(data)}/${createToken(data)}`,
+		);
+		cy.contains('Unable to subscribe.');
+	};
+
+	const subscribeWithInvalidToken = (
+		type: 'newsletter' | 'marketing',
+		data: string,
+	) => {
+		cy.visit(`/subscribe/${type}/${encodeURIComponent(data)}/fakeToken`);
+		cy.get('button[type="submit"]').click();
+		cy.contains('Unable to subscribe.');
+	};
+
 	const unsubscribe = (
-		type: 'newsletter' | 'marketing' | 'fake',
+		type: 'newsletter' | 'marketing',
 		data: string,
 		expectSuccess = true,
 	) => {
@@ -46,6 +70,30 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		} else {
 			cy.contains('Unable to unsubscribe.');
 		}
+	};
+
+	const unsubscribeWithFakeEmailType = (data: string) => {
+		cy.visit(
+			`/unsubscribe/fake/${encodeURIComponent(data)}/${createToken(data)}`,
+		);
+		cy.contains('Unable to unsubscribe.');
+	};
+
+	const unsubscribeWithInvalidData = (type: 'newsletter' | 'marketing') => {
+		const data = 'data-is-invalid:yes-123';
+		cy.visit(
+			`/unsubscribe/${type}/${encodeURIComponent(data)}/${createToken(data)}`,
+		);
+		cy.contains('Unable to unsubscribe.');
+	};
+
+	const unsubscribeWithInvalidToken = (
+		type: 'newsletter' | 'marketing',
+		data: string,
+	) => {
+		cy.visit(`/unsubscribe/${type}/${encodeURIComponent(data)}/fakeToken`);
+		cy.get('button[type="submit"]').click();
+		cy.contains('Unable to unsubscribe.');
 	};
 
 	it('should be able to unsubscribe from a newsletter', () => {
@@ -87,7 +135,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			isUserEmailValidated: true,
 		}).then(({ idapiUserId }) => {
 			const data = createData(marketingId, idapiUserId);
-			subscribe('fake', data, false);
+			subscribeWithFakeEmailType(data);
 		});
 	});
 
@@ -96,7 +144,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			isUserEmailValidated: true,
 		}).then(({ idapiUserId }) => {
 			const data = createData(marketingId, idapiUserId);
-			unsubscribe('fake', data, false);
+			unsubscribeWithFakeEmailType(data);
 		});
 	});
 
@@ -105,8 +153,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			isUserEmailValidated: true,
 		}).then(({ idapiUserId }) => {
 			const data = createData(newsletterId, idapiUserId);
-			cy.visit(`/subscribe/newsletter/${encodeURIComponent(data)}/fake_token`);
-			cy.contains('Unable to subscribe.');
+			subscribeWithInvalidToken('newsletter', data);
 		});
 	});
 
@@ -116,10 +163,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		}).then(({ idapiUserId }) => {
 			const data = createData(newsletterId, idapiUserId);
 			subscribe('newsletter', data);
-			cy.visit(
-				`/unsubscribe/newsletter/${encodeURIComponent(data)}/fake_token`,
-			);
-			cy.contains('Unable to unsubscribe.');
+			unsubscribeWithInvalidToken('newsletter', data);
 		});
 	});
 
@@ -174,12 +218,10 @@ describe('Unsubscribe newsletter/marketing email', () => {
 	});
 
 	it('should be able to handle a subscribe error if data is invalid', () => {
-		const data = 'data-is-invalid:yes-123';
-		subscribe('marketing', data, false);
+		subscribeWithInvalidData('marketing');
 	});
 
 	it('should be able to handle a unsubscribe error if data is invalid', () => {
-		const data = 'data-is-invalid:yes-123';
-		unsubscribe('marketing', data, false);
+		unsubscribeWithInvalidData('marketing');
 	});
 });
