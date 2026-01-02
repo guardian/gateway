@@ -21,8 +21,9 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		cy.visit(
 			`/subscribe/${type}/${encodeURIComponent(data)}/${createToken(data)}`,
 		);
+		cy.get('button[type="submit"]').click();
 		if (expectSuccess) {
-			cy.contains('You have been subscribed');
+			cy.contains("You're signed up!");
 		} else {
 			cy.contains('Unable to subscribe.');
 		}
@@ -36,6 +37,10 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		cy.visit(
 			`/unsubscribe/${type}/${encodeURIComponent(data)}/${createToken(data)}`,
 		);
+		cy.contains(
+			'Please click below to complete your unsubscribe from this list',
+		);
+		cy.get('button[type="submit"]').click();
 		if (expectSuccess) {
 			cy.contains('You have been unsubscribed');
 		} else {
