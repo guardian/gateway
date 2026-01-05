@@ -138,10 +138,14 @@ router.post(
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
 			// otherwise redirect the user to the review page
+			const redirectPath =
+				state.queryParams.clientId === 'jobs'
+					? '/agree/GRS'
+					: '/welcome/review';
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/welcome/review', state.queryParams),
+				addQueryParamsToPath(redirectPath, state.queryParams),
 			);
 		}
 	}),
@@ -245,10 +249,14 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
+			const redirectPath =
+				state.queryParams.clientId === 'jobs'
+					? '/agree/GRS'
+					: '/welcome/review';
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/welcome/review', state.queryParams),
+				addQueryParamsToPath(redirectPath, state.queryParams),
 			);
 		}
 	}),

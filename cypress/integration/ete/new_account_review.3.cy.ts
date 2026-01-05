@@ -169,10 +169,6 @@ describe('New account newsletters page', () => {
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				// consents page
-				cy.url().should('contain', '/welcome/review');
-				cy.get('a').contains('Continue').click();
-
 				// jobs T&C page
 				cy.url().should('contain', '/agree/GRS');
 				cy.contains(

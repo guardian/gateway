@@ -9,6 +9,7 @@ import { clearIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getErrorMessageFromQueryParams } from '@/server/routes/signIn';
+import { JOBS_TERMS_OF_SERVICE_URL } from '@/shared/model/Configuration';
 
 const { baseUri } = getConfiguration();
 
@@ -58,7 +59,7 @@ export const redirectIfLoggedIn = async (
 		const continueLink =
 			state.queryParams?.clientId === 'jobs'
 				? `https://${baseUri}${addQueryParamsToPath(
-						'/agree/GRS',
+						JOBS_TERMS_OF_SERVICE_URL,
 						state.queryParams,
 					)}`
 				: state.queryParams.fromURI ||

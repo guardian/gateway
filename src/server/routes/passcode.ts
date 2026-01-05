@@ -16,6 +16,7 @@ import { getConfiguration } from '../lib/getConfiguration';
 import { getErrorMessageFromQueryParams } from './signIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
+import { JOBS_TERMS_OF_SERVICE_URL } from '@/shared/model/Configuration';
 
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
@@ -54,7 +55,7 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 			const continueLink =
 				queryParams.clientId === 'jobs'
 					? `https://${baseUri}${addQueryParamsToPath(
-							'/agree/GRS',
+							JOBS_TERMS_OF_SERVICE_URL,
 							queryParams,
 						)}`
 					: queryParams.fromURI ||

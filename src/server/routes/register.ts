@@ -347,7 +347,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const { email = '', isCombinedSigninAndRegisterFlow = false } = req.body;
 
 	const {
-		queryParams: { appClientId },
+		queryParams: { appClientId, clientId },
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -362,7 +362,9 @@ const oktaIdxCreateAccountOrSignIn = async (
 			authorizationCodeFlowOptions: {
 				confirmationPagePath: isCombinedSigninAndRegisterFlow
 					? '/welcome/complete-account'
-					: '/welcome/review',
+					: clientId === 'jobs'
+						? '/agree/GRS'
+						: '/welcome/review',
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,

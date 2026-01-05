@@ -42,6 +42,7 @@ import {
 import { RoutePaths } from '@/shared/model/Routes';
 import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
+import { JOBS_TERMS_OF_SERVICE_URL } from '@/shared/model/Configuration';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -479,7 +480,7 @@ const authenticationHandler = async (
 			!authState.confirmationPage
 		) {
 			return res.redirect(
-				addQueryParamsToPath('/agree/GRS', authState.queryParams),
+				addQueryParamsToPath(JOBS_TERMS_OF_SERVICE_URL, authState.queryParams),
 			);
 		}
 
