@@ -18,12 +18,21 @@ import { default as subscriptions } from './subscriptions';
 import { default as consentToken } from './consentToken';
 import { default as deleteAccount } from './delete';
 import { default as passcode } from './passcode';
+import { default as dev } from './dev';
+import { getConfiguration } from '../lib/getConfiguration';
+
+const { stage } = getConfiguration();
 
 const router = Router();
 const uncachedRoutes = Router();
 
 // core routes for the app, e.g. healthcheck, static routes
 router.use(core);
+
+// dev routes - only available in non-prod environments
+if (stage !== 'PROD') {
+	router.use(dev);
+}
 
 // all routes should be uncached except for the core (static) routes
 // to avoid caching sensitive page state
