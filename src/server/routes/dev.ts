@@ -6,10 +6,56 @@ import { getApps } from '../lib/okta/api/apps';
 router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 	const apps = await getApps();
 
-	const clientSignInRoutes = apps.map(
-		(app) =>
-			`<li><a href="/signin?appClientId=${app.id}${app.label === 'jobs_site' ? '&clientId=jobs' : ''}">${app.label}</a></li>`,
-	);
+	const appsToShow = [
+		{
+			name: 'Gateway',
+			labels: ['profile'],
+		},
+		{
+			name: 'The Guardian',
+			labels: ['theguardian'],
+		},
+		{
+			name: 'Manage My Account',
+			labels: ['manage'],
+		},
+		{
+			name: 'Guardian Jobs',
+			labels: ['jobs_site'],
+			clientId: 'jobs',
+		},
+		{
+			name: 'Editions',
+			labels: ['editions_pressreader'],
+		},
+		{
+			name: 'Support',
+			labels: ['support'],
+		},
+		{
+			name: 'Guardian App',
+			labels: ['ios_live_app', 'android_live_app'],
+			suffix: ['iOS', 'Android'],
+		},
+		{
+			name: 'Feast App',
+			labels: ['ios_feast_app', 'android_feast_app'],
+			suffix: ['iOS', 'Android'],
+		},
+	];
+
+	const signInLinks = appsToShow.map((app) => {
+		const signInLinks = app.labels.map((label, index) => {
+			const clientIdParam = app.clientId ? `&clientId=${app.clientId}` : '';
+			const appClientId = apps.find((a) => a.label === label)?.id;
+
+			const suffix = app.suffix ? ` (${app.suffix[index]})` : '';
+
+			return `<a href="/signin?appClientId=${appClientId}${clientIdParam}">Sign-in${suffix}</a>`;
+		});
+
+		return `<li><b>${app.name}<b>: ${signInLinks.join(' | ')}</li>`;
+	});
 
 	const html = `
 		<!DOCTYPE html>
@@ -23,7 +69,13 @@ router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 				<h1>Development Routes</h1>
 				<h2>Sign-in / Registration</h2>
 				<ul>
-					${clientSignInRoutes.join('')}
+					${signInLinks.join('')}
+				</ul>
+				<h2>Other Routes</h2>
+				<ul>
+					<li><a href="/signout">Sign Out</a></li>
+					<li><a href="/delete">Delete Account</a></li>
+					<li><a href="/maintenance">Maintenance</a></li>
 				</ul>
 			</body>
 		</html>
