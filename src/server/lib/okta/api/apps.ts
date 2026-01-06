@@ -1,5 +1,9 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { AppResponse, appResponseSchema } from '@/server/models/okta/App';
+import {
+	AppResponse,
+	appResponseSchema,
+	appsResponseSchema,
+} from '@/server/models/okta/App';
 import { OktaError } from '@/server/models/okta/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
@@ -15,7 +19,7 @@ const { okta } = getConfiguration();
  */
 
 /**
- * @name getApps
+ * @name getApp
  * @description Get an application configured within Okta by application ID
  *
  * Uses AppCache map to memoize as to cache the response, as the application config is unlikely to change
@@ -50,6 +54,52 @@ const handleAppResponse = async (response: Response): Promise<AppResponse> => {
 			logger.error(`Parsing error - appResponseSchema`, error);
 			throw new OktaError({
 				message: 'Could not parse Okta app response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
+};
+
+// eslint-disable-next-line functional/no-let -- we want to cache the apps response, so this variable needs to be mutable
+let AppsCache: AppResponse[] | undefined;
+
+/**
+ * @name getApps
+ * @description Get all applications configured within Okta
+ *
+ * Uses AppsCache array to memoize as to cache the response, as the application config is unlikely to change
+ *
+ * https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Application/#tag/Application/operation/listApplications
+ *
+ * @returns {Promise<AppResponse[]>}
+ */
+export const getApps = async (): Promise<AppResponse[]> => {
+	if (AppsCache) {
+		return Promise.resolve(AppsCache);
+	}
+
+	const path = buildUrl(`/api/v1/apps`, {});
+
+	const apps = await fetch(joinUrl(okta.orgUrl, path), {
+		headers: { ...defaultHeaders(), ...authorizationHeader() },
+	}).then(handleAppsResponse);
+
+	AppsCache = apps;
+
+	return apps;
+};
+
+const handleAppsResponse = async (
+	response: Response,
+): Promise<AppResponse[]> => {
+	if (response.ok) {
+		try {
+			return appsResponseSchema.parse(await response.json());
+		} catch (error) {
+			logger.error(`Parsing error - appsResponseSchema`, error);
+			throw new OktaError({
+				message: 'Could not parse Okta apps response',
 			});
 		}
 	} else {

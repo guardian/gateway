@@ -5,6 +5,7 @@ export type ConsentPath = 'newsletters' | 'data' | 'review';
  * If you want to add a new route, it will need to be added below
  */
 export const ValidRoutePathsArray = [
+	'/',
 	'/404',
 	'/change-email/:token',
 	'/change-email/complete',
@@ -135,6 +136,7 @@ export type ApiRoutePaths =
 	| '/users/me/touch-braze';
 
 type OktaApiRoutePaths =
+	| '/api/v1/apps'
 	| '/api/v1/apps/:id'
 	| '/api/v1/authn'
 	| '/api/v1/authn/credentials/reset_password'
