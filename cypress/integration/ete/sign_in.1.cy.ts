@@ -1,3 +1,4 @@
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -916,7 +917,7 @@ describe('Sign in flow, Okta enabled', () => {
 						cy.contains('Continue')
 							.should('have.attr', 'href')
 							.and('include', `fromURI=${encodeURIComponent(`/oauth2/`)}`)
-							.and('include', '/agree/GRS');
+							.and('include', JOBS_TOS_URI);
 						cy.contains('a', 'Sign in')
 							.should('have.attr', 'href')
 							.and('include', '/signout?returnUrl=');

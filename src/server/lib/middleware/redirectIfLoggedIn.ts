@@ -9,7 +9,7 @@ import { clearIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getErrorMessageFromQueryParams } from '@/server/routes/signIn';
-import { JOBS_TERMS_OF_SERVICE_URL } from '@/shared/model/Configuration';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { baseUri } = getConfiguration();
 
@@ -55,11 +55,11 @@ export const redirectIfLoggedIn = async (
 
 		// determine the "Continue" button link, either "fromURI" if coming from Okta login page (and OAuth flow)
 		// or /signin/refresh if not (this will refresh their identity and okta session and redirect them back to the returnUrl)
-		// or /agree/GRS if the user is coming from the Jobs client
+		// or the jobs T&C page if the user is coming from the Jobs client
 		const continueLink =
 			state.queryParams?.clientId === 'jobs'
 				? `https://${baseUri}${addQueryParamsToPath(
-						JOBS_TERMS_OF_SERVICE_URL,
+						JOBS_TOS_URI,
 						state.queryParams,
 					)}`
 				: state.queryParams.fromURI ||

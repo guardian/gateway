@@ -47,6 +47,7 @@ import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -140,7 +141,7 @@ router.post(
 			// otherwise redirect the user to the review page
 			const redirectPath =
 				state.queryParams.clientId === 'jobs'
-					? '/agree/GRS'
+					? JOBS_TOS_URI
 					: '/welcome/review';
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
@@ -251,7 +252,7 @@ router.post(
 		} finally {
 			const redirectPath =
 				state.queryParams.clientId === 'jobs'
-					? '/agree/GRS'
+					? JOBS_TOS_URI
 					: '/welcome/review';
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(

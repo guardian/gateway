@@ -3,6 +3,7 @@ import {
 	randomPassword,
 } from '../../support/commands/testUser';
 import { Status } from '../../../src/server/models/okta/User';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const breachCheck = () => {
 	cy.intercept({
@@ -294,7 +295,7 @@ describe('Registration flow - Split 1/3', () => {
 					cy.contains('Guardian Jobs newsletter');
 					cy.contains('Next').click();
 
-					cy.url().should('include', '/agree/GRS');
+					cy.url().should('include', JOBS_TOS_URI);
 
 					cy.url().should('include', encodeURIComponent(fromURI));
 				},

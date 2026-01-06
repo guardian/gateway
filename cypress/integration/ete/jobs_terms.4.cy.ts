@@ -1,6 +1,8 @@
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+
 describe('Jobs terms and conditions flow in Okta', () => {
 	context('Shows the terms and conditions page on Sign In', () => {
-		it('visits /agree/GRS after sign in if clientId=jobs parameter is set', () => {
+		it('visits Jobs T&C page after sign in if clientId=jobs parameter is set', () => {
 			cy.intercept('GET', 'https://jobs.theguardian.com/', (req) => {
 				req.reply(200);
 			});
@@ -14,7 +16,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 				cy.get('input[name=email]').type(emailAddress);
 				cy.get('input[name=password]').type(finalPassword);
 				cy.get('[data-cy="main-form-submit-button"]').click();
-				cy.url().should('include', '/agree/GRS');
+				cy.url().should('include', JOBS_TOS_URI);
 				cy.get('[data-cy="main-form-submit-button"]').click();
 				cy.url().should('include', 'https://jobs.theguardian.com/');
 			});
@@ -26,7 +28,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 			// load the consents page as its on the same domain
 			const termsAcceptPageUrl = `https://${Cypress.env(
 				'BASE_URI',
-			)}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
+			)}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
 			cy.setCookie('idx', 'invalid-cookie');
 			cy.visit(termsAcceptPageUrl);
 			cy.url().should(
@@ -39,7 +41,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 			// load the consents page as its on the same domain
 			const termsAcceptPageUrl = `https://${Cypress.env(
 				'BASE_URI',
-			)}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+			)}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/healthcheck`;
 			cy.visit(termsAcceptPageUrl);
 			cy.url().should(
 				'include',
@@ -68,7 +70,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 				const termsAcceptPageUrl = `https://${Cypress.env(
 					'BASE_URI',
-				)}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+				)}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
 				// Create a test user without a first/last name who has `isJobsUser` set to true.
 				cy.updateOktaTestUserProfile(emailAddress, {
@@ -113,7 +115,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 			})?.then(({ emailAddress, finalPassword }) => {
 				const termsAcceptPageUrl = `https://${Cypress.env(
 					'BASE_URI',
-				)}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+				)}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
 				// load the consents page as its on the same domain
 				const postSignInReturnUrl = `https://${Cypress.env(
@@ -144,7 +146,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 					const finalTermsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/agree/GRS?returnUrl=https://profile.thegulocal.com/welcome/review`;
+					)}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/welcome/review`;
 
 					cy.visit(finalTermsAcceptPageUrl, { failOnStatusCode: false });
 
@@ -163,7 +165,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 			})?.then(({ emailAddress, finalPassword }) => {
 				const termsAcceptPageUrl = `https://${Cypress.env(
 					'BASE_URI',
-				)}/agree/GRS?returnUrl=https://jobs.theguardian.com/`;
+				)}${JOBS_TOS_URI}?returnUrl=https://jobs.theguardian.com/`;
 
 				// load the consents page as its on the same domain
 				const postSignInReturnUrl = `https://${Cypress.env(
@@ -183,7 +185,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 				cy.visit(termsAcceptPageUrl);
 
 				// check sign in has worked first
-				cy.url().should('include', `/agree/GRS`);
+				cy.url().should('include', JOBS_TOS_URI);
 				// check session cookie is set
 				cy.getCookie('idx').should('exist');
 				// check idapi cookies are set

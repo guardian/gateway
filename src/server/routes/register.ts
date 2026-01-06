@@ -63,6 +63,7 @@ import {
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -363,7 +364,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 				confirmationPagePath: isCombinedSigninAndRegisterFlow
 					? '/welcome/complete-account'
 					: clientId === 'jobs'
-						? '/agree/GRS'
+						? JOBS_TOS_URI
 						: '/welcome/review',
 				extraData: {
 					flow: 'create-account',
