@@ -102,6 +102,7 @@ export const NewAccountNewsletters = ({
 								id={newsletter.id}
 								title={newsletter.name}
 								description={newsletter.description}
+								subLabel={newsletter.frequency}
 								imagePath={
 									NEWSLETTER_IMAGES[newsletter.id as NewslettersWithImages]
 								}

@@ -9,6 +9,7 @@ import {
 	descriptionId,
 	space,
 	remSpace,
+	textSans12,
 } from '@guardian/source/foundations';
 
 const switchVariables = {
@@ -63,6 +64,7 @@ const labelTextContainerStyles = (isFirstItem: boolean) => css`
 	flex-direction: column;
 	overflow: hidden;
 	margin-left: ${isFirstItem ? remSpace[2] : '0'};
+	height: min-content;
 `;
 
 const siblingStyles = css`
@@ -157,6 +159,13 @@ const titleStyles = css`
 	align-items: center;
 `;
 
+const subLabelStyles = css`
+	display: block;
+	${textSans12};
+	color: var(--color-alert-info);
+	text-transform: uppercase;
+	margin-top: ${remSpace[1]};
+`;
 const descriptionStyles = (hasImage: boolean) => css`
 	flex: 1;
 	color: var(--color-toggle-text);
@@ -200,6 +209,13 @@ export interface ToggleSwitchInputProps {
 	imagePath?: string;
 
 	/**
+	 *
+	 * @type {string}
+	 * @memberof ToggleSwitchInputProps
+	 */
+	subLabel?: string;
+
+	/**
 	 * Optional onChange handler to catch input changes
 	 */
 	onChange?: (id: string, checked: boolean) => void;
@@ -211,6 +227,7 @@ export const ToggleSwitchInput = ({
 	defaultChecked,
 	description,
 	imagePath,
+	subLabel,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
 	const defaultId = useId();
 	const switchName = id ?? defaultId;
@@ -230,6 +247,7 @@ export const ToggleSwitchInput = ({
 				{description && (
 					<span css={descriptionStyles(hasImage)}>{description}</span>
 				)}
+				{subLabel && <span css={subLabelStyles}>{subLabel}</span>}
 			</div>
 			<input
 				css={inputStyles}
