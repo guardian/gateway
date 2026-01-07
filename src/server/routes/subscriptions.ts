@@ -32,7 +32,7 @@ const buildPageData = (
 		return {
 			accountManagementUrl,
 			newsletterId: emailId,
-			newsletterTitle: emailTitle,
+			emailTitle,
 		};
 	}
 	return {
