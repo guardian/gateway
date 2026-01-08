@@ -1,4 +1,4 @@
-import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { JOBS_TOS_URI } from '../../../src/shared/model/Configuration';
 
 describe('Jobs terms and conditions flow in Okta', () => {
 	context('Shows the terms and conditions page on Sign In', () => {

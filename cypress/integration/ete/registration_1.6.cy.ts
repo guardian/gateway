@@ -3,7 +3,7 @@ import {
 	randomPassword,
 } from '../../support/commands/testUser';
 import { Status } from '../../../src/server/models/okta/User';
-import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { JOBS_TOS_URI } from '../../../src/shared/model/Configuration';
 
 const breachCheck = () => {
 	cy.intercept({

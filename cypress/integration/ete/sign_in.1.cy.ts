@@ -1,4 +1,4 @@
-import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { JOBS_TOS_URI } from '../../../src/shared/model/Configuration';
 import {
 	randomMailosaurEmail,
 	randomPassword,
