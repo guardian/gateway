@@ -8,12 +8,13 @@ on:
     branches:
       - main
   pull_request:
-    types: ['review_requested']
+    types: ['review_requested', 'labeled']
   workflow_dispatch:
 jobs:
   build:
     name: Build Gateway
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'run_cypress')  ||  github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v5
