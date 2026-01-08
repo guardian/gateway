@@ -1,3 +1,4 @@
+import { JOBS_TOS_URI } from '../../../src/shared/model/Configuration';
 import { randomMailosaurEmail } from '../../support/commands/testUser';
 
 describe('New account newsletters page', () => {
@@ -169,12 +170,8 @@ describe('New account newsletters page', () => {
 				cy.contains('Submit verification code');
 				cy.get('input[name=code]').type(code!);
 
-				// consents page
-				cy.url().should('contain', '/welcome/review');
-				cy.get('a').contains('Continue').click();
-
 				// jobs T&C page
-				cy.url().should('contain', '/agree/GRS');
+				cy.url().should('contain', JOBS_TOS_URI);
 				cy.contains(
 					'Click ‘continue’ to automatically use your existing Guardian account to sign in with Guardian Jobs',
 				);

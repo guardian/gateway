@@ -1,3 +1,5 @@
+import { JOBS_TOS_URI } from './Configuration';
+
 export type ConsentPath = 'newsletters' | 'data' | 'review';
 
 /**
@@ -10,7 +12,7 @@ export const ValidRoutePathsArray = [
 	'/change-email/:token',
 	'/change-email/complete',
 	'/change-email/error',
-	'/agree/GRS',
+	JOBS_TOS_URI,
 	'/email/:template',
 	'/consent-token/:token/accept',
 	'/consent-token/error',

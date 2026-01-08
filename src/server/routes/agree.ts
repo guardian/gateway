@@ -11,11 +11,12 @@ import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { deleteOAuthTokenCookie } from '@/server/lib/okta/tokens';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { defaultReturnUri, signInPageUrl } = getConfiguration();
 
 router.get(
-	'/agree/GRS',
+	JOBS_TOS_URI,
 	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
@@ -59,7 +60,7 @@ router.get(
 				);
 			}
 
-			const html = renderer('/agree/GRS', {
+			const html = renderer(JOBS_TOS_URI, {
 				requestState: deepmerge(state, {
 					pageData: {
 						firstName,
@@ -87,7 +88,7 @@ router.get(
 );
 
 router.post(
-	'/agree/GRS',
+	JOBS_TOS_URI,
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;

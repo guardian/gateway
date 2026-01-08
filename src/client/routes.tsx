@@ -50,6 +50,7 @@ import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { parse } from '@/shared/lib/regexparam';
 import { IframedRegisterWithEmailPage } from './pages/IframedRegisterWithEmailPage';
 import { SubscriptionReviewPage } from './pages/SubscriptionReviewPage';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -221,7 +222,7 @@ const routes: Array<{
 		element: <ReturnToAppPage />,
 	},
 	{
-		path: '/agree/GRS',
+		path: JOBS_TOS_URI,
 		element: <JobsTermsPage />,
 	},
 	{
