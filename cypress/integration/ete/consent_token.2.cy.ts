@@ -17,7 +17,7 @@ describe('Consent token flow', () => {
 					cy.visit(`/consent-token/${token}/accept`, {
 						failOnStatusCode: false,
 					});
-					cy.contains('Subscribe Confirmation');
+					cy.contains("You're signed up!");
 					// TODO: Would be nice to check that the user is actually
 					// subscribed to the newsletters here
 					cy.url().should('include', '/subscribe/success');
