@@ -48,6 +48,7 @@ import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { sendToMembershipQueueForPrintPromo } from '../lib/sqs/membership-sqs';
+import { getUser } from '../lib/okta/api/users';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -426,12 +427,15 @@ router.get(
 
 router.get(
 	'/welcome/print-promo',
-	(req: Request, res: ResponseWithRequestState) => {
+	loginMiddlewareOAuth,
+	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const continueLink = state.queryParams.returnUrl || '/';
 		const email = readEmailCookie(req);
+
 		if (email) {
-			sendToMembershipQueueForPrintPromo({ email })
+			const user = await getUser(email);
+			sendToMembershipQueueForPrintPromo({ email, identityId: user.id })
 				.then(() => {
 					logger.info(
 						'Successfully sent message to Membership SQS queue for Print Promo sign up',

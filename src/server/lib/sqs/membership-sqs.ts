@@ -21,10 +21,12 @@ const client = new SQSClient(awsConfig);
 
 interface MembershipQueueMessage {
 	email: string;
+	identityId: string;
 }
 
 export const sendToMembershipQueueForPrintPromo = async ({
 	email,
+	identityId,
 }: MembershipQueueMessage) => {
 	const body = {
 		To: {
@@ -39,7 +41,7 @@ export const sendToMembershipQueueForPrintPromo = async ({
 			},
 		},
 		DataExtensionName: 'payment-method-changed-email',
-		IdentityUserId: '200093367',
+		IdentityUserId: identityId,
 	};
 	const command = new SendMessageCommand({
 		QueueUrl: queueUrl,
