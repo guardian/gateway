@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { GuardianTerms } from '@/client/components/Terms';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { divider } from '@/client/styles/Shared';
@@ -22,10 +22,9 @@ export type RegistrationProps = {
 	shortRequestId?: string;
 };
 
-const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
+const RegistrationTerms = () => (
 	<InformationBox>
-		{!isJobs && <GuardianTerms />}
-		{isJobs && <JobsTerms />}
+		<GuardianTerms />
 	</InformationBox>
 );
 
@@ -35,9 +34,6 @@ export const Registration = ({
 }: RegistrationProps) => {
 	const formTrackingName = 'register';
 
-	const { clientId } = queryParams;
-	const isJobs = clientId === 'jobs';
-
 	usePageLoadOphanInteraction(formTrackingName);
 
 	return (
@@ -46,7 +42,7 @@ export const Registration = ({
 			pageHeader="Create a free account"
 			leadText="One account to access all Guardian products."
 		>
-			<RegistrationTerms isJobs={isJobs} />
+			<RegistrationTerms />
 			<AuthProviderButtons
 				queryParams={queryParams}
 				providers={['social', 'email']}
