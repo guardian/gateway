@@ -35,6 +35,9 @@ export const getNextWelcomeFlowPage = ({
 	switch (geolocation) {
 		case 'US':
 		case 'AU':
+		case 'GB':
+		case 'ROW':
+		case 'EU':
 			return addQueryParamsToPath('/welcome/newsletters', queryParams);
 		default:
 			return returnUrl;
