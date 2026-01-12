@@ -63,6 +63,7 @@ import {
 } from '@/server/controllers/signInControllers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -347,7 +348,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const { email = '', isCombinedSigninAndRegisterFlow = false } = req.body;
 
 	const {
-		queryParams: { appClientId },
+		queryParams: { appClientId, clientId },
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -362,7 +363,9 @@ const oktaIdxCreateAccountOrSignIn = async (
 			authorizationCodeFlowOptions: {
 				confirmationPagePath: isCombinedSigninAndRegisterFlow
 					? '/welcome/complete-account'
-					: '/welcome/review',
+					: clientId === 'jobs'
+						? JOBS_TOS_URI
+						: '/welcome/review',
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,

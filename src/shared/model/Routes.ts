@@ -1,3 +1,5 @@
+import { JOBS_TOS_URI } from './Configuration';
+
 export type ConsentPath = 'newsletters' | 'data' | 'review';
 
 /**
@@ -5,11 +7,12 @@ export type ConsentPath = 'newsletters' | 'data' | 'review';
  * If you want to add a new route, it will need to be added below
  */
 export const ValidRoutePathsArray = [
+	'/',
 	'/404',
 	'/change-email/:token',
 	'/change-email/complete',
 	'/change-email/error',
-	'/agree/GRS',
+	JOBS_TOS_URI,
 	'/email/:template',
 	'/consent-token/:token/accept',
 	'/consent-token/error',
@@ -73,10 +76,12 @@ export const ValidRoutePathsArray = [
 	'/signout',
 	'/signout/all',
 	'/unsubscribe/:emailType/:data/:token',
+	'/unsubscribe/review',
 	'/unsubscribe/success',
 	'/unsubscribe/error',
 	'/unsubscribe-all/:data/:token',
 	'/subscribe/:emailType/:data/:token',
+	'/subscribe/review',
 	'/subscribe/success',
 	'/subscribe/error',
 	'/verify-email',
@@ -133,6 +138,7 @@ export type ApiRoutePaths =
 	| '/users/me/touch-braze';
 
 type OktaApiRoutePaths =
+	| '/api/v1/apps'
 	| '/api/v1/apps/:id'
 	| '/api/v1/authn'
 	| '/api/v1/authn/credentials/reset_password'
