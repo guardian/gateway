@@ -43,17 +43,6 @@ InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
 
-export const JobsSite = (args: RegistrationProps) => (
-	<IframedRegisterWithEmail
-		{...args}
-		queryParams={{ clientId: 'jobs', returnUrl: '#' }}
-	/>
-);
-
-JobsSite.story = {
-	name: 'with Jobs site',
-};
-
 export const WithPasscodeExpiredError = (args: RegistrationProps) => (
 	<IframedRegisterWithEmail
 		{...args}
