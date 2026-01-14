@@ -9,6 +9,7 @@ import {
 	descriptionId,
 	space,
 	remSpace,
+	textSans12,
 } from '@guardian/source/foundations';
 
 const switchVariables = {
@@ -17,6 +18,8 @@ const switchVariables = {
 	border: 1,
 	marginLeft: space[3],
 };
+
+const imageSize = 100;
 
 const switchComputedWidth =
 	switchVariables.width +
@@ -27,7 +30,7 @@ const inputStyles = css`
 	${visuallyHidden};
 `;
 
-const labelStyles = (hasFocus: boolean) => css`
+const labelStyles = (hasFocus: boolean, hasImage: boolean) => css`
 	user-select: none;
 	position: relative;
 	${textSans15};
@@ -39,10 +42,9 @@ const labelStyles = (hasFocus: boolean) => css`
 	border: ${switchVariables.border}px solid
 		var(--color-toggle-inactive-background);
 	display: grid;
-	grid-template-columns:
-		calc(100% - ${switchComputedWidth}px)
-		${switchComputedWidth}px;
-
+	grid-template-columns: ${hasImage
+		? `${imageSize}px calc(100% - ${switchComputedWidth}px - ${imageSize}px) ${switchComputedWidth}px`
+		: `calc(100% - ${switchComputedWidth}px) ${switchComputedWidth}px`};
 	/*
 	 * FOCUS LOGIC
 	 * Modern browsers which support :has
@@ -57,10 +59,12 @@ const labelStyles = (hasFocus: boolean) => css`
 	`}
 `;
 
-const labelTextContainerStyles = css`
+const labelTextContainerStyles = (isFirstItem: boolean) => css`
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	margin-left: ${isFirstItem ? remSpace[2] : '0'};
+	height: min-content;
 `;
 
 const siblingStyles = css`
@@ -155,11 +159,28 @@ const titleStyles = css`
 	align-items: center;
 `;
 
-const descriptionStyles = css`
+const subLabelStyles = css`
+	display: block;
+	${textSans12};
+	color: var(--color-alert-info);
+	text-transform: uppercase;
+	margin-top: ${remSpace[1]};
+`;
+const descriptionStyles = (hasImage: boolean) => css`
 	flex: 1;
 	color: var(--color-toggle-text);
 	display: flex;
-	align-items: center;
+	align-items: ${hasImage ? 'start' : 'center'};
+`;
+const imageStyles = (imagePath: string) => css`
+	align-self: flex-start;
+	width: ${imageSize}px;
+	height: ${imageSize}px;
+	background-image: url('${imagePath}');
+	background-repeat: no-repeat;
+	background-size: cover;
+	flex-shrink: 0;
+	border-radius: 4px;
 `;
 
 export interface ToggleSwitchInputProps {
@@ -183,6 +204,18 @@ export interface ToggleSwitchInputProps {
 	description?: string;
 
 	/**
+	 * Optional image to display to the left of the text.
+	 */
+	imagePath?: string;
+
+	/**
+	 *
+	 * @type {string}
+	 * @memberof ToggleSwitchInputProps
+	 */
+	subLabel?: string;
+
+	/**
 	 * Optional onChange handler to catch input changes
 	 */
 	onChange?: (id: string, checked: boolean) => void;
@@ -193,17 +226,28 @@ export const ToggleSwitchInput = ({
 	title,
 	defaultChecked,
 	description,
+	imagePath,
+	subLabel,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
 	const defaultId = useId();
 	const switchName = id ?? defaultId;
 	const labelId = descriptionId(switchName);
 	const [fieldIsFocused, setFieldIsFocused] = useState(false);
 
+	const hasImage = Boolean(imagePath);
+
 	return (
-		<label id={labelId} css={[labelStyles(fieldIsFocused), siblingStyles]}>
-			<div css={labelTextContainerStyles}>
+		<label
+			id={labelId}
+			css={[labelStyles(fieldIsFocused, hasImage), siblingStyles]}
+		>
+			{imagePath && <div css={imageStyles(imagePath)} />}
+			<div css={labelTextContainerStyles(hasImage)}>
 				{title && <span css={titleStyles}>{title}</span>}
-				{description && <span css={descriptionStyles}>{description}</span>}
+				{description && (
+					<span css={descriptionStyles(hasImage)}>{description}</span>
+				)}
+				{subLabel && <span css={subLabelStyles}>{subLabel}</span>}
 			</div>
 			<input
 				css={inputStyles}
