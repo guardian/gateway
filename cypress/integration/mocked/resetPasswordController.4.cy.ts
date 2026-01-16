@@ -206,6 +206,14 @@ const setupMocksForNonActiveUsers = (status: string) => {
 
 beforeEach(() => {
 	cy.mockPurge();
+	cy.on('uncaught:exception', (err) => {
+		// eslint-disable-next-line no-console
+		console.log('uncaught exception', err);
+	});
+	cy.intercept('https://ophan.theguardian.com/**', {
+		statusCode: 204,
+		body: {},
+	});
 });
 
 userStatuses.forEach((status) => {

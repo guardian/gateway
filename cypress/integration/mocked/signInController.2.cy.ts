@@ -9,7 +9,15 @@ import idxChallengeAnswerPassword401Response from '../..//fixtures/okta-response
 import userResponse from '../../fixtures/okta-responses/success/user.json';
 
 beforeEach(() => {
+	cy.on('uncaught:exception', (err) => {
+		// eslint-disable-next-line no-console
+		console.log('uncaught exception', err);
+	});
 	cy.mockPurge();
+	cy.intercept('https://ophan.theguardian.com/**', {
+		statusCode: 204,
+		body: {},
+	});
 });
 context('When I submit the form on /signin - useOktaClassic', () => {
 	beforeEach(() => {

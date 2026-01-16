@@ -18,6 +18,14 @@ import { dangerouslySetPlaceholderPasswordMocks } from './resetPasswordControlle
 
 beforeEach(() => {
 	cy.mockPurge();
+	cy.on('uncaught:exception', (err) => {
+		// eslint-disable-next-line no-console
+		console.log('uncaught exception', err);
+	});
+	cy.intercept('https://ophan.theguardian.com/**', {
+		statusCode: 204,
+		body: {},
+	});
 });
 const verifyInRegularEmailSentPage = () => {
 	cy.contains('Check your inbox');
