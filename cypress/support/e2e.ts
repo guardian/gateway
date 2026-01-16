@@ -42,8 +42,3 @@ Cypress.on('uncaught:exception', (err) => {
 
 	return true;
 });
-
-cy.intercept('https://ophan.theguardian.com/**', {
-	statusCode: 204,
-	body: {},
-});
