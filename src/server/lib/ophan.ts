@@ -1,12 +1,12 @@
-import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
+import { OphanEvent } from '@/shared/model/ophan';
+import {
+	Interaction as OphanInteraction,
+	TComponentType as OphanComponentType,
+	ComponentEvent as OphanComponentEvent,
+	TAction as OphanAction,
+} from '@guardian/ophan-tracker-js';
 import { logger } from '@/server/lib/serverSideLogger';
 import { z } from 'zod';
-import {
-	OphanAction,
-	OphanComponent,
-	OphanComponentEvent,
-	OphanComponentType,
-} from '@guardian/libs';
 import serialize from 'serialize-javascript';
 import { timeoutSignal } from './timeoutSignal';
 import { removeEmptyKeysFromObjectAndConvertValuesToString } from '@/shared/lib/queryParams';
@@ -100,7 +100,7 @@ export const generateOphanComponentEvent = (
 		componentEventParams.componentType,
 	);
 
-	const component: OphanComponent = {
+	const component = {
 		componentType,
 		id: componentEventParams.componentId,
 	};

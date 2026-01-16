@@ -174,7 +174,7 @@ export const IframedPasscodeEmailSent = ({
 			return { errorOccurred: userStatus === 'authError' };
 		} catch (e) {
 			record({
-				experiences: 'passcode-submit-failure',
+				experiences: ['passcode-submit-failure'],
 			});
 			return { errorOccurred: true };
 		}

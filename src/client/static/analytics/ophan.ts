@@ -26,7 +26,7 @@ import '@guardian/ophan-tracker-js';
 
 export const init = () => {
 	record({
-		experiences: 'gateway',
+		experiences: ['gateway'],
 		abTestRegister: {
 			gateway: {
 				variantName: 'gateway',
