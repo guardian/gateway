@@ -84,7 +84,7 @@ describe('Content Security Policy headers', () => {
 			);
 			expect(splitCSPHeader).toContain('font-src assets.guim.co.uk');
 			expect(splitCSPHeader).toContain(
-				`connect-src 'self' consent-logs.${apiDomain} api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com ophan.theguardian.com`,
+				`connect-src 'self' consent-logs.${apiDomain} api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com`,
 			);
 			expect(splitCSPHeader).toContain("object-src 'none'");
 			expect(splitCSPHeader).toContain("script-src-attr 'none'");
