@@ -24,6 +24,10 @@ export const baseIdxPasscodeResetPasswordMocks = () => {
 		idxIntrospectDefaultResponse.code,
 		idxIntrospectDefaultResponse.response,
 	);
+	cy.intercept('GET', 'https://ophan.theguardian.com/**', {
+		statusCode: 204,
+		body: {},
+	});
 };
 
 export const dangerouslySetPlaceholderPasswordMocks = (email: string) => {
@@ -210,7 +214,7 @@ beforeEach(() => {
 		// eslint-disable-next-line no-console
 		console.log('uncaught exception', err);
 	});
-	cy.intercept('https://ophan.theguardian.com/**', {
+	cy.intercept('GET', 'https://ophan.theguardian.com/**', {
 		statusCode: 204,
 		body: {},
 	});

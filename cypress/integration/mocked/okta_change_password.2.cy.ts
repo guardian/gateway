@@ -25,6 +25,10 @@ describe('Change password in Okta', () => {
 
 		beforeEach(() => {
 			cy.mockPurge();
+			cy.intercept('GET', 'https://ophan.theguardian.com/**', {
+				statusCode: 204,
+				body: {},
+			});
 		});
 
 		const mockValidateRecoveryTokenSuccess = (

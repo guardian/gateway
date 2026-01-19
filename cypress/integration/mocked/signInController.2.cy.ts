@@ -14,7 +14,7 @@ beforeEach(() => {
 		console.log('uncaught exception', err);
 	});
 	cy.mockPurge();
-	cy.intercept('https://ophan.theguardian.com/**', {
+	cy.intercept('GET', 'https://ophan.theguardian.com/**', {
 		statusCode: 204,
 		body: {},
 	});

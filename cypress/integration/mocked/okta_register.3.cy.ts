@@ -9,6 +9,10 @@ describe('Okta Register flow', () => {
 		beforeEach(() => {
 			cy.mockPurge();
 			cy.clearCookies();
+			cy.intercept('GET', 'https://ophan.theguardian.com/**', {
+				statusCode: 204,
+				body: {},
+			});
 			// we visit the healthcheck page to make sure the cookies are cleared from the browser
 			cy.visit('/healthcheck');
 		});

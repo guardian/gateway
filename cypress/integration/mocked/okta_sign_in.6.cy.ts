@@ -4,6 +4,10 @@ describe('Sign in flow', () => {
 	context('Signing in - Okta', () => {
 		beforeEach(() => {
 			cy.mockPurge();
+			cy.intercept('GET', 'https://ophan.theguardian.com/**', {
+				statusCode: 204,
+				body: {},
+			});
 		});
 
 		it('loads the "signed in as" page if user is already authenticated', function () {
