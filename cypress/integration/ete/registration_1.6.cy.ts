@@ -3,6 +3,7 @@ import {
 	randomPassword,
 } from '../../support/commands/testUser';
 import { Status } from '../../../src/server/models/okta/User';
+import { JOBS_TOS_URI } from '../../../src/shared/model/Configuration';
 
 const breachCheck = () => {
 	cy.intercept({
@@ -135,10 +136,9 @@ describe('Registration flow - Split 1/3', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
 			const refViewId = 'testRefViewId';
-			const clientId = 'jobs';
 
 			cy.visit(
-				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -164,8 +164,7 @@ describe('Registration flow - Split 1/3', () => {
 						.should('have.attr', 'action')
 						.and('match', new RegExp(encodedReturnUrl))
 						.and('match', new RegExp(refViewId))
-						.and('match', new RegExp(encodedRef))
-						.and('match', new RegExp(clientId));
+						.and('match', new RegExp(encodedRef));
 
 					cy.contains('Submit verification code');
 
@@ -188,10 +187,9 @@ describe('Registration flow - Split 1/3', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
 			const refViewId = 'testRefViewId';
-			const clientId = 'jobs';
 
 			cy.visit(
-				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -217,8 +215,7 @@ describe('Registration flow - Split 1/3', () => {
 						.should('have.attr', 'action')
 						.and('match', new RegExp(encodedReturnUrl))
 						.and('match', new RegExp(refViewId))
-						.and('match', new RegExp(encodedRef))
-						.and('match', new RegExp(clientId));
+						.and('match', new RegExp(encodedRef));
 
 					cy.contains('Submit verification code');
 
@@ -297,6 +294,8 @@ describe('Registration flow - Split 1/3', () => {
 					cy.url().should('include', '/welcome/complete-account');
 					cy.contains('Guardian Jobs newsletter');
 					cy.contains('Next').click();
+
+					cy.url().should('include', JOBS_TOS_URI);
 
 					cy.url().should('include', encodeURIComponent(fromURI));
 				},
