@@ -7,10 +7,6 @@ describe('Password reset flow', () => {
 	before(() => {
 		cy.mockPurge();
 		cy.fixture('users').as('users');
-		cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-			statusCode: 204,
-			body: {},
-		});
 	});
 
 	beforeEach(function () {
