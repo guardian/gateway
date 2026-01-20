@@ -3,10 +3,6 @@ import { injectAndCheckAxe } from '../../support/cypress-axe';
 describe('Sign in flow', () => {
 	beforeEach(() => {
 		cy.mockPurge();
-		cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-			statusCode: 204,
-			body: {},
-		});
 	});
 
 	context('A11y checks', () => {

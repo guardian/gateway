@@ -3,10 +3,6 @@ import { injectAndCheckAxe } from '../../support/cypress-axe';
 describe('Unsubscribe newsletter/marketing email', () => {
 	beforeEach(() => {
 		cy.mockPurge();
-		cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-			statusCode: 204,
-			body: {},
-		});
 	});
 
 	context('a11y checks', () => {

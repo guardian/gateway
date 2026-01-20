@@ -26,10 +26,6 @@ const baseIdxPasscodeRegistrationMocks = () => {
 	);
 	// enroll
 	cy.mockNext(idxEnrollResponse.code, idxEnrollResponse.response);
-	cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-		statusCode: 204,
-		body: {},
-	});
 };
 
 export const idxPasscodeExistingUserMocks = () => {

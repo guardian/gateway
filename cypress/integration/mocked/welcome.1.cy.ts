@@ -14,10 +14,6 @@ describe('Welcome and set password page', () => {
 
 	beforeEach(() => {
 		cy.mockPurge();
-		cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-			statusCode: 204,
-			body: {},
-		});
 	});
 
 	context('A11y checks', () => {

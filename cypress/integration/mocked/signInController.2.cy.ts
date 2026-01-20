@@ -14,10 +14,6 @@ beforeEach(() => {
 		console.log('uncaught exception', err);
 	});
 	cy.mockPurge();
-	cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-		statusCode: 204,
-		body: {},
-	});
 });
 context('When I submit the form on /signin - useOktaClassic', () => {
 	beforeEach(() => {

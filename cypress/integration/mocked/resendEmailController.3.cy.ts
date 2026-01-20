@@ -22,10 +22,6 @@ beforeEach(() => {
 		// eslint-disable-next-line no-console
 		console.log('uncaught exception', err);
 	});
-	cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-		statusCode: 204,
-		body: {},
-	});
 });
 const verifyInRegularEmailSentPage = () => {
 	cy.contains('Check your inbox');

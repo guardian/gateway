@@ -5,10 +5,6 @@ import { injectAndCheckAxe } from '../../support/cypress-axe';
 describe('Password set/create flow', () => {
 	beforeEach(() => {
 		cy.mockPurge();
-		cy.intercept('GET', 'https://ophan.theguardian.com/**', {
-			statusCode: 204,
-			body: {},
-		});
 	});
 
 	context('A11y checks', () => {
