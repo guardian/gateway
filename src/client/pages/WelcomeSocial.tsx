@@ -41,7 +41,7 @@ export const WelcomeSocial = ({
 		>
 			{isGoogleOneTap && (
 				<InformationBox>
-					<GuardianTerms />
+					<GuardianTerms isGoogleOneTap={isGoogleOneTap} />
 				</InformationBox>
 			)}
 			<MainForm
