@@ -14,6 +14,7 @@ export const WelcomeSocialPage = () => {
 			geolocation={pageData.geolocation}
 			appName={pageData.appName}
 			shortRequestId={shortRequestId}
+			isGoogleOneTap={isGoogleOneTap}
 		/>
 	);
 };
