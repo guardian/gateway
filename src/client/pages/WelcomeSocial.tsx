@@ -59,6 +59,7 @@ export const WelcomeSocial = ({
 					Boolean,
 				)}
 				shortRequestId={shortRequestId}
+				isGoogleOneTap={isGoogleOneTap}
 			>
 				<RegistrationConsents
 					geolocation={geolocation}
