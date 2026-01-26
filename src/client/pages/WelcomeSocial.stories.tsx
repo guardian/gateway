@@ -61,3 +61,11 @@ export const JobsSite = (args: WelcomeSocialProps) => (
 JobsSite.story = {
 	name: 'with Jobs site',
 };
+
+export const GoogleOneTap = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} isGoogleOneTap={true} />
+);
+
+GoogleOneTap.story = {
+	name: 'with Google One Tap',
+};
