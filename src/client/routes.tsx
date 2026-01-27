@@ -198,6 +198,10 @@ const routes: Array<{
 		element: <WelcomeSocialPage />,
 	},
 	{
+		path: '/welcome/google-one-tap',
+		element: <WelcomeSocialPage isGoogleOneTap={true} />,
+	},
+	{
 		path: '/welcome/apple',
 		element: <WelcomeSocialPage />,
 	},

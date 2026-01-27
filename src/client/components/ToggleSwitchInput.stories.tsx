@@ -5,6 +5,7 @@ import {
 	ToggleSwitchInput,
 	ToggleSwitchInputProps,
 } from '@/client/components/ToggleSwitchInput';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 
 export default {
 	title: 'Components/ToggleSwitchInput',
@@ -51,3 +52,26 @@ export const WithTitleAndDescription = (
 );
 
 WithTitleAndDescription.storyName = 'With title and description';
+
+export const WithImage = (props: Partial<ToggleSwitchInputProps>) => {
+	const newsletter = {
+		frequency: 'Every weekday',
+		title: 'Morning Mail',
+		description:
+			'Start your day with our Australian curated news roundup, straight to your inbox',
+		nameId: 'morning-mail',
+		id: '4148',
+	};
+	return (
+		<ToggleSwitchInput
+			title={newsletter.title}
+			description={newsletter.description}
+			subLabel={newsletter.frequency}
+			imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+			defaultChecked
+			{...props}
+		/>
+	);
+};
+
+WithImage.storyName = 'With image';

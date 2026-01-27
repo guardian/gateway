@@ -94,6 +94,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/expired',
 	'/welcome/resend',
 	'/welcome/google',
+	'/welcome/google-one-tap',
 	'/welcome/apple',
 	'/welcome/social',
 	'/welcome/complete-account',

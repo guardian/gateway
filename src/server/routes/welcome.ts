@@ -93,6 +93,18 @@ router.get(
 	},
 );
 
+router.get(
+	'/welcome/google-one-tap',
+	loginMiddlewareOAuth,
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/welcome/google-one-tap', {
+			pageTitle: 'Welcome',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
+);
+
 // consent page for post social registration - apple
 router.get(
 	'/welcome/apple',
