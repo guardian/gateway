@@ -7,7 +7,7 @@ describe('New account newsletters page', () => {
 			req.reply(200);
 		});
 	});
-	it('should not redirect to the newsletters page if the geolocation is UK/EU', () => {
+	it('should redirect to the newsletters page if the geolocation is UK/EU', () => {
 		// We test that the GB geolocation flow works as expected in the tests above
 		// because they set the geolocation mock cookie to GB, and don't expect a redirect
 		// to the newsletters page, so here we just check an EU geolocation.
@@ -45,7 +45,8 @@ describe('New account newsletters page', () => {
 				cy.get('a').contains('Continue').click();
 				cy.contains(
 					'Our newsletters help you get closer to our quality, independent journalism.',
-				).should('not.exist');
+				);
+				cy.get('button[type="submit"]').click();
 				cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
 			},
 		);
