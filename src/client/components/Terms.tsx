@@ -1,20 +1,42 @@
 import React from 'react';
 import { InformationBoxText } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
+import { css } from '@emotion/react';
 
-export const GuardianTerms = () => (
-	<InformationBoxText>
-		By proceeding, you agree to our{' '}
-		<ExternalLink href="https://www.theguardian.com/help/terms-of-service">
-			terms and conditions
-		</ExternalLink>
-		. For more information about how we use your data, including the generation
-		of random identifiers based on your email address for advertising and
+type GuardianTermsProps = {
+	isGoogleOneTap?: boolean;
+};
+
+const moreInfoCopy = () => (
+	<>
+		For more information about how we use your data, including the generation of
+		random identifiers based on your email address for advertising and
 		marketing, visit our{' '}
 		<ExternalLink href="https://www.theguardian.com/help/privacy-policy">
 			privacy policy
 		</ExternalLink>
 		.
+	</>
+);
+
+export const GuardianTerms = ({ isGoogleOneTap }: GuardianTermsProps) => (
+	<InformationBoxText>
+		By proceeding, you agree to our{' '}
+		<ExternalLink href="https://www.theguardian.com/help/terms-of-service">
+			terms and conditions
+		</ExternalLink>
+		.
+		{isGoogleOneTap ? (
+			<p
+				css={css(`
+					margin-bottom: 0;
+				`)}
+			>
+				{moreInfoCopy()}
+			</p>
+		) : (
+			<> {moreInfoCopy()}</>
+		)}
 	</InformationBoxText>
 );
 
