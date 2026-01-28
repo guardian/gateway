@@ -26,7 +26,7 @@ export const Newsletters = {
 	BREAKING_NEWS_AU: '6048',
 	FIVE_GREAT_READS_AU: '6019',
 	CLEAR_AIR_AU: '6055',
-	//UK
+	// UK
 	THE_GUIDE: '6006',
 	HEADLINES_UK: '4151',
 	// ROW
@@ -62,7 +62,6 @@ export type NewslettersWithImages =
 	| typeof Newsletters.FEAST
 	| typeof Newsletters.THE_GUIDE
 	| typeof Newsletters.THE_LONG_WAVE
-	// | typeof Newsletters.THIS_WEEK_IN_TRUMPLAND
 	| typeof Newsletters.THIS_IS_EUROPE
 	| typeof Newsletters.HEADLINES_EUROPE;
 

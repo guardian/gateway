@@ -773,7 +773,7 @@ describe('Registration flow - Split 1/3', () => {
 				});
 			});
 
-			it.only('should sign in with passcode - resend email', () => {
+			it('should sign in with passcode - resend email', () => {
 				cy.createTestUser({
 					isUserEmailValidated: true,
 				})?.then(({ emailAddress }) => {
