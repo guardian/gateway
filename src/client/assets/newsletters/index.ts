@@ -17,5 +17,4 @@ export { default as THE_LONG_WAVE_SQUARE_IMAGE } from '@/client/assets/newslette
 export { default as THIS_WEEK_IN_TRUMPLAND_SQUARE_IMAGE } from '@/client/assets/newsletters/this-week-in-trumpland.jpg';
 export { default as FEAST_SQUARE_IMAGE } from '@/client/assets/newsletters/feast-square.jpg';
 export { default as THE_GUIDE_IMAGE } from '@/client/assets/newsletters/the-guide-square.jpg';
-
-export { default as HEADLINES_UK_SQUARE_IMAGE } from '@/client/assets/newsletters/us-headlines-square.png';
+export { default as HEADLINES_UK_SQUARE_IMAGE } from '@/client/assets/newsletters/uk-headlines-square.jpg';
