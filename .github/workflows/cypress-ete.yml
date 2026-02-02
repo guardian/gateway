@@ -29,7 +29,7 @@ jobs:
       contents: read
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup OS, Nginx, and Certs
         run: |
           sudo apt-get update -y
@@ -51,13 +51,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
       - name: Download build
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
       - name: Get pnpm cache directory path
@@ -67,7 +67,7 @@ jobs:
         id: cypress-cache-dir
         run: echo "CYPRESS_BIN_PATH=$(pnpm dlx cypress cache path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm modules and cypress binary
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: pnpm-cache
         with:
           path: |
@@ -77,7 +77,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-cypress-
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         env:
           PORT: 8861
           ENVIRONMENT: production
@@ -134,7 +134,7 @@ jobs:
           browser: chrome
           spec: cypress/integration/ete/**/*.cy.ts
           config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete/**/*.${{ matrix.group }}.cy.ts"]}}'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: cypress-screenshots
