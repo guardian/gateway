@@ -7,134 +7,48 @@ describe('New account newsletters page', () => {
 			req.reply(200);
 		});
 	});
-	it('should not redirect to the newsletters page if the geolocation is UK/EU', () => {
-		// We test that the GB geolocation flow works as expected in the tests above
-		// because they set the geolocation mock cookie to GB, and don't expect a redirect
-		// to the newsletters page, so here we just check an EU geolocation.
-		const encodedReturnUrl =
-			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
-		const unregisteredEmail = randomMailosaurEmail();
+	['GB', 'FR', 'AU', 'US'].forEach((geoLocation) => {
+		it(`should redirect to the newsletters page if the geolocation is ${geoLocation}`, () => {
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
 
-		cy.setCookie('cypress-mock-state', 'FR');
+			cy.setCookie('cypress-mock-state', geoLocation);
 
-		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
+			cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
 
-		const timeRequestWasMade = new Date();
-		cy.get('input[name=email]').type(unregisteredEmail);
-		cy.get('[data-cy="main-form-submit-button"]').click();
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Enter your one-time code');
-		cy.contains(unregisteredEmail);
-		cy.contains('send again');
-		cy.contains('try another address');
+			cy.contains('Enter your one-time code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
 
-		cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
-			({ body, codes }) => {
-				// email
-				expect(body).to.have.string('Your verification code');
-				expect(codes?.length).to.eq(1);
-				const code = codes?.[0].value;
-				expect(code).to.match(/^\d{6}$/);
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
 
-				// passcode page
-				cy.url().should('include', '/passcode');
-				cy.contains('Submit verification code');
-				cy.get('input[name=code]').type(code!);
+					// passcode page
+					cy.url().should('include', '/passcode');
+					cy.contains('Submit verification code');
+					cy.get('input[name=code]').type(code!);
 
-				cy.url().should('contain', '/welcome/review');
-				cy.get('a').contains('Continue').click();
-				cy.contains(
-					'Our newsletters help you get closer to our quality, independent journalism.',
-				).should('not.exist');
-				cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
-			},
-		);
-	});
-
-	it('should redirect to the newsletters page if the geolocation is AU', () => {
-		const encodedReturnUrl =
-			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
-		const unregisteredEmail = randomMailosaurEmail();
-
-		cy.setCookie('cypress-mock-state', 'AU');
-
-		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
-
-		const timeRequestWasMade = new Date();
-		cy.get('input[name=email]').type(unregisteredEmail);
-		cy.get('[data-cy="main-form-submit-button"]').click();
-
-		cy.contains('Enter your one-time code');
-		cy.contains(unregisteredEmail);
-		cy.contains('send again');
-		cy.contains('try another address');
-
-		cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
-			({ body, codes }) => {
-				// email
-				expect(body).to.have.string('Your verification code');
-				expect(codes?.length).to.eq(1);
-				const code = codes?.[0].value;
-				expect(code).to.match(/^\d{6}$/);
-
-				// passcode page
-				cy.url().should('include', '/passcode');
-				cy.contains('Submit verification code');
-				cy.get('input[name=code]').type(code!);
-
-				cy.url().should('contain', '/welcome/review');
-				cy.get('a').contains('Continue').click();
-				cy.url().should('contain', '/welcome/newsletters');
-				cy.contains(
-					'Our newsletters help you get closer to our quality, independent journalism.',
-				);
-				cy.get('button[type="submit"]').click();
-				cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
-			},
-		);
-	});
-
-	it('should redirect to the newsletters page if the geolocation is US', () => {
-		const encodedReturnUrl =
-			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
-		const unregisteredEmail = randomMailosaurEmail();
-
-		cy.setCookie('cypress-mock-state', 'US');
-
-		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
-
-		const timeRequestWasMade = new Date();
-		cy.get('input[name=email]').type(unregisteredEmail);
-		cy.get('[data-cy="main-form-submit-button"]').click();
-
-		cy.contains('Enter your one-time code');
-		cy.contains(unregisteredEmail);
-		cy.contains('send again');
-		cy.contains('try another address');
-
-		cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
-			({ body, codes }) => {
-				// email
-				expect(body).to.have.string('Your verification code');
-				expect(codes?.length).to.eq(1);
-				const code = codes?.[0].value;
-				expect(code).to.match(/^\d{6}$/);
-
-				// passcode page
-				cy.url().should('include', '/passcode');
-				cy.contains('Submit verification code');
-				cy.get('input[name=code]').type(code!);
-
-				cy.url().should('contain', '/welcome/review');
-				cy.get('a').contains('Continue').click();
-				cy.url().should('contain', '/welcome/newsletters');
-				cy.contains(
-					'Our newsletters help you get closer to our quality, independent journalism.',
-				);
-				cy.get('button[type="submit"]').click();
-				cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
-			},
-		);
+					cy.url().should('contain', '/welcome/review');
+					cy.get('a').contains('Continue').click();
+					cy.contains(
+						'Our newsletters help you get closer to our quality, independent journalism.',
+					);
+					cy.get('button[type="submit"]').click();
+					cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
+				},
+			);
+		});
 	});
 
 	it('should redirect to the Jobs T&C page if client is Jobs', () => {

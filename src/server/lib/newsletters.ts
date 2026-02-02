@@ -15,8 +15,24 @@ export const NewsletterMap = new Map<
 	Literal<typeof Newsletters>[]
 >([
 	[undefined, []],
-	['ROW', []],
-	['GB', []],
+	[
+		'ROW',
+		[
+			Newsletters.FIRST_EDITION,
+			Newsletters.HEADLINES_UK,
+			Newsletters.THE_LONG_WAVE,
+			Newsletters.THIS_WEEK_IN_TRUMPLAND,
+		],
+	],
+	[
+		'GB',
+		[
+			Newsletters.FIRST_EDITION,
+			Newsletters.THE_GUIDE,
+			Newsletters.HEADLINES_UK,
+			Newsletters.FEAST,
+		],
+	],
 	[
 		'AU',
 		[
@@ -26,7 +42,15 @@ export const NewsletterMap = new Map<
 			Newsletters.CLEAR_AIR_AU,
 		],
 	],
-	['EU', []],
+	[
+		'EU',
+		[
+			Newsletters.THIS_IS_EUROPE,
+			Newsletters.HEADLINES_EUROPE,
+			Newsletters.THE_LONG_WAVE,
+			Newsletters.FEAST,
+		],
+	],
 	[
 		'US',
 		[

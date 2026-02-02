@@ -68,7 +68,7 @@ const existingUserSendEmailAndValidatePasscode = ({
 							cy.contains("You're signed in! Welcome to the Guardian.");
 							cy.contains('Continue').click();
 
-							cy.url().should('include', expectedReturnUrl);
+							cy.url().should('contain', encodeURIComponent(expectedReturnUrl));
 
 							cy.getTestOktaUser(emailAddress).then((user) => {
 								expect(user.status).to.eq('ACTIVE');
