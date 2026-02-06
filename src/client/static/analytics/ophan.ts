@@ -1,4 +1,4 @@
-import { record } from '@/client/lib/ophan';
+// import { record } from '@/client/lib/ophan';
 import { storage } from '@guardian/libs';
 
 const addRefToOphanFollow = () => {
@@ -22,11 +22,11 @@ const addRefToOphanFollow = () => {
 
 addRefToOphanFollow();
 
-import '@guardian/ophan-tracker-js';
+import ophan from '@guardian/ophan-tracker-js';
 
 export const init = () => {
-	record({
-		experiences: 'gateway',
+	ophan.record({
+		experiences: ['gateway'],
 		abTestRegister: {
 			gateway: {
 				variantName: 'gateway',

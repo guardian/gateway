@@ -18,6 +18,10 @@ import { dangerouslySetPlaceholderPasswordMocks } from './resetPasswordControlle
 
 beforeEach(() => {
 	cy.mockPurge();
+	cy.on('uncaught:exception', (err) => {
+		// eslint-disable-next-line no-console
+		console.log('uncaught exception', err);
+	});
 });
 const verifyInRegularEmailSentPage = () => {
 	cy.contains('Check your inbox');

@@ -9,6 +9,10 @@ import idxChallengeAnswerPassword401Response from '../..//fixtures/okta-response
 import userResponse from '../../fixtures/okta-responses/success/user.json';
 
 beforeEach(() => {
+	cy.on('uncaught:exception', (err) => {
+		// eslint-disable-next-line no-console
+		console.log('uncaught exception', err);
+	});
 	cy.mockPurge();
 });
 context('When I submit the form on /signin - useOktaClassic', () => {
