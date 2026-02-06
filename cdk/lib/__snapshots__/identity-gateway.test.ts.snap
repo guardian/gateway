@@ -58,6 +58,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuVpcParameter",
       "GuStringParameter",
       "GuStringParameter",
+      "GuStringParameter",
       "GuAllowPolicy",
       "GuAllowPolicy",
       "GuAllowPolicy",
@@ -83,6 +84,12 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuHttpsApplicationListener",
       "GuSecurityGroup",
       "GuCname",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
     ],
     "gu:cdk:version": "TEST",
   },
@@ -114,6 +121,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     "AlarmEmailAddress": {
       "Description": "Email address to send CloudWatch alerts",
       "Type": "String",
+    },
+    "AlarmTopicEmail": {
+      "Default": "/identity/identity-gateway/TEST/alarm-topic-email",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "App": {
       "Default": "identity-gateway",
@@ -530,6 +541,41 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "AlarmTopicD01E77F9": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::Topic",
+    },
+    "AlarmTopicTokenSubscription17F7316A1": {
+      "Properties": {
+        "Endpoint": {
+          "Ref": "AlarmTopicEmail",
+        },
+        "Protocol": "email",
+        "TopicArn": {
+          "Ref": "AlarmTopicD01E77F9",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
+    },
     "AppRole": {
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -896,6 +942,21 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::AutoScaling::AutoScalingGroup",
     },
+    "AutoScalingGroupIdentitygatewayScalingPolicyCpuScalingPolicy4CBD4A39": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "AutoScalingGroupIdentitygatewayASG7D467284",
+        },
+        "PolicyType": "TargetTrackingScaling",
+        "TargetTrackingConfiguration": {
+          "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ASGAverageCPUUtilization",
+          },
+          "TargetValue": 10,
+        },
+      },
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+    },
     "CertificateIdentitygateway7B4A089E": {
       "DeletionPolicy": "Retain",
       "Properties": {
@@ -1012,6 +1073,75 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
           },
         ],
         "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "DeletionInactivityAlarm909792EE": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "AlarmTopicD01E77F9",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": " No one has successfully deleted their account in the last 6 hours.",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had no success self service user deletion in the last 6 hours",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "AlarmTopicD01E77F9",
+          },
+        ],
+        "MetricName": "OAuthDeleteCallback::Success",
+        "Namespace": "Gateway",
+        "Period": 21600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
@@ -2136,6 +2266,75 @@ systemctl start identity-gateway
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "OAuthApplicationCallbackInactivityAlarm00589919": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "AlarmTopicD01E77F9",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "AlarmTopicD01E77F9",
+          },
+        ],
+        "MetricName": "OAuthApplicationCallback::Success",
+        "Namespace": "Gateway",
+        "Period": 3600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
     "OAuthAuthenticationCallbackInactivityAlarm": {
       "Condition": "IsProd",
       "Properties": {
@@ -2217,6 +2416,75 @@ systemctl start identity-gateway
           },
         ],
         "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "OauthAuthenticationCallbackInactivityAlarmF984354A": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "AlarmTopicD01E77F9",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "AlarmTopicD01E77F9",
+          },
+        ],
+        "MetricName": "OAuthAuthenticationCallback::Success",
+        "Namespace": "Gateway",
+        "Period": 1200,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
@@ -2352,6 +2620,113 @@ systemctl start identity-gateway
                 "Namespace": "Gateway",
               },
               "Period": 3600,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "RegisterInactivityAlarm1F5BC42F": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "AlarmTopicD01E77F9",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully registered in the last hour.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new registrations in the last hour",
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "AlarmTopicD01E77F9",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "oktaIdxRegistrationCount + oktaRegistrationCount",
+            "Id": "expr_1",
+            "ReturnData": true,
+          },
+          {
+            "Id": "oktaRegistrationCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaRegister::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+          {
+            "Id": "oktaIdxRegistrationCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaIDXRegister::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
               "Stat": "Sum",
               "Unit": "Count",
             },
@@ -2620,6 +2995,113 @@ systemctl start identity-gateway
         "ScalingAdjustment": 1,
       },
       "Type": "AWS::AutoScaling::ScalingPolicy",
+    },
+    "SignInInactivityAlarmDADAF488": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "AlarmTopicD01E77F9",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully signed ins in the last 20 minutes.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new sign-ins in the last 20 minutes",
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "AlarmTopicD01E77F9",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "oktaSignInCount + oktaIdxSignInCount",
+            "Id": "expr_1",
+            "ReturnData": true,
+          },
+          {
+            "Id": "oktaSignInCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaSignIn::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+          {
+            "Id": "oktaIdxSignInCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaIdxSignIn::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
     },
     "SigninInactivityAlarm": {
       "Condition": "IsProd",
@@ -2979,6 +3461,75 @@ systemctl start identity-gateway
           },
         ],
         "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "UnsubscribeAllInactivityAlarmA2260AED": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "AlarmTopicD01E77F9",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully unsubscribed all from email clients in the last hour.",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had successful no unsubscribe all from email clients in the last hour",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "AlarmTopicD01E77F9",
+          },
+        ],
+        "MetricName": "UnsubscribeAll::Success",
+        "Namespace": "Gateway",
+        "Period": 3600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
