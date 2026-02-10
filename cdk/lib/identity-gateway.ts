@@ -3,11 +3,11 @@ import { AccessScope } from '@guardian/cdk/lib/constants';
 import { GuAlarm } from '@guardian/cdk/lib/constructs/cloudwatch';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import {
+	GuAnghammaradTopicParameter,
 	GuStack,
 	GuStringParameter,
 	GuVpcParameter,
 } from '@guardian/cdk/lib/constructs/core';
-import { GuCname } from '@guardian/cdk/lib/constructs/dns';
 import { GuAllowPolicy } from '@guardian/cdk/lib/constructs/iam';
 import type { GuAsgCapacity } from '@guardian/cdk/lib/types';
 import { type App, Duration, Tags } from 'aws-cdk-lib';
@@ -22,7 +22,6 @@ import {
 	UserData,
 } from 'aws-cdk-lib/aws-ec2';
 import { Topic } from 'aws-cdk-lib/aws-sns';
-import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 type IdentityGatewayProps = GuStackProps & {
@@ -116,7 +115,7 @@ export class IdentityGateway extends GuStack {
 			this,
 			'RedisSecurityGroup',
 			{
-				default: `/${stack}/${app}/${stage}/redis-security-group`,
+				default: `/${stage}/${stack}/redis-security-group`,
 				fromSSM: true,
 			},
 		);
@@ -137,15 +136,8 @@ export class IdentityGateway extends GuStack {
 				IdentityConfigBucket: configBucket.valueAsString,
 			},
 		});
-		
-		const alarmTopicEmail = new GuStringParameter(this, 'AlarmTopicEmail', {
-			// TODO: should we just have some kind of account wide variable for the email?
-			default: `/${stack}/${app}/${stage}/alarm-topic-email`,
-			fromSSM: true,
-		});
 
-		const alarmTopic = new Topic(this, 'AlarmTopic')
-		alarmTopic.addSubscription(new EmailSubscription(alarmTopicEmail.valueAsString));
+		const alarmTopic = Topic.fromTopicArn(this, 'AlarmTopic', GuAnghammaradTopicParameter.getInstance(this).valueAsString);
 
 		// Allow Gateway to read artefacts and configuration files from S3
 		const bucketPolicy = new GuAllowPolicy(
@@ -289,7 +281,7 @@ systemctl start ${app}
 			monitoringConfiguration:
 				stage === 'PROD'
 					? {
-							snsTopicName: alarmTopic.topicName,
+							snsTopicName: alarmTopic.topicArn,
 							http5xxAlarm: {
 								tolerated5xxPercentage: 0.05,
 							},
@@ -326,17 +318,6 @@ systemctl start ${app}
 			targetUtilizationPercent: 10
 		});
 
-		// Provision NS1 CNAME Record for the load balancer created by the GuEc2App
-		// Not technically necessary as Fastly could use the load balancer's internal DNS name
-		// but as CDK requires a domain name to provision the certificate for the load balancer
-		// we might as well use it for Fastly too.
-		new GuCname(this, 'IdentityGatewayCname', {
-			domainName,
-			ttl: Duration.hours(1),
-			app: app,
-			resourceRecord: nodeApp.loadBalancer.loadBalancerDnsName,
-		});
-
 		///
 		/// Custom Alarms
 		/// We have some custom alarms that we want to create that aren't covered by the default alarms provided by GuEc2App.
@@ -345,7 +326,7 @@ systemctl start ${app}
 
 		// Alert us if for some reason we're not seeing any sign-ins
 		const signInInactivityAlarm = new GuAlarm(this, 'SignInInactivityAlarm', {
-			snsTopicName: alarmTopic.topicName,
+			snsTopicName: alarmTopic.topicArn,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new sign-ins in the last 20 minutes`,
 			alarmDescription: 'No one has successfully signed ins in the last 20 minutes.',
 			metric: new MathExpression({
@@ -384,7 +365,7 @@ systemctl start ${app}
 		signInInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const registerInactivityAlarm = new GuAlarm(this, 'RegisterInactivityAlarm', {
-			snsTopicName: alarmTopic.topicName,
+			snsTopicName: alarmTopic.topicArn,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new registrations in the last hour`,
 			alarmDescription: 'No one has successfully registered in the last hour.',
 			metric: new MathExpression({
@@ -423,7 +404,7 @@ systemctl start ${app}
 		registerInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const oauthAuthenticationCallbackInactivityAlarm = new GuAlarm(this, 'OauthAuthenticationCallbackInactivityAlarm', {
-			snsTopicName: alarmTopic.topicName,
+			snsTopicName: alarmTopic.topicArn,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes`,
 			alarmDescription: 'No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.',
 			metric: new Metric({
@@ -446,7 +427,7 @@ systemctl start ${app}
 		oauthAuthenticationCallbackInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const oauthApplicationInactivityAlarm = new GuAlarm(this, 'OAuthApplicationCallbackInactivityAlarm', {
-			snsTopicName: alarmTopic.topicName,
+			snsTopicName: alarmTopic.topicArn,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour`,
 			alarmDescription: 'No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.',
 			metric: new Metric({
@@ -469,7 +450,7 @@ systemctl start ${app}
 		oauthApplicationInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const deletionInactivityAlarm = new GuAlarm(this, 'DeletionInactivityAlarm', {
-			snsTopicName: alarmTopic.topicName,
+			snsTopicName: alarmTopic.topicArn,
 			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had no success self service user deletion in the last 6 hours`,
 			alarmDescription: ' No one has successfully deleted their account in the last 6 hours.',
 			metric: new Metric({
@@ -492,7 +473,7 @@ systemctl start ${app}
 		deletionInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const unsubscribeAllInactivityAlarm = new GuAlarm(this, 'UnsubscribeAllInactivityAlarm', {
-			snsTopicName: alarmTopic.topicName,
+			snsTopicName: alarmTopic.topicArn,
 			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had successful no unsubscribe all from email clients in the last hour`,
 			alarmDescription: 'No one has successfully unsubscribed all from email clients in the last hour.',
 			metric: new Metric({

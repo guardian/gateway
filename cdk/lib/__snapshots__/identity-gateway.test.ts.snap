@@ -58,7 +58,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuVpcParameter",
       "GuStringParameter",
       "GuStringParameter",
-      "GuStringParameter",
+      "GuAnghammaradTopicParameter",
       "GuAllowPolicy",
       "GuAllowPolicy",
       "GuAllowPolicy",
@@ -83,7 +83,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuApplicationTargetGroup",
       "GuHttpsApplicationListener",
       "GuSecurityGroup",
-      "GuCname",
       "GuAlarm",
       "GuAlarm",
       "GuAlarm",
@@ -122,8 +121,9 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "Email address to send CloudWatch alerts",
       "Type": "String",
     },
-    "AlarmTopicEmail": {
-      "Default": "/identity/identity-gateway/TEST/alarm-topic-email",
+    "AnghammaradSnsArn": {
+      "Default": "/account/services/anghammarad.topic.arn",
+      "Description": "SSM parameter containing the ARN of the Anghammarad SNS topic",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "App": {
@@ -193,7 +193,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "RedisSecurityGroup": {
-      "Default": "/identity/identity-gateway/TEST/redis-security-group",
+      "Default": "/TEST/identity/redis-security-group",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "SignInPageUrl": {
@@ -540,41 +540,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         },
       },
       "Type": "AWS::CloudWatch::Alarm",
-    },
-    "AlarmTopicD01E77F9": {
-      "Properties": {
-        "Tags": [
-          {
-            "Key": "gu:cdk:version",
-            "Value": "TEST",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/gateway",
-          },
-          {
-            "Key": "Stack",
-            "Value": "identity",
-          },
-          {
-            "Key": "Stage",
-            "Value": "TEST",
-          },
-        ],
-      },
-      "Type": "AWS::SNS::Topic",
-    },
-    "AlarmTopicTokenSubscription17F7316A1": {
-      "Properties": {
-        "Endpoint": {
-          "Ref": "AlarmTopicEmail",
-        },
-        "Protocol": "email",
-        "TopicArn": {
-          "Ref": "AlarmTopicD01E77F9",
-        },
-      },
-      "Type": "AWS::SNS::Subscription",
     },
     "AppRole": {
       "Properties": {
@@ -1090,10 +1055,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                 },
                 ":",
                 {
-                  "Fn::GetAtt": [
-                    "AlarmTopicD01E77F9",
-                    "TopicName",
-                  ],
+                  "Ref": "AnghammaradSnsArn",
                 },
               ],
             ],
@@ -1115,7 +1077,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AlarmTopicD01E77F9",
+            "Ref": "AnghammaradSnsArn",
           },
         ],
         "MetricName": "OAuthDeleteCallback::Success",
@@ -1507,23 +1469,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
-    },
-    "IdentityGatewayCname": {
-      "Properties": {
-        "Name": "profile.code.dev-theguardian.com.origin.guardianapis.com",
-        "RecordType": "CNAME",
-        "ResourceRecords": [
-          {
-            "Fn::GetAtt": [
-              "LoadBalancerIdentitygateway7DAC8BBC",
-              "DNSName",
-            ],
-          },
-        ],
-        "Stage": "TEST",
-        "TTL": 3600,
-      },
-      "Type": "Guardian::DNS::RecordSet",
     },
     "IdentityGatewayS3ReadPolicy7A96C047": {
       "Properties": {
@@ -2280,10 +2225,7 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Fn::GetAtt": [
-                    "AlarmTopicD01E77F9",
-                    "TopicName",
-                  ],
+                  "Ref": "AnghammaradSnsArn",
                 },
               ],
             ],
@@ -2305,7 +2247,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AlarmTopicD01E77F9",
+            "Ref": "AnghammaradSnsArn",
           },
         ],
         "MetricName": "OAuthApplicationCallback::Success",
@@ -2433,10 +2375,7 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Fn::GetAtt": [
-                    "AlarmTopicD01E77F9",
-                    "TopicName",
-                  ],
+                  "Ref": "AnghammaradSnsArn",
                 },
               ],
             ],
@@ -2458,7 +2397,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AlarmTopicD01E77F9",
+            "Ref": "AnghammaradSnsArn",
           },
         ],
         "MetricName": "OAuthAuthenticationCallback::Success",
@@ -2662,10 +2601,7 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Fn::GetAtt": [
-                    "AlarmTopicD01E77F9",
-                    "TopicName",
-                  ],
+                  "Ref": "AnghammaradSnsArn",
                 },
               ],
             ],
@@ -2677,7 +2613,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AlarmTopicD01E77F9",
+            "Ref": "AnghammaradSnsArn",
           },
         ],
         "Metrics": [
@@ -3010,10 +2946,7 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Fn::GetAtt": [
-                    "AlarmTopicD01E77F9",
-                    "TopicName",
-                  ],
+                  "Ref": "AnghammaradSnsArn",
                 },
               ],
             ],
@@ -3025,7 +2958,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AlarmTopicD01E77F9",
+            "Ref": "AnghammaradSnsArn",
           },
         ],
         "Metrics": [
@@ -3478,10 +3411,7 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Fn::GetAtt": [
-                    "AlarmTopicD01E77F9",
-                    "TopicName",
-                  ],
+                  "Ref": "AnghammaradSnsArn",
                 },
               ],
             ],
@@ -3503,7 +3433,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AlarmTopicD01E77F9",
+            "Ref": "AnghammaradSnsArn",
           },
         ],
         "MetricName": "UnsubscribeAll::Success",
