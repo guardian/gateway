@@ -32,7 +32,6 @@ export const applyMiddleware = (server: Express): void => {
 
 	server.use(loggerMiddleware);
 	server.use(csrfMiddleware);
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- express has its own way of handling async middleware
 	server.use(requestStateMiddleware);
 	server.use(routes);
 	server.use(fourZeroFourMiddleware);

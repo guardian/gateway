@@ -10,8 +10,10 @@ import {
 	errorMessageStyles,
 } from '@/client/styles/Shared';
 
-interface GateWayErrorSummaryProps
-	extends Omit<ErrorSummaryProps, 'message' | 'cssOverrides'> {
+interface GateWayErrorSummaryProps extends Omit<
+	ErrorSummaryProps,
+	'message' | 'cssOverrides'
+> {
 	shortRequestId?: string;
 	gatewayError?: GatewayError;
 }
