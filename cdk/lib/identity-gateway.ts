@@ -3,7 +3,6 @@ import { AccessScope } from '@guardian/cdk/lib/constants';
 import { GuAlarm } from '@guardian/cdk/lib/constructs/cloudwatch';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import {
-	GuAnghammaradTopicParameter,
 	GuStack,
 	GuStringParameter,
 	GuVpcParameter,
@@ -22,6 +21,7 @@ import {
 	UserData,
 } from 'aws-cdk-lib/aws-ec2';
 import { Topic } from 'aws-cdk-lib/aws-sns';
+import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 type IdentityGatewayProps = GuStackProps & {
@@ -137,7 +137,17 @@ export class IdentityGateway extends GuStack {
 			},
 		});
 
-		const alarmTopic = Topic.fromTopicArn(this, 'AlarmTopic', GuAnghammaradTopicParameter.getInstance(this).valueAsString);
+		const alarmEmail = new GuStringParameter(
+			this,
+			'AlarmEmail',
+			{
+				default: `/${stack}/INFRA/alarm-email`,
+				fromSSM: true,
+			},
+		);
+
+		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
+		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
 
 		// Allow Gateway to read artefacts and configuration files from S3
 		const bucketPolicy = new GuAllowPolicy(
@@ -281,7 +291,7 @@ systemctl start ${app}
 			monitoringConfiguration:
 				stage === 'PROD'
 					? {
-							snsTopicName: alarmTopic.topicArn,
+							snsTopicName: alarmTopic.topicName,
 							http5xxAlarm: {
 								tolerated5xxPercentage: 0.05,
 							},
@@ -326,7 +336,7 @@ systemctl start ${app}
 
 		// Alert us if for some reason we're not seeing any sign-ins
 		const signInInactivityAlarm = new GuAlarm(this, 'SignInInactivityAlarm', {
-			snsTopicName: alarmTopic.topicArn,
+			snsTopicName: alarmTopic.topicName,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new sign-ins in the last 20 minutes`,
 			alarmDescription: 'No one has successfully signed ins in the last 20 minutes.',
 			metric: new MathExpression({
@@ -365,7 +375,7 @@ systemctl start ${app}
 		signInInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const registerInactivityAlarm = new GuAlarm(this, 'RegisterInactivityAlarm', {
-			snsTopicName: alarmTopic.topicArn,
+			snsTopicName: alarmTopic.topicName,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new registrations in the last hour`,
 			alarmDescription: 'No one has successfully registered in the last hour.',
 			metric: new MathExpression({
@@ -404,7 +414,7 @@ systemctl start ${app}
 		registerInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const oauthAuthenticationCallbackInactivityAlarm = new GuAlarm(this, 'OauthAuthenticationCallbackInactivityAlarm', {
-			snsTopicName: alarmTopic.topicArn,
+			snsTopicName: alarmTopic.topicName,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes`,
 			alarmDescription: 'No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.',
 			metric: new Metric({
@@ -427,7 +437,7 @@ systemctl start ${app}
 		oauthAuthenticationCallbackInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const oauthApplicationInactivityAlarm = new GuAlarm(this, 'OAuthApplicationCallbackInactivityAlarm', {
-			snsTopicName: alarmTopic.topicArn,
+			snsTopicName: alarmTopic.topicName,
 			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour`,
 			alarmDescription: 'No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.',
 			metric: new Metric({
@@ -450,7 +460,7 @@ systemctl start ${app}
 		oauthApplicationInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const deletionInactivityAlarm = new GuAlarm(this, 'DeletionInactivityAlarm', {
-			snsTopicName: alarmTopic.topicArn,
+			snsTopicName: alarmTopic.topicName,
 			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had no success self service user deletion in the last 6 hours`,
 			alarmDescription: ' No one has successfully deleted their account in the last 6 hours.',
 			metric: new Metric({
@@ -473,7 +483,7 @@ systemctl start ${app}
 		deletionInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
 		const unsubscribeAllInactivityAlarm = new GuAlarm(this, 'UnsubscribeAllInactivityAlarm', {
-			snsTopicName: alarmTopic.topicArn,
+			snsTopicName: alarmTopic.topicName,
 			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had successful no unsubscribe all from email clients in the last hour`,
 			alarmDescription: 'No one has successfully unsubscribed all from email clients in the last hour.',
 			metric: new Metric({

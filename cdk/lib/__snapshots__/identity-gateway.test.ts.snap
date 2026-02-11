@@ -58,7 +58,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuVpcParameter",
       "GuStringParameter",
       "GuStringParameter",
-      "GuAnghammaradTopicParameter",
+      "GuStringParameter",
       "GuAllowPolicy",
       "GuAllowPolicy",
       "GuAllowPolicy",
@@ -117,14 +117,13 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "S3 bucket to store your access logs",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
+    "AlarmEmail": {
+      "Default": "/identity/INFRA/alarm-email",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
     "AlarmEmailAddress": {
       "Description": "Email address to send CloudWatch alerts",
       "Type": "String",
-    },
-    "AnghammaradSnsArn": {
-      "Default": "/account/services/anghammarad.topic.arn",
-      "Description": "SSM parameter containing the ARN of the Anghammarad SNS topic",
-      "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "App": {
       "Default": "identity-gateway",
@@ -1055,7 +1054,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                 },
                 ":",
                 {
-                  "Ref": "AnghammaradSnsArn",
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
                 },
               ],
             ],
@@ -1077,7 +1079,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AnghammaradSnsArn",
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
           },
         ],
         "MetricName": "OAuthDeleteCallback::Success",
@@ -1448,6 +1450,41 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         },
       },
       "Type": "AWS::CloudWatch::Alarm",
+    },
+    "IdentityGatewayAlarmTopicEEA18544": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::Topic",
+    },
+    "IdentityGatewayAlarmTopicTokenSubscription19E35C585": {
+      "Properties": {
+        "Endpoint": {
+          "Ref": "AlarmEmail",
+        },
+        "Protocol": "email",
+        "TopicArn": {
+          "Ref": "IdentityGatewayAlarmTopicEEA18544",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
     },
     "IdentityGatewayCloudWatchPolicyEFFEAF3C": {
       "Properties": {
@@ -2225,7 +2262,10 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Ref": "AnghammaradSnsArn",
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
                 },
               ],
             ],
@@ -2247,7 +2287,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AnghammaradSnsArn",
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
           },
         ],
         "MetricName": "OAuthApplicationCallback::Success",
@@ -2375,7 +2415,10 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Ref": "AnghammaradSnsArn",
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
                 },
               ],
             ],
@@ -2397,7 +2440,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AnghammaradSnsArn",
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
           },
         ],
         "MetricName": "OAuthAuthenticationCallback::Success",
@@ -2601,7 +2644,10 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Ref": "AnghammaradSnsArn",
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
                 },
               ],
             ],
@@ -2613,7 +2659,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AnghammaradSnsArn",
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
           },
         ],
         "Metrics": [
@@ -2946,7 +2992,10 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Ref": "AnghammaradSnsArn",
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
                 },
               ],
             ],
@@ -2958,7 +3007,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AnghammaradSnsArn",
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
           },
         ],
         "Metrics": [
@@ -3411,7 +3460,10 @@ systemctl start identity-gateway
                 },
                 ":",
                 {
-                  "Ref": "AnghammaradSnsArn",
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
                 },
               ],
             ],
@@ -3433,7 +3485,7 @@ systemctl start identity-gateway
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
           {
-            "Ref": "AnghammaradSnsArn",
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
           },
         ],
         "MetricName": "UnsubscribeAll::Success",
