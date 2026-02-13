@@ -89,7 +89,7 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 		id: Newsletters.AU_BUNDLE,
 		label: 'Saturday newsletters',
 		context:
-			"Get an exclusive, curated view of the week's best Guardian journalism from around the world by editor-in-chief Katharine Viner, and the local view from Guardian Australia editor Lenore Taylor.",
+			"Get an exclusive, curated view of the week's best Guardian journalism from editor-in-chief Katharine Viner, and the local view from Guardian Australia's editors.",
 	},
 	usBundle: {
 		id: Newsletters.US_BUNDLE,
