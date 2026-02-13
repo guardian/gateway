@@ -52,13 +52,74 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     },
   },
   "Metadata": {
-    "gu:cdk:constructs": [],
+    "gu:cdk:constructs": [
+      "GuStringParameter",
+      "GuStringParameter",
+      "GuVpcParameter",
+      "GuStringParameter",
+      "GuStringParameter",
+      "GuStringParameter",
+      "GuAllowPolicy",
+      "GuAllowPolicy",
+      "GuAllowPolicy",
+      "GuAllowPolicy",
+      "GuSubnetListParameter",
+      "GuSubnetListParameter",
+      "GuEc2App",
+      "GuCertificate",
+      "GuInstanceRole",
+      "GuSsmSshPolicy",
+      "GuDescribeEC2Policy",
+      "GuLoggingStreamNameParameter",
+      "GuLogShippingPolicy",
+      "GuDistributionBucketParameter",
+      "GuGetDistributablePolicy",
+      "GuParameterStoreReadPolicy",
+      "GuAmiParameter",
+      "GuHttpsEgressSecurityGroup",
+      "GuAutoScalingGroup",
+      "GuApplicationLoadBalancer",
+      "GuAccessLoggingBucketParameter",
+      "GuApplicationTargetGroup",
+      "GuHttpsApplicationListener",
+      "GuSecurityGroup",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+      "GuAlarm",
+    ],
     "gu:cdk:version": "TEST",
+  },
+  "Outputs": {
+    "LoadBalancerIdentitygatewayDnsName": {
+      "Description": "DNS entry for LoadBalancerIdentitygateway",
+      "Value": {
+        "Fn::GetAtt": [
+          "LoadBalancerIdentitygateway7DAC8BBC",
+          "DNSName",
+        ],
+      },
+    },
   },
   "Parameters": {
     "AMI": {
       "Description": "AMI to use in the autoscaling group",
       "Type": "String",
+    },
+    "AMIIdentitygateway": {
+      "Description": "Amazon Machine Image ID for the app identity-gateway. Use this in conjunction with AMIgo to keep AMIs up to date.",
+      "Type": "AWS::EC2::Image::Id",
+    },
+    "AccessLoggingBucket": {
+      "Default": "/account/services/access-logging/bucket",
+      "Description": "S3 bucket to store your access logs",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "AlarmEmail": {
+      "Default": "/identity/INFRA/alarm-email",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "AlarmEmailAddress": {
       "Description": "Email address to send CloudWatch alerts",
@@ -73,16 +134,19 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Description": "ARN of certificate for loadbalancer use.",
       "Type": "String",
     },
+    "DistributionBucketName": {
+      "Default": "/account/services/artifact.bucket",
+      "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
     "IdapiBaseUrl": {
       "Description": "The base url for idapi",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "IdentityArtifactBucket": {
-      "Description": "S3 Bucket to read identity artifacts from",
       "Type": "String",
     },
     "IdentityConfigBucket": {
-      "Description": "S3 Bucket to read identity config from",
       "Type": "String",
     },
     "KeyName": {
@@ -97,6 +161,11 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     "LoadBalancerLogsS3Bucket": {
       "Description": "S3 Bucket to write ELB access logs to",
       "Type": "String",
+    },
+    "LoggingStreamName": {
+      "Default": "/account/services/logging.stream.name",
+      "Description": "SSM parameter containing the Name (not ARN) on the kinesis stream",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "MembersDataApiUrl": {
       "Description": "The url for members-data-api",
@@ -119,7 +188,11 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Type": "List<AWS::EC2::Subnet::Id>",
     },
     "RedisHost": {
-      "Description": "The Redis server URL, used for rate limiting.",
+      "Default": "/identity/identity-gateway/TEST/redis-host",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "RedisSecurityGroup": {
+      "Default": "/TEST/identity/redis-security-group",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "SignInPageUrl": {
@@ -145,8 +218,19 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Type": "String",
     },
     "VpcId": {
-      "Description": "VPC id of VPC for this service to use",
-      "Type": "String",
+      "Default": "/account/vpc/primary/id",
+      "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
+    },
+    "identitygatewayPrivateSubnets": {
+      "Default": "/account/vpc/primary/subnets/private",
+      "Description": "A list of private subnets",
+      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
+    },
+    "identitygatewayPublicSubnets": {
+      "Default": "/account/vpc/primary/subnets/public",
+      "Description": "A list of public subnets",
+      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
   },
   "Resources": {
@@ -486,7 +570,14 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                   "Effect": "Allow",
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:s3:::\${IdentityArtifactBucket}/\${Stage}/\${App}/*",
+                      "Fn::Sub": [
+                        "arn:aws:s3:::\${IdentityArtifactBucket}/\${Stage}/\${App}/*",
+                        {
+                          "IdentityArtifactBucket": {
+                            "Ref": "IdentityArtifactBucket",
+                          },
+                        },
+                      ],
                     },
                   ],
                 },
@@ -495,7 +586,14 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                   "Effect": "Allow",
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:s3:::\${IdentityConfigBucket}/\${Stage}/\${App}/*",
+                      "Fn::Sub": [
+                        "arn:aws:s3:::\${IdentityConfigBucket}/\${Stage}/\${App}/*",
+                        {
+                          "IdentityConfigBucket": {
+                            "Ref": "IdentityConfigBucket",
+                          },
+                        },
+                      ],
                     },
                   ],
                 },
@@ -731,6 +829,133 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::AutoScaling::AutoScalingGroup",
     },
+    "AutoScalingGroupIdentitygatewayASG7D467284": {
+      "Properties": {
+        "HealthCheckGracePeriod": 120,
+        "HealthCheckType": "ELB",
+        "LaunchTemplate": {
+          "LaunchTemplateId": {
+            "Ref": "identityTESTidentitygateway7C7C3C37",
+          },
+          "Version": {
+            "Fn::GetAtt": [
+              "identityTESTidentitygateway7C7C3C37",
+              "LatestVersionNumber",
+            ],
+          },
+        },
+        "MaxSize": "2",
+        "MetricsCollection": [
+          {
+            "Granularity": "1Minute",
+          },
+        ],
+        "MinSize": "1",
+        "Tags": [
+          {
+            "Key": "App",
+            "PropagateAtLaunch": true,
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "PropagateAtLaunch": true,
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "PropagateAtLaunch": true,
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "gu:riffraff:new-asg",
+            "PropagateAtLaunch": true,
+            "Value": "true",
+          },
+          {
+            "Key": "LogKinesisStreamName",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Ref": "LoggingStreamName",
+            },
+          },
+          {
+            "Key": "Stack",
+            "PropagateAtLaunch": true,
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "PropagateAtLaunch": true,
+            "Value": "TEST",
+          },
+          {
+            "Key": "SystemdUnit",
+            "PropagateAtLaunch": true,
+            "Value": "identity-gateway.service",
+          },
+        ],
+        "TargetGroupARNs": [
+          {
+            "Ref": "TargetGroupIdentitygateway709F53C5",
+          },
+        ],
+        "VPCZoneIdentifier": {
+          "Ref": "identitygatewayPrivateSubnets",
+        },
+      },
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+    },
+    "AutoScalingGroupIdentitygatewayScalingPolicyCpuScalingPolicy4CBD4A39": {
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "AutoScalingGroupIdentitygatewayASG7D467284",
+        },
+        "PolicyType": "TargetTrackingScaling",
+        "TargetTrackingConfiguration": {
+          "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ASGAverageCPUUtilization",
+          },
+          "TargetValue": 10,
+        },
+      },
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+    },
+    "CertificateIdentitygateway7B4A089E": {
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "DomainName": "profile.code.dev-theguardian.com.origin.guardianapis.com",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Name",
+            "Value": "IdentityGateway/CertificateIdentitygateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+      "UpdateReplacePolicy": "Retain",
+    },
     "DeletionInactivityAlarm": {
       "Condition": "IsProd",
       "Properties": {
@@ -815,6 +1040,133 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "DeletionInactivityAlarm909792EE": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": " No one has successfully deleted their account in the last 6 hours.",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had no success self service user deletion in the last 6 hours",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "MetricName": "OAuthDeleteCallback::Success",
+        "Namespace": "Gateway",
+        "Period": 21600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "DescribeEC2PolicyFF5F9295": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "autoscaling:DescribeAutoScalingInstances",
+                "autoscaling:DescribeAutoScalingGroups",
+                "ec2:DescribeTags",
+                "ec2:DescribeInstances",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "describe-ec2-policy",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "GetDistributablePolicyIdentitygatewayD2C0494C": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "DistributionBucketName",
+                    },
+                    "/identity/TEST/identity-gateway/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "GetDistributablePolicyIdentitygatewayD2C0494C",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "GithubActionsSESSendEmailsRole": {
       "Condition": "NotIsProd",
       "Properties": {
@@ -874,6 +1226,126 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Role",
+    },
+    "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011": {
+      "Properties": {
+        "GroupDescription": "Allow all outbound HTTPS traffic",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound HTTPS traffic",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "VpcId": {
+          "Ref": "VpcId",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "GuHttpsEgressSecurityGroupIdentitygatewayfromIdentityGatewayLoadBalancerIdentitygatewaySecurityGroupA3602EBF92338F6DA735": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerIdentitygatewaySecurityGroupC2E97C21",
+            "GroupId",
+          ],
+        },
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "GuHttpsEgressSecurityGroupIdentitygatewayfromIdentityGatewayRestrictedIngressSecurityGroupIdentitygateway1A3B6CE092332EB920DF": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "RestrictedIngressSecurityGroupIdentitygateway35716087",
+            "GroupId",
+          ],
+        },
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "GuLogShippingPolicy981BFE5A": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "kinesis:Describe*",
+                "kinesis:Put*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:kinesis:eu-west-1:",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":stream/",
+                    {
+                      "Ref": "LoggingStreamName",
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "GuLogShippingPolicy981BFE5A",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
     },
     "HighLatencyScalingAlarm": {
       "Condition": "IsProd",
@@ -979,6 +1451,161 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "IdentityGatewayAlarmTopicEEA18544": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::Topic",
+    },
+    "IdentityGatewayAlarmTopicTokenSubscription19E35C585": {
+      "Properties": {
+        "Endpoint": {
+          "Ref": "AlarmEmail",
+        },
+        "Protocol": "email",
+        "TopicArn": {
+          "Ref": "IdentityGatewayAlarmTopicEEA18544",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
+    },
+    "IdentityGatewayCloudWatchPolicyEFFEAF3C": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "cloudwatch:PutMetricData",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IdentityGatewayCloudWatchPolicyEFFEAF3C",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "IdentityGatewayS3ReadPolicy7A96C047": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "IdentityConfigBucket",
+                      },
+                      "/TEST/identity-gateway/*",
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:s3:::",
+                      {
+                        "Ref": "IdentityArtifactBucket",
+                      },
+                      "/TEST/identity-gateway/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IdentityGatewayS3ReadPolicy7A96C047",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "IdentityGatewaySESSendPolicy2E1555D4": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ses:SendEmail",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IdentityGatewaySESSendPolicy2E1555D4",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "IdentityGatewaySSMReadPolicy861DB118": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ssm:GetParameter",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ssm:eu-west-1:",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/identity/identity-gateway/TEST/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IdentityGatewaySSMReadPolicy861DB118",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "InstanceProfile": {
       "Properties": {
         "Path": "/",
@@ -989,6 +1616,46 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::InstanceProfile",
+    },
+    "InstanceRoleIdentitygatewayF5932C92": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Path": "/",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
     },
     "InstanceSecurityGroup": {
       "Properties": {
@@ -1180,6 +1847,15 @@ systemctl start identity-gateway
                       "DefaultReturnUri",
                     ],
                   },
+                  "IdentityArtifactBucket": {
+                    "Ref": "IdentityArtifactBucket",
+                  },
+                  "IdentityConfigBucket": {
+                    "Ref": "IdentityConfigBucket",
+                  },
+                  "RedisHost": {
+                    "Ref": "RedisHost",
+                  },
                 },
               ],
             },
@@ -1190,6 +1866,32 @@ systemctl start identity-gateway
         },
       },
       "Type": "AWS::EC2::LaunchTemplate",
+    },
+    "ListenerIdentitygatewayC2F66018": {
+      "Properties": {
+        "Certificates": [
+          {
+            "CertificateArn": {
+              "Ref": "CertificateIdentitygateway7B4A089E",
+            },
+          },
+        ],
+        "DefaultActions": [
+          {
+            "TargetGroupArn": {
+              "Ref": "TargetGroupIdentitygateway709F53C5",
+            },
+            "Type": "forward",
+          },
+        ],
+        "LoadBalancerArn": {
+          "Ref": "LoadBalancerIdentitygateway7DAC8BBC",
+        },
+        "Port": 443,
+        "Protocol": "HTTPS",
+        "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-2021-06",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
     "LoadBalancer": {
       "Properties": {
@@ -1248,6 +1950,150 @@ systemctl start identity-gateway
         ],
       },
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "LoadBalancerIdentitygateway7DAC8BBC": {
+      "Properties": {
+        "LoadBalancerAttributes": [
+          {
+            "Key": "deletion_protection.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "routing.http.x_amzn_tls_version_and_cipher_suite.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "routing.http.drop_invalid_header_fields.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "access_logs.s3.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "access_logs.s3.bucket",
+            "Value": {
+              "Ref": "AccessLoggingBucket",
+            },
+          },
+          {
+            "Key": "access_logs.s3.prefix",
+            "Value": "application-load-balancer/TEST/identity/identity-gateway",
+          },
+        ],
+        "Scheme": "internet-facing",
+        "SecurityGroups": [
+          {
+            "Fn::GetAtt": [
+              "LoadBalancerIdentitygatewaySecurityGroupC2E97C21",
+              "GroupId",
+            ],
+          },
+          {
+            "Fn::GetAtt": [
+              "RestrictedIngressSecurityGroupIdentitygateway35716087",
+              "GroupId",
+            ],
+          },
+        ],
+        "Subnets": {
+          "Ref": "identitygatewayPublicSubnets",
+        },
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Type": "application",
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    },
+    "LoadBalancerIdentitygatewaySecurityGroupC2E97C21": {
+      "Properties": {
+        "GroupDescription": "Automatically created Security Group for ELB IdentityGatewayLoadBalancerIdentitygatewayDD0AB5CE",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "VpcId": {
+          "Ref": "VpcId",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "LoadBalancerIdentitygatewaySecurityGrouptoIdentityGatewayGuHttpsEgressSecurityGroupIdentitygatewayF2FC415C9233734A9C39": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011",
+            "GroupId",
+          ],
+        },
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerIdentitygatewaySecurityGroupC2E97C21",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "LoadBalancerIdentitygatewaySecurityGrouptoIdentityGatewayRedisSecurityGroupInstance52B5F29192338622CF4E": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Ref": "RedisSecurityGroup",
+        },
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerIdentitygatewaySecurityGroupC2E97C21",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
     },
     "LoadBalancerListener": {
       "Properties": {
@@ -1402,6 +2248,75 @@ systemctl start identity-gateway
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "OAuthApplicationCallbackInactivityAlarm00589919": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "MetricName": "OAuthApplicationCallback::Success",
+        "Namespace": "Gateway",
+        "Period": 3600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
     "OAuthAuthenticationCallbackInactivityAlarm": {
       "Condition": "IsProd",
       "Properties": {
@@ -1485,6 +2400,126 @@ systemctl start identity-gateway
         "Threshold": 1,
       },
       "Type": "AWS::CloudWatch::Alarm",
+    },
+    "OauthAuthenticationCallbackInactivityAlarmF984354A": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "MetricName": "OAuthAuthenticationCallback::Success",
+        "Namespace": "Gateway",
+        "Period": 1200,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "ParameterStoreReadIdentitygatewayDA9EF7BF": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "ssm:GetParametersByPath",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ssm:eu-west-1:",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/TEST/identity/identity-gateway",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:ssm:eu-west-1:",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":parameter/TEST/identity/identity-gateway/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "parameter-store-read-policy",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
     },
     "RegisterInactivityAlarm": {
       "Condition": "IsProd",
@@ -1595,6 +2630,332 @@ systemctl start identity-gateway
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "RegisterInactivityAlarm1F5BC42F": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully registered in the last hour.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new registrations in the last hour",
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "oktaIdxRegistrationCount + oktaRegistrationCount",
+            "Id": "expr_1",
+            "ReturnData": true,
+          },
+          {
+            "Id": "oktaRegistrationCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaRegister::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+          {
+            "Id": "oktaIdxRegistrationCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaIDXRegister::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "RestrictedIngressSecurityGroupIdentitygateway35716087": {
+      "Properties": {
+        "GroupDescription": "Allow restricted ingress from CIDR ranges",
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "23.235.32.0/20",
+            "Description": "Allow access on port 443 from 23.235.32.0/20",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "43.249.72.0/22",
+            "Description": "Allow access on port 443 from 43.249.72.0/22",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "103.244.50.0/24",
+            "Description": "Allow access on port 443 from 103.244.50.0/24",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "103.245.222.0/23",
+            "Description": "Allow access on port 443 from 103.245.222.0/23",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "103.245.224.0/24",
+            "Description": "Allow access on port 443 from 103.245.224.0/24",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "104.156.80.0/20",
+            "Description": "Allow access on port 443 from 104.156.80.0/20",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "140.248.64.0/18",
+            "Description": "Allow access on port 443 from 140.248.64.0/18",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "140.248.128.0/17",
+            "Description": "Allow access on port 443 from 140.248.128.0/17",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "146.75.0.0/17",
+            "Description": "Allow access on port 443 from 146.75.0.0/17",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "151.101.0.0/16",
+            "Description": "Allow access on port 443 from 151.101.0.0/16",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "157.52.64.0/18",
+            "Description": "Allow access on port 443 from 157.52.64.0/18",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "167.82.0.0/17",
+            "Description": "Allow access on port 443 from 167.82.0.0/17",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "167.82.128.0/20",
+            "Description": "Allow access on port 443 from 167.82.128.0/20",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "167.82.160.0/20",
+            "Description": "Allow access on port 443 from 167.82.160.0/20",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "167.82.224.0/20",
+            "Description": "Allow access on port 443 from 167.82.224.0/20",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "172.111.64.0/18",
+            "Description": "Allow access on port 443 from 172.111.64.0/18",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "185.31.16.0/22",
+            "Description": "Allow access on port 443 from 185.31.16.0/22",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "199.27.72.0/21",
+            "Description": "Allow access on port 443 from 199.27.72.0/21",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "199.232.0.0/16",
+            "Description": "Allow access on port 443 from 199.232.0.0/16",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIpv6": "2a04:4e40::/32",
+            "Description": "Allow access on port 443 from 2a04:4e40::/32",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIpv6": "2a04:4e42::/32",
+            "Description": "Allow access on port 443 from 2a04:4e42::/32",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "VpcId": {
+          "Ref": "VpcId",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "RestrictedIngressSecurityGroupIdentitygatewaytoIdentityGatewayGuHttpsEgressSecurityGroupIdentitygatewayF2FC415C9233D7349603": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011",
+            "GroupId",
+          ],
+        },
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "RestrictedIngressSecurityGroupIdentitygateway35716087",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "RestrictedIngressSecurityGroupIdentitygatewaytoIdentityGatewayRedisSecurityGroupInstance52B5F29192336F7FE4BB": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Ref": "RedisSecurityGroup",
+        },
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "RestrictedIngressSecurityGroupIdentitygateway35716087",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
     "ScaleDownPolicy": {
       "Properties": {
         "AdjustmentType": "ChangeInCapacity",
@@ -1616,6 +2977,113 @@ systemctl start identity-gateway
         "ScalingAdjustment": 1,
       },
       "Type": "AWS::AutoScaling::ScalingPolicy",
+    },
+    "SignInInactivityAlarmDADAF488": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully signed ins in the last 20 minutes.",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new sign-ins in the last 20 minutes",
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "oktaSignInCount + oktaIdxSignInCount",
+            "Id": "expr_1",
+            "ReturnData": true,
+          },
+          {
+            "Id": "oktaSignInCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaSignIn::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+          {
+            "Id": "oktaIdxSignInCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                  {
+                    "Name": "Stage",
+                    "Value": "TEST",
+                  },
+                ],
+                "MetricName": "OktaIdxSignIn::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 300,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
     },
     "SigninInactivityAlarm": {
       "Condition": "IsProd",
@@ -1726,6 +3194,42 @@ systemctl start identity-gateway
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
+    "SsmSshPolicy4CFC977E": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ec2messages:AcknowledgeMessage",
+                "ec2messages:DeleteMessage",
+                "ec2messages:FailMessage",
+                "ec2messages:GetEndpoint",
+                "ec2messages:GetMessages",
+                "ec2messages:SendReply",
+                "ssm:UpdateInstanceInformation",
+                "ssm:ListInstanceAssociations",
+                "ssm:DescribeInstanceProperties",
+                "ssm:DescribeDocumentParameters",
+                "ssmmessages:CreateControlChannel",
+                "ssmmessages:CreateDataChannel",
+                "ssmmessages:OpenControlChannel",
+                "ssmmessages:OpenDataChannel",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "ssm-ssh-policy",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "TargetGroup": {
       "DependsOn": [
         "LoadBalancer",
@@ -1769,6 +3273,55 @@ systemctl start identity-gateway
             "Value": "45",
           },
         ],
+        "UnhealthyThresholdCount": 2,
+        "VpcId": {
+          "Ref": "VpcId",
+        },
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+    },
+    "TargetGroupIdentitygateway709F53C5": {
+      "Properties": {
+        "HealthCheckIntervalSeconds": 10,
+        "HealthCheckPath": "/healthcheck",
+        "HealthCheckProtocol": "HTTP",
+        "HealthCheckTimeoutSeconds": 5,
+        "HealthyThresholdCount": 5,
+        "Port": 9233,
+        "Protocol": "HTTP",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "TargetGroupAttributes": [
+          {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "30",
+          },
+          {
+            "Key": "stickiness.enabled",
+            "Value": "false",
+          },
+        ],
+        "TargetType": "instance",
         "UnhealthyThresholdCount": 2,
         "VpcId": {
           "Ref": "VpcId",
@@ -1892,6 +3445,325 @@ systemctl start identity-gateway
         "Threshold": 1,
       },
       "Type": "AWS::CloudWatch::Alarm",
+    },
+    "UnsubscribeAllInactivityAlarmA2260AED": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully unsubscribed all from email clients in the last hour.",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had successful no unsubscribe all from email clients in the last hour",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "MetricName": "UnsubscribeAll::Success",
+        "Namespace": "Gateway",
+        "Period": 3600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "identityTESTidentitygateway7C7C3C37": {
+      "DependsOn": [
+        "InstanceRoleIdentitygatewayF5932C92",
+      ],
+      "Properties": {
+        "LaunchTemplateData": {
+          "IamInstanceProfile": {
+            "Arn": {
+              "Fn::GetAtt": [
+                "identityTESTidentitygatewayProfileAEE12FAF",
+                "Arn",
+              ],
+            },
+          },
+          "ImageId": {
+            "Ref": "AMIIdentitygateway",
+          },
+          "InstanceType": "t4g.small",
+          "MetadataOptions": {
+            "HttpTokens": "required",
+            "InstanceMetadataTags": "enabled",
+          },
+          "Monitoring": {
+            "Enabled": true,
+          },
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011",
+                "GroupId",
+              ],
+            },
+            {
+              "Ref": "RedisSecurityGroup",
+            },
+          ],
+          "TagSpecifications": [
+            {
+              "ResourceType": "instance",
+              "Tags": [
+                {
+                  "Key": "App",
+                  "Value": "identity-gateway",
+                },
+                {
+                  "Key": "gu:cdk:version",
+                  "Value": "TEST",
+                },
+                {
+                  "Key": "gu:repo",
+                  "Value": "guardian/gateway",
+                },
+                {
+                  "Key": "Name",
+                  "Value": "IdentityGateway/identity-TEST-identity-gateway",
+                },
+                {
+                  "Key": "Stack",
+                  "Value": "identity",
+                },
+                {
+                  "Key": "Stage",
+                  "Value": "TEST",
+                },
+              ],
+            },
+            {
+              "ResourceType": "volume",
+              "Tags": [
+                {
+                  "Key": "App",
+                  "Value": "identity-gateway",
+                },
+                {
+                  "Key": "gu:cdk:version",
+                  "Value": "TEST",
+                },
+                {
+                  "Key": "gu:repo",
+                  "Value": "guardian/gateway",
+                },
+                {
+                  "Key": "Name",
+                  "Value": "IdentityGateway/identity-TEST-identity-gateway",
+                },
+                {
+                  "Key": "Stack",
+                  "Value": "identity",
+                },
+                {
+                  "Key": "Stage",
+                  "Value": "TEST",
+                },
+              ],
+            },
+          ],
+          "UserData": {
+            "Fn::Base64": {
+              "Fn::Join": [
+                "",
+                [
+                  "#!/bin/bash -ev
+
+mkdir /etc/gu
+
+# Get Riff Raff deployed artefact S3
+aws s3 cp s3://",
+                  {
+                    "Ref": "IdentityArtifactBucket",
+                  },
+                  "/TEST/identity-gateway/identity-gateway.zip /etc/gu
+unzip -o /etc/gu/identity-gateway.zip -d /etc/gu
+
+# Get Rate Limiter configuration file
+# Try multiple times to the config file. The s3 cp command can fail when called immediately on instance startup.
+while true; do
+	if 		aws s3 cp s3://",
+                  {
+                    "Ref": "IdentityConfigBucket",
+                  },
+                  "/TEST/identity-gateway/.ratelimit.json /etc/gu/.ratelimit.json
+		then break
+	fi
+	sleep 1
+done
+
+# Setup user
+groupadd identity-gateway
+useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
+chown -R identity-gateway:identity-gateway /etc/gu
+
+# Setup logs
+touch /var/log/identity-gateway.log
+chown identity-gateway:identity-gateway /var/log/identity-gateway.log
+
+# Try multiple times to get parameter store values. The SSM command can fail when called immediately on instance startup.
+while true; do
+if 	IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	APP_SECRET=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	REDIS_PASSWORD=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/redis-password' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	OKTA_API_TOKEN=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	OKTA_CUSTOM_OAUTH_SERVER=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/oktaCustomOAuthServer' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/oktaClientId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && 	OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/oktaIdpApple' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/identity/identity-gateway/TEST/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+	then break
+fi
+
+sleep 1
+done
+
+# systemd setup
+cat > /etc/systemd/system/identity-gateway.service <<EOL
+[Service]
+ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js 2>&1'
+Restart=always
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=identity-gateway
+User=identity-gateway
+Group=identity-gateway
+Environment=NODE_ENV=production
+Environment=PORT=9233
+Environment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN
+Environment=IDAPI_BASE_URL=https://idapi.code.dev-theguardian.com
+Environment=SIGN_IN_PAGE_URL=https://profile.code.dev-theguardian.com/signin
+Environment=OAUTH_BASE_URL=https://oauth.code.dev-theguardian.com
+Environment=BASE_URI=profile.code.dev-theguardian.com
+Environment=DEFAULT_RETURN_URI=https://m.code.dev-theguardian.com
+Environment=STAGE=TEST
+Environment=IS_HTTPS=true
+Environment=APP_SECRET=$APP_SECRET
+Environment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
+Environment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY
+Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
+Environment=OKTA_ORG_URL=https://profile.code.dev-theguardian.com
+Environment=OKTA_API_TOKEN=$OKTA_API_TOKEN
+Environment=OKTA_CUSTOM_OAUTH_SERVER=$OKTA_CUSTOM_OAUTH_SERVER
+Environment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID
+Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
+Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
+Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
+Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
+Environment=REDIS_PASSWORD=$REDIS_PASSWORD
+Environment=REDIS_HOST=",
+                  {
+                    "Ref": "RedisHost",
+                  },
+                  "
+Environment=REDIS_SSL_ON=true
+Environment=MEMBERS_DATA_API_URL=https://members-data-api.code.dev-theguardian.com
+Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
+Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
+Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
+
+[Install]
+WantedBy=multi-user.target
+EOL
+
+systemctl enable identity-gateway
+systemctl start identity-gateway
+		",
+                ],
+              ],
+            },
+          },
+        },
+        "TagSpecifications": [
+          {
+            "ResourceType": "launch-template",
+            "Tags": [
+              {
+                "Key": "App",
+                "Value": "identity-gateway",
+              },
+              {
+                "Key": "gu:cdk:version",
+                "Value": "TEST",
+              },
+              {
+                "Key": "gu:repo",
+                "Value": "guardian/gateway",
+              },
+              {
+                "Key": "Name",
+                "Value": "IdentityGateway/identity-TEST-identity-gateway",
+              },
+              {
+                "Key": "Stack",
+                "Value": "identity",
+              },
+              {
+                "Key": "Stage",
+                "Value": "TEST",
+              },
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::EC2::LaunchTemplate",
+    },
+    "identityTESTidentitygatewayProfileAEE12FAF": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
     },
   },
 }

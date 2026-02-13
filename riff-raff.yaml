@@ -8,13 +8,22 @@ deployments:
     app: identity-gateway
     parameters:
       cloudFormationStackName: gateway
-      amiTags:
-        Recipe: gateway-arm64
-        AmigoStage: PROD
+      amiParametersToTags:
+        AMIIdentitygateway:
+          BuiltBy: amigo
+          AmigoStage: PROD
+          Recipe: gateway-arm64
+          Encrypted: 'true'
+        AMI:
+          BuiltBy: amigo
+          AmigoStage: PROD
+          Recipe: gateway-arm64
+          Encrypted: 'true'
       templateStagePaths:
         CODE: IdentityGateway-euwest-1-CODE.template.json
         PROD: IdentityGateway-euwest-1-PROD.template.json
-      amiEncrypted: true
+      templateParameters:
+        VpcId: /account/vpc/primary/id
     dependencies:
       - update-ami
   identity-gateway:
@@ -25,6 +34,7 @@ deployments:
       bucketSsmLookup: true
       bucketSsmKey: /account/services/identity.artifact.bucket
       prefixStack: false
+      asgMigrationInProgress: true
   update-ami:
     type: ami-cloudformation-parameter
     parameters:
