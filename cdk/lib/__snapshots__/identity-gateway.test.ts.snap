@@ -1064,7 +1064,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
           },
         ],
         "AlarmDescription": " No one has successfully deleted their account in the last 6 hours.",
-        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had no success self service user deletion in the last 6 hours",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had no success self service user deletion in the last 6 hours - CDK",
         "ComparisonOperator": "LessThanThreshold",
         "Dimensions": [
           {
@@ -2272,7 +2272,7 @@ systemctl start identity-gateway
           },
         ],
         "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.",
-        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour - CDK",
         "ComparisonOperator": "LessThanThreshold",
         "Dimensions": [
           {
@@ -2425,7 +2425,7 @@ systemctl start identity-gateway
           },
         ],
         "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.",
-        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes - CDK",
         "ComparisonOperator": "LessThanThreshold",
         "Dimensions": [
           {
@@ -2654,7 +2654,7 @@ systemctl start identity-gateway
           },
         ],
         "AlarmDescription": "No one has successfully registered in the last hour.",
-        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new registrations in the last hour",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new registrations in the last hour - CDK",
         "ComparisonOperator": "LessThanThreshold",
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
@@ -3002,7 +3002,7 @@ systemctl start identity-gateway
           },
         ],
         "AlarmDescription": "No one has successfully signed ins in the last 20 minutes.",
-        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new sign-ins in the last 20 minutes",
+        "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new sign-ins in the last 20 minutes - CDK",
         "ComparisonOperator": "LessThanThreshold",
         "EvaluationPeriods": 1,
         "InsufficientDataActions": [
@@ -3470,7 +3470,7 @@ systemctl start identity-gateway
           },
         ],
         "AlarmDescription": "No one has successfully unsubscribed all from email clients in the last hour.",
-        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had successful no unsubscribe all from email clients in the last hour",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had successful no unsubscribe all from email clients in the last hour - CDK",
         "ComparisonOperator": "LessThanThreshold",
         "Dimensions": [
           {
