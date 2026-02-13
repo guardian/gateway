@@ -64,9 +64,8 @@ describe('Content Security Policy headers', () => {
 			const response = await request(server).get(route);
 			// Dynamically import getConfiguration so the changes to the environment
 			// variables are reflected inside the getConfiguration() call
-			const { getConfiguration } = await import(
-				'@/server/lib/getConfiguration'
-			);
+			const { getConfiguration } =
+				await import('@/server/lib/getConfiguration');
 			const { baseUri, apiDomain } = getConfiguration();
 			// Is the CSP header set?
 			expect(response.header).toHaveProperty('content-security-policy');

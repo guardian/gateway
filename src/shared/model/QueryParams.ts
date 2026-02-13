@@ -35,8 +35,7 @@ export interface TrackingQueryParams {
  * from page to page in a flow e.g. returnUrl
  */
 export interface PersistableQueryParams
-	extends TrackingQueryParams,
-		StringifiableRecord {
+	extends TrackingQueryParams, StringifiableRecord {
 	returnUrl: string;
 	clientId?: ValidClientId;
 	// This is the fromURI query parameter from Otka authorization code flow
@@ -60,8 +59,7 @@ export interface PersistableQueryParams
  * `error` or state flag
  */
 export interface QueryParams
-	extends PersistableQueryParams,
-		StringifiableRecord {
+	extends PersistableQueryParams, StringifiableRecord {
 	emailVerified?: boolean;
 	// used to show the success message on the email sent page
 	// only if the email is resent from the email sent page

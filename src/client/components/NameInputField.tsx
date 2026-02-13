@@ -86,8 +86,7 @@ const SecondNameInput = (props: NameInputProps) => {
 	);
 };
 
-interface NameInputFieldProps
-	extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
+interface NameInputFieldProps extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
 	onGroupError?: (errorOccurred: boolean) => void;
 	firstName?: string;
 	secondName?: string;
