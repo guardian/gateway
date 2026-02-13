@@ -6,13 +6,14 @@ on:
     branches:
       - main
   pull_request:
-    types: ['review_requested']
+    types: ['review_requested', 'labeled']
 
 # List of jobs
 jobs:
   chromatic-deployment:
     # Operating System
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'run_tests')  ||  github.ref == 'refs/heads/main'
     # Job steps
     steps:
       - uses: actions/checkout@v5

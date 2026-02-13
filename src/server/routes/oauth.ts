@@ -42,6 +42,7 @@ import {
 import { RoutePaths } from '@/shared/model/Routes';
 import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -253,7 +254,10 @@ const authenticationHandler = async (
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
-				if (
+				if (isGoogleOneTap) {
+					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
+					authState.confirmationPage = `/welcome/google-one-tap`;
+				} else if (
 					authState.data?.socialProvider ||
 					// Cypress Test START
 					// this is a special case for the cypress tests, where we want to be able to mock the social provider
@@ -479,7 +483,7 @@ const authenticationHandler = async (
 			!authState.confirmationPage
 		) {
 			return res.redirect(
-				addQueryParamsToPath('/agree/GRS', authState.queryParams),
+				addQueryParamsToPath(JOBS_TOS_URI, authState.queryParams),
 			);
 		}
 

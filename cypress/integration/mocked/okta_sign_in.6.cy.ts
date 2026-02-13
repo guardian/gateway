@@ -1,3 +1,5 @@
+import { JOBS_TOS_URI } from '../../../src/shared/model/Configuration';
+
 describe('Sign in flow', () => {
 	context('Signing in - Okta', () => {
 		beforeEach(() => {
@@ -270,7 +272,7 @@ describe('Sign in flow', () => {
 					'include',
 					`fromURI=${encodeURIComponent(`/oauth2/v1/authorize/redirect?okta_key=oktaKey`)}`,
 				)
-				.and('include', '/agree/GRS');
+				.and('include', JOBS_TOS_URI);
 
 			cy.contains('a', 'Sign in')
 				.should('have.attr', 'href')

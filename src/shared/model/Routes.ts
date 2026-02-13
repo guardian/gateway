@@ -1,3 +1,5 @@
+import { JOBS_TOS_URI } from './Configuration';
+
 export type ConsentPath = 'newsletters' | 'data' | 'review';
 
 /**
@@ -10,7 +12,7 @@ export const ValidRoutePathsArray = [
 	'/change-email/:token',
 	'/change-email/complete',
 	'/change-email/error',
-	'/agree/GRS',
+	JOBS_TOS_URI,
 	'/email/:template',
 	'/consent-token/:token/accept',
 	'/consent-token/error',
@@ -74,10 +76,12 @@ export const ValidRoutePathsArray = [
 	'/signout',
 	'/signout/all',
 	'/unsubscribe/:emailType/:data/:token',
+	'/unsubscribe/review',
 	'/unsubscribe/success',
 	'/unsubscribe/error',
 	'/unsubscribe-all/:data/:token',
 	'/subscribe/:emailType/:data/:token',
+	'/subscribe/review',
 	'/subscribe/success',
 	'/subscribe/error',
 	'/verify-email',
@@ -90,6 +94,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/expired',
 	'/welcome/resend',
 	'/welcome/google',
+	'/welcome/google-one-tap',
 	'/welcome/apple',
 	'/welcome/social',
 	'/welcome/complete-account',

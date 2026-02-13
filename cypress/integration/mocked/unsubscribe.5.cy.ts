@@ -12,6 +12,15 @@ describe('Unsubscribe newsletter/marketing email', () => {
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A1677075570/token',
 			);
 			injectAndCheckAxe();
+			cy.contains(
+				'Please click below to complete your unsubscribe from this list',
+			);
+
+			cy.mockNext(200);
+
+			cy.get('button[type="submit"]').click();
+
+			cy.contains('You have been unsubscribed');
 		});
 
 		it('Has no detectable a11y violations on unsubscribe error page', () => {
@@ -29,7 +38,15 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			cy.visit(
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A1677075570/token',
 			);
-			cy.contains('You have been unsubscribed.');
+			cy.contains(
+				'Please click below to complete your unsubscribe from this list',
+			);
+
+			cy.mockNext(200);
+
+			cy.get('button[type="submit"]').click();
+
+			cy.contains('You have been unsubscribed');
 		});
 
 		it('should be able to unsubscribe from all marketing consents and newsletters', () => {
@@ -44,7 +61,15 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		it('should be able to unsubscribe from a marketing email', () => {
 			cy.mockNext(200);
 			cy.visit('/unsubscribe/marketing/supporter%3A1000000%3A1677075570/token');
-			cy.contains('You have been unsubscribed.');
+			cy.contains(
+				'Please click below to complete your unsubscribe from this list',
+			);
+
+			cy.mockNext(200);
+
+			cy.get('button[type="submit"]').click();
+
+			cy.contains('You have been unsubscribed');
 		});
 
 		it('should be able to handle a unsubscribe error if emailType is not newsletter/marketing', () => {
@@ -56,9 +81,22 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			cy.visit(
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A16770755abc70/token',
 			);
+
+			cy.mockNext(500, {
+				status: 'error',
+				errors: [
+					{
+						message: 'Invalid data',
+					},
+				],
+			});
+
+			cy.get('button[type="submit"]').click();
+
 			cy.contains('Unable to unsubscribe.');
 
 			cy.visit('/unsubscribe/newsletter/pushing-buttons%3A1000000%3A/token');
+
 			cy.contains('Unable to unsubscribe.');
 
 			cy.visit('/unsubscribe/newsletter/pushing-buttons-bad-data/token');
