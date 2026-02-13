@@ -337,7 +337,7 @@ systemctl start ${app}
 		// Alert us if for some reason we're not seeing any sign-ins
 		const signInInactivityAlarm = new GuAlarm(this, 'SignInInactivityAlarm', {
 			snsTopicName: alarmTopic.topicName,
-			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new sign-ins in the last 20 minutes`,
+			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new sign-ins in the last 20 minutes - CDK`,
 			alarmDescription: 'No one has successfully signed ins in the last 20 minutes.',
 			metric: new MathExpression({
 				expression: 'oktaSignInCount + oktaIdxSignInCount',
@@ -376,7 +376,7 @@ systemctl start ${app}
 
 		const registerInactivityAlarm = new GuAlarm(this, 'RegisterInactivityAlarm', {
 			snsTopicName: alarmTopic.topicName,
-			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new registrations in the last hour`,
+			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no new registrations in the last hour - CDK`,
 			alarmDescription: 'No one has successfully registered in the last hour.',
 			metric: new MathExpression({
 				expression: 'oktaIdxRegistrationCount + oktaRegistrationCount',
@@ -415,7 +415,7 @@ systemctl start ${app}
 
 		const oauthAuthenticationCallbackInactivityAlarm = new GuAlarm(this, 'OauthAuthenticationCallbackInactivityAlarm', {
 			snsTopicName: alarmTopic.topicName,
-			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes`,
+			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes - CDK`,
 			alarmDescription: 'No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.',
 			metric: new Metric({
 				namespace: 'Gateway',
@@ -438,7 +438,7 @@ systemctl start ${app}
 
 		const oauthApplicationInactivityAlarm = new GuAlarm(this, 'OAuthApplicationCallbackInactivityAlarm', {
 			snsTopicName: alarmTopic.topicName,
-			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour`,
+			alarmName: `${alarmPriorities.P1} - ${app} ${stage} has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour - CDK`,
 			alarmDescription: 'No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.',
 			metric: new Metric({
 				namespace: 'Gateway',
@@ -461,7 +461,7 @@ systemctl start ${app}
 
 		const deletionInactivityAlarm = new GuAlarm(this, 'DeletionInactivityAlarm', {
 			snsTopicName: alarmTopic.topicName,
-			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had no success self service user deletion in the last 6 hours`,
+			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had no success self service user deletion in the last 6 hours - CDK`,
 			alarmDescription: ' No one has successfully deleted their account in the last 6 hours.',
 			metric: new Metric({
 				namespace: 'Gateway',
@@ -484,7 +484,7 @@ systemctl start ${app}
 
 		const unsubscribeAllInactivityAlarm = new GuAlarm(this, 'UnsubscribeAllInactivityAlarm', {
 			snsTopicName: alarmTopic.topicName,
-			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had successful no unsubscribe all from email clients in the last hour`,
+			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had successful no unsubscribe all from email clients in the last hour - CDK`,
 			alarmDescription: 'No one has successfully unsubscribed all from email clients in the last hour.',
 			metric: new Metric({
 				namespace: 'Gateway',
