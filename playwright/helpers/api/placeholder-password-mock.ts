@@ -1,5 +1,7 @@
+import { APIRequestContext } from '@playwright/test';
+
 export const dangerouslySetPlaceholderPasswordMocks = async (
-	mockApi: any,
+	mockApi: APIRequestContext,
 	email: string,
 ) => {
 	await Promise.all([

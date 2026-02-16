@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page, APIRequestContext } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
@@ -23,8 +23,8 @@ const existingUserSendEmailAndValidatePasscode = async ({
 	expectedEmailBody = 'Your one-time passcode',
 	additionalTests,
 }: {
-	page: any;
-	request: any;
+	page: Page;
+	request: APIRequestContext;
 	emailAddress: string;
 	expectedReturnUrl?: string;
 	params?: string;

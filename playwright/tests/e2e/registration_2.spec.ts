@@ -10,267 +10,264 @@ import {
 } from '../../helpers/api/okta';
 
 test.describe('Registration flow - Split 2/3', () => {
-	test.describe(
-		'Existing users asking for an email to be resent after attempting to register with Okta - useOktaClassic',
-		() => {
-			test('should resend a STAGED user a set password email with an Okta activation token', async ({
-				page,
-				request,
-			}) => {
-				const { emailAddress } = await createTestUser(request, {
-					isGuestUser: true,
-					isUserEmailValidated: true,
-				});
-
-				const oktaUser = await getTestOktaUser(request, emailAddress);
-				expect(oktaUser.status).toBe(Status.STAGED);
-
-				await page.goto('/register/email?useOktaClassic=true');
-
-				const timeRequestWasMade = new Date();
-
-				await page.locator('input[name=email]').fill(emailAddress);
-				await page.locator('[data-cy="main-form-submit-button"]').click();
-
-				await expect(page.getByText('Check your inbox')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
-				await expect(page.getByText('send again')).toBeVisible();
-				await expect(page.getByText('try another address')).toBeVisible();
-
-				// Wait for the first email to arrive...
-				await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade,
-					/\/set-password\/([^"]*)/,
-				);
-
-				const timeRequestWasMade2 = new Date();
-				await page.locator('[data-cy="main-form-submit-button"]').click();
-
-				// ...before waiting for the second email to arrive
-				const { links, body } = await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade2,
-					/\/set-password\/([^"]*)/,
-				);
-
-				expect(body).toContain('This account already exists');
-				expect(body).toContain('Create password');
-				expect(links.length).toBe(2);
-				const setPasswordLink = links.find((s) =>
-					s.text?.includes('Create password'),
-				);
-				expect(setPasswordLink?.href ?? '').not.toContain('useOkta=true');
-				await page.goto(setPasswordLink?.href as string);
-				await expect(page.getByText('Create password')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
+	test.describe('Existing users asking for an email to be resent after attempting to register with Okta - useOktaClassic', () => {
+		test('should resend a STAGED user a set password email with an Okta activation token', async ({
+			page,
+			request,
+		}) => {
+			const { emailAddress } = await createTestUser(request, {
+				isGuestUser: true,
+				isUserEmailValidated: true,
 			});
 
-			test('should resend a PROVISIONED user a set password email with an Okta activation token', async ({
-				page,
-				request,
-			}) => {
-				const { emailAddress } = await createTestUser(request, {
-					isGuestUser: true,
-					isUserEmailValidated: true,
-				});
+			const oktaUser = await getTestOktaUser(request, emailAddress);
+			expect(oktaUser.status).toBe(Status.STAGED);
 
-				await activateTestOktaUser(request, emailAddress);
+			await page.goto('/register/email?useOktaClassic=true');
 
-				const oktaUser = await getTestOktaUser(request, emailAddress);
-				expect(oktaUser.status).toBe(Status.PROVISIONED);
+			const timeRequestWasMade = new Date();
 
-				await page.goto('/register/email?useOktaClassic=true');
+			await page.locator('input[name=email]').fill(emailAddress);
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				const timeRequestWasMade = new Date();
+			await expect(page.getByText('Check your inbox')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+			await expect(page.getByText('send again')).toBeVisible();
+			await expect(page.getByText('try another address')).toBeVisible();
 
-				await page.locator('input[name=email]').fill(emailAddress);
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			// Wait for the first email to arrive...
+			await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade,
+				/\/set-password\/([^"]*)/,
+			);
 
-				await expect(page.getByText('Check your inbox')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
-				await expect(page.getByText('send again')).toBeVisible();
-				await expect(page.getByText('try another address')).toBeVisible();
+			const timeRequestWasMade2 = new Date();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade,
-					/\/set-password\/([^"]*)/,
-				);
+			// ...before waiting for the second email to arrive
+			const { links, body } = await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade2,
+				/\/set-password\/([^"]*)/,
+			);
 
-				const timeRequestWasMade2 = new Date();
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			expect(body).toContain('This account already exists');
+			expect(body).toContain('Create password');
+			expect(links.length).toBe(2);
+			const setPasswordLink = links.find((s) =>
+				s.text?.includes('Create password'),
+			);
+			expect(setPasswordLink?.href ?? '').not.toContain('useOkta=true');
+			await page.goto(setPasswordLink?.href as string);
+			await expect(page.getByText('Create password')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+		});
 
-				const { links, body } = await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade2,
-					/\/set-password\/([^"]*)/,
-				);
-
-				expect(body).toContain('This account already exists');
-				expect(body).toContain('Create password');
-				expect(links.length).toBe(2);
-				const setPasswordLink = links.find((s) =>
-					s.text?.includes('Create password'),
-				);
-				expect(setPasswordLink?.href ?? '').not.toContain('useOkta=true');
-				await page.goto(setPasswordLink?.href as string);
-				await expect(page.getByText('Create password')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
+		test('should resend a PROVISIONED user a set password email with an Okta activation token', async ({
+			page,
+			request,
+		}) => {
+			const { emailAddress } = await createTestUser(request, {
+				isGuestUser: true,
+				isUserEmailValidated: true,
 			});
 
-			test('should send an ACTIVE user a reset password email with an Okta activation token', async ({
-				page,
-				request,
-			}) => {
-				const { emailAddress } = await createTestUser(request, {
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				});
+			await activateTestOktaUser(request, emailAddress);
 
-				const oktaUser = await getTestOktaUser(request, emailAddress);
-				expect(oktaUser.status).toBe(Status.ACTIVE);
+			const oktaUser = await getTestOktaUser(request, emailAddress);
+			expect(oktaUser.status).toBe(Status.PROVISIONED);
 
-				await page.goto('/register/email?useOktaClassic=true');
-				const timeRequestWasMade = new Date();
+			await page.goto('/register/email?useOktaClassic=true');
 
-				await page.locator('input[name=email]').fill(emailAddress);
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			const timeRequestWasMade = new Date();
 
-				await expect(page.getByText('Check your inbox')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
-				await expect(page.getByText('send again')).toBeVisible();
-				await expect(page.getByText('try another address')).toBeVisible();
+			await page.locator('input[name=email]').fill(emailAddress);
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				await checkForEmailAndGetDetails(emailAddress, timeRequestWasMade);
+			await expect(page.getByText('Check your inbox')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+			await expect(page.getByText('send again')).toBeVisible();
+			await expect(page.getByText('try another address')).toBeVisible();
 
-				const timeRequestWasMade2 = new Date();
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade,
+				/\/set-password\/([^"]*)/,
+			);
 
-				const { links, body } = await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade2,
-					/reset-password\/([^"]*)/,
-				);
+			const timeRequestWasMade2 = new Date();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				expect(body).toContain('This account already exists');
-				expect(body).toContain('Sign in');
-				expect(body).toContain('Reset password');
-				expect(links.length).toBe(3);
-				const resetPasswordLink = links.find((s) =>
-					s.text?.includes('Reset password'),
-				);
-				expect(resetPasswordLink?.href ?? '').not.toContain('useOkta=true');
-				await page.goto(resetPasswordLink?.href as string);
-				await expect(page.getByText('Create new password')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
+			const { links, body } = await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade2,
+				/\/set-password\/([^"]*)/,
+			);
+
+			expect(body).toContain('This account already exists');
+			expect(body).toContain('Create password');
+			expect(links.length).toBe(2);
+			const setPasswordLink = links.find((s) =>
+				s.text?.includes('Create password'),
+			);
+			expect(setPasswordLink?.href ?? '').not.toContain('useOkta=true');
+			await page.goto(setPasswordLink?.href as string);
+			await expect(page.getByText('Create password')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+		});
+
+		test('should send an ACTIVE user a reset password email with an Okta activation token', async ({
+			page,
+			request,
+		}) => {
+			const { emailAddress } = await createTestUser(request, {
+				isGuestUser: false,
+				isUserEmailValidated: true,
 			});
 
-			test('should send a RECOVERY user a reset password email with an Okta activation token', async ({
-				page,
-				request,
-			}) => {
-				const { emailAddress } = await createTestUser(request, {
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				});
+			const oktaUser = await getTestOktaUser(request, emailAddress);
+			expect(oktaUser.status).toBe(Status.ACTIVE);
 
-				await resetOktaUserPassword(request, emailAddress);
+			await page.goto('/register/email?useOktaClassic=true');
+			const timeRequestWasMade = new Date();
 
-				const oktaUser = await getTestOktaUser(request, emailAddress);
-				expect(oktaUser.status).toBe(Status.RECOVERY);
+			await page.locator('input[name=email]').fill(emailAddress);
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				await page.goto('/register/email?useOktaClassic=true');
-				const timeRequestWasMade = new Date();
+			await expect(page.getByText('Check your inbox')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+			await expect(page.getByText('send again')).toBeVisible();
+			await expect(page.getByText('try another address')).toBeVisible();
 
-				await page.locator('input[name=email]').fill(emailAddress);
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			await checkForEmailAndGetDetails(emailAddress, timeRequestWasMade);
 
-				await expect(page.getByText('Check your inbox')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
-				await expect(page.getByText('send again')).toBeVisible();
-				await expect(page.getByText('try another address')).toBeVisible();
+			const timeRequestWasMade2 = new Date();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade,
-					/reset-password\/([^"]*)/,
-				);
+			const { links, body } = await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade2,
+				/reset-password\/([^"]*)/,
+			);
 
-				const timeRequestWasMade2 = new Date();
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			expect(body).toContain('This account already exists');
+			expect(body).toContain('Sign in');
+			expect(body).toContain('Reset password');
+			expect(links.length).toBe(3);
+			const resetPasswordLink = links.find((s) =>
+				s.text?.includes('Reset password'),
+			);
+			expect(resetPasswordLink?.href ?? '').not.toContain('useOkta=true');
+			await page.goto(resetPasswordLink?.href as string);
+			await expect(page.getByText('Create new password')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+		});
 
-				const { links, body } = await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade2,
-					/reset-password\/([^"]*)/,
-				);
-
-				expect(body).toContain('Password reset');
-				expect(body).toContain('Reset password');
-				expect(links.length).toBe(3);
-				const resetPasswordLink = links.find((s) =>
-					s.text?.includes('Reset password'),
-				);
-				expect(resetPasswordLink?.href ?? '').not.toContain('useOkta=true');
-				await page.goto(resetPasswordLink?.href as string);
-				await expect(page.getByText('Create new password')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
+		test('should send a RECOVERY user a reset password email with an Okta activation token', async ({
+			page,
+			request,
+		}) => {
+			const { emailAddress } = await createTestUser(request, {
+				isGuestUser: false,
+				isUserEmailValidated: true,
 			});
 
-			test('should send a PASSWORD_EXPIRED user a reset password email with an Okta activation token', async ({
-				page,
-				request,
-			}) => {
-				const { emailAddress } = await createTestUser(request, {
-					isGuestUser: false,
-					isUserEmailValidated: true,
-				});
+			await resetOktaUserPassword(request, emailAddress);
 
-				await expireOktaUserPassword(request, emailAddress);
+			const oktaUser = await getTestOktaUser(request, emailAddress);
+			expect(oktaUser.status).toBe(Status.RECOVERY);
 
-				const oktaUser = await getTestOktaUser(request, emailAddress);
-				expect(oktaUser.status).toBe(Status.PASSWORD_EXPIRED);
+			await page.goto('/register/email?useOktaClassic=true');
+			const timeRequestWasMade = new Date();
 
-				await page.goto('/register/email?useOktaClassic=true');
-				const timeRequestWasMade = new Date();
+			await page.locator('input[name=email]').fill(emailAddress);
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				await page.locator('input[name=email]').fill(emailAddress);
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			await expect(page.getByText('Check your inbox')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+			await expect(page.getByText('send again')).toBeVisible();
+			await expect(page.getByText('try another address')).toBeVisible();
 
-				await expect(page.getByText('Check your inbox')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
-				await expect(page.getByText('send again')).toBeVisible();
-				await expect(page.getByText('try another address')).toBeVisible();
+			await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade,
+				/reset-password\/([^"]*)/,
+			);
 
-				await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade,
-					/reset-password\/([^"]*)/,
-				);
+			const timeRequestWasMade2 = new Date();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-				const timeRequestWasMade2 = new Date();
-				await page.locator('[data-cy="main-form-submit-button"]').click();
+			const { links, body } = await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade2,
+				/reset-password\/([^"]*)/,
+			);
 
-				const { links, body } = await checkForEmailAndGetDetails(
-					emailAddress,
-					timeRequestWasMade2,
-					/reset-password\/([^"]*)/,
-				);
+			expect(body).toContain('Password reset');
+			expect(body).toContain('Reset password');
+			expect(links.length).toBe(3);
+			const resetPasswordLink = links.find((s) =>
+				s.text?.includes('Reset password'),
+			);
+			expect(resetPasswordLink?.href ?? '').not.toContain('useOkta=true');
+			await page.goto(resetPasswordLink?.href as string);
+			await expect(page.getByText('Create new password')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+		});
 
-				expect(body).toContain('Password reset');
-				expect(body).toContain('Reset password');
-				expect(links.length).toBe(3);
-				const resetPasswordLink = links.find((s) =>
-					s.text?.includes('Reset password'),
-				);
-				expect(resetPasswordLink?.href ?? '').not.toContain('useOkta=true');
-				await page.goto(resetPasswordLink?.href as string);
-				await expect(page.getByText('Create new password')).toBeVisible();
-				await expect(page.getByText(emailAddress)).toBeVisible();
+		test('should send a PASSWORD_EXPIRED user a reset password email with an Okta activation token', async ({
+			page,
+			request,
+		}) => {
+			const { emailAddress } = await createTestUser(request, {
+				isGuestUser: false,
+				isUserEmailValidated: true,
 			});
-		},
-	);
+
+			await expireOktaUserPassword(request, emailAddress);
+
+			const oktaUser = await getTestOktaUser(request, emailAddress);
+			expect(oktaUser.status).toBe(Status.PASSWORD_EXPIRED);
+
+			await page.goto('/register/email?useOktaClassic=true');
+			const timeRequestWasMade = new Date();
+
+			await page.locator('input[name=email]').fill(emailAddress);
+			await page.locator('[data-cy="main-form-submit-button"]').click();
+
+			await expect(page.getByText('Check your inbox')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+			await expect(page.getByText('send again')).toBeVisible();
+			await expect(page.getByText('try another address')).toBeVisible();
+
+			await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade,
+				/reset-password\/([^"]*)/,
+			);
+
+			const timeRequestWasMade2 = new Date();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
+
+			const { links, body } = await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade2,
+				/reset-password\/([^"]*)/,
+			);
+
+			expect(body).toContain('Password reset');
+			expect(body).toContain('Reset password');
+			expect(links.length).toBe(3);
+			const resetPasswordLink = links.find((s) =>
+				s.text?.includes('Reset password'),
+			);
+			expect(resetPasswordLink?.href ?? '').not.toContain('useOkta=true');
+			await page.goto(resetPasswordLink?.href as string);
+			await expect(page.getByText('Create new password')).toBeVisible();
+			await expect(page.getByText(emailAddress)).toBeVisible();
+		});
+	});
 
 	test.describe('Welcome Page - Resend (Link expired)', () => {
 		test('send an email for user with no existing account', async ({

@@ -35,9 +35,7 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 
 	const subscribeWithFakeEmailType = async (page: Page, data: string) => {
 		const token = createToken(data);
-		await page.goto(
-			`/subscribe/fake/${encodeURIComponent(data)}/${token}`,
-		);
+		await page.goto(`/subscribe/fake/${encodeURIComponent(data)}/${token}`);
 		await expect(page.getByText('Unable to subscribe.')).toBeVisible();
 	};
 
@@ -47,9 +45,7 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 	) => {
 		const data = 'data-is-invalid:yes-123';
 		const token = createToken(data);
-		await page.goto(
-			`/subscribe/${type}/${encodeURIComponent(data)}/${token}`,
-		);
+		await page.goto(`/subscribe/${type}/${encodeURIComponent(data)}/${token}`);
 		await expect(page.getByText('Unable to subscribe.')).toBeVisible();
 	};
 
@@ -58,9 +54,7 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 		type: 'newsletter' | 'marketing',
 		data: string,
 	) => {
-		await page.goto(
-			`/subscribe/${type}/${encodeURIComponent(data)}/fakeToken`,
-		);
+		await page.goto(`/subscribe/${type}/${encodeURIComponent(data)}/fakeToken`);
 		await page.locator('button[type="submit"]').click();
 		await expect(page.getByText('Unable to subscribe.')).toBeVisible();
 	};
@@ -82,18 +76,13 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 		await page.locator('button[type="submit"]').click();
 
 		if (expectSuccess) {
-			await expect(
-				page.getByText('You have been unsubscribed'),
-			).toBeVisible();
+			await expect(page.getByText('You have been unsubscribed')).toBeVisible();
 		} else {
 			await expect(page.getByText('Unable to unsubscribe.')).toBeVisible();
 		}
 	};
 
-	const unsubscribeWithFakeEmailType = async (
-		page: Page,
-		data: string,
-	) => {
+	const unsubscribeWithFakeEmailType = async (page: Page, data: string) => {
 		await page.goto(
 			`/unsubscribe/fake/${encodeURIComponent(data)}/${createToken(data)}`,
 		);

@@ -39,7 +39,9 @@ test.describe('Reauthenticate flow, Okta enabled, password default', () => {
 		const idxCookie = cookies.find((c) => c.name === 'idx');
 		expect(idxCookie).toBeDefined();
 		if (idxCookie) {
-			const session = await getCurrentOktaSession(request, { idx: idxCookie.value });
+			const session = await getCurrentOktaSession(request, {
+				idx: idxCookie.value,
+			});
 			expect(session.login).toBe(emailAddress);
 		}
 	});
@@ -83,7 +85,9 @@ test.describe('Reauthenticate flow, Okta enabled, password default', () => {
 		const idxCookie = cookies.find((c) => c.name === 'idx');
 		expect(idxCookie).toBeDefined();
 		if (idxCookie) {
-			const session = await getCurrentOktaSession(request, { idx: idxCookie.value });
+			const session = await getCurrentOktaSession(request, {
+				idx: idxCookie.value,
+			});
 			expect(session.login).toBe(emailAddressB);
 		}
 	});
@@ -126,7 +130,9 @@ test.describe('Reauthenticate flow, Okta enabled, passcode default', () => {
 		const idxCookie = cookies.find((c) => c.name === 'idx');
 		expect(idxCookie).toBeDefined();
 		if (idxCookie) {
-			const session = await getCurrentOktaSession(request, { idx: idxCookie.value });
+			const session = await getCurrentOktaSession(request, {
+				idx: idxCookie.value,
+			});
 			expect(session.login).toBe(emailAddress);
 		}
 	});
@@ -183,7 +189,9 @@ test.describe('Reauthenticate flow, Okta enabled, passcode default', () => {
 		const idxCookie = cookies.find((c) => c.name === 'idx');
 		expect(idxCookie).toBeDefined();
 		if (idxCookie) {
-			const session = await getCurrentOktaSession(request, { idx: idxCookie.value });
+			const session = await getCurrentOktaSession(request, {
+				idx: idxCookie.value,
+			});
 			expect(session.login).toBe(emailAddress);
 		}
 	});
@@ -228,7 +236,9 @@ test.describe('Reauthenticate flow, Okta enabled, passcode default', () => {
 		const idxCookie = cookies.find((c) => c.name === 'idx');
 		expect(idxCookie).toBeDefined();
 		if (idxCookie) {
-			const session = await getCurrentOktaSession(request, { idx: idxCookie.value });
+			const session = await getCurrentOktaSession(request, {
+				idx: idxCookie.value,
+			});
 			expect(session.login).toBe(emailAddressB);
 		}
 	});
@@ -290,7 +300,9 @@ test.describe('Reauthenticate flow, Okta enabled, passcode default', () => {
 		const idxCookie = cookies.find((c) => c.name === 'idx');
 		expect(idxCookie).toBeDefined();
 		if (idxCookie) {
-			const session = await getCurrentOktaSession(request, { idx: idxCookie.value });
+			const session = await getCurrentOktaSession(request, {
+				idx: idxCookie.value,
+			});
 			expect(session.login).toBe(emailAddressB);
 		}
 	});

@@ -1,4 +1,5 @@
 import MailosaurClient from 'mailosaur';
+import { Message } from 'mailosaur/lib/models';
 
 const client = new MailosaurClient(process.env.CYPRESS_MAILOSAUR_API_KEY || '');
 
@@ -28,7 +29,6 @@ export async function checkForEmailAndGetDetails(
 	// Small delay to ensure email is received
 	await new Promise((resolve) => setTimeout(resolve, 3000));
 
-
 	const serverId = process.env.CYPRESS_MAILOSAUR_SERVER_ID || '';
 	const message = await client.messages.get(
 		serverId,
@@ -54,13 +54,13 @@ export async function checkForEmailAndGetDetails(
  * @param tokenMatcher A regular expression to extract the token from the email body.
  * @returns The email details.
  */
-function getEmailDetails(
-	email: any,
+const getEmailDetails = (
+	email: Message,
 	tokenMatcher?: RegExp,
-): EmailDetails {
+): EmailDetails => {
 	const { id, html } = email;
 	const { body, links } = html || {};
-	let { codes } = html || {};
+	const { codes } = html || {};
 
 	if (id === undefined || body === undefined || links === undefined) {
 		throw new Error('Email details not found');
@@ -77,9 +77,9 @@ function getEmailDetails(
 		token = match[1];
 	}
 
-	if (codes) {
-		codes = codes.filter((code: any) => code.value?.match(/\d{6}/));
-	}
+	const validatedCodes = codes
+		? codes.filter((code) => code.value?.match(/\d{6}/))
+		: undefined;
 
-	return { id, body, token, links, codes };
-}
+	return { id, body, token, links, codes: validatedCodes };
+};

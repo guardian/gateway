@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { APIRequestContext, expect, Page } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { setEncryptedStateCookie } from '../../helpers/cookies/cookie-helpers';
 import userStatuses from '../../../cypress/support/okta/userStatuses';
@@ -23,7 +23,9 @@ import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeh
 // Helper Functions
 // ============================================
 
-const baseIdxPasscodeResetPasswordMocks = async (mockApi: any) => {
+const baseIdxPasscodeResetPasswordMocks = async (
+	mockApi: APIRequestContext,
+) => {
 	await Promise.all([
 		// interact
 		mockApi.post('/mock/permanent-pattern', {
@@ -44,7 +46,9 @@ const baseIdxPasscodeResetPasswordMocks = async (mockApi: any) => {
 	]);
 };
 
-const setupMocksForSocialUserPasswordReset = async (mockApi: any) => {
+const setupMocksForSocialUserPasswordReset = async (
+	mockApi: APIRequestContext,
+) => {
 	// Set up permanent mocks for endpoints that always return the same response
 	await Promise.all([
 		// Response from getUser() - same for both calls
@@ -108,7 +112,7 @@ const setupMocksForSocialUserPasswordReset = async (mockApi: any) => {
 };
 
 const setupMocksForActiveUsersWithEmailPasswordFactors = async (
-	mockApi: any,
+	mockApi: APIRequestContext,
 	status: string,
 ) => {
 	const response = { ...userResponse.response, status };
@@ -157,7 +161,7 @@ const setupMocksForActiveUsersWithEmailPasswordFactors = async (
 };
 
 const setupMocksForActiveUsersEmailFactorOnly = async (
-	mockApi: any,
+	mockApi: APIRequestContext,
 	status: string,
 ) => {
 	const response = { ...userResponse.response, status };
@@ -216,7 +220,7 @@ const setupMocksForActiveUsersEmailFactorOnly = async (
 };
 
 const setupMocksForActiveUsersPasswordFactorOnly = async (
-	mockApi: any,
+	mockApi: APIRequestContext,
 	status: string,
 ) => {
 	const response = { ...userResponse.response, status };
@@ -357,7 +361,10 @@ const setupMocksForActiveUsersPasswordFactorOnly = async (
 	]);
 };
 
-const setupMocksForNonActiveUsers = async (mockApi: any, status: string) => {
+const setupMocksForNonActiveUsers = async (
+	mockApi: APIRequestContext,
+	status: string,
+) => {
 	const response = { ...userResponse.response, status };
 	await mockApi.post('/mock/permanent-pattern', {
 		data: {

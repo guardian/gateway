@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { APIRequestContext, expect, Page } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { setEncryptedStateCookie } from '../../helpers/cookies/cookie-helpers';
 import userStatuses from '../../../cypress/support/okta/userStatuses';
@@ -19,7 +19,7 @@ import idxChallengeResponseEmail from '../../../cypress/fixtures/okta-responses/
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
 
 // IDX passcode registration mocks
-const baseIdxPasscodeRegistrationMocks = async (mockApi: any) => {
+const baseIdxPasscodeRegistrationMocks = async (mockApi: APIRequestContext) => {
 	await Promise.all([
 		mockApi.post('/mock/permanent-pattern', {
 			data: {
@@ -46,7 +46,7 @@ const baseIdxPasscodeRegistrationMocks = async (mockApi: any) => {
 };
 
 // IDX passcode existing user mocks
-const idxPasscodeExistingUserMocks = async (mockApi: any) => {
+const idxPasscodeExistingUserMocks = async (mockApi: APIRequestContext) => {
 	await Promise.all([
 		mockApi.post('/mock/permanent-pattern', {
 			data: {
@@ -65,13 +65,13 @@ const idxPasscodeExistingUserMocks = async (mockApi: any) => {
 	]);
 };
 
-const verifyInRegularEmailSentPage = async (page: any) => {
+const verifyInRegularEmailSentPage = async (page: Page) => {
 	await expect(page.getByText('Check your inbox')).toBeVisible();
 	await expect(page.getByText('send again')).toBeVisible();
 	await expect(page.getByText('within 2 minutes')).not.toBeVisible();
 };
 
-const verifyInPasscodeEmailSentPage = async (page: any) => {
+const verifyInPasscodeEmailSentPage = async (page: Page) => {
 	await expect(page.getByText('Enter your one-time code')).toBeVisible();
 	await expect(page.getByText('send again')).toBeVisible();
 };

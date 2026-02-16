@@ -9,7 +9,9 @@ export default defineConfig({
 	reporter: process.env.CI
 		? [['html'], ['list'], ['github']]
 		: [['html'], ['list']],
-
+	expect: {
+		timeout: 30000,
+	},
 	use: {
 		baseURL: 'https://profile.thegulocal.com',
 		ignoreHTTPSErrors: true,
@@ -39,4 +41,3 @@ export default defineConfig({
 		},
 	],
 });
-

@@ -810,7 +810,6 @@ test.describe('Registration flow - Split 3/3', () => {
 				.click();
 			await expect(page).toHaveURL(guardianPrivacyPolicyUrl);
 		});
-
 	});
 
 	test('persists the clientId when navigating away', async ({ page }) => {

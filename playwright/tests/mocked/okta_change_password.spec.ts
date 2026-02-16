@@ -17,7 +17,7 @@
  * Password set successfully                        | show password updated confirmation page
  */
 
-import { expect } from '@playwright/test';
+import { APIRequestContext, expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { randomPassword } from '../../helpers/api/idapi';
 
@@ -29,7 +29,7 @@ test.describe('Change password in Okta', () => {
 	});
 
 	const mockValidateRecoveryTokenSuccess = async (
-		mockApi: any,
+		mockApi: APIRequestContext,
 		date: Date = new Date(Date.now() + 1800000) /* 30mins from now */,
 	) => {
 		await mockApi.post('/mock', {
@@ -53,7 +53,9 @@ test.describe('Change password in Okta', () => {
 		});
 	};
 
-	const mockValidateRecoveryTokenFailure = async (mockApi: any) => {
+	const mockValidateRecoveryTokenFailure = async (
+		mockApi: APIRequestContext,
+	) => {
 		await mockApi.post('/mock', {
 			headers: { 'Content-Type': 'application/json', 'x-status': '403' },
 			data: {
@@ -68,7 +70,7 @@ test.describe('Change password in Okta', () => {
 	};
 
 	const mockPasswordResetSuccess = async (
-		mockApi: any,
+		mockApi: APIRequestContext,
 		date: Date = new Date(Date.now() + 1800000) /* 30mins from now */,
 	) => {
 		await mockApi.post('/mock', {
@@ -94,7 +96,7 @@ test.describe('Change password in Okta', () => {
 		});
 	};
 
-	const mockUpdateUserSuccess = async (mockApi: any) => {
+	const mockUpdateUserSuccess = async (mockApi: APIRequestContext) => {
 		await mockApi.post('/mock', {
 			headers: { 'Content-Type': 'application/json', 'x-status': '200' },
 			data: {
@@ -110,7 +112,10 @@ test.describe('Change password in Okta', () => {
 		});
 	};
 
-	const mockPasswordResetFailure = async (mockApi: any, cause: string) => {
+	const mockPasswordResetFailure = async (
+		mockApi: APIRequestContext,
+		cause: string,
+	) => {
 		await mockApi.post('/mock', {
 			headers: { 'Content-Type': 'application/json', 'x-status': '403' },
 			data: {
@@ -128,7 +133,9 @@ test.describe('Change password in Okta', () => {
 		});
 	};
 
-	const mockPasswordResetInvalidStateTokenFailure = async (mockApi: any) => {
+	const mockPasswordResetInvalidStateTokenFailure = async (
+		mockApi: APIRequestContext,
+	) => {
 		await mockApi.post('/mock', {
 			headers: { 'Content-Type': 'application/json', 'x-status': '403' },
 			data: {
