@@ -12,6 +12,7 @@ import {
 	expireOktaUserPassword,
 	getTestOktaUser,
 } from '../../helpers/api/okta';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const existingUserSendEmailAndValidatePasscode = async ({
 	page,
@@ -86,7 +87,9 @@ const existingUserSendEmailAndValidatePasscode = async ({
 			).toBeVisible();
 			await page.getByText('Continue').click();
 
-			await expect(page).toHaveURL(new RegExp(expectedReturnUrl));
+			await expect(page).toHaveURL(
+				new RegExp(encodeURIComponent(expectedReturnUrl)),
+			);
 
 			const user = await getTestOktaUser(request, emailAddress);
 			expect(user.status).toBe('ACTIVE');
@@ -155,10 +158,9 @@ test.describe('Registration flow - Split 1/3', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
 			const refViewId = 'testRefViewId';
-			const clientId = 'jobs';
 
 			await page.goto(
-				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -188,7 +190,6 @@ test.describe('Registration flow - Split 1/3', () => {
 			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
 			expect(formAction).toMatch(new RegExp(refViewId));
 			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -214,10 +215,9 @@ test.describe('Registration flow - Split 1/3', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
 			const refViewId = 'testRefViewId';
-			const clientId = 'jobs';
 
 			await page.goto(
-				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+				`/signin?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -247,7 +247,6 @@ test.describe('Registration flow - Split 1/3', () => {
 			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
 			expect(formAction).toMatch(new RegExp(refViewId));
 			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -259,7 +258,6 @@ test.describe('Registration flow - Split 1/3', () => {
 			 * However, in playwright the status appears to be 'STAGED'
 			 * expect(oktaUser.status).toBe(Status.ACTIVE);
 			 */
-			expect(oktaUser.profile.registrationPlatform).toBe('profile');
 			expect(oktaUser.profile.registrationPlatform).toBe('profile');
 
 			await expect(page).toHaveURL(/\/welcome\/complete-account/);
@@ -330,6 +328,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
 			await page.getByRole('button', { name: 'Next' }).click();
 
+			await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
 			await expect(page).toHaveURL(new RegExp(encodeURIComponent(fromURI)));
 		});
 

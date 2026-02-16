@@ -27,7 +27,7 @@ test.describe('Consent token flow', () => {
 		await page.goto(`/consent-token/${token}/accept`, {
 			waitUntil: 'networkidle',
 		});
-		await expect(page.getByText('Subscribe Confirmation')).toBeVisible();
+		await expect(page.getByText("You're signed up!")).toBeVisible();
 		// TODO: Would be nice to check that the user is actually
 		// subscribed to the newsletters here
 		await expect(page).toHaveURL(/\/subscribe\/success/);

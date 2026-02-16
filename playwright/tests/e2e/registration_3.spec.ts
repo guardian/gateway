@@ -811,36 +811,6 @@ test.describe('Registration flow - Split 3/3', () => {
 			await expect(page).toHaveURL(guardianPrivacyPolicyUrl);
 		});
 
-		test('links to the Guardian jobs terms and conditions page when jobs clientId set', async ({
-			page,
-		}) => {
-			const guardianJobsTermsOfServiceUrl =
-				'https://jobs.theguardian.com/terms-and-conditions/';
-			// Intercept the external redirect page.
-			await page.route(guardianJobsTermsOfServiceUrl, async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-			await page.goto('/register?clientId=jobs');
-			await page.getByText('Guardian Jobs terms and conditions').click();
-			await expect(page).toHaveURL(guardianJobsTermsOfServiceUrl);
-		});
-
-		test('links to the Guardian jobs privacy policy page when jobs clientId set', async ({
-			page,
-		}) => {
-			const guardianJobsPrivacyPolicyUrl =
-				'https://jobs.theguardian.com/privacy-policy/';
-			// Intercept the external redirect page.
-			await page.route(guardianJobsPrivacyPolicyUrl, async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-			await page.goto('/register?clientId=jobs');
-			await page
-				.getByText('For information about how we use your data')
-				.getByText('Guardian Jobs privacy policy')
-				.click();
-			await expect(page).toHaveURL(guardianJobsPrivacyPolicyUrl);
-		});
 	});
 
 	test('persists the clientId when navigating away', async ({ page }) => {

@@ -4,10 +4,11 @@ import {
 	getTestOktaUser,
 	updateOktaTestUserProfile,
 } from '../../helpers/api/okta';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 test.describe('Jobs terms and conditions flow in Okta', () => {
 	test.describe('Shows the terms and conditions page on Sign In', () => {
-		test('visits /agree/GRS after sign in if clientId=jobs parameter is set', async ({
+		test(`visits ${JOBS_TOS_URI} after sign in if clientId=jobs parameter is set`, async ({
 			request,
 			page,
 		}) => {
@@ -25,7 +26,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await page.locator('input[name=email]').fill(emailAddress);
 			await page.locator('input[name=password]').fill(finalPassword);
 			await page.locator('[data-cy="main-form-submit-button"]').click();
-			await expect(page).toHaveURL(/\/agree\/GRS/);
+			await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 			await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
 		});
@@ -37,7 +38,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			context,
 		}) => {
 			// load the consents page as its on the same domain
-			const termsAcceptPageUrl = `https://${process.env.BASE_URI}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
+			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
 			await context.addCookies([
 				{
 					name: 'idx',
@@ -56,7 +57,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			page,
 		}) => {
 			// load the consents page as its on the same domain
-			const termsAcceptPageUrl = `https://${process.env.BASE_URI}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/healthcheck`;
 			await page.goto(termsAcceptPageUrl);
 			await expect(page).toHaveURL(
 				/https:\/\/profile\.thegulocal\.com\/signin\?returnUrl=/,
@@ -85,7 +86,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 
 			await expect(page).toHaveURL(/\/welcome\/review/);
 
-			const termsAcceptPageUrl = `https://${process.env.BASE_URI}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
 			// Create a test user without a first/last name who has `isJobsUser` set to true.
 			await updateOktaTestUserProfile(request, emailAddress, {
@@ -135,7 +136,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 				isUserEmailValidated: true,
 			});
 
-			const termsAcceptPageUrl = `https://${process.env.BASE_URI}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
 			// load the consents page as its on the same domain
 			const postSignInReturnUrl = `https://${process.env.BASE_URI}/welcome/review`;
@@ -162,7 +163,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 				/https:\/\/profile\.thegulocal\.com\/healthcheck/,
 			);
 
-			const finalTermsAcceptPageUrl = `https://${process.env.BASE_URI}/agree/GRS?returnUrl=https://profile.thegulocal.com/welcome/review`;
+			const finalTermsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/welcome/review`;
 
 			await page.goto(finalTermsAcceptPageUrl, { waitUntil: 'networkidle' });
 
@@ -179,7 +180,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 				isUserEmailValidated: true,
 			});
 
-			const termsAcceptPageUrl = `https://${process.env.BASE_URI}/agree/GRS?returnUrl=https://jobs.theguardian.com/`;
+			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://jobs.theguardian.com/`;
 
 			// load the consents page as its on the same domain
 			const postSignInReturnUrl = `https://${process.env.BASE_URI}/welcome/review`;
@@ -197,7 +198,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await page.goto(termsAcceptPageUrl);
 
 			// check sign in has worked first
-			await expect(page).toHaveURL(/\/agree\/GRS/);
+			await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
 			// check session cookie is set
 			const cookies = await page.context().cookies();
 			const idxCookie = cookies.find((c) => c.name === 'idx');

@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 test.describe('Sign in flow', () => {
 	test.describe('Signing in - Okta', () => {
@@ -392,7 +393,10 @@ test.describe('Sign in flow', () => {
 				'href',
 				/fromURI=%2Foauth2%2Fv1%2Fauthorize%2Fredirect%3Fokta_key%3DoktaKey/,
 			);
-			await expect(continueLink).toHaveAttribute('href', /\/agree\/GRS/);
+			await expect(continueLink).toHaveAttribute(
+				'href',
+				new RegExp(JOBS_TOS_URI),
+			);
 
 			const signInLink = page.locator('a', { hasText: 'Sign in' });
 			await expect(signInLink).toHaveAttribute(

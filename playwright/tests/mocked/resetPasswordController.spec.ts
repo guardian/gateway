@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { setEncryptedStateCookie } from '../../helpers/cookies/cookie-helpers';
 import userStatuses from '../../../cypress/support/okta/userStatuses';
@@ -439,10 +439,24 @@ const setupMocksForNonActiveUsers = async (mockApi: any, status: string) => {
 	});
 };
 
-const verifyIn2MinutesEmailSentPage = async (page: any) => {
+const verifyIn2MinutesEmailSentPage = async (page: Page) => {
 	await expect(page.getByText('Check your inbox')).toBeVisible();
 	await expect(page.getByText('send again')).toBeVisible();
 	await expect(page.getByText(/We.ve sent an email/)).toBeVisible();
+	await expect(page.getByText('within 2 minutes')).toBeVisible();
+};
+
+const verifyInRegularEmailSentPage = async (page: Page) => {
+	await expect(page.getByText('Check your inbox')).toBeVisible();
+	await expect(page.getByText('send again')).toBeVisible();
+	await expect(page.getByText(/We.ve sent an email/)).toBeVisible();
+	await expect(page.getByText('within 2 minutes')).not.toBeVisible();
+};
+
+const verifyIn2MinutesEmailSentPagePasscodes = async (page: Page) => {
+	await expect(page.getByText('Enter your one-time code')).toBeVisible();
+	await expect(page.getByText('send again')).toBeVisible();
+	await expect(page.getByText(/We.ve sent a 6-digit code/)).toBeVisible();
 	await expect(page.getByText('within 2 minutes')).toBeVisible();
 };
 
@@ -1016,7 +1030,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1044,7 +1058,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 
 					test("Then I should be shown the 'Check your inbox' page for social user", async ({
@@ -1053,7 +1067,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForSocialUserPasswordReset(mockApi);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1093,7 +1107,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1119,7 +1133,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 			}
@@ -1148,7 +1162,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1176,7 +1190,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 
 					test("Then I should be shown the 'Check your inbox' page for social user", async ({
@@ -1185,7 +1199,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForSocialUserPasswordReset(mockApi);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1225,7 +1239,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1251,7 +1265,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 			}
@@ -1280,7 +1294,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1308,7 +1322,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 
 					test("Then I should be shown the 'Check your inbox' page for social user", async ({
@@ -1317,7 +1331,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForSocialUserPasswordReset(mockApi);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1357,7 +1371,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 
@@ -1383,7 +1397,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyInRegularEmailSentPage(page);
 					});
 					break;
 			}
@@ -1418,7 +1432,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1432,7 +1446,7 @@ userStatuses.forEach((status) => {
 							status,
 						);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for social user", async ({
@@ -1441,7 +1455,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersEmailFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for password only authenticator user", async ({
@@ -1450,7 +1464,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersPasswordFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1464,7 +1478,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForNonActiveUsers(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 			}
@@ -1499,7 +1513,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.getByText('send again').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1513,7 +1527,7 @@ userStatuses.forEach((status) => {
 							status,
 						);
 						await page.getByText('send again').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for social user", async ({
@@ -1522,7 +1536,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersEmailFactorOnly(mockApi, status);
 						await page.getByText('send again').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for password only authenticator user", async ({
@@ -1531,7 +1545,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersPasswordFactorOnly(mockApi, status);
 						await page.getByText('send again').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1545,7 +1559,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForNonActiveUsers(mockApi, status);
 						await page.getByText('send again').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 			}
@@ -1575,7 +1589,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1589,7 +1603,7 @@ userStatuses.forEach((status) => {
 							status,
 						);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for social user", async ({
@@ -1598,7 +1612,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersEmailFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for password only authenticator user", async ({
@@ -1607,7 +1621,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersPasswordFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1621,7 +1635,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForNonActiveUsers(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 			}
@@ -1651,7 +1665,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1665,7 +1679,7 @@ userStatuses.forEach((status) => {
 							status,
 						);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for social user", async ({
@@ -1674,7 +1688,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersEmailFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for password only authenticator user", async ({
@@ -1683,7 +1697,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersPasswordFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1697,7 +1711,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForNonActiveUsers(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 			}
@@ -1727,7 +1741,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1741,7 +1755,7 @@ userStatuses.forEach((status) => {
 							status,
 						);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for social user", async ({
@@ -1750,7 +1764,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersEmailFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for password only authenticator user", async ({
@@ -1759,7 +1773,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersPasswordFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1773,7 +1787,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForNonActiveUsers(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 			}
@@ -1803,7 +1817,7 @@ userStatuses.forEach((status) => {
 							},
 						});
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1817,7 +1831,7 @@ userStatuses.forEach((status) => {
 							status,
 						);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for social user", async ({
@@ -1826,7 +1840,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersEmailFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 
 					test("Then I should be shown the 'Enter your one-time code' page for password only authenticator user", async ({
@@ -1835,7 +1849,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForActiveUsersPasswordFactorOnly(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 
@@ -1849,7 +1863,7 @@ userStatuses.forEach((status) => {
 					}) => {
 						await setupMocksForNonActiveUsers(mockApi, status);
 						await page.locator('button[type=submit]').click();
-						await verifyIn2MinutesEmailSentPage(page);
+						await verifyIn2MinutesEmailSentPagePasscodes(page);
 					});
 					break;
 			}
