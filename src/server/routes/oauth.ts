@@ -480,7 +480,8 @@ const authenticationHandler = async (
 		// before redirecting to the jobs t&c page
 		if (
 			authState.queryParams.clientId === 'jobs' &&
-			!authState.confirmationPage
+			(!authState.confirmationPage ||
+				authState.confirmationPage === '/welcome/existing')
 		) {
 			return res.redirect(
 				addQueryParamsToPath(JOBS_TOS_URI, authState.queryParams),
