@@ -129,8 +129,8 @@ const config = tseslint.config(
 		},
 	},
 	{
-		// rules specific to cypress test files
-		files: ['**/*.cy.ts'],
+		// rules specific to test (playwright) files
+		files: ['**/*.spec.ts'],
 
 		rules: {
 			'@typescript-eslint/no-unused-expressions': 'off',
@@ -141,12 +141,12 @@ const config = tseslint.config(
 		files: [
 			'__mocks__/**/*',
 			'.storybook/**/*',
-			'cypress/**/*',
+			'playwright/**/*',
 			'scripts/**/*',
 			'util/**/*',
 			'.swcrc.config.js',
 			'babel.config.js',
-			'cypress.config.ts',
+			'playwright.config.ts',
 			'jest.config.js',
 			'webpack.config.js',
 			'webpack.development.js',

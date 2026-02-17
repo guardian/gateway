@@ -1,4 +1,4 @@
-name: Cypress Tests
+name: Playwright Tests
 permissions:
   # required by aws-actions/configure-aws-credentials
   id-token: write
@@ -27,19 +27,16 @@ jobs:
       - name: Get pnpm cache directory path
         id: pnpm-cache-dir
         run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - name: Get cypress cache directory path
-        id: cypress-cache-dir
-        run: echo "CYPRESS_BIN_PATH=$(pnpm dlx cypress cache path)" >> $GITHUB_OUTPUT
-      - name: Cache pnpm modules and cypress binary
+      - name: Cache pnpm modules and Playwright browsers
         uses: actions/cache@v4
         id: pnpm-cache
         with:
           path: |
             ${{ steps.pnpm-cache-dir.outputs.PNPM_STORE_PATH }}
-            ${{ steps.cypress-cache-dir.outputs.CYPRESS_BIN_PATH }}
-          key: ${{ runner.os }}-pnpm-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pnpm-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-cypress-
+            ${{ runner.os }}-pnpm-playwright-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build project
@@ -52,11 +49,11 @@ jobs:
           name: build
           path: build.zip
           retention-days: 1
-  cypress-mocked:
+  playwright-mocked:
     needs: build
-    uses: ./.github/workflows/cypress-mocked.yml
+    uses: ./.github/workflows/playwright-mocked.yml
     secrets: inherit
-  cypress-ete:
+  playwright-e2e:
     needs: build
-    uses: ./.github/workflows/cypress-ete.yml
+    uses: ./.github/workflows/playwright-e2e.yml
     secrets: inherit

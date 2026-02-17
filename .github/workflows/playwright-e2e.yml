@@ -87,18 +87,23 @@ jobs:
           ENVIRONMENT: production
           STAGE: DEV
           BASE_URI: profile.thegulocal.com
+          CYPRESS_BASE_URI: profile.thegulocal.com
           IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
+          CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
           IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
+          CYPRESS_IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
           DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
+          CYPRESS_DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
           OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
           MEMBERS_DATA_API_URL: https://members-data-api.code.dev-theguardian.com
           USER_BENEFITS_API_URL: https://user-benefits.code.dev-guardianapis.com
+          CYPRESS_SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
           IS_HTTPS: true
           APP_SECRET: ${{ secrets.APP_SECRET }}
-          MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
-          MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
-          OKTA_ANDROID_CLIENT_ID: ${{ secrets.CYPRESS_OKTA_ANDROID_CLIENT_ID }}
+          CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
+          CYPRESS_MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
+          CYPRESS_OKTA_ANDROID_CLIENT_ID: ${{ secrets.CYPRESS_OKTA_ANDROID_CLIENT_ID }}
           # These are public test keys provided by Google for testing.
           # https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do
           GOOGLE_RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
@@ -106,7 +111,9 @@ jobs:
           ENCRYPTION_SECRET_KEY: ${{ secrets.ENCRYPTION_SECRET_KEY }}
           GU_OKTA_ENV_COOKIE: 'CODE'
           OKTA_ORG_URL: https://profile.thegulocal.com
+          CYPRESS_OKTA_ORG_URL: https://profile.thegulocal.com
           OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+          CYPRESS_OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
           OKTA_CUSTOM_OAUTH_SERVER: ${{ secrets.OKTA_CUSTOM_OAUTH_SERVER }}
           OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
           OKTA_CLIENT_SECRET: ${{ secrets.OKTA_CLIENT_SECRET }}
@@ -119,11 +126,11 @@ jobs:
           RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":4,"addTokenMs":5000},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}}}'
           DELETE_ACCOUNT_STEP_FUNCTION_URL: ${{ secrets.DELETE_ACCOUNT_STEP_FUNCTION_URL }}
           DELETE_ACCOUNT_STEP_FUNCTION_API_KEY: ${{ secrets.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY }}
-          BRAZE_HMAC_KEY: ${{ secrets.CYPRESS_BRAZE_HMAC_KEY }}
-          # Required for the tests to run as we're unable to verify the created certs
+          CYPRESS_BRAZE_HMAC_KEY: ${{ secrets.CYPRESS_BRAZE_HMAC_KEY }}
+          # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
-          # Used to tell Gateway server we're running in Playwright
-          RUNNING_IN_PLAYWRIGHT: true
+          # Used to tell Gateway server we're running in Cypress
+          RUNNING_IN_CYPRESS: true
         run: pnpm exec playwright test --project=e2e --shard=${{ matrix.shard }}/11
       - uses: actions/upload-artifact@v4
         if: failure()

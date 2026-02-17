@@ -62,4 +62,3 @@ fi
 
 echo "opening playwright"
 pnpm run playwright:mocked --ui --workers=1
-#pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/mocked/**/*.cy.ts"]}}' --e2e --browser chrome

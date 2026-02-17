@@ -3,4 +3,4 @@
 pnpm run prettier
 pnpm run lint
 pnpm run tsc
-pnpm run tsc:cypress
+pnpm run tsc:playwright
