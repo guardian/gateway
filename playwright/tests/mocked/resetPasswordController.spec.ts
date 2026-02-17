@@ -1,22 +1,22 @@
 import { APIRequestContext, expect, Page } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { setEncryptedStateCookie } from '../../helpers/cookies/cookie-helpers';
-import userStatuses from '../../../cypress/support/okta/userStatuses';
-import userNotFoundError from '../../../cypress/fixtures/okta-responses/error/user-not-found.json';
-import oktaPermissionsError from '../../../cypress/fixtures/okta-responses/error/no-permission.json';
-import userResponse from '../../../cypress/fixtures/okta-responses/success/user.json';
-import socialUserResponse from '../../../cypress/fixtures/okta-responses/success/social-user.json';
-import resetPasswordResponse from '../../../cypress/fixtures/okta-responses/success/reset-password.json';
-import verifyRecoveryTokenResponse from '../../../cypress/fixtures/okta-responses/success/verify-recovery-token.json';
-import authResetPasswordResponse from '../../../cypress/fixtures/okta-responses/success/auth-reset-password.json';
-import updateUser from '../../../cypress/fixtures/okta-responses/success/update-user.json';
-import { identifyResponse } from '../../../cypress/fixtures/okta-responses/success/idx-identify-response';
-import idxChallengeResponsePassword from '../../../cypress/fixtures/okta-responses/success/idx-challenge-response-password.json';
-import idxChallengeResponseEmail from '../../../cypress/fixtures/okta-responses/success/idx-challenge-response-email.json';
-import idxRecoverResponse from '../../../cypress/fixtures/okta-responses/success/idx-recover-response.json';
-import idxChallengeAnswerPasswordEnrollEmailResponse from '../../../cypress/fixtures/okta-responses/success/idx-challenge-answer-password-enroll-email-response.json';
-import idxInteractResponse from '../../../cypress/fixtures/okta-responses/success/idx-interact-response.json';
-import idxIntrospectDefaultResponse from '../../../cypress/fixtures/okta-responses/success/idx-introspect-default-response.json';
+import userStatuses from '../../support/okta/userStatuses';
+import userNotFoundError from '../../fixtures/okta-responses/error/user-not-found.json';
+import oktaPermissionsError from '../../fixtures/okta-responses/error/no-permission.json';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
+import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
+import verifyRecoveryTokenResponse from '../../fixtures/okta-responses/success/verify-recovery-token.json';
+import authResetPasswordResponse from '../../fixtures/okta-responses/success/auth-reset-password.json';
+import updateUser from '../../fixtures/okta-responses/success/update-user.json';
+import { identifyResponse } from '../../fixtures/okta-responses/success/idx-identify-response';
+import idxChallengeResponsePassword from '../../fixtures/okta-responses/success/idx-challenge-response-password.json';
+import idxChallengeResponseEmail from '../../fixtures/okta-responses/success/idx-challenge-response-email.json';
+import idxRecoverResponse from '../../fixtures/okta-responses/success/idx-recover-response.json';
+import idxChallengeAnswerPasswordEnrollEmailResponse from '../../fixtures/okta-responses/success/idx-challenge-answer-password-enroll-email-response.json';
+import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
+import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
 
 // ============================================

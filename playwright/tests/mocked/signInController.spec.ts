@@ -1,15 +1,15 @@
 import { APIRequestContext, expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
-import authenticationFailedError from '../../../cypress/fixtures/okta-responses/error/authentication-failed.json';
-import validUserResponse from '../../../cypress/fixtures/okta-responses/success/valid-user.json';
-import validUserGroupsResponse from '../../../cypress/fixtures/okta-responses/success/valid-user-groups.json';
-import { identifyResponse } from '../../../cypress/fixtures/okta-responses/success/idx-identify-response';
-import idxChallengeResponsePassword from '../../../cypress/fixtures/okta-responses/success/idx-challenge-response-password.json';
-import idxChallengeAnswerPasswordUserResponse from '../../../cypress/fixtures/okta-responses/success/idx-challenge-answer-password-user-response.json';
-import idxChallengeAnswerPassword401Response from '../../../cypress/fixtures/okta-responses/error/idx-challenge-answer-password-401-response.json';
-import userResponse from '../../../cypress/fixtures/okta-responses/success/user.json';
-import idxInteractResponse from '../../../cypress/fixtures/okta-responses/success/idx-interact-response.json';
-import idxIntrospectDefaultResponse from '../../../cypress/fixtures/okta-responses/success/idx-introspect-default-response.json';
+import authenticationFailedError from '../../fixtures/okta-responses/error/authentication-failed.json';
+import validUserResponse from '../../fixtures/okta-responses/success/valid-user.json';
+import validUserGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
+import { identifyResponse } from '../../fixtures/okta-responses/success/idx-identify-response';
+import idxChallengeResponsePassword from '../../fixtures/okta-responses/success/idx-challenge-response-password.json';
+import idxChallengeAnswerPasswordUserResponse from '../../fixtures/okta-responses/success/idx-challenge-answer-password-user-response.json';
+import idxChallengeAnswerPassword401Response from '../../fixtures/okta-responses/error/idx-challenge-answer-password-401-response.json';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
+import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
 
 const baseIdxPasscodeResetPasswordMocks = async (
 	mockApi: APIRequestContext,

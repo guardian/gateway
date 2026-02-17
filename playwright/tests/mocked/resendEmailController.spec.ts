@@ -1,21 +1,21 @@
 import { APIRequestContext, expect, Page } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { setEncryptedStateCookie } from '../../helpers/cookies/cookie-helpers';
-import userStatuses from '../../../cypress/support/okta/userStatuses';
-import userExistsError from '../../../cypress/fixtures/okta-responses/error/user-exists.json';
-import userResponse from '../../../cypress/fixtures/okta-responses/success/user.json';
-import userGroupsResponse from '../../../cypress/fixtures/okta-responses/success/valid-user-groups.json';
-import socialUserResponse from '../../../cypress/fixtures/okta-responses/success/social-user.json';
-import successTokenResponse from '../../../cypress/fixtures/okta-responses/success/token.json';
-import resetPasswordResponse from '../../../cypress/fixtures/okta-responses/success/reset-password.json';
-import idxInteractResponse from '../../../cypress/fixtures/okta-responses/success/idx-interact-response.json';
-import idxIntrospectDefaultResponse from '../../../cypress/fixtures/okta-responses/success/idx-introspect-default-response.json';
-import idxEnrollResponse from '../../../cypress/fixtures/okta-responses/success/idx-enroll-response.json';
-import idxEnrollNewResponse from '../../../cypress/fixtures/okta-responses/success/idx-enroll-new-response.json';
-import idxEnrollNewSelectAuthenticatorResponse from '../../../cypress/fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
-import idxEnrollNewExistingUserResponse from '../../../cypress/fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
-import { identifyResponse } from '../../../cypress/fixtures/okta-responses/success/idx-identify-response';
-import idxChallengeResponseEmail from '../../../cypress/fixtures/okta-responses/success/idx-challenge-response-email.json';
+import userStatuses from '../../support/okta/userStatuses';
+import userExistsError from '../../fixtures/okta-responses/error/user-exists.json';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import userGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
+import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
+import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
+import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
+import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
+import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
+import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-response.json';
+import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
+import idxEnrollNewSelectAuthenticatorResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
+import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
+import { identifyResponse } from '../../fixtures/okta-responses/success/idx-identify-response';
+import idxChallengeResponseEmail from '../../fixtures/okta-responses/success/idx-challenge-response-email.json';
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
 
 // IDX passcode registration mocks

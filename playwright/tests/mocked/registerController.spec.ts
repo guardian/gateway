@@ -1,20 +1,20 @@
-import { expect, Page } from '@playwright/test';
+import { APIRequestContext, expect, Page } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
-import userStatuses from '../../../cypress/support/okta/userStatuses';
-import userResponse from '../../../cypress/fixtures/okta-responses/success/user.json';
-import idxInteractResponse from '../../../cypress/fixtures/okta-responses/success/idx-interact-response.json';
-import idxIntrospectDefaultResponse from '../../../cypress/fixtures/okta-responses/success/idx-introspect-default-response.json';
-import idxEnrollResponse from '../../../cypress/fixtures/okta-responses/success/idx-enroll-response.json';
-import idxEnrollNewResponse from '../../../cypress/fixtures/okta-responses/success/idx-enroll-new-response.json';
-import idxEnrollNewSelectAuthenticatorResponse from '../../../cypress/fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
-import idxEnrollNewExistingUserResponse from '../../../cypress/fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
-import { identifyResponse } from '../../../cypress/fixtures/okta-responses/success/idx-identify-response';
-import idxChallengeResponseEmail from '../../../cypress/fixtures/okta-responses/success/idx-challenge-response-email.json';
-import idxChallengeResponsePassword from '../../../cypress/fixtures/okta-responses/success/idx-challenge-response-password.json';
-import idxChallengeAnswerPasswordEnrollEmailResponse from '../../../cypress/fixtures/okta-responses/success/idx-challenge-answer-password-enroll-email-response.json';
+import userStatuses from '../../support/okta/userStatuses';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
+import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
+import idxEnrollResponse from '../../fixtures/okta-responses/success/idx-enroll-response.json';
+import idxEnrollNewResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response.json';
+import idxEnrollNewSelectAuthenticatorResponse from '../../fixtures/okta-responses/success/idx-enroll-new-response-select-authenticator.json';
+import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/error/idx-enroll-new-existing-user-response.json';
+import { identifyResponse } from '../../fixtures/okta-responses/success/idx-identify-response';
+import idxChallengeResponseEmail from '../../fixtures/okta-responses/success/idx-challenge-response-email.json';
+import idxChallengeResponsePassword from '../../fixtures/okta-responses/success/idx-challenge-response-password.json';
+import idxChallengeAnswerPasswordEnrollEmailResponse from '../../fixtures/okta-responses/success/idx-challenge-answer-password-enroll-email-response.json';
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
 
-const baseIdxPasscodeRegistrationMocks = async (mockApi) => {
+const baseIdxPasscodeRegistrationMocks = async (mockApi: APIRequestContext) => {
 	await Promise.all([
 		mockApi.post('/mock/permanent-pattern', {
 			data: {
@@ -40,7 +40,9 @@ const baseIdxPasscodeRegistrationMocks = async (mockApi) => {
 	]);
 };
 
-export const idxPasscodeExistingUserMocks = async (mockApi) => {
+export const idxPasscodeExistingUserMocks = async (
+	mockApi: APIRequestContext,
+) => {
 	await Promise.all([
 		mockApi.post('/mock/permanent-pattern', {
 			data: {
