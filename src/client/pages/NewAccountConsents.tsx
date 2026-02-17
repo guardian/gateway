@@ -15,11 +15,12 @@ import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
 
-type NewAccountConsentsProps = RegistrationProps & {
+export type NewAccountConsentsProps = RegistrationProps & {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	shortRequestId?: string;
 	pageError?: string;
+	signInOrRegister?: 'REGISTER' | 'SIGNIN';
 };
 
 const getErrorContext = (pageError?: string) => {
@@ -52,6 +53,7 @@ export const NewAccountConsents = ({
 	appName,
 	shortRequestId,
 	pageError,
+	signInOrRegister,
 }: NewAccountConsentsProps) => {
 	const formTrackingName = 'register';
 
@@ -96,6 +98,7 @@ export const NewAccountConsents = ({
 					geolocation={geolocation}
 					appName={appName}
 					isJobs={isJobs}
+					signInOrRegister={signInOrRegister}
 				/>
 			</MainForm>
 		</MinimalLayout>

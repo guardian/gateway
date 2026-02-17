@@ -136,12 +136,21 @@ export const chooseNewsletter = ({
 	geolocation,
 	appName,
 	isJobs,
+	signInOrRegister,
 }: {
 	geolocation: GeoLocation | undefined;
 	appName: AppName | undefined;
 	isJobs?: boolean;
+	signInOrRegister?: 'REGISTER' | 'SIGNIN';
 }): RegistrationNewsletterFormFields | undefined => {
 	const isFeast = appName === 'Feast';
+
+	// For existing users accessing Guardian Jobs for the first time we don't want to show
+	// the Saturday Edition newsletter as they may have already seen it in the past when they originally
+	// created their Guardian account.
+	if (signInOrRegister === 'SIGNIN' && isJobs) {
+		return undefined;
+	}
 
 	if (isFeast) {
 		return RegistrationNewslettersFormFieldsMap.feast;

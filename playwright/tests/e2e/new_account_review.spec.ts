@@ -121,6 +121,11 @@ test.describe('New account newsletters page', () => {
 		await page.locator('input[name=secondName]').fill(id);
 		await page.locator('button[type="submit"]').click();
 
+		// Complete Account page (with just Jobs newsletter)
+		await expect(page).toHaveURL(/\/welcome\/complete-account/);
+		await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
+		await page.locator('[data-cy="main-form-submit-button"]').click();
+
 		// jobs.theguardian.com
 		await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
 	});

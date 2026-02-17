@@ -11,7 +11,7 @@ export const NewAccountConsentsPage = () => {
 		shortRequestId,
 		globalMessage = {},
 	} = clientState;
-	const { email, formError } = pageData;
+	const { email, formError, signInOrRegister } = pageData;
 	const { recaptchaSiteKey } = recaptchaConfig;
 	const { error: pageError } = globalMessage;
 
@@ -25,6 +25,7 @@ export const NewAccountConsentsPage = () => {
 			appName={pageData.appName}
 			shortRequestId={shortRequestId}
 			pageError={pageError}
+			signInOrRegister={signInOrRegister}
 		/>
 	);
 };
