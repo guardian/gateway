@@ -636,6 +636,7 @@ test.describe('Registration flow - Split 3/3', () => {
 			request,
 		}) => {
 			// mechanism to block POST requests to recaptcha
+			// eslint-disable-next-line functional/no-let -- easiest way to control single recaptcha interception
 			let blockRecaptcha = false;
 			await page.route(/.*google\.com\/recaptcha\/api2\/.*/, async (route) => {
 				if (blockRecaptcha && route.request().method() === 'POST') {

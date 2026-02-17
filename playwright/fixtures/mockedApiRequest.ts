@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern -- needed to setup the mockApi function */
+/* eslint-disable react-hooks/rules-of-hooks -- stop eslint from complaining about react hooks in a non react file */
 import {
 	test as base,
 	request as playwrightRequest,

@@ -598,6 +598,7 @@ test.describe('Sign in flow, Okta enabled', () => {
 			await page.goto('/signin?usePasswordSignIn=true');
 
 			// Intercept reCAPTCHA POST requests once to simulate failure
+			// eslint-disable-next-line functional/no-let -- easiest way to control single recaptcha interception
 			let recaptchaIntercepted = false;
 			await page.route('**/www.google.com/recaptcha/api2/**', async (route) => {
 				if (!recaptchaIntercepted && route.request().method() === 'POST') {

@@ -23,6 +23,6 @@ export async function oktaGetApps(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to list okta apps: ' + error);
+		throw new Error(`Failed to list okta apps: ${JSON.stringify(error)}`);
 	}
 }

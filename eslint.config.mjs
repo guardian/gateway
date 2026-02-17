@@ -15,6 +15,8 @@ const config = tseslint.config(
 			'**/storybook-static/',
 			'build/',
 			'scripts/okta/okta-login.js',
+			'playwright-report/',
+			'test-results',
 		],
 	},
 	{
@@ -41,7 +43,7 @@ const config = tseslint.config(
 			parserOptions: {
 				projectService: {
 					// lint additional files that are not part of the tsconfig
-					allowDefaultProject: ['eslint.config.mjs', 'cypress.config.ts'],
+					allowDefaultProject: ['eslint.config.mjs', 'playwright.config.ts'],
 				},
 
 				ecmaFeatures: {

@@ -29,7 +29,7 @@ export async function getTestOktaUser(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to get Okta test user: ' + error);
+		throw new Error(`Failed to get Okta test user: : ${JSON.stringify(error)}`);
 	}
 }
 
@@ -53,7 +53,9 @@ export async function updateOktaTestUserProfile(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to update Okta test user: ' + error);
+		throw new Error(
+			`Failed to update Okta test user: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -73,7 +75,9 @@ export async function activateTestOktaUser(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to activate Okta test user: ' + error);
+		throw new Error(
+			`Failed to activate Okta test user: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -95,7 +99,9 @@ export async function resetOktaUserPassword(
 		const token = body.resetPasswordUrl.split('/').slice(-1)[0];
 		return { token } as TokenResponse;
 	} catch (error) {
-		throw new Error('Failed to reset password for Okta test user: ' + error);
+		throw new Error(
+			`Failed to reset password for Okta test user: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -115,7 +121,9 @@ export async function expireOktaUserPassword(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to expire password for Okta test user: ' + error);
+		throw new Error(
+			`Failed to expire password for Okta test user: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -135,7 +143,9 @@ export async function suspendOktaUser(
 
 		return true;
 	} catch (error) {
-		throw new Error('Failed to suspend Okta test user: ' + error);
+		throw new Error(
+			`Failed to suspend Okta test user: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -155,7 +165,7 @@ export async function getOktaUserGroups(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to get user groups: ' + error);
+		throw new Error(`Failed to get user groups: ${JSON.stringify(error)}`);
 	}
 }
 
@@ -176,7 +186,9 @@ export async function addOktaUserToGroup(
 
 		return true;
 	} catch (error) {
-		throw new Error('Failed to add Okta test user to group: ' + error);
+		throw new Error(
+			`Failed to add Okta test user to group: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -201,7 +213,7 @@ export async function findEmailValidatedOktaGroupId(
 		return group;
 	} catch (error) {
 		throw new Error(
-			'Failed to get ID of GuardianUser-EmailValidated group: ' + error,
+			`Failed to get ID of GuardianUser-EmailValidated group: ${JSON.stringify(error)}`,
 		);
 	}
 }
@@ -223,7 +235,9 @@ export async function getCurrentOktaSession(
 
 		return await response.json();
 	} catch (error) {
-		throw new Error('Failed to get current Okta session: ' + error);
+		throw new Error(
+			`Failed to get current Okta session: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -247,6 +261,8 @@ export async function closeCurrentOktaSession(
 		}
 		return false;
 	} catch (error) {
-		throw new Error('Failed to close current Okta session: ' + error);
+		throw new Error(
+			`Failed to close current Okta session: ${JSON.stringify(error)}`,
+		);
 	}
 }

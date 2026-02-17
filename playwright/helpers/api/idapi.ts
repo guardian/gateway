@@ -147,7 +147,9 @@ export async function createTestUser(
 			idapiUserId,
 		};
 	} catch (error) {
-		throw new Error('Failed to create IDAPI test user: ' + error);
+		throw new Error(
+			`Failed to create IDAPI test user: ${JSON.stringify(error)}`,
+		);
 	}
 }
 
@@ -186,6 +188,6 @@ export async function sendConsentEmail(
 			);
 		}
 	} catch (error) {
-		throw new Error('Failed to send consents email: ' + error);
+		throw new Error(`Failed to send consents email: ${JSON.stringify(error)}`);
 	}
 }

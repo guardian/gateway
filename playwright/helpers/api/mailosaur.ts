@@ -6,8 +6,8 @@ const client = new MailosaurClient(process.env.CYPRESS_MAILOSAUR_API_KEY || '');
 type EmailDetails = {
 	id: string;
 	body: string;
+	links: Array<{ href?: string; text?: string }>;
 	token?: string;
-	links: Array<{ href: string; text: string }>;
 	codes?: Array<{ value: string }>;
 };
 
@@ -66,20 +66,27 @@ const getEmailDetails = (
 		throw new Error('Email details not found');
 	}
 
-	let token = undefined;
-	if (tokenMatcher) {
-		const match = body.match(tokenMatcher);
-		if (match === null) {
-			throw new Error(
-				'Unable to find token in the email body with the given regex',
-			);
-		}
-		token = match[1];
-	}
+	const token = tokenMatcher
+		? (() => {
+				const match = body.match(tokenMatcher);
+				if (match === null) {
+					throw new Error(
+						'Unable to find token in the email body with the given regex',
+					);
+				}
+				return match[1];
+			})()
+		: undefined;
 
 	const validatedCodes = codes
 		? codes.filter((code) => code.value?.match(/\d{6}/))
 		: undefined;
 
-	return { id, body, token, links, codes: validatedCodes };
+	return {
+		id,
+		body,
+		token,
+		links,
+		...(validatedCodes && { prop: validatedCodes }),
+	};
 };

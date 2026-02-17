@@ -89,7 +89,7 @@ export async function sendEmailAndValidatePasscode({
 			await page.getByText('try another address').click();
 			await expect(page).toHaveURL(/\/signin/);
 			break;
-		case 'passcode-incorrect':
+		case 'passcode-incorrect': {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await page.locator('input[name=code]').fill(`${+code! + 1}`);
 
@@ -110,7 +110,8 @@ export async function sendEmailAndValidatePasscode({
 			expect(user1.status).toEqual('ACTIVE');
 			expect(user1.profile.emailValidated).toEqual(true);
 			break;
-		case 'from-uri':
+		}
+		case 'from-uri': {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
 
@@ -120,6 +121,7 @@ export async function sendEmailAndValidatePasscode({
 			expect(user2.status).toEqual('ACTIVE');
 			expect(user2.profile.emailValidated).toEqual(true);
 			break;
+		}
 		default: {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);

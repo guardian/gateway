@@ -1,10 +1,15 @@
+/* eslint-disable functional/immutable-data --- only used for playwright test setup */
 import { Page } from '@playwright/test';
+
+interface WindowWIthGrecaptcha {
+	grecaptcha?: unknown;
+}
 
 export const mockClientRecaptcha = async (page: Page) => {
 	await page.addInitScript(() => {
 		const FAKE_TOKEN = 'fake-recaptcha-token';
 
-		window.grecaptcha = {
+		(window as WindowWIthGrecaptcha).grecaptcha = {
 			ready: (callback: () => void) => callback(),
 			render: (
 				element: string | HTMLElement,

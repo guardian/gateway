@@ -19,11 +19,7 @@ export async function injectAndCheckAxe(page: Page): Promise<void> {
 			}),
 		);
 
-		console.log(
-			`${results.violations.length} accessibility violation${
-				results.violations.length === 1 ? '' : 's'
-			} ${results.violations.length === 1 ? 'was' : 'were'} detected`,
-		);
+		// eslint-disable-next-line no-console -- this is helpful information for the playwright tests
 		console.table(violationData);
 
 		throw new Error(
