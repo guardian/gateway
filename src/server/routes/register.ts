@@ -361,11 +361,12 @@ const oktaIdxCreateAccountOrSignIn = async (
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath: isCombinedSigninAndRegisterFlow
-					? '/welcome/complete-account'
-					: clientId === 'jobs'
+				confirmationPagePath:
+					clientId === 'jobs'
 						? JOBS_TOS_URI
-						: '/welcome/review',
+						: isCombinedSigninAndRegisterFlow
+							? '/welcome/complete-account'
+							: '/welcome/review',
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
