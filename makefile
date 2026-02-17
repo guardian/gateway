@@ -65,16 +65,16 @@ ci: clear setup
 	@(./ci.sh)
 
 playwright-mocked: clear
-	$(call log, "opening playwright using mocks 🌲")
+	$(call log, "opening playwright using mocks 🎭")
 	@(./playwright-mocked.sh)
 
 playwright-e2e: clear
-	$(call log, "opening playwright 🌲")
+	$(call log, "opening playwright 🎭")
 	@(./playwright-e2e.sh)
 
 playwright-e2e-dev: export DEV_MODE = true
 playwright-e2e-dev: clear
-	$(call log, "opening playwright 🌲")
+	$(call log, "opening playwright 🎭")
 	@(./playwright-e2e.sh)
 
 storybook: clear
