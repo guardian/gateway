@@ -59,7 +59,6 @@ export const mockClientRecaptcha = async (page: Page) => {
 		};
 	});
 
-	//await page.route(/.google\.com\/recaptcha\/./, async (route) => {
 	await page.route(
 		/https:\/\/www\.google\.com\/recaptcha\/./,
 		async (route) => {
