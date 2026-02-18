@@ -5,6 +5,7 @@ import {
 	updateOktaTestUserProfile,
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Jobs terms and conditions flow in Okta', () => {
 	test.describe('Shows the terms and conditions page on Sign In', () => {
@@ -26,7 +27,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await page.locator('input[name=email]').fill(emailAddress);
 			await page.locator('input[name=password]').fill(finalPassword);
 			await page.locator('[data-cy="main-form-submit-button"]').click();
-			await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 			await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
 		});
@@ -198,7 +199,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await page.goto(termsAcceptPageUrl);
 
 			// check sign in has worked first
-			await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 			// check session cookie is set
 			const cookies = await page.context().cookies();
 			const idxCookie = cookies.find((c) => c.name === 'idx');

@@ -7,6 +7,7 @@ import {
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getTestOktaUser } from '../../helpers/api/okta';
 import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Sign In flow, with passcode', () => {
 	// set up useful variables
@@ -128,7 +129,7 @@ test.describe('Sign In flow, with passcode', () => {
 			const code = codes?.[0].value;
 			await page.locator('input[name=code]').fill(code!);
 
-			await expect(page).toHaveURL(new RegExp(fromURI));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(fromURI)));
 
 			const updatedUser = await getTestOktaUser(request, emailAddress);
 			expect(updatedUser.status).toBe('ACTIVE');

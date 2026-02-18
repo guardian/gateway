@@ -11,6 +11,7 @@ import {
 	resetOktaUserPassword,
 	expireOktaUserPassword,
 } from '../../helpers/api/okta';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Password reset recovery flows', () => {
 	test.describe('Passcode limbo state - user does not set password after using passcode', () => {
@@ -197,10 +198,10 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			await page.goto(`/reset-password/${token}`);
 
 			const formAction = await page.locator('form').getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
 
 			// reload to make sure the params are persisted even on page refresh
 			await page.reload();
@@ -216,10 +217,10 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			await expect(page.getByText('Password updated')).toBeVisible();
 			await expect(page.getByText(emailAddress.toLowerCase())).toBeVisible();
 
-			await expect(page).toHaveURL(new RegExp(encodedReturnUrl));
-			await expect(page).toHaveURL(new RegExp(refViewId));
-			await expect(page).toHaveURL(new RegExp(encodedRef));
-			await expect(page).toHaveURL(new RegExp(clientId));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedReturnUrl)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(refViewId)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedRef)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(clientId)));
 			await expect(page).not.toHaveURL(/useOkta=true/);
 		});
 
@@ -261,12 +262,12 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			await page.goto(`/reset-password/${token}`);
 
 			const formAction = await page.locator('form').getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
-			expect(formAction).not.toMatch(new RegExp(appClientId!));
-			expect(formAction).not.toMatch(new RegExp(fromURI));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(appClientId!)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(fromURI)));
 
 			// reload to make sure the params are persisted even on page refresh
 			await page.reload();
@@ -282,13 +283,13 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			await expect(page.getByText('Password updated')).toBeVisible();
 			await expect(page.getByText(emailAddress.toLowerCase())).toBeVisible();
 
-			await expect(page).toHaveURL(new RegExp(encodedReturnUrl));
-			await expect(page).toHaveURL(new RegExp(refViewId));
-			await expect(page).toHaveURL(new RegExp(encodedRef));
-			await expect(page).toHaveURL(new RegExp(clientId));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedReturnUrl)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(refViewId)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedRef)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(clientId)));
 			await expect(page).not.toHaveURL(/useOkta=true/);
-			await expect(page).not.toHaveURL(new RegExp(appClientId!));
-			await expect(page).not.toHaveURL(new RegExp(fromURI));
+			await expect(page).not.toHaveURL(new RegExp(escapeRegExp(appClientId!)));
+			await expect(page).not.toHaveURL(new RegExp(escapeRegExp(fromURI)));
 		});
 
 		test("changes the reader's password and overrides returnUrl from encryptedStateCookie if one set on reset password page url", async ({
@@ -324,8 +325,10 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			);
 			await page.goto(`/reset-password/${token}&returnUrl=${newReturnUrl}`);
 
-			await expect(page).toHaveURL(new RegExp(newReturnUrl));
-			await expect(page).not.toHaveURL(new RegExp(encodedReturnUrl));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(newReturnUrl)));
+			await expect(page).not.toHaveURL(
+				new RegExp(escapeRegExp(encodedReturnUrl)),
+			);
 
 			const formAction = await page.locator('form').getAttribute('action');
 			expect(formAction).toContain(newReturnUrl);
@@ -345,8 +348,10 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			await expect(page.getByText('Password updated')).toBeVisible();
 			await expect(page.getByText(emailAddress.toLowerCase())).toBeVisible();
 
-			await expect(page).toHaveURL(new RegExp(newReturnUrl));
-			await expect(page).not.toHaveURL(new RegExp(encodedReturnUrl));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(newReturnUrl)));
+			await expect(page).not.toHaveURL(
+				new RegExp(escapeRegExp(encodedReturnUrl)),
+			);
 			await expect(page).not.toHaveURL(/useOkta=true/);
 		});
 
@@ -387,16 +392,20 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 				`/reset-password/${token}&appClientId=${appClientId2}&fromURI=${fromURI2}`,
 			);
 
-			await expect(page).toHaveURL(new RegExp(appClientId2));
-			await expect(page).toHaveURL(new RegExp(fromURI2));
-			await expect(page).not.toHaveURL(new RegExp(appClientId1));
-			await expect(page).not.toHaveURL(new RegExp(fromURI1));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(appClientId2)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(fromURI2)));
+			await expect(page).not.toHaveURL(new RegExp(escapeRegExp(appClientId1)));
+			await expect(page).not.toHaveURL(new RegExp(escapeRegExp(fromURI1)));
 
 			const formAction = await page.locator('form').getAttribute('action');
-			expect(formAction).toMatch(new RegExp(appClientId2));
-			expect(formAction).toMatch(new RegExp(encodeURIComponent(fromURI2)));
-			expect(formAction).not.toMatch(new RegExp(appClientId1));
-			expect(formAction).not.toMatch(new RegExp(encodeURIComponent(fromURI1)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(appClientId2)));
+			expect(formAction).toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI2))),
+			);
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(appClientId1)));
+			expect(formAction).not.toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI1))),
+			);
 		});
 	});
 

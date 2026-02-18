@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Sign in flow', () => {
 	test.describe('Signing in - Okta', () => {
@@ -395,7 +396,7 @@ test.describe('Sign in flow', () => {
 			);
 			await expect(continueLink).toHaveAttribute(
 				'href',
-				new RegExp(JOBS_TOS_URI),
+				new RegExp(escapeRegExp(JOBS_TOS_URI)),
 			);
 
 			const signInLink = page.locator('a', { hasText: 'Sign in' });

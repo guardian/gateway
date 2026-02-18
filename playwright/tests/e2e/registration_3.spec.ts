@@ -13,6 +13,7 @@ import {
 	suspendOktaUser,
 	getTestOktaUser,
 } from '../../helpers/api/okta';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Registration flow - Split 3/3', () => {
 	// a few tests to check if the Okta Classic flow is still working using the useOktaClassic flag
@@ -59,12 +60,12 @@ test.describe('Registration flow - Split 3/3', () => {
 
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
-			expect(formAction).not.toMatch(new RegExp(appClientId));
-			expect(formAction).not.toMatch(new RegExp(fromURI));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(fromURI)));
 
 			// we are reloading here to make sure the params are persisted even on page refresh
 			await page.reload();
@@ -74,12 +75,12 @@ test.describe('Registration flow - Split 3/3', () => {
 			await page.locator('input[name="password"]').fill(randomPassword());
 			await page.locator('button[type="submit"]').click();
 
-			await expect(page).toHaveURL(new RegExp(encodedReturnUrl));
-			await expect(page).toHaveURL(new RegExp(refViewId));
-			await expect(page).toHaveURL(new RegExp(encodedRef));
-			await expect(page).toHaveURL(new RegExp(clientId));
-			expect(page.url()).not.toMatch(new RegExp(appClientId));
-			expect(page.url()).not.toMatch(new RegExp(fromURI));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedReturnUrl)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(refViewId)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedRef)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(clientId)));
+			expect(page.url()).not.toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(page.url()).not.toMatch(new RegExp(escapeRegExp(fromURI)));
 
 			// test the registration platform is set correctly
 			const oktaUser = await getTestOktaUser(request, unregisteredEmail);
@@ -134,12 +135,12 @@ test.describe('Registration flow - Split 3/3', () => {
 
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
-			expect(formAction).not.toMatch(new RegExp(appClientId!));
-			expect(formAction).not.toMatch(new RegExp(fromURI));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(appClientId!)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(fromURI)));
 
 			// we are reloading here to make sure the params are persisted even on page refresh
 			await page.reload();
@@ -147,12 +148,22 @@ test.describe('Registration flow - Split 3/3', () => {
 			const formAfterReload = page.locator('form');
 			const formActionAfterReload =
 				await formAfterReload.getAttribute('action');
-			expect(formActionAfterReload).toMatch(new RegExp(encodedReturnUrl));
-			expect(formActionAfterReload).toMatch(new RegExp(refViewId));
-			expect(formActionAfterReload).toMatch(new RegExp(encodedRef));
-			expect(formActionAfterReload).toMatch(new RegExp(clientId));
-			expect(formActionAfterReload).not.toMatch(new RegExp(appClientId!));
-			expect(formActionAfterReload).not.toMatch(new RegExp(fromURI));
+			expect(formActionAfterReload).toMatch(
+				new RegExp(escapeRegExp(encodedReturnUrl)),
+			);
+			expect(formActionAfterReload).toMatch(
+				new RegExp(escapeRegExp(refViewId)),
+			);
+			expect(formActionAfterReload).toMatch(
+				new RegExp(escapeRegExp(encodedRef)),
+			);
+			expect(formActionAfterReload).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formActionAfterReload).not.toMatch(
+				new RegExp(escapeRegExp(appClientId!)),
+			);
+			expect(formActionAfterReload).not.toMatch(
+				new RegExp(escapeRegExp(fromURI)),
+			);
 
 			await page.locator('input[name="firstName"]').fill('First Name');
 			await page.locator('input[name="secondName"]').fill('Last Name');
@@ -201,14 +212,14 @@ test.describe('Registration flow - Split 3/3', () => {
 
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
 
 			// we are reloading here to make sure the params are persisted even on page refresh
 			await page.reload();
 
 			await page.locator('input[name="password"]').fill(randomPassword());
 			await page.locator('button[type="submit"]').click();
-			await expect(page).toHaveURL(new RegExp(encodedReturnUrl));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedReturnUrl)));
 		});
 	});
 

@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { randomMailosaurEmail } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('New account newsletters page', () => {
 	test.beforeEach(async ({ page }) => {
@@ -63,7 +64,7 @@ test.describe('New account newsletters page', () => {
 			).toBeVisible();
 			await page.locator('button[type="submit"]').click();
 			await expect(page).toHaveURL(
-				new RegExp(decodeURIComponent(encodedReturnUrl)),
+				new RegExp(escapeRegExp(decodeURIComponent(encodedReturnUrl))),
 			);
 		});
 	});
@@ -109,7 +110,7 @@ test.describe('New account newsletters page', () => {
 		await page.locator('input[name=code]').fill(code!);
 
 		// jobs T&C page
-		await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
+		await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 		await expect(
 			page.getByText(
 				'Click ‘continue’ to automatically use your existing Guardian account to sign in with Guardian Jobs',

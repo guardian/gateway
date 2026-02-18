@@ -12,6 +12,7 @@ import {
 	expireOktaUserPassword,
 	activateTestOktaUser,
 } from '../../helpers/api/okta';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Password reset recovery flows - with Passcodes', () => {
 	test.describe('ACTIVE user with password', () => {
@@ -54,10 +55,10 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page).toHaveURL(/\/reset-password\/email-sent/);
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			const formAction = await page.locator('form').getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
 
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
 
@@ -66,20 +67,20 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			// password page
 			await expect(page).toHaveURL(/\/reset-password\/password/);
 			const formAction2 = await page.locator('form').getAttribute('action');
-			expect(formAction2).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction2).toMatch(new RegExp(refViewId));
-			expect(formAction2).toMatch(new RegExp(encodedRef));
-			expect(formAction2).toMatch(new RegExp(clientId));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(clientId)));
 
 			await page.locator('input[name="password"]').fill(randomPassword());
 			await page.locator('button[type="submit"]').click();
 
 			// password complete page
 			await expect(page).toHaveURL(/\/reset-password\/complete/);
-			await expect(page).toHaveURL(new RegExp(encodedReturnUrl));
-			await expect(page).toHaveURL(new RegExp(refViewId));
-			await expect(page).toHaveURL(new RegExp(encodedRef));
-			await expect(page).toHaveURL(new RegExp(clientId));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedReturnUrl)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(refViewId)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedRef)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(clientId)));
 
 			await expect(page.getByText('Password updated')).toBeVisible();
 			const continueLink = page.getByRole('link', {
@@ -141,12 +142,14 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page).toHaveURL(/\/reset-password\/email-sent/);
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			const formAction = await page.locator('form').getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(clientId));
-			expect(formAction).toMatch(new RegExp(appClientId));
-			expect(formAction).toMatch(new RegExp(encodeURIComponent(fromURI)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction).toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
+			);
 
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
 
@@ -155,18 +158,22 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			// password page
 			await expect(page).toHaveURL(/\/reset-password\/password/);
 			const formAction2 = await page.locator('form').getAttribute('action');
-			expect(formAction2).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction2).toMatch(new RegExp(refViewId));
-			expect(formAction2).toMatch(new RegExp(encodedRef));
-			expect(formAction2).toMatch(new RegExp(clientId));
-			expect(formAction2).toMatch(new RegExp(appClientId));
-			expect(formAction2).toMatch(new RegExp(encodeURIComponent(fromURI)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formAction2).toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction2).toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
+			);
 
 			await page.locator('input[name="password"]').fill(randomPassword());
 			await page.locator('button[type="submit"]').click();
 
 			// fromURI redirect
-			await expect(page).toHaveURL(new RegExp(decodeURIComponent(fromURI)));
+			await expect(page).toHaveURL(
+				new RegExp(escapeRegExp(decodeURIComponent(fromURI))),
+			);
 		});
 
 		test('passcode incorrect functionality', async ({ request, page }) => {

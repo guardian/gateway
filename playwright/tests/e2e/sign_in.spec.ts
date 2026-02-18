@@ -14,6 +14,7 @@ import {
 	closeCurrentOktaSession,
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { escapeRegExp } from '../../helpers/utils';
 
 const returnUrl =
 	'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
@@ -384,7 +385,7 @@ test.describe('Sign in flow, Okta enabled', () => {
 
 			// fromURI redirect
 			await expect(page).toHaveURL(
-				new RegExp(decodeURIComponent(fromURI).replace(/\//g, '\\/')),
+				new RegExp(escapeRegExp(decodeURIComponent(fromURI))),
 			);
 		});
 

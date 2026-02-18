@@ -13,6 +13,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { escapeRegExp } from '../../helpers/utils';
 
 const existingUserSendEmailAndValidatePasscode = async ({
 	page,
@@ -88,7 +89,7 @@ const existingUserSendEmailAndValidatePasscode = async ({
 			await page.getByText('Continue').click();
 
 			await expect(page).toHaveURL(
-				new RegExp(encodeURIComponent(expectedReturnUrl)),
+				new RegExp(escapeRegExp(encodeURIComponent(expectedReturnUrl))),
 			);
 
 			const user = await getTestOktaUser(request, emailAddress);
@@ -117,7 +118,7 @@ const existingUserSendEmailAndValidatePasscode = async ({
 			const returnLink = page.getByText('Return to the Guardian');
 			await expect(returnLink).toHaveAttribute(
 				'href',
-				new RegExp(expectedReturnUrl),
+				new RegExp(escapeRegExp(expectedReturnUrl)),
 			);
 
 			const user = await getTestOktaUser(request, emailAddress);
@@ -130,13 +131,15 @@ const existingUserSendEmailAndValidatePasscode = async ({
 			await page.locator('input[name=code]').fill(code!);
 
 			if (params?.includes('fromURI')) {
-				await expect(page).toHaveURL(new RegExp(expectedReturnUrl));
+				await expect(page).toHaveURL(
+					new RegExp(escapeRegExp(expectedReturnUrl)),
+				);
 			} else {
 				await expect(page).toHaveURL(/\/welcome\/existing/);
 				const returnLink = page.getByText('Return to the Guardian');
 				await expect(returnLink).toHaveAttribute(
 					'href',
-					new RegExp(expectedReturnUrl),
+					new RegExp(escapeRegExp(expectedReturnUrl)),
 				);
 
 				const user = await getTestOktaUser(request, emailAddress);
@@ -187,9 +190,9 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/passcode/);
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -244,9 +247,9 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/passcode/);
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -315,11 +318,13 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/passcode/);
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(appClientId));
-			expect(formAction).toMatch(new RegExp(encodeURIComponent(fromURI)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction).toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
+			);
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -328,8 +333,10 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
 			await page.getByRole('button', { name: 'Next' }).click();
 
-			await expect(page).toHaveURL(new RegExp(JOBS_TOS_URI));
-			await expect(page).toHaveURL(new RegExp(encodeURIComponent(fromURI)));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
+			await expect(page).toHaveURL(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
+			);
 		});
 
 		test('successfully registers using an email with no existing account using a passcode and redirects to fromURI - passwordless user', async ({
@@ -381,11 +388,13 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/passcode/);
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(appClientId));
-			expect(formAction).toMatch(new RegExp(encodeURIComponent(fromURI)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction).toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
+			);
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -402,7 +411,9 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/welcome\/review/);
 			await page.getByRole('link', { name: 'Continue' }).click();
 
-			await expect(page).toHaveURL(new RegExp(decodeURIComponent(fromURI)));
+			await expect(page).toHaveURL(
+				new RegExp(escapeRegExp(decodeURIComponent(fromURI))),
+			);
 		});
 
 		test('successfully registers using an email with no existing account using a passcode and redirects to fromURI - password user', async ({
@@ -454,11 +465,13 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/passcode/);
 			const form = page.locator('form');
 			const formAction = await form.getAttribute('action');
-			expect(formAction).toMatch(new RegExp(encodedReturnUrl));
-			expect(formAction).toMatch(new RegExp(refViewId));
-			expect(formAction).toMatch(new RegExp(encodedRef));
-			expect(formAction).toMatch(new RegExp(appClientId));
-			expect(formAction).toMatch(new RegExp(encodeURIComponent(fromURI)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedReturnUrl)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
+			expect(formAction).toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction).toMatch(
+				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
+			);
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
@@ -474,7 +487,9 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page).toHaveURL(/\/welcome\/review/);
 			await page.getByRole('link', { name: 'Continue' }).click();
 
-			await expect(page).toHaveURL(new RegExp(decodeURIComponent(fromURI)));
+			await expect(page).toHaveURL(
+				new RegExp(escapeRegExp(decodeURIComponent(fromURI))),
+			);
 		});
 
 		test('registers registrationLocation for email with no existing account', async ({

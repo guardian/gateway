@@ -8,6 +8,7 @@ import {
 	expireOktaUserPassword,
 	getTestOktaUser,
 } from '../../helpers/api/okta';
+import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Registration flow - Split 2/3', () => {
 	test.describe('Existing users asking for an email to be resent after attempting to register with Okta - useOktaClassic', () => {
@@ -309,7 +310,7 @@ test.describe('Registration flow - Split 2/3', () => {
 			// we are reloading here to make sure the params are persisted even on page refresh
 			await page.reload();
 
-			await expect(page).toHaveURL(new RegExp(encodedReturnUrl));
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(encodedReturnUrl)));
 		});
 
 		test('should resend a STAGED user a set password email with an Okta activation token', async ({
