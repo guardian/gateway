@@ -79,7 +79,9 @@ const getEmailDetails = (
 		: undefined;
 
 	const validatedCodes = codes
-		? codes.filter((code) => code.value?.match(/\d{6}/))
+		? codes
+				.filter((code) => code.value?.match(/\d{6}/))
+				.map((code) => ({ value: code.value! }))
 		: undefined;
 
 	return {
@@ -87,6 +89,6 @@ const getEmailDetails = (
 		body,
 		token,
 		links,
-		...(validatedCodes && { prop: validatedCodes }),
+		...(validatedCodes && { codes: validatedCodes }),
 	};
 };

@@ -59,20 +59,27 @@ export const mockClientRecaptcha = async (page: Page) => {
 		};
 	});
 
-	await page.route(/.google\.com\/recaptcha\/./, async (route) => {
-		// Return an empty script instead of blocking entirely
-		// This prevents errors from failed script loads
-		await route.fulfill({
-			status: 200,
-			contentType: 'application/javascript',
-			body: '// reCAPTCHA script blocked for testing',
-		});
-	});
-	await page.route(/.gstatic\.com\/recaptcha\/./, async (route) => {
-		await route.fulfill({
-			status: 200,
-			contentType: 'application/javascript',
-			body: '// reCAPTCHA script blocked for testing',
-		});
-	});
+	//await page.route(/.google\.com\/recaptcha\/./, async (route) => {
+	await page.route(
+		/https:\/\/www\.google\.com\/recaptcha\/./,
+		async (route) => {
+			// Return an empty script instead of blocking entirely
+			// This prevents errors from failed script loads
+			await route.fulfill({
+				status: 200,
+				contentType: 'application/javascript',
+				body: '// reCAPTCHA script blocked for testing',
+			});
+		},
+	);
+	await page.route(
+		/https:\/\/www\.gstatic\.com\/recaptcha\/./,
+		async (route) => {
+			await route.fulfill({
+				status: 200,
+				contentType: 'application/javascript',
+				body: '// reCAPTCHA script blocked for testing',
+			});
+		},
+	);
 };
