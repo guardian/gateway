@@ -13,6 +13,7 @@ module.exports = {
 	testPathIgnorePatterns: [
 		'<rootDir>/cypress/',
 		'<rootDir>/node_modules/',
+		'<rootDir>/playwright/',
 		'utils',
 		'<rootDir>/src/server/lib/__tests__/sharedConfig.ts',
 		// TODO: Shared Jest config between Gateway and CDK? Monorepo?
