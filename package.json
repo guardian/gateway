@@ -117,9 +117,9 @@
 		"zod-to-json-schema": "^3.24.6"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.986.0",
-		"@aws-sdk/client-sesv2": "^3.986.0",
-		"@aws-sdk/credential-providers": "^3.986.0",
+		"@aws-sdk/client-cloudwatch": "^3.993.0",
+		"@aws-sdk/client-sesv2": "^3.993.0",
+		"@aws-sdk/credential-providers": "^3.993.0",
 		"@emotion/react": "^11.14.0",
 		"@faire/mjml-react": "^3.5.3",
 		"@guardian/ab-core": "8.0.2",
