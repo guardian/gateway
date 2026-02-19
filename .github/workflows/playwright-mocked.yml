@@ -26,8 +26,8 @@ jobs:
       PORT: 8861
       ENVIRONMENT: production
       STAGE: DEV
-      BASE_URI: profile.thegulocal.com
-      IDAPI_CLIENT_ACCESS_TOKEN: fakekey
+      CYPRESS_BASE_URI: profile.thegulocal.com
+      CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: fakekey
       IDAPI_BASE_URL: http://localhost:9000
       DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
       SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
@@ -36,9 +36,9 @@ jobs:
       USER_BENEFITS_API_URL: http://localhost:9000
       IS_HTTPS: true
       APP_SECRET: devsecret
-      MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
-      MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
-      OKTA_ANDROID_CLIENT_ID: androidclientid
+      CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
+      CYPRESS_MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
+      CYPRESS_OKTA_ANDROID_CLIENT_ID: androidclientid
       # These are public test keys provided by Google for testing.
       # https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do
       GOOGLE_RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
@@ -61,8 +61,8 @@ jobs:
       # Required for the tests to run as we're unable to verify the created certs
       NODE_TLS_REJECT_UNAUTHORIZED: 0
       # Used to tell Gateway server we're running in Playwright
-      RUNNING_IN_PLAYWRIGHT: true
-      RUNNING_IN_PLAYWRIGHT_MOCKED: true
+      RUNNING_IN_CYPRESS: true
+      RUNNING_IN_CYPRESS_MOCKED: true
     steps:
       - name: Checkout
         uses: actions/checkout@v5
