@@ -26,8 +26,8 @@ jobs:
       PORT: 8861
       ENVIRONMENT: production
       STAGE: DEV
-      CYPRESS_BASE_URI: profile.thegulocal.com
-      CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: fakekey
+      BASE_URI: profile.thegulocal.com
+      IDAPI_CLIENT_ACCESS_TOKEN: fakekey
       IDAPI_BASE_URL: http://localhost:9000
       DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
       SIGN_IN_PAGE_URL: https://profile.thegulocal.com/signin
@@ -109,10 +109,12 @@ jobs:
         run: pnpm install
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
+      - name: Start mock server
+        run: pnpm run mock-server &
       - name: Start server
         run: pnpm start &
-      - name: Wait for server
-        run: pnpm run wait-on:server
+      - name: Wait for servers
+        run: pnpm exec wait-on https://profile.thegulocal.com/healthcheck http://localhost:9000/healthcheck -t 60000
       - name: Run Playwright mocked tests
         run: pnpm exec playwright test --project=mocked --shard=${{ matrix.shard }}/6
       - name: Upload test results
