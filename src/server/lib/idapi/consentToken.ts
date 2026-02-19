@@ -14,20 +14,11 @@ const handleError = (): never => {
 	});
 };
 
-export const validateConsentToken = async ({
-	ip,
-	token,
-	browserId,
-}: {
-	ip: string | undefined;
-	token: string;
-	browserId: string | undefined;
-}) => {
-	const options = APIAddClientAccessToken(
-		APIPostOptions({ 'browser-id': browserId }),
-		ip,
-	);
-
+export const validateConsentToken = async (
+	ip: string | undefined,
+	token: string,
+) => {
+	const options = APIAddClientAccessToken(APIPostOptions(), ip);
 	try {
 		await idapiFetch({
 			path: '/consent-email/:token',
