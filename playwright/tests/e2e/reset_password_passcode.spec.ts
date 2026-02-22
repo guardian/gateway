@@ -208,7 +208,9 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
 
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			// ensure that the code is alway 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = String((+code! + 1) % 1000000).padStart(6, '0');
+			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/reset-password\/code/, {
 				timeout: 30000,
@@ -417,32 +419,33 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page).toHaveURL(/\/reset-password\/email-sent/);
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 
+			const wrongCodeAgain = String((+code! + 1) % 1000000).padStart(6, '0');
 			// attempt 1 - auto submit
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCodeAgain);
 			await expect(page).toHaveURL(/\/reset-password\/code/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 2 - manual submit
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCodeAgain);
 			await page.getByText('Submit one-time code').click();
 			await expect(page).toHaveURL(/\/reset-password\/code/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 3 - manual submit
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCodeAgain);
 			await page.getByText('Submit one-time code').click();
 			await expect(page).toHaveURL(/\/reset-password\/code/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 4 - manual submit
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCodeAgain);
 			await page.getByText('Submit one-time code').click();
 			await expect(page).toHaveURL(/\/reset-password\/code/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 5 - manual submit
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCodeAgain);
 			await page.getByText('Submit one-time code').click();
 			await expect(page).toHaveURL(/\/reset-password/);
 			await expect(page.getByText('Your code has expired')).toBeVisible();

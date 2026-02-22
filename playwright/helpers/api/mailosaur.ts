@@ -35,6 +35,7 @@ export async function checkForEmailAndGetDetails(
 		{ sentTo },
 		{
 			receivedAfter,
+			timeout: 30000,
 		},
 	);
 

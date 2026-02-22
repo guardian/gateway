@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
@@ -7,6 +7,22 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { PasscodeUsed } from '@/client/pages/PasscodeUsed';
 
 export const ResetPasswordEmailSentPage = () => {
+	/*
+	 * This useEffect hook refreshes the page if it detects that the page load/show
+	 * was a result of the BFCache (https://developer.mozilla.org/en-US/docs/Glossary/bfcache)
+	 * This should mean that the correct content is shown to the user if they got here
+	 * via the browser back button
+	 */
+	useEffect(() => {
+		const handlePageShow = (event: Event) => {
+			if ((event as PageTransitionEvent).persisted) {
+				window.location.reload();
+			}
+		};
+		window.addEventListener('pageshow', handlePageShow);
+		return () => window.removeEventListener('pageShow', handlePageShow);
+	}, []);
+
 	const clientState = useClientState();
 	const {
 		pageData = {},

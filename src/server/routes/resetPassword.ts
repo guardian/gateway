@@ -94,7 +94,7 @@ router.get(
 				},
 			}),
 		});
-		res.type('html').send(html);
+		res.set('Cache-Control', 'no-store').type('html').send(html);
 	},
 );
 
@@ -158,7 +158,7 @@ router.get(
 				}),
 				pageTitle: 'Check Your Inbox',
 			});
-			return res.type('html').send(html);
+			return res.set('Cache-Control', 'no-store').type('html').send(html);
 		}
 		return res.redirect(
 			303,
