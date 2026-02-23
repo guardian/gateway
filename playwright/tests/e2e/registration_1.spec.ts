@@ -270,7 +270,6 @@ test.describe('Registration flow - Split 1/3', () => {
 
 		test('successfully registers using an email with no existing account using a passcode - passwordless jobs user - using the combined signin/register flow', async ({
 			page,
-			request,
 		}) => {
 			const appClientId = 'appClientId1';
 			const clientId = 'jobs';
@@ -283,6 +282,52 @@ test.describe('Registration flow - Split 1/3', () => {
 					await route.fulfill({ status: 200 });
 				},
 			);
+
+			// Mock reCAPTCHA to prevent it blocking form submission on /welcome/complete-account.
+			// The server does not validate the reCAPTCHA token on this endpoint so a fake token is accepted.
+			await page.addInitScript(() => {
+				if (!window.location.pathname.startsWith('/welcome/complete-account')) {
+					return;
+				}
+
+				type RecaptchaCallback = (token: string) => void;
+				type RecaptchaMock = {
+					ready: (cb: () => void) => void;
+					render: (
+						el: unknown,
+						opts: { callback: RecaptchaCallback },
+					) => number;
+					execute: () => void;
+					reset: () => void;
+				};
+
+				const mock: RecaptchaMock = {
+					ready(cb) {
+						cb();
+					},
+					render(_el, opts) {
+						window.addEventListener(
+							'recaptcha-execute',
+							() => opts.callback('fake-recaptcha-token'),
+							{ once: true },
+						);
+						return 0;
+					},
+					execute() {
+						window.dispatchEvent(new Event('recaptcha-execute'));
+					},
+					reset() {},
+				};
+
+				// eslint-disable-next-line functional/immutable-data
+				Object.defineProperty(window, 'grecaptcha', {
+					configurable: true,
+					get(): RecaptchaMock {
+						return mock;
+					},
+					set(_value: RecaptchaMock) {},
+				});
+			});
 
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
@@ -331,6 +376,7 @@ test.describe('Registration flow - Split 1/3', () => {
 
 			await expect(page).toHaveURL(/\/welcome\/complete-account/);
 			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
+
 			await page.getByRole('button', { name: 'Next' }).click();
 
 			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
