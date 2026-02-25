@@ -405,7 +405,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			// test the registration platform is set correctly
 			const oktaUser = await getTestOktaUser(request, unregisteredEmail);
 			/*
-			 * Previously the playwright test checked that the okta status was 'ACTIVE' next
+			 * Previously the Cypress test checked that the okta status was 'ACTIVE' next
 			 * However, in playwright the status appears to be 'STAGED'
 			 * expect(oktaUser.status).toBe(Status.ACTIVE);
 			 */
