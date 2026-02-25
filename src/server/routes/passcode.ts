@@ -19,6 +19,7 @@ import handleRecaptcha from '../lib/recaptcha';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
+	res.set('Cache-Control', 'no-store');
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
 	const email = encrypedCookieState?.email;

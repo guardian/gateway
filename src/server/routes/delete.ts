@@ -70,7 +70,8 @@ router.get(
 				 * This code checks if we're running in Playwright to
 				 * mock the user's email validation status
 				 */
-				(runningInPlaywright && playwrightMockStateCookie === 'unvalidatedEmail')
+				(runningInPlaywright &&
+					playwrightMockStateCookie === 'unvalidatedEmail')
 			) {
 				// if not, ask them to validate their email address
 				const html = renderer('/delete-email-validation', {
