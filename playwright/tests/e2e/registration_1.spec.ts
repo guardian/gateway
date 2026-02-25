@@ -14,6 +14,7 @@ import {
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp } from '../../helpers/utils';
+import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 
 const existingUserSendEmailAndValidatePasscode = async ({
 	page,
@@ -34,7 +35,7 @@ const existingUserSendEmailAndValidatePasscode = async ({
 }) => {
 	await page.context().addCookies([
 		{
-			name: 'cypress-mock-state',
+			name: 'playwright-mock-state',
 			value: '1',
 			domain: process.env.BASE_URI,
 			path: '/',
@@ -200,7 +201,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			// test the registration platform is set correctly
 			const oktaUser = await getTestOktaUser(request, unregisteredEmail);
 			/*
-			 * Previously the cypress test checked that the okta status was 'ACTIVE' next
+			 * Previously the playwright test checked that the okta status was 'ACTIVE' next
 			 * However, in playwright the status appears to be 'STAGED'
 			 * expect(oktaUser.status).toBe(Status.ACTIVE);
 			 */
@@ -257,7 +258,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			// test the registration platform is set correctly
 			const oktaUser = await getTestOktaUser(request, unregisteredEmail);
 			/*
-			 * Previously the cypress test checked that the okta status was 'ACTIVE' next
+			 * Previously the playwright test checked that the okta status was 'ACTIVE' next
 			 * However, in playwright the status appears to be 'STAGED'
 			 * expect(oktaUser.status).toBe(Status.ACTIVE);
 			 */
@@ -282,52 +283,8 @@ test.describe('Registration flow - Split 1/3', () => {
 					await route.fulfill({ status: 200 });
 				},
 			);
-
-			// Mock reCAPTCHA to prevent it blocking form submission on /welcome/complete-account.
-			// The server does not validate the reCAPTCHA token on this endpoint so a fake token is accepted.
-			await page.addInitScript(() => {
-				if (!window.location.pathname.startsWith('/welcome/complete-account')) {
-					return;
-				}
-
-				type RecaptchaCallback = (token: string) => void;
-				type RecaptchaMock = {
-					ready: (cb: () => void) => void;
-					render: (
-						el: unknown,
-						opts: { callback: RecaptchaCallback },
-					) => number;
-					execute: () => void;
-					reset: () => void;
-				};
-
-				const mock: RecaptchaMock = {
-					ready(cb) {
-						cb();
-					},
-					render(_el, opts) {
-						window.addEventListener(
-							'recaptcha-execute',
-							() => opts.callback('fake-recaptcha-token'),
-							{ once: true },
-						);
-						return 0;
-					},
-					execute() {
-						window.dispatchEvent(new Event('recaptcha-execute'));
-					},
-					reset() {},
-				};
-
-				// eslint-disable-next-line functional/immutable-data
-				Object.defineProperty(window, 'grecaptcha', {
-					configurable: true,
-					get(): RecaptchaMock {
-						return mock;
-					},
-					set(_value: RecaptchaMock) {},
-				});
-			});
+			// block recaptcha client script to prevent google from robot checking playwright
+			await mockClientRecaptcha(page);
 
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
@@ -448,7 +405,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			// test the registration platform is set correctly
 			const oktaUser = await getTestOktaUser(request, unregisteredEmail);
 			/*
-			 * Previously the cypress test checked that the okta status was 'ACTIVE' next
+			 * Previously the playwright test checked that the okta status was 'ACTIVE' next
 			 * However, in playwright the status appears to be 'STAGED'
 			 * expect(oktaUser.status).toBe(Status.ACTIVE);
 			 */
@@ -547,7 +504,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			await page.goto('/register/email');
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: 'FR',
 					domain: process.env.BASE_URI,
 					path: '/',
@@ -572,7 +529,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			await page.goto('/register/email');
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: 'AU-ACT',
 					domain: process.env.BASE_URI,
 					path: '/',
@@ -713,7 +670,7 @@ test.describe('Registration flow - Split 1/3', () => {
 		test('resend email functionality', async ({ page }) => {
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: '1',
 					domain: process.env.BASE_URI,
 					path: '/',
@@ -977,7 +934,7 @@ test.describe('Registration flow - Split 1/3', () => {
 
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: '1',
 					domain: process.env.BASE_URI,
 					path: '/',

@@ -198,55 +198,49 @@ $ make test
 
 ### Integration Tests
 
-Integration tests are provided by [Cypress](https://cypress.io). They are all defined in the `cypress` folder.
+Integration tests are provided by [Playwright](https://playwright.dev/). They are all defined in the `playwright` folder.
 
 First make sure that the development environment isn't running, since the following scripts will set them up automatically.
 
-We now support a development mode that allows you to make code changes to the server without having the restart cypress to check your changes against the tests.
+We now support a development mode that allows you to make code changes to the server without having the restart playwright to check your changes against the tests.
 
 You can also run the tests with the production build (as is done in CI) without the ability to automatically reload the gateway server.
 
 You can then open the test runner in using:
 
 ```sh
-# to run in dev mode
-$ make cypress-mocked-dev
 # or to run in production mode
-$ make cypress-mocked
+$ make playwright-mocked
 ```
 
 You can also open the end to end test runner using:
 
 ```sh
 # to run in dev mode
-$ make cypress-ete-dev
+$ make playwright-ete-dev
 # or to run in production mode
-$ make cypress-ete
+$ make playwright-ete
 ```
 
 You can also run the Okta specific end to end tests using:
 
 ```sh
 # to run in dev mode
-$ make cypress-ete-dev
+$ make playwright-ete-dev
 # or to run in production mode
-$ make cypress-ete
+$ make playwright-ete
 ```
 
-It's recommended to use the `make` commands rather than calling the file directly e.g `./cypress-ete.sh`
+It's recommended to use the `make` commands rather than calling the file directly e.g `./playwright-ete.sh`
 as the test runners use environment variables to check the running mode.
 
-When creating new Cypress test files be sure to add a number to the name of the file so that GitHub actions can detect the test files and determine which machine to run the test on (`*.${{ matrix.group }}.cy.ts`).
+To determine how many machines we can run the tests on in CI, you can check the `matrix.group` variable in the `.github/workflows/playwright-*.yml` files.
 
-e.g. `cypress/integration/mocked/test.1.cy.ts`
+In terms of how Playwright works in github actions, it's kicked off by the `.github/workflows/playwright.yml` file. The workflow only runs on the following events: On `main` branch, on PR `review_request`, and on `workflow_dispatch` which let's us run this from the Actions tab. This workflow will first build the project, upload the build, and then kick off the other Playwright workflows.
 
-This allows us to run the tests in parallel on the CI environment. To determine how many machines we can run the tests on, you can check the `matrix.group` variable in the `.github/workflows/cypress-*.yml` files.
+The other workflows are defined in the `.github/workflows/playwright-*.yml` files, namely `playwright-ete.yml` and `playwright-mocked.yml`. These define the environments to run the Playwright E2E tests and Playwright tests against a mocked Okta API respectively. These workflows only run on `workflow_call`, so they can only run when called by another workflow, namely the `playwright.yml` workflow.
 
-In terms of how Cypress works in github actions, it's kicked off by the `.github/workflows/cypress.yml` file. The workflow only runs on the following events: On `main` branch, on PR `review_request`, and on `workflow_dispatch` which let's us run this from the Actions tab. This workflow will first build the project, upload the build, and then kick off the other Cypress workflows.
-
-The other workflows are defined in the `.github/workflows/cypress-*.yml` files, namely `cypress-ete.yml` and `cypress-mocked.yml`. These define the environments to run the Cypress E2E tests and Cypress tests against a mocked Okta API respectively. These workflows only run on `workflow_call`, so they can only run when called by another workflow, namely the `cypress.yml` workflow.
-
-As mentioned previously these are also set to run on a matrix group. This splits the cypress tests out into a parallel set of cypress tests rather than running all the tests on a single machine. This means that by running tests in parallel that they should run slightly faster as each individual matrix machine has less tests to run. It should help with test flakiness, or at least being able to identify which tests are flaky. This is also why we use the `matrix.group` variable in the `.github/workflows/cypress-*.yml` files and append it to the test file name: `*.${{ matrix.group }}.cy.ts`.
+As mentioned previously these are also set to run on a matrix group. This splits the playwright tests out into a parallel set of playwright tests rather than running all the tests on a single machine. This means that by running tests in parallel that they should run slightly faster as each individual matrix machine has less tests to run. It should help with test flakiness, or at least being able to identify which tests are flaky. This is also why we use the `matrix.group` variable in the `.github/workflows/playwright-*.yml` files and append it to the test file name: `*.${{ matrix.group }}.cy.ts`.
 
 ## Accessing Gateway on CODE or PROD
 

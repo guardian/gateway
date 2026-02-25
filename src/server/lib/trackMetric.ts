@@ -25,8 +25,8 @@ export const trackMetric = (
 	metricName: Metrics,
 	dimensions?: MetricDimensions,
 ): void => {
-	if (process.env.RUNNING_IN_CYPRESS === 'true') {
-		// return void in cypress
+	if (process.env.RUNNING_IN_PLAYWRIGHT === 'true') {
+		// return void in playwright
 		return;
 	}
 

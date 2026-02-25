@@ -517,7 +517,7 @@ const updateNewslettersAndConstents = async (
 	res: ResponseWithRequestState,
 	loggingContext: string,
 ) => {
-	const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
 	const state = res.locals;
 
 	if (!state.oauthState) {
@@ -533,11 +533,11 @@ const updateNewslettersAndConstents = async (
 
 			// since the CODE newsletters API isn't up to date with PROD newsletters API the
 			// review page will not show the correct newsletters on CODE.
-			// so when running in cypress we set a cookie to return the decrypted consents to cypress
+			// so when running in Playwright we set a cookie to return the decrypted consents to playwright
 			// so we can check we at least got to the correct code path
-			if (runningInCypress) {
+			if (runningInPlaywright) {
 				res.cookie(
-					'cypress-consent-response',
+					'playwright-consent-response',
 					JSON.stringify(registrationConsents.consents),
 				);
 			}
@@ -560,11 +560,11 @@ const updateNewslettersAndConstents = async (
 
 			// since the CODE newsletters API isn't up to date with PROD newsletters API the
 			// review page will not show the correct newsletters on CODE.
-			// so when running in cypress we set a cookie to return the decrypted consents to cypress
+			// so when running in playwright we set a cookie to return the decrypted consents to playwright
 			// so we can check we at least got to the correct code path
-			if (runningInCypress) {
+			if (runningInPlaywright) {
 				res.cookie(
-					'cypress-newsletter-response',
+					'playwright-newsletter-response',
 					JSON.stringify(registrationConsents.newsletters),
 				);
 			}

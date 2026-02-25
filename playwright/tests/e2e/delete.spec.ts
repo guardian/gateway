@@ -84,7 +84,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'digitalPack',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -110,7 +110,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'paperSubscriber',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -138,7 +138,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'guardianWeeklySubscriber',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -166,7 +166,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'feast',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -194,7 +194,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'recurringContributor',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -220,7 +220,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'member',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -246,7 +246,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'paidMember',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -273,7 +273,7 @@ test.describe('Delete my account flow in Okta', () => {
 		// set the mock state cookie
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'unvalidatedEmail',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -318,7 +318,7 @@ test.describe('Delete my account flow in Okta', () => {
 		await page.locator('button[type="submit"]').click();
 
 		await expect(page).toHaveURL(/\/reset-password\/complete/);
-		await context.clearCookies({ name: 'cypress-mock-state' });
+		await context.clearCookies({ name: 'playwright-mock-state' });
 		await page.getByText('Continue to the Guardian').click();
 		await expect(page).toHaveURL(/\/delete/);
 	});
@@ -334,7 +334,7 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await context.addCookies([
 			{
-				name: 'cypress-mock-state',
+				name: 'playwright-mock-state',
 				value: 'noPassword',
 				domain: 'profile.thegulocal.com',
 				path: '/',
@@ -378,7 +378,7 @@ test.describe('Delete my account flow in Okta', () => {
 		await page.locator('button[type="submit"]').click();
 
 		await expect(page).toHaveURL(/\/reset-password\/complete/);
-		await context.clearCookies({ name: 'cypress-mock-state' });
+		await context.clearCookies({ name: 'playwright-mock-state' });
 		await page.getByText('Continue to the Guardian').click();
 		await expect(page).toHaveURL(/\/delete/);
 	});

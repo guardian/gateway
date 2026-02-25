@@ -280,7 +280,7 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: '1',
 					domain: process.env.BASE_URI,
 					path: '/',

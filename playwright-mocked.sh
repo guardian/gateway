@@ -24,13 +24,13 @@ set -ae
 trap 'kill $(jobs -p)' INT TERM EXIT
 
 echo "loading environment variables"
-source cypress-mocked.env
-CI_ENV=$(cat cypress-mocked.env | tr '\n' ',')
+source playwright-mocked.env
+CI_ENV=$(cat playwright-mocked.env | tr '\n' ',')
 CI_ENV=${CI_ENV%?}
 
-# Used to tell Gateway server we're running in Cypress
-RUNNING_IN_CYPRESS=true
-RUNNING_IN_CYPRESS_MOCKED=true
+# Used to tell Gateway server we're running in Playwright
+RUNNING_IN_PLAYWRIGHT=true
+RUNNING_IN_PLAYWRIGHT_MOCKED=true
 
 if [ -z ${NODE_EXTRA_CA_CERTS+x} ]; then
   echo "NODE_EXTRA_CA_CERTS is unset in your bash config, see setup docs on how to set this."

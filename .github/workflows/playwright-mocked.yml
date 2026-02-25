@@ -61,8 +61,8 @@ jobs:
       # Required for the tests to run as we're unable to verify the created certs
       NODE_TLS_REJECT_UNAUTHORIZED: 0
       # Used to tell Gateway server we're running in Playwright
-      RUNNING_IN_CYPRESS: true
-      RUNNING_IN_CYPRESS_MOCKED: true
+      RUNNING_IN_PLAYWRIGHT: true
+      RUNNING_IN_PLAYWRIGHT_MOCKED: true
     steps:
       - name: Checkout
         uses: actions/checkout@v5

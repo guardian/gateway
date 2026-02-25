@@ -31,15 +31,9 @@ server {
 
 Restart nginx to apply changes.
 
-_Note_: this works for localhost but will cause Cypress tests to fail locally.
+_Note_: this works for localhost but will cause playwright tests to fail locally.
 
-**Potentially impacted Cypress tests:**
-
-- `cypress/integration/mocked/onboarding_flow.1.cy.ts`
-- `cypress/integration/ete-okta/onboarding_flow.5.cy.ts`
-
-- Testing data may need to be updated here:
-  - `cypress/support/idapi/newsletter.ts`
-  - `cypress/support/pages/onboarding/newsletters_page.ts`
+**Potentially impacted Playwright tests:**
+tests that sign up for geo located newsletters
 
 Always check the Review page is also working as expected after localisation or updates.

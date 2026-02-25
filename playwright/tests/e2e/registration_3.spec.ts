@@ -659,7 +659,7 @@ test.describe('Registration flow - Split 3/3', () => {
 
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: '1',
 					domain: process.env.BASE_URI,
 					path: '/',

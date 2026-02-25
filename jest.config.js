@@ -11,7 +11,6 @@ module.exports = {
 			'<rootDir>/__mocks__/fileMock.js',
 	},
 	testPathIgnorePatterns: [
-		'<rootDir>/cypress/',
 		'<rootDir>/node_modules/',
 		'<rootDir>/playwright/',
 		'utils',

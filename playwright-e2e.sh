@@ -30,8 +30,8 @@ source .env
 CI_ENV=$(cat .env | tr '\n' ',')
 CI_ENV=${CI_ENV%?}
 
-# Used to tell Gateway server we're running in Cypress
-RUNNING_IN_CYPRESS=true
+# Used to tell Gateway server we're running in Playwright
+RUNNING_IN_PLAYWRIGHT=true
 
 
 if [ -z ${NODE_EXTRA_CA_CERTS+x} ]; then
@@ -78,4 +78,3 @@ set -a
 source .env
 set +a
 pnpm run playwright:e2e --ui
-#pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete/**/*.cy.ts"]}}' --e2e --browser chrome

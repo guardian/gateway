@@ -21,7 +21,7 @@ test.describe('New account newsletters page', () => {
 
 			await page.context().addCookies([
 				{
-					name: 'cypress-mock-state',
+					name: 'playwright-mock-state',
 					value: geoLocation,
 					domain: process.env.BASE_URI,
 					path: '/',
