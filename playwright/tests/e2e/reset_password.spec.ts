@@ -173,13 +173,15 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
 			const refViewId = 'testRefViewId';
 			const clientId = 'jobs';
+			const appClientId = 'appClientId1';
+			const fromURI = 'fromURI1';
 
 			const { emailAddress } = await createTestUser(request, {
 				isUserEmailValidated: true,
 			});
 
 			await page.goto(
-				`/reset-password?useOktaClassic=true&returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}`,
+				`/reset-password?useOktaClassic=true&returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
 			);
 			const timeRequestWasMade = new Date();
 
@@ -202,6 +204,8 @@ test.describe('Password reset flow in Okta - useOktaClassic', () => {
 			expect(formAction).toMatch(new RegExp(escapeRegExp(refViewId)));
 			expect(formAction).toMatch(new RegExp(escapeRegExp(encodedRef)));
 			expect(formAction).toMatch(new RegExp(escapeRegExp(clientId)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(appClientId)));
+			expect(formAction).not.toMatch(new RegExp(escapeRegExp(fromURI)));
 
 			// reload to make sure the params are persisted even on page refresh
 			await page.reload();
