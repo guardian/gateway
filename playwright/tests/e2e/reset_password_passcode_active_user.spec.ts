@@ -201,7 +201,7 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
 
-			// ensure that the code is alway 6 characters long (pad it with leading zeros if necasery)
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
 			const wrongCode = String((+code! + 1) % 1000000).padStart(6, '0');
 			await page.locator('input[name=code]').fill(wrongCode);
 
