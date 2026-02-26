@@ -166,7 +166,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 
 			const finalTermsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://profile.thegulocal.com/welcome/review`;
 
-			await page.goto(finalTermsAcceptPageUrl, { waitUntil: 'networkidle' });
+			await page.goto(finalTermsAcceptPageUrl);
 
 			await expect(page).toHaveURL(
 				/https:\/\/profile\.thegulocal\.com\/welcome\/review/,

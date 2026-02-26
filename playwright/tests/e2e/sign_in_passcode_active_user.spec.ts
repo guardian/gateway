@@ -140,8 +140,6 @@ test.describe('Sign In flow, with passcode', () => {
 			request,
 			page,
 		}) => {
-			// INFO: this is the original test we needed to mock recaptcha for
-
 			const { emailAddress, finalPassword } = await createTestUser(request, {
 				isUserEmailValidated: true,
 			});
