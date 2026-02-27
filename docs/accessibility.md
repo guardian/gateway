@@ -39,7 +39,7 @@ To test the accessibility using this tool on a specific page in a playwright tes
 
 ```js
 // import the axe check
-import { injectAndCheckAxe } from '../helpers/accessability';
+import { injectAndCheckAxe } from '../helpers/accessibility';
 
 ...
 
