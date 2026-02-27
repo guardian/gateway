@@ -538,6 +538,17 @@ test.describe('Sign in flow, Okta enabled - split 1', () => {
 			request,
 			page,
 		}) => {
+			// this is a specific test case for new user registrations in Okta
+			// In Okta new social registered users are added to the GuardianUser-EmailValidated group
+			// by default, but the custom emailValidated field is not defined/set to false
+			// this causes problems in legacy code, where the emailValidated flag is not set but the group is
+			// so we need to set the flag to true when the user is added to the group
+			// we do this on the oauth callback route /oauth/authorization-code/callback
+			// where we update the user profile with the emailValidated flag if the user is in the GuardianUser-EmailValidated group but the emailValidated is falsy
+
+			// This test checks this behaviour by first getting a user into this state
+			// i.e user.profile.emailValidated = false, and user groups has GuardianUser-EmailValidated
+
 			// first we have to get the id of the GuardianUser-EmailValidated group
 			const groupId = await findEmailValidatedOktaGroupId(request);
 
