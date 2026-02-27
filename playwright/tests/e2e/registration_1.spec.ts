@@ -1057,7 +1057,7 @@ test.describe('Registration flow - Split 1/3', () => {
 				/**
 				 * END - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR
 				 */
-				await page.goto('/signin?usePasscodeSignIn=true');
+				await page.goto('/signin');
 				await page.getByText('Sign in with a different email').click();
 				await existingUserSendEmailAndValidatePasscode({
 					page,

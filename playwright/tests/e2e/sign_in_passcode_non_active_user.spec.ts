@@ -41,7 +41,7 @@ test.describe('Sign In flow, with passcode (part 1)', () => {
 			const oktaUser = await getTestOktaUser(request, emailAddress);
 			expect(oktaUser.status).toBe(Status.STAGED);
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -85,7 +85,7 @@ test.describe('Sign In flow, with passcode (part 1)', () => {
 			const oktaUser = await getTestOktaUser(request, emailAddress);
 			expect(oktaUser.status).toBe(Status.PROVISIONED);
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -125,7 +125,7 @@ test.describe('Sign In flow, with passcode (part 1)', () => {
 			const oktaUser = await getTestOktaUser(request, emailAddress);
 			expect(oktaUser.status).toBe(Status.RECOVERY);
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -164,7 +164,7 @@ test.describe('Sign In flow, with passcode (part 1)', () => {
 			const oktaUser = await getTestOktaUser(request, emailAddress);
 			expect(oktaUser.status).toBe(Status.PASSWORD_EXPIRED);
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();

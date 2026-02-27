@@ -41,7 +41,7 @@ test.describe('Sign In flow, with passcode', () => {
 				isUserEmailValidated: true,
 			});
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -82,9 +82,7 @@ test.describe('Sign In flow, with passcode', () => {
 				isUserEmailValidated: true,
 			});
 
-			await page.goto(
-				`/signin?usePasscodeSignIn=true&returnUrl=${encodedReturnUrl}`,
-			);
+			await page.goto(`/signin?returnUrl=${encodedReturnUrl}`);
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -189,7 +187,7 @@ test.describe('Sign In flow, with passcode', () => {
 				isUserEmailValidated: true,
 			});
 
-			await page.goto(`/signin?usePasscodeSignIn=true`);
+			await page.goto(`/signin`);
 			await page.locator('input[name=email]').fill(emailAddress);
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 
@@ -246,7 +244,7 @@ test.describe('Sign In flow, with passcode', () => {
 				},
 			]);
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -294,7 +292,7 @@ test.describe('Sign In flow, with passcode', () => {
 				isUserEmailValidated: true,
 			});
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -318,7 +316,7 @@ test.describe('Sign In flow, with passcode', () => {
 				isUserEmailValidated: true,
 			});
 
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.locator('input[name=email]').fill(emailAddress);
 
 			const timeRequestWasMade = new Date();
@@ -365,7 +363,7 @@ test.describe('Sign In flow, with passcode', () => {
 				isUserEmailValidated: true,
 			});
 
-			await page.goto(`/signin?usePasscodeSignIn=true`);
+			await page.goto(`/signin`);
 			await page.locator('input[name=email]').clear();
 			await page.locator('input[name=email]').fill(emailAddress);
 
@@ -482,7 +480,7 @@ test.describe('Sign In flow, with passcode', () => {
 			/**
 			 * END - SETUP USER WITH ONLY PASSWORD AUTHENTICATOR
 			 */
-			await page.goto('/signin?usePasscodeSignIn=true');
+			await page.goto('/signin');
 			await page.getByText('Sign in with a different email').click();
 
 			await page.locator('input[name=email]').fill(emailAddress);
