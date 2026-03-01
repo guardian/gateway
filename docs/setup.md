@@ -240,7 +240,7 @@ In terms of how Playwright works in github actions, it's kicked off by the `.git
 
 The other workflows are defined in the `.github/workflows/playwright-*.yml` files, namely `playwright-ete.yml` and `playwright-mocked.yml`. These define the environments to run the Playwright E2E tests and Playwright tests against a mocked Okta API respectively. These workflows only run on `workflow_call`, so they can only run when called by another workflow, namely the `playwright.yml` workflow.
 
-As mentioned previously these are also set to run on a matrix group. This splits the playwright tests out into a parallel set of playwright tests rather than running all the tests on a single machine. This means that by running tests in parallel that they should run slightly faster as each individual matrix machine has less tests to run. It should help with test flakiness, or at least being able to identify which tests are flaky. This is also why we use the `matrix.group` variable in the `.github/workflows/playwright-*.yml` files and append it to the test file name: `*.${{ matrix.group }}.cy.ts`.
+As mentioned previously these are also set to run on a matrix group. This splits the playwright tests out into a parallel set of playwright tests rather than running all the tests on a single machine. This means that by running tests in parallel that they should run slightly faster as each individual matrix machine has less tests to run. It should help with test flakiness, or at least being able to identify which tests are flaky. This is also why we use the `matrix.group` variable in the `.github/workflows/playwright-*.yml` files and append it to the test file name: `*.${{ matrix.group }}.spec.ts`.
 
 ## Accessing Gateway on CODE or PROD
 
