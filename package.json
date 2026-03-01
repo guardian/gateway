@@ -153,6 +153,9 @@
 		"zod": "^4.1.12"
 	},
 	"pnpm": {
+		"overrides": {
+			"minimatch@9.0.5": "9.0.6"
+		},
 		"onlyBuiltDependencies": [
 			"@playwright/test",
 			"esbuild",
