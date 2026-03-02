@@ -29,6 +29,12 @@
     "ts-node": "^10.9.2",
     "typescript": "5.9.3"
   },
+  "pnpm": {
+		"overrides": {
+			"minimatch@3.1.2": "3.1.4",
+			"minimatch@>=9.0.0 <9.0.7": "9.0.7"
+		}
+	},
   "prettier": "@guardian/prettier",
   "jest": {
     "testMatch": [
