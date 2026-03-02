@@ -51,12 +51,12 @@ Other documentation in the [docs](docs) folder.
 
 - `make ci` or `./ci.sh`
   - This runs linting, type-check, unit tests, build checks
-- `make cypress-mocked` or `./cypress-mocked`
-  - This runs Cypress integration tests against a mocked version of the Okta API
-- `make cypress-ete` or `./cypress-ete`
-  - This runs Cypress end-to-end tests against the Okta environment defined in `.env`
+- `make playwright-mocked`
+  - This runs the Playwright integration tests against a mocked version of the Okta API
+- `make playwright-e2e`
+  - This runs the Playwright end-to-end tests against the Okta environment defined in `.env`
   - Be sure to use sparingly, this relies on [Mailosaur](https://mailosaur.com/) which has a limited number of emails we can test with it each day
-- You can add `-dev` to the end of any of the above commands to run the tests against the development server. e.g. `make cypress-ete-dev`
+- You can add `-dev` to the end of any of the above commands to run the tests against the development server. e.g. `make playwright-e2e-dev`
 
 4. Make sure your branch is up to date with `main`
 
@@ -69,8 +69,8 @@ Other documentation in the [docs](docs) folder.
 5. Open a pull request
 
 - The template can be used for guidance on how to structure the PR, but you don't have to follow it.
-- Draft pull requests, and open pull requests with further pushed commits will not run the `Chromatic` and `cypress-ete` on each push/by default.
-  - You have to manually opt into running these tests by either marking the draft PR as "Ready for review", or re-requesting a review (usually from "guardian/identity" or a previous reviewer)
+- Draft pull requests, and open pull requests with further pushed commits will not run the `Chromatic` and `playwright-e2e` on each push/by default.
+  - You have to manually opt into running these tests by either marking the draft PR as "Ready for review", re-requesting a review (usually from "guardian/identity" or a previous reviewer), or adding the label `run_tests` to the pr
   - This change was made to limit the number of builds to Chromatic and emails with Mailosaur to reduce costs with those products
 
 6. Code will be reviewed and require a 👍 from a team member before it will be merged

@@ -6,7 +6,7 @@ import {
 	RegistrationLocationState,
 	UsStates,
 } from '@/shared/model/RegistrationLocation';
-import { maybeGetCountryCodeFromCypressMockStateCookie } from '@/server/lib/cypress';
+import { maybeGetCountryCodeFromPlaywrightMockStateCookie } from '@/server/lib/playwright';
 
 const headerValueIsCountryCode = (
 	header: string | string[] | undefined,
@@ -41,10 +41,10 @@ export const getRegistrationLocation = (
 	RegistrationLocationState | undefined,
 ] => {
 	/**
-	 * Cypress Test START
+	 * Playwright Test START
 	 */
 	const [maybeMockedCountryCode, maybeMockedStateCode] =
-		maybeGetCountryCodeFromCypressMockStateCookie(req);
+		maybeGetCountryCodeFromPlaywrightMockStateCookie(req);
 	if (maybeMockedCountryCode) {
 		const mockedRegistrationLocation = countryCodeToRegistrationLocation(
 			maybeMockedCountryCode,
@@ -61,7 +61,7 @@ export const getRegistrationLocation = (
 		];
 	}
 	/**
-	 * Cypress Test END
+	 * Playwright Test END
 	 */
 
 	// get the country code from the header

@@ -25,7 +25,7 @@ const config: KnipConfig = {
 		'.storybook/**/*.{js,ts}',
 		'cdk/bin/cdk.ts',
 		'cdk/jest.setup.js',
-		'cypress/**/*.{js,ts}',
+		'playwright/**/*.{js,ts}',
 		'scripts/**/*.{js,ts}',
 		'src/client/static/index.tsx',
 		'src/server/index.ts',

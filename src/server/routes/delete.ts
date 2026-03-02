@@ -48,14 +48,14 @@ router.get(
 
 		try {
 			/**
-			 * Cypress Test START
+			 * Playwright Test START
 			 *
-			 * This code checks if we're running in Cypress
+			 * This code checks if we're running in Playwright
 			 */
-			const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
-			const cypressMockStateCookie = req.cookies['cypress-mock-state'];
+			const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
+			const playwrightMockStateCookie = req.cookies['playwright-mock-state'];
 			/**
-			 * Cypress Test END
+			 * Playwright Test END
 			 */
 
 			// get the current user profile
@@ -65,12 +65,13 @@ router.get(
 			if (
 				!user.profile.emailValidated ||
 				/**
-				 * Cypress Test
+				 * Playwright Test
 				 *
-				 * This code checks if we're running in Cypress to
+				 * This code checks if we're running in Playwright to
 				 * mock the user's email validation status
 				 */
-				(runningInCypress && cypressMockStateCookie === 'unvalidatedEmail')
+				(runningInPlaywright &&
+					playwrightMockStateCookie === 'unvalidatedEmail')
 			) {
 				// if not, ask them to validate their email address
 				const html = renderer('/delete-email-validation', {
@@ -90,12 +91,12 @@ router.get(
 			if (
 				!user.credentials.password ||
 				/**
-				 * Cypress Test
+				 * Playwright Test
 				 *
-				 * This code checks if we're running in Cypress to
+				 * This code checks if we're running in Playwright to
 				 * mock the user's password
 				 */
-				(runningInCypress && cypressMockStateCookie === 'noPassword')
+				(runningInPlaywright && playwrightMockStateCookie === 'noPassword')
 			) {
 				// if not, ask them to set a password
 				const html = renderer('/delete-set-password', {
@@ -120,12 +121,12 @@ router.get(
 			if (userAttributes) {
 				const contentAccess: UserAttributesResponse['contentAccess'] = (() => {
 					/**
-					 * Cypress Test START
+					 * Playwright Test START
 					 *
-					 * This code is only used in Cypress tests to mock the user's content access
+					 * This code is only used in Playwright tests to mock the user's content access
 					 */
-					if (runningInCypress && cypressMockStateCookie) {
-						const cypressContentAccess: UserAttributesResponse['contentAccess'] =
+					if (runningInPlaywright && playwrightMockStateCookie) {
+						const playwrightContentAccess: UserAttributesResponse['contentAccess'] =
 							{
 								digitalPack: false,
 								guardianWeeklySubscriber: false,
@@ -137,46 +138,46 @@ router.get(
 								supporterPlus: false,
 							};
 
-						switch (cypressMockStateCookie) {
+						switch (playwrightMockStateCookie) {
 							case 'digitalPack':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.digitalPack = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.digitalPack = true;
 								break;
 							case 'guardianWeeklySubscriber':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.guardianWeeklySubscriber = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.guardianWeeklySubscriber = true;
 								break;
 							case 'member':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.member = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.member = true;
 								break;
 							case 'paidMember':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.paidMember = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.paidMember = true;
 								break;
 							case 'paperSubscriber':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.paperSubscriber = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.paperSubscriber = true;
 								break;
 							case 'recurringContributor':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.recurringContributor = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.recurringContributor = true;
 								break;
 							case 'feast':
-								// eslint-disable-next-line functional/immutable-data -- cypress test only
-								cypressContentAccess.feast = true;
+								// eslint-disable-next-line functional/immutable-data -- playwright test only
+								playwrightContentAccess.feast = true;
 								break;
 							default:
 								break;
 						}
 
-						return cypressContentAccess;
+						return playwrightContentAccess;
 					}
 					/**
-					 * Cypress Test END
+					 * Playwright Test END
 					 */
 
-					// default to the user's content access from the members data api if not in Cypress
+					// default to the user's content access from the members data api if not in Playwright
 					return userAttributes.contentAccess;
 				})();
 

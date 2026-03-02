@@ -44,7 +44,7 @@ Here is a general workflow for so doing:
 5. Upgrade the packages in batches. First perform the semver patch and minor
    updates, followed by individual major updates, unless any of these updates
    are being held back.
-6. After every batch, test the app by running commands such as `make dev`, `make build`, `make test`, `make cypress-{mocked|ete}{|-okta}`. Various packages will of course be best tested by various commands and sanity checks.
+6. After every batch, test the app by running commands such as `make dev`, `make build`, `make test`, `make playwright-{mocked|ete}`. Various packages will of course be best tested by various commands and sanity checks.
 7. Once it looks like the update is working, commit that batch of changes.
 8. Once all your changes are in, make sure to run GitHub CI and have your PR
    reviewed.

@@ -101,14 +101,14 @@ const authenticationHandler = async (
 ): Promise<void> => {
 	try {
 		/**
-		 * Cypress Test START
+		 * Playwright Test START
 		 *
-		 * This code checks if we're running in Cypress
+		 * This code checks if we're running in Playwright
 		 */
-		const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
-		const cypressMockStateCookie = req.cookies['cypress-mock-state'];
+		const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
+		const playwrightMockStateCookie = req.cookies['playwright-mock-state'];
 		/**
-		 * Cypress Test END
+		 * Playwright Test END
 		 */
 
 		// this is just to handle potential errors where we don't get back an access token
@@ -259,15 +259,15 @@ const authenticationHandler = async (
 					authState.confirmationPage = `/welcome/google-one-tap`;
 				} else if (
 					authState.data?.socialProvider ||
-					// Cypress Test START
-					// this is a special case for the cypress tests, where we want to be able to mock the social provider
-					(runningInCypress &&
-						(cypressMockStateCookie === 'google' ||
-							cypressMockStateCookie === 'apple'))
+					// Playwright Test START
+					// this is a special case for the playwright tests, where we want to be able to mock the social provider
+					(runningInPlaywright &&
+						(playwrightMockStateCookie === 'google' ||
+							playwrightMockStateCookie === 'apple'))
 				) {
 					const path =
 						authState.data?.socialProvider ||
-						(cypressMockStateCookie as SocialProvider);
+						(playwrightMockStateCookie as SocialProvider);
 					// if there is a social provider in the response (which there should be), then show the social consents page
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/${path}`;
@@ -317,11 +317,11 @@ const authenticationHandler = async (
 
 						// since the CODE newsletters API isn't up to date with PROD newsletters API the
 						// review page will not show the correct newsletters on CODE.
-						// so when running in cypress we set a cookie to return the decrypted consents to cypress
+						// so when running in playwright we set a cookie to return the decrypted consents to playwright
 						// so we can check we at least got to the correct code path
-						if (runningInCypress) {
+						if (runningInPlaywright) {
 							res.cookie(
-								'cypress-consent-response',
+								'playwright-consent-response',
 								JSON.stringify(decryptedConsents.consents),
 							);
 						}
@@ -342,11 +342,11 @@ const authenticationHandler = async (
 						});
 						// since the CODE newsletters API isn't up to date with PROD newsletters API the
 						// review page will not show the correct newsletters on CODE.
-						// so when running in cypress we set a cookie to return the decrypted consents to cypress
+						// so when running in playwright we set a cookie to return the decrypted consents to playwright
 						// so we can check we at least got to the correct code path
-						if (runningInCypress) {
+						if (runningInPlaywright) {
 							res.cookie(
-								'cypress-newsletter-response',
+								'playwright-newsletter-response',
 								JSON.stringify(decryptedConsents.newsletters),
 							);
 						}
@@ -493,17 +493,17 @@ const authenticationHandler = async (
 			isSocialRegistration &&
 			authState.queryParams.fromURI &&
 			(authState.data?.socialProvider ||
-				// Cypress Test START
-				// this is a special case for the cypress tests, where we want to be able to mock the social provider
-				(runningInCypress &&
-					(cypressMockStateCookie === 'google' ||
-						cypressMockStateCookie === 'apple')))
+				// Playwright Test START
+				// this is a special case for the playwright tests, where we want to be able to mock the social provider
+				(runningInPlaywright &&
+					(playwrightMockStateCookie === 'google' ||
+						playwrightMockStateCookie === 'apple')))
 		) {
 			// get the social provider from the authState.data.socialProvider
-			// or from the cypress mock state cookie if we're running in cypress
+			// or from the playwright mock state cookie if we're running in playwright
 			const path =
 				authState.data?.socialProvider ||
-				(cypressMockStateCookie as SocialProvider);
+				(playwrightMockStateCookie as SocialProvider);
 
 			return res.redirect(
 				303,

@@ -2,19 +2,19 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { Request } from 'express';
 import { Europe } from '@/server/lib/getRegistrationLocation';
 import { CountryCode } from '@guardian/libs';
-import { maybeGetCountryCodeFromCypressMockStateCookie } from '@/server/lib/cypress';
+import { maybeGetCountryCodeFromPlaywrightMockStateCookie } from '@/server/lib/playwright';
 
 export const getGeolocationRegion = (req: Request): GeoLocation => {
 	/**
-	 * Cypress Test START
+	 * Playwright Test START
 	 */
 	const [maybeMockedCountryCode] =
-		maybeGetCountryCodeFromCypressMockStateCookie(req);
+		maybeGetCountryCodeFromPlaywrightMockStateCookie(req);
 	if (maybeMockedCountryCode) {
 		return countryCodeToRegion(maybeMockedCountryCode);
 	}
 	/**
-	 * Cypress Test END
+	 * Playwright Test END
 	 */
 	const header = req.headers['x-gu-geolocation'];
 	return countryCodeToRegion(header);

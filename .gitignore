@@ -53,6 +53,11 @@ cypress/videos
 # Cypress screenshots
 cypress/screenshots
 
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
 # Rate limiter configuration
 .ratelimit.json
 

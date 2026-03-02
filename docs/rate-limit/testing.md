@@ -6,4 +6,4 @@ The Express rate limiting middleware layer is tested using the [Supertest](https
 
 An in-memory instance of Redis called [ioredis-mock](https://github.com/stipsan/ioredis-mock#readme) is used to back both of these test suites.
 
-A Redis instance and rate limiter configuration is made available in our GitHub actions for our Cypress end-to-end and mocked test suites. This is so that we can run our tests in an environment that is as similar to production as possible. A test is also included to check that the access token rate limiting bucket is working as expected once the user is signed in: `hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout`
+A Redis instance and rate limiter configuration is made available in our GitHub actions for our Playwright end-to-end and mocked test suites. This is so that we can run our tests in an environment that is as similar to production as possible. A test is also included to check that the access token rate limiting bucket is working as expected once the user is signed in: `hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout`

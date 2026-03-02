@@ -32,9 +32,9 @@ const OAuthAccessTokenCookieName = 'GU_ACCESS_TOKEN';
 const OAuthIdTokenCookieName = 'GU_ID_TOKEN';
 
 const issuerDomain = () => {
-	// if we're in cypress mocked, we need to add https to the issuer domain, just to get it
-	// to validate, even if we never actually use the verifier in cypress mocked tests
-	if (process.env.RUNNING_IN_CYPRESS_MOCKED === 'true') {
+	// if we're in playwright mocked, we need to add https to the issuer domain, just to get it
+	// to validate, even if we never actually use the verifier in playwright mocked tests
+	if (process.env.RUNNING_IN_PLAYWRIGHT_MOCKED === 'true') {
 		return okta.orgUrl.replace('http://', 'https://');
 	}
 	// If we're in DEV, but we're developing against okta CODE environment, the issuer domain
@@ -171,7 +171,7 @@ export const getOAuthTokenCookie = (
 ): string | undefined => {
 	// eslint-disable-next-line functional/no-let -- used to determine the cookie source, TODO: potential for refactoring to remove let
 	let cookieSource: 'cookies' | 'signedCookies';
-	if (process.env.RUNNING_IN_CYPRESS === 'true') {
+	if (process.env.RUNNING_IN_PLAYWRIGHT === 'true') {
 		// If we're in testing, first try reading from signedCookies,
 		// and only then fall back to regular cookies.
 		if (Object.keys(req.signedCookies).includes(name)) {

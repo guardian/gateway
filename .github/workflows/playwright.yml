@@ -1,0 +1,59 @@
+name: Playwright Tests
+permissions:
+  # required by aws-actions/configure-aws-credentials
+  id-token: write
+  contents: read
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: ['review_requested', 'labeled']
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build Gateway
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'run_tests')  ||  github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: Cache pnpm modules and Playwright browsers
+        uses: actions/cache@v4
+        id: pnpm-cache
+        with:
+          path: |
+            ${{ steps.pnpm-cache-dir.outputs.PNPM_STORE_PATH }}
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-pnpm-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-playwright-
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build project
+        run: pnpm run build
+      - name: 'Zip build'
+        run: zip -r -q build.zip ./build
+      - name: 'Upload build'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build.zip
+          retention-days: 1
+  playwright-mocked:
+    needs: build
+    uses: ./.github/workflows/playwright-mocked.yml
+    secrets: inherit
+  playwright-e2e:
+    needs: build
+    uses: ./.github/workflows/playwright-e2e.yml
+    secrets: inherit

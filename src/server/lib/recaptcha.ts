@@ -35,10 +35,7 @@ interface RecaptchaAPIResponse {
  * Takes the reCAPTCHA token from the client and sends it to the Google reCAPTCHA API to verify it.
  * If the token is valid, the request will be allowed to continue; if not, an error will be thrown.
  * Documentation: https://developers.google.com/recaptcha/docs/verify
- * @param req Express request object
- * @param _ Express response object (not used)
- * @param next Express next function
- * @returns Throws an error if the reCAPTCHA check has failed; otherwise, calls the next function
+ * Throws an error if the reCAPTCHA check has failed; otherwise, calls the next function
  */
 const handleRecaptcha = async (
 	req: Request,
@@ -74,7 +71,6 @@ const handleRecaptcha = async (
 			);
 			return next(recaptchaError);
 		}
-
 		trackMetric('RecaptchaMiddleware::Success');
 		next();
 	} catch (error) {
