@@ -380,6 +380,10 @@ const oktaIdxCreateAccountOrSignIn = async (
 			return '/welcome/complete-account';
 		}
 
+		if (clientId === 'jobs') {
+			return JOBS_TOS_URI;
+		}
+
 		if (appClientId === 'printpromo') {
 			return '/welcome/print-promo';
 		}
@@ -392,11 +396,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath: isCombinedSigninAndRegisterFlow
-					? '/welcome/complete-account'
-					: clientId === 'jobs'
-						? JOBS_TOS_URI
-						: '/welcome/review',
+				confirmationPagePath: getConfirmationPagePathForNewUser(),
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
