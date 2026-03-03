@@ -47,9 +47,9 @@ import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
-import { sendToMembershipQueueForPrintPromo } from '../lib/sqs/membership-sqs';
 import { getUser } from '../lib/okta/api/users';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { publishSnsEvent } from '../lib/sqs/snseventpublisher';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -456,15 +456,15 @@ router.get(
 
 		if (email) {
 			const user = await getUser(email);
-			sendToMembershipQueueForPrintPromo({ email, identityId: user.id })
+			publishSnsEvent({ email, identityId: user.id })
 				.then(() => {
 					logger.info(
-						'Successfully sent message to Membership SQS queue for Print Promo sign up',
+						'Successfully published message to SNS topic for Print Promo sign up',
 					);
 				})
 				.catch((error) => {
 					logger.error(
-						'Error sending message to Membership SQS queue for Print Promo sign up',
+						'Error publishing message to SNS topic for Print Promo sign up',
 						{ error },
 					);
 				});
