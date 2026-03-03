@@ -13,10 +13,6 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			request,
 			page,
 		}) => {
-			await page.route('https://jobs.theguardian.com/', async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-
 			const { emailAddress, finalPassword } = await createTestUser(request, {
 				isUserEmailValidated: true,
 			});

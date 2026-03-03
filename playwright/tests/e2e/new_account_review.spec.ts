@@ -5,16 +5,17 @@ import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('New account newsletters page', () => {
-	test.beforeEach(async ({ page }) => {
-		await page.route('https://m.code.dev-theguardian.com/**', async (route) => {
-			await route.fulfill({ status: 200 });
-		});
-	});
-
 	['GB', 'FR', 'AU', 'US'].forEach((geoLocation) => {
 		test(`should redirect to the newsletters page if the geolocation is ${geoLocation}`, async ({
 			page,
 		}) => {
+			await page.route(
+				'https://m.code.dev-theguardian.com/**',
+				async (route) => {
+					await route.fulfill({ status: 200 });
+				},
+			);
+
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
@@ -72,12 +73,7 @@ test.describe('New account newsletters page', () => {
 	test('should redirect to the Jobs T&C page if client is Jobs', async ({
 		page,
 	}) => {
-		await page.route('https://jobs.theguardian.com/', async (route) => {
-			await route.fulfill({ status: 200 });
-		});
-
-		const encodedReturnUrl =
-			'https%3A%2F%2Fjobs.theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+		const encodedReturnUrl = 'https://jobs.theguardian.com/';
 		const unregisteredEmail = randomMailosaurEmail();
 
 		await page.goto(

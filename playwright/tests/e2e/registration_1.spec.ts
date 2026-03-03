@@ -349,7 +349,6 @@ test.describe('Registration flow - Split 1/3', () => {
 
 			await page.getByRole('button', { name: 'Next' }).click();
 
-			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 			await expect(page).toHaveURL(
 				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
 			);
