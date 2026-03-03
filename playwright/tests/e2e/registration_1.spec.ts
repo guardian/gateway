@@ -616,7 +616,10 @@ test.describe('Registration flow - Split 1/3', () => {
 			// passcode page
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Submit verification code')).toBeVisible();
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = String((+code! + 1) % 1000000).padStart(6, '0');
+			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();

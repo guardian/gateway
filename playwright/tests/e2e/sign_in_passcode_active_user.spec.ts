@@ -335,8 +335,9 @@ test.describe('Sign In flow, with passcode', () => {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 
-			// enter incorrect code
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = String((+code! + 1) % 1000000).padStart(6, '0');
+			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
@@ -385,32 +386,35 @@ test.describe('Sign In flow, with passcode', () => {
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = String((+code! + 1) % 1000000).padStart(6, '0');
+
 			// attempt 1
 			await expect(page.getByText('Submit verification code')).toBeVisible();
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 2
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 3
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 4
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 5
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/signin/);
 			await expect(page.getByText('Your code has expired')).toBeVisible();
