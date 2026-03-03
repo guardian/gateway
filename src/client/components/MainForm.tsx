@@ -82,6 +82,7 @@ export interface MainFormProps {
 	shortRequestId?: string;
 	disabled?: boolean;
 	formRef?: React.RefObject<HTMLFormElement | null>;
+	isGoogleOneTap?: boolean;
 }
 
 const formStyles = (displayInline: boolean, largeGap: boolean) => css`
@@ -128,6 +129,7 @@ export const MainForm = ({
 	disabled = false,
 	// eslint-disable-next-line react-hooks/rules-of-hooks -- allow a formRef to be passed in or use a default value, either way a ref will be defined
 	formRef = useRef(null),
+	isGoogleOneTap,
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
 
@@ -342,7 +344,9 @@ export const MainForm = ({
 						{additionalTerms &&
 							additionalTerms.map((specificTermsItem) => {
 								return (
-									<InformationBoxText>{specificTermsItem}</InformationBoxText>
+									<InformationBoxText isGoogleOneTap={isGoogleOneTap}>
+										{specificTermsItem}
+									</InformationBoxText>
 								);
 							})}
 						{recaptchaEnabled && !hideRecaptchaMessage && (

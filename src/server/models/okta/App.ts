@@ -11,3 +11,6 @@ export const appResponseSchema = z.object({
 	}),
 });
 export type AppResponse = z.infer<typeof appResponseSchema>;
+
+export const appsResponseSchema = z.array(appResponseSchema);
+export type AppsResponse = z.infer<typeof appsResponseSchema>;

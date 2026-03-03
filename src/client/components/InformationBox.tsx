@@ -13,9 +13,9 @@ const informationBoxStyles = css`
 	padding: ${remSpace[2]} ${remSpace[3]} ${remSpace[4]} ${remSpace[3]};
 `;
 
-const informationBoxTextStyle = css`
+const informationBoxTextStyle = (isGoogleOneTap?: boolean) => css`
 	${textSans14};
-	margin: 0 0 ${remSpace[2]} 0;
+	margin: 0 0 ${isGoogleOneTap ? 0 : remSpace[2]} 0;
 	&:last-of-type {
 		margin: 0;
 	}
@@ -25,11 +25,14 @@ const informationBoxTextStyle = css`
 		${textSansBold14};
 	}
 `;
+
 export const InformationBoxText = ({
 	children,
+	isGoogleOneTap,
 }: {
 	children: React.ReactNode;
-}) => <div css={informationBoxTextStyle}>{children}</div>;
+	isGoogleOneTap?: boolean;
+}) => <div css={informationBoxTextStyle(isGoogleOneTap)}>{children}</div>;
 
 export const InformationBox = ({ children }: PropsWithChildren) => (
 	<div css={informationBoxStyles}>{children}</div>

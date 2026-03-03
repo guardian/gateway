@@ -5,7 +5,7 @@ import {
 	AuthProviderButtons,
 } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { GuardianTerms } from '@/client/components/Terms';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { divider } from '@/client/styles/Shared';
@@ -25,10 +25,9 @@ export type RegistrationProps = {
 	shortRequestId?: string;
 };
 
-const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
+const RegistrationTerms = () => (
 	<InformationBox>
-		{!isJobs && <GuardianTerms />}
-		{isJobs && <JobsTerms />}
+		<GuardianTerms />
 	</InformationBox>
 );
 
@@ -38,8 +37,7 @@ export const Registration = ({
 }: RegistrationProps) => {
 	const formTrackingName = 'register';
 
-	const { clientId, appClientId } = queryParams;
-	const isJobs = clientId === 'jobs';
+	const { appClientId } = queryParams;
 	const isPrintPromo = appClientId === 'printpromo';
 
 	const providers = (): AuthButtonProvider[] => {
@@ -63,7 +61,7 @@ export const Registration = ({
 					: 'One account to access all Guardian products.'
 			}
 		>
-			<RegistrationTerms isJobs={isJobs} />
+			<RegistrationTerms />
 			<AuthProviderButtons queryParams={queryParams} providers={providers()} />
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 			<MainBodyText>

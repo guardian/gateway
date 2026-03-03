@@ -98,27 +98,6 @@ InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
 
-export const WithJobs = (args: SignInProps) => (
-	<SignIn
-		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
-	/>
-);
-WithJobs.story = {
-	name: 'with Jobs terms',
-};
-
-export const WithJobsAndSocialSigninBlocked = (args: SignInProps) => (
-	<SignIn
-		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
-		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
-		email="someone@theguardian.com"
-		shortRequestId="123e4567"
-	/>
-);
-WithJobsAndSocialSigninBlocked.story = {
-	name: 'with Jobs terms and social sign-in blocked',
-};
-
 export const IsReauthenticate = (args: SignInProps) => (
 	<SignIn {...{ ...args, isReauthenticate: true }} />
 );

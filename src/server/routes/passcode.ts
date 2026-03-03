@@ -16,8 +16,10 @@ import { getConfiguration } from '../lib/getConfiguration';
 import { getErrorMessageFromQueryParams } from './signIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
+	res.set('Cache-Control', 'no-store');
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
 	const email = encrypedCookieState?.email;
@@ -54,7 +56,7 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 			const continueLink =
 				queryParams.clientId === 'jobs'
 					? `https://${baseUri}${addQueryParamsToPath(
-							'/agree/GRS',
+							JOBS_TOS_URI,
 							queryParams,
 						)}`
 					: queryParams.fromURI ||

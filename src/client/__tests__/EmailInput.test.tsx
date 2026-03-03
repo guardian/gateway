@@ -31,7 +31,7 @@ test('errors with nothing submitted', () => {
 });
 
 // test doesn't seem to work with @testing-library/preact
-// despite the fact that it works in the browser, cypress, and storybook
+// despite the fact that it works in the browser, playwright, and storybook
 // and used to work with @testing-library/react
 test.skip('errors with an invalid email', () => {
 	const { emailInput, queryByText } = setup();
@@ -61,7 +61,7 @@ test('does not error with a valid email', () => {
 });
 
 // test doesn't seem to work with @testing-library/preact
-// despite the fact that it works in the browser, cypress, and storybook
+// despite the fact that it works in the browser, playwright, and storybook
 // and used to work with @testing-library/react
 test.skip('error is corrected once a valid email is submitted', () => {
 	const { emailInput, queryByText } = setup();

@@ -50,6 +50,8 @@ import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { parse } from '@/shared/lib/regexparam';
 import { IframedRegisterWithEmailPage } from './pages/IframedRegisterWithEmailPage';
 import { WelcomePrintPromoPage } from './pages/WelcomePrintPromoPage';
+import { SubscriptionReviewPage } from './pages/SubscriptionReviewPage';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -201,6 +203,10 @@ const routes: Array<{
 		element: <WelcomeSocialPage />,
 	},
 	{
+		path: '/welcome/google-one-tap',
+		element: <WelcomeSocialPage isGoogleOneTap={true} />,
+	},
+	{
 		path: '/welcome/apple',
 		element: <WelcomeSocialPage />,
 	},
@@ -229,7 +235,7 @@ const routes: Array<{
 		element: <ReturnToAppPage />,
 	},
 	{
-		path: '/agree/GRS',
+		path: JOBS_TOS_URI,
 		element: <JobsTermsPage />,
 	},
 	{
@@ -245,12 +251,20 @@ const routes: Array<{
 		element: <ChangeEmailErrorPage />,
 	},
 	{
+		path: '/unsubscribe/review',
+		element: <SubscriptionReviewPage action={'unsubscribe'} />,
+	},
+	{
 		path: '/unsubscribe/success',
 		element: <SubscriptionSuccessPage action={'unsubscribe'} />,
 	},
 	{
 		path: '/unsubscribe/error',
 		element: <SubscriptionErrorPage action={'unsubscribe'} />,
+	},
+	{
+		path: '/subscribe/review',
+		element: <SubscriptionReviewPage action={'subscribe'} />,
 	},
 	{
 		path: '/subscribe/success',

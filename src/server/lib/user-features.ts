@@ -31,7 +31,7 @@ export const setUserFeatureCookies = async ({
 	accessToken: string;
 	res: Response;
 }): Promise<void> => {
-	// call the members-data-api to get the user's attributes/products if any
+	// call the user-benefits-api to get the user's attributes/products if any
 
 	const userBenefits = await getUserBenefits({
 		accessToken,
@@ -74,6 +74,8 @@ const createCookie = ({
 	});
 };
 
+const USER_BENEFITS_COOKIE_EXPIRATION_IN_DAYS = 30;
+
 /**
  * https://github.com/guardian/dotcom-rendering/blob/a0eff55ee7fedf08b785557fceaa0f4f7265e0df/dotcom-rendering/src/client/userFeatures/user-features.ts
  *
@@ -101,16 +103,23 @@ const persistUserBenefitsCookies = ({
 		createCookie({
 			name: HIDE_SUPPORT_MESSAGING_COOKIE,
 			res,
-			daysTillExpiry: 1,
+			daysTillExpiry: USER_BENEFITS_COOKIE_EXPIRATION_IN_DAYS,
 		});
 	}
 	// Allow reject all cookie
 	if (userBenefits?.benefits?.includes('allowRejectAll')) {
-		createCookie({ name: ALLOW_REJECT_ALL_COOKIE, res, daysTillExpiry: 1 });
+		createCookie({
+			name: ALLOW_REJECT_ALL_COOKIE,
+			res,
+			daysTillExpiry: USER_BENEFITS_COOKIE_EXPIRATION_IN_DAYS,
+		});
 	}
-	// Ad free user cookie is set for 2 days
-	// https://github.com/guardian/frontend/blob/f17fe93c542fbd448392a0687d0b92f35796097a/static/src/javascripts/projects/common/modules/commercial/user-features.ts#L128
+	// Ad free user cookie
 	if (userBenefits?.benefits?.includes('adFree')) {
-		createCookie({ name: AD_FREE_USER_COOKIE, res, daysTillExpiry: 2 });
+		createCookie({
+			name: AD_FREE_USER_COOKIE,
+			res,
+			daysTillExpiry: USER_BENEFITS_COOKIE_EXPIRATION_IN_DAYS,
+		});
 	}
 };

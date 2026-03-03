@@ -28,8 +28,8 @@ export const send = async ({
 	subject,
 	to,
 }: Props): Promise<boolean> => {
-	// used to mock email send in cypress mocked tests
-	if (process.env.RUNNING_IN_CYPRESS_MOCKED === 'true') {
+	// used to mock email send in playwright mocked tests
+	if (process.env.RUNNING_IN_PLAYWRIGHT_MOCKED === 'true') {
 		return true;
 	}
 

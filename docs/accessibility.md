@@ -23,42 +23,42 @@ To test run `pnpm lint` or using the ESLint VSCode plugin will highlight issues 
 
 CI builds will fail unless all linting error are dealt with.
 
-### Axe with Cypress
+### Axe with Playwright
 
 [Axe](https://github.com/dequelabs/axe-core) is an accessibility testing engine for websites and other HTML-based user interfaces.
 
-[Cypress](https://www.cypress.io/) is the E2E and integration testing tool that we use in this project.
+import { AxeBuilder } from '@axe-core/playwright';
 
-Combining the two together results in [cypress-axe](https://github.com/component-driven/cypress-axe) which allows automated testing of accessibility tests using Axe directly as a test in Cypress.
+[Playwright](https://playwright.dev/) is the E2E and integration testing tool that we use in this project.
+
+Combining the two together results in [playwright-axe](https://playwright.dev/docs/accessibility-testing) which allows automated testing of accessibility tests using Axe directly as a test in Playwright.
 
 This makes it easy to check for accessibility as part of the automated CI tests, some of which may not have been picked up by the linter.
 
-To test the accessibility using this tool on a specific page in a cypress test is simple. In a given test file:
+To test the accessibility using this tool on a specific page in a playwright test is simple. In a given test file:
 
 ```js
 // import the axe check
-import { injectAndCheckAxe } from '../support/cypress-axe';
+import { injectAndCheckAxe } from '../helpers/accessibility';
 
 ...
 
 // go to a page and test the accessibility on a given page
-it('Has no detectable a11y violations on change password page', () => {
-  cy.mockNext(200);
-  cy.mockNext(200, fakeSuccessResponse);
-  page.goto(fakeToken);
-  // this is the test
-  injectAndCheckAxe();
-});
-
+test('Has no detectable a11y violations on change password page', async ({
+			page,
+			mockApi,
+		}) => {
+			await mockApi.post('/mock/permanent', {
+				data: {
+					path: '/api/v1/authn/recovery/token',
+					status: 200,
+					body: {},
+				},
+			});
+			await page.goto('/reset-password/fake_token');
+			await injectAndCheckAxe(page);
+		});
 ```
-
-When running cypress visually using `./cypress-open.sh` and running a test, a failed a11y test would appear like so:
-
-![vcxsrv_6AJITLSUJD](https://user-images.githubusercontent.com/13315440/101000467-dbbcae00-3555-11eb-9ebb-28341f4c544b.png)
-
-While running in CI a violation would look like:
-
-![WindowsTerminal_05gOduN2MS](https://user-images.githubusercontent.com/13315440/101000507-e8d99d00-3555-11eb-8f8b-bb8c30e70c2d.png)
 
 ## Manual testing
 

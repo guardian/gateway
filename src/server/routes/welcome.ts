@@ -49,6 +49,7 @@ import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { sendToMembershipQueueForPrintPromo } from '../lib/sqs/membership-sqs';
 import { getUser } from '../lib/okta/api/users';
+import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -87,6 +88,18 @@ router.get(
 	loginMiddlewareOAuth,
 	(_: Request, res: ResponseWithRequestState) => {
 		const html = renderer('/welcome/google', {
+			pageTitle: 'Welcome',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
+);
+
+router.get(
+	'/welcome/google-one-tap',
+	loginMiddlewareOAuth,
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/welcome/google-one-tap', {
 			pageTitle: 'Welcome',
 			requestState: res.locals,
 		});
@@ -140,10 +153,14 @@ router.post(
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
 			// otherwise redirect the user to the review page
+			const redirectPath =
+				state.queryParams.clientId === 'jobs'
+					? JOBS_TOS_URI
+					: '/welcome/review';
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/welcome/review', state.queryParams),
+				addQueryParamsToPath(redirectPath, state.queryParams),
 			);
 		}
 	}),
@@ -247,10 +264,14 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
+			const redirectPath =
+				state.queryParams.clientId === 'jobs'
+					? JOBS_TOS_URI
+					: '/welcome/review';
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/welcome/review', state.queryParams),
+				addQueryParamsToPath(redirectPath, state.queryParams),
 			);
 		}
 	}),
@@ -538,7 +559,7 @@ const updateNewslettersAndConstents = async (
 	res: ResponseWithRequestState,
 	loggingContext: string,
 ) => {
-	const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
 	const state = res.locals;
 
 	if (!state.oauthState) {
@@ -554,11 +575,11 @@ const updateNewslettersAndConstents = async (
 
 			// since the CODE newsletters API isn't up to date with PROD newsletters API the
 			// review page will not show the correct newsletters on CODE.
-			// so when running in cypress we set a cookie to return the decrypted consents to cypress
+			// so when running in Playwright we set a cookie to return the decrypted consents to playwright
 			// so we can check we at least got to the correct code path
-			if (runningInCypress) {
+			if (runningInPlaywright) {
 				res.cookie(
-					'cypress-consent-response',
+					'playwright-consent-response',
 					JSON.stringify(registrationConsents.consents),
 				);
 			}
@@ -581,11 +602,11 @@ const updateNewslettersAndConstents = async (
 
 			// since the CODE newsletters API isn't up to date with PROD newsletters API the
 			// review page will not show the correct newsletters on CODE.
-			// so when running in cypress we set a cookie to return the decrypted consents to cypress
+			// so when running in playwright we set a cookie to return the decrypted consents to playwright
 			// so we can check we at least got to the correct code path
-			if (runningInCypress) {
+			if (runningInPlaywright) {
 				res.cookie(
-					'cypress-newsletter-response',
+					'playwright-newsletter-response',
 					JSON.stringify(registrationConsents.newsletters),
 				);
 			}

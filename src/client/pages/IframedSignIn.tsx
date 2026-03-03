@@ -15,7 +15,7 @@ import { css } from '@emotion/react';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { remSpace } from '@guardian/source/foundations';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { GuardianTerms } from '@/client/components/Terms';
 import { InformationBox } from '@/client/components/InformationBox';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
@@ -111,14 +111,12 @@ const getErrorContext = (
 const showAuthProviderButtons = (
 	socialSigninBlocked: boolean,
 	queryParams: QueryParams,
-	isJobs: boolean,
 ) => {
 	if (!socialSigninBlocked) {
 		return (
 			<>
 				<InformationBox>
-					{!isJobs && <GuardianTerms />}
-					{isJobs && <JobsTerms />}
+					<GuardianTerms />
 				</InformationBox>
 				<AuthProviderButtons queryParams={queryParams} providers={['social']} />
 				<Divider
@@ -146,8 +144,6 @@ export const IframedSignIn = ({
 	// The page level error is equivalent to this enum if social signin has been blocked.
 	const socialSigninBlocked = pageError === SignInErrors.SOCIAL_SIGNIN_ERROR;
 
-	const { clientId } = queryParams;
-	const isJobs = clientId === 'jobs';
 	const formErrorMessage = extractMessage(formError);
 	usePageLoadOphanInteraction(formTrackingName);
 
@@ -162,7 +158,7 @@ export const IframedSignIn = ({
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{!hideSocialButtons &&
-				showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
+				showAuthProviderButtons(socialSigninBlocked, queryParams)}
 			<MainForm
 				shortRequestId={shortRequestId}
 				formErrorMessageFromParent={formError}
@@ -182,8 +178,7 @@ export const IframedSignIn = ({
 				isIframed={true}
 				// If social signin is blocked, terms and conditions appear inside MainForm
 				// instead of being handled by showAuthProviderButtons(), above.
-				hasGuardianTerms={!isJobs && socialSigninBlocked}
-				hasJobsTerms={isJobs && socialSigninBlocked}
+				hasGuardianTerms={socialSigninBlocked}
 				primaryTermsPosition={false}
 				termsStyle="secondary"
 			>

@@ -16,7 +16,7 @@ Many other client side applications at the Guardian now are React app based, whi
 
 ## Technology
 
-Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [the Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Cypress](https://www.cypress.io/) for integration tests and E2E tests.
+Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [the Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Playwright](https://playwright.dev/) for integration tests and E2E tests.
 
 We also heavily integrate with [Okta Customer Identity Solution](https://okta.com), who is our Identity backend and provider, and their APIs. For documentation on how we interact with Okta, see the [Okta Documentation](./okta) folder, and specific documentation on the new(er) [Okta IDX API](./okta/idx/README.md).
 
@@ -37,7 +37,7 @@ Development principles can be found in [development.md](development.md).
 ```
 gateway
 ├── docs                - Documentation folder
-├── cypress             - Cypress Tests
+├── Playwright          - Playwright Tests
 └── src                 - Main Application Folder
     └── client          - Client side React application
         └── components  - Reusable React components

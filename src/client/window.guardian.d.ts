@@ -19,7 +19,7 @@ declare global {
 				subscribeTo: (subscription: Subscription) => void;
 			};
 		};
-		Cypress: unknown;
+		Playwright: unknown;
 		ga: unknown;
 		grecaptcha: {
 			ready: (readyCallback: () => void) => void;

@@ -19,14 +19,20 @@ import {
 	SubscriptionAction,
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
+import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 
 const { accountManagementUrl } = getConfiguration();
 
-const buildPageData = (emailType: EmailType, emailId: string) => {
+const buildPageData = (
+	emailType: EmailType,
+	emailId: string,
+	emailTitle?: string,
+) => {
 	if (emailType === 'newsletter') {
 		return {
 			accountManagementUrl,
 			newsletterId: emailId,
+			emailTitle,
 		};
 	}
 	return {
@@ -34,7 +40,67 @@ const buildPageData = (emailType: EmailType, emailId: string) => {
 	};
 };
 
-const handler = (action: SubscriptionAction) =>
+const getPossibleNewsletterTile = async (newsletterId: string) => {
+	try {
+		const allNewsletters = await getNewsletters();
+		return allNewsletters.find((newsletter) => newsletter.id === newsletterId)
+			?.name;
+	} catch {
+		logger.error(
+			"Couldn't retrieve the newsletter from the emailId for the newsletter subcribe/unsubscribe page.",
+		);
+		return;
+	}
+};
+
+const reviewHandler =
+	(action: SubscriptionAction) =>
+	async (req: Request, res: ResponseWithRequestState) => {
+		try {
+			const { emailType, data, token } = req.params;
+			if (!isValidEmailType(emailType)) {
+				throw new Error('Invalid email type');
+			}
+			const subscriptionData = parseSubscriptionData(data);
+			const newsLetterTitle = await getPossibleNewsletterTile(
+				subscriptionData.emailId,
+			);
+
+			const html = renderer(`/${action}/review`, {
+				requestState: mergeRequestState(res.locals, {
+					pageData: {
+						...buildPageData(
+							emailType,
+							subscriptionData.emailId,
+							newsLetterTitle,
+						),
+						emailType,
+						encodedSubscriptionData: data,
+						token,
+					},
+				}),
+				pageTitle: `${subscriptionActionName(action)} Review`,
+			});
+
+			return res.type('html').send(html);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl} Error:`, error);
+			trackMetric(`${subscriptionActionName(action)}::Failure`);
+
+			const html = renderer(`/${action}/error`, {
+				requestState: mergeRequestState(res.locals, {
+					pageData: {
+						accountManagementUrl,
+					},
+				}),
+				pageTitle: `${subscriptionActionName(action)} Error`,
+			});
+
+			return res.type('html').send(html);
+		}
+	};
+
+const confirmHandler = (action: SubscriptionAction) =>
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { emailType, data, token } = req.params;
 
@@ -81,8 +147,16 @@ const handler = (action: SubscriptionAction) =>
 		}
 	});
 
-router.get('/unsubscribe/:emailType/:data/:token', handler('unsubscribe'));
-router.get('/subscribe/:emailType/:data/:token', handler('subscribe'));
+router.get(
+	'/unsubscribe/:emailType/:data/:token',
+	reviewHandler('unsubscribe'),
+);
+router.post(
+	'/unsubscribe/:emailType/:data/:token',
+	confirmHandler('unsubscribe'),
+);
+router.get('/subscribe/:emailType/:data/:token', reviewHandler('subscribe'));
+router.post('/subscribe/:emailType/:data/:token', confirmHandler('subscribe'));
 
 router.post(
 	'/unsubscribe-all/:data/:token',

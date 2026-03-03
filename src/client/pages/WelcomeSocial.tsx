@@ -9,11 +9,14 @@ import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 import { AppName } from '@/shared/lib/appNameUtils';
 import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { GuardianTerms } from '@/client/components/Terms';
+import { InformationBox } from '@/client/components/InformationBox';
 
 export type WelcomeSocialProps = RegistrationProps & {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	shortRequestId?: string;
+	isGoogleOneTap?: boolean;
 };
 
 export const WelcomeSocial = ({
@@ -22,6 +25,7 @@ export const WelcomeSocial = ({
 	geolocation,
 	appName,
 	shortRequestId,
+	isGoogleOneTap,
 }: WelcomeSocialProps) => {
 	const formTrackingName = 'register';
 
@@ -35,6 +39,11 @@ export const WelcomeSocial = ({
 			shortRequestId={shortRequestId}
 			imageId="welcome"
 		>
+			{isGoogleOneTap && (
+				<InformationBox>
+					<GuardianTerms isGoogleOneTap={isGoogleOneTap} />
+				</InformationBox>
+			)}
 			<MainForm
 				formAction={buildUrlWithQueryParams('/welcome/social', {}, queryParams)}
 				submitButtonText="Confirm"
@@ -50,6 +59,7 @@ export const WelcomeSocial = ({
 					Boolean,
 				)}
 				shortRequestId={shortRequestId}
+				isGoogleOneTap={isGoogleOneTap}
 			>
 				<RegistrationConsents
 					geolocation={geolocation}

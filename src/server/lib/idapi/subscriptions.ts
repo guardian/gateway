@@ -69,13 +69,13 @@ const handleError = (
 export const makeSubscriptionRequest = async (
 	subscriptionAction: SubscriptionAction,
 	emailType: EmailType,
-	unsubscribeData: SubscriptionData,
+	subscriptionData: SubscriptionData,
 	token: string,
 	ip: string | undefined,
 ): Promise<unknown> => {
 	const body = {
 		emailType,
-		...unsubscribeData,
+		...subscriptionData,
 		token,
 	};
 

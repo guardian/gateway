@@ -12,23 +12,29 @@
     "diff": "cdk diff --path-metadata false --version-reporting false"
   },
   "devDependencies": {
-    "@guardian/cdk": "62.1.2",
+    "@guardian/cdk": "62.5.0",
     "@guardian/eslint-config": "^12.0.1",
     "@guardian/prettier": "8.0.2",
     "@guardian/tsconfig": "^1.0.1",
     "@types/jest": "^30.0.0",
     "@types/node": "24.10.1",
-    "aws-cdk": "2.1031.2",
-    "aws-cdk-lib": "2.223.0",
-    "constructs": "10.4.3",
+    "aws-cdk": "2.1108.0",
+    "aws-cdk-lib": "2.241.0",
+    "constructs": "10.5.1",
     "eslint": "^9.39.1",
     "jest": "^30.2.0",
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.1",
     "source-map-support": "^0.5.20",
-    "ts-jest": "^29.4.5",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "5.9.3"
   },
+  "pnpm": {
+		"overrides": {
+			"minimatch@3.1.2": "3.1.4",
+			"minimatch@>=9.0.0 <9.0.7": "9.0.7"
+		}
+	},
   "prettier": "@guardian/prettier",
   "jest": {
     "testMatch": [

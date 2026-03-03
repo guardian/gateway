@@ -5,14 +5,7 @@ import {
 	newsletterAdditionalTerms,
 	NewslettersWithImages,
 } from '@/shared/model/Newsletter';
-import {
-	palette,
-	textSans14,
-	textSansBold14,
-} from '@guardian/source/foundations';
-import { css } from '@emotion/react';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { CheckboxInput } from '@/client/components/CheckboxInput';
 import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
@@ -25,19 +18,7 @@ import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 import { newslettersFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
-
-const labelStyles = css`
-	justify-content: space-between;
-	& > span:first-of-type {
-		color: ${palette.neutral[20]};
-		${textSansBold14}
-	}
-	& > span:last-of-type {
-		align-self: flex-start;
-		color: ${palette.neutral[46]};
-		${textSans14}
-	}
-`;
+import { ToggleSwitchInput } from '../components/ToggleSwitchInput';
 
 export interface NewAccountNewslettersProps {
 	newsletters?: NewsLetter[];
@@ -55,16 +36,23 @@ export const NewAccountNewsletters = ({
 	const formTrackingName = 'new-account-newsletters';
 	usePageLoadOphanInteraction(formTrackingName);
 
-	const [checkboxesChecked, setCheckboxesChecked] = React.useState<string[]>(
-		[],
-	);
+	const [toggleSwitchesChecked, setToggleSwitchesChecked] = React.useState<
+		string[]
+	>([]);
 
-	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { checked, name } = event.target;
+	const handleToggleSwitchChange = ({
+		checked,
+		name,
+	}: {
+		checked: boolean;
+		name: string;
+	}) => {
 		if (checked) {
-			setCheckboxesChecked([...checkboxesChecked, name]);
+			setToggleSwitchesChecked([...toggleSwitchesChecked, name]);
 		} else {
-			setCheckboxesChecked(checkboxesChecked.filter((item) => item !== name));
+			setToggleSwitchesChecked(
+				toggleSwitchesChecked.filter((item) => item !== name),
+			);
 		}
 	};
 
@@ -91,7 +79,9 @@ export const NewAccountNewsletters = ({
 					queryParams,
 				)}
 				submitButtonText={
-					checkboxesChecked.length ? 'Subscribe and continue' : 'Maybe later'
+					toggleSwitchesChecked.length
+						? 'Subscribe and continue'
+						: 'Maybe later'
 				}
 				onSubmit={({ target: form }) => {
 					newslettersFormSubmitOphanTracking(
@@ -107,17 +97,21 @@ export const NewAccountNewsletters = ({
 				{newsletters?.length ? (
 					<ToggleSwitchList columns={2}>
 						{newsletters.map((newsletter: NewsLetter) => (
-							<CheckboxInput
+							<ToggleSwitchInput
 								key={newsletter.id}
 								id={newsletter.id}
-								label={newsletter.name}
+								title={newsletter.name}
+								description={newsletter.description}
 								subLabel={newsletter.frequency}
-								context={newsletter.description}
-								cssOverrides={labelStyles}
 								imagePath={
 									NEWSLETTER_IMAGES[newsletter.id as NewslettersWithImages]
 								}
-								onToggle={handleCheckboxChange}
+								onChange={(id, checked) => {
+									handleToggleSwitchChange({
+										checked,
+										name: id,
+									});
+								}}
 							/>
 						))}
 					</ToggleSwitchList>

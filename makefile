@@ -1,4 +1,4 @@
-.PHONY: build dev tsc lint fix test ci cypress clean-build clean-deps install reinstall upgrade clear setup
+.PHONY: build dev tsc lint fix test ci playwright clean-build clean-deps install reinstall upgrade clear setup
 
 # these means you can run the binaries in node_modules
 # like with npm scripts
@@ -64,23 +64,18 @@ ci: clear setup
 	$(call log, "running CI 🤖")
 	@(./ci.sh)
 
-cypress-mocked: clear
-	$(call log, "opening cypress using mocks 🌲")
-	@(./cypress-mocked.sh)
+playwright-mocked: clear
+	$(call log, "opening playwright using mocks 🎭")
+	@(./playwright-mocked.sh)
 
-cypress-mocked-dev: export DEV_MODE = true
-cypress-mocked-dev: clear
-	$(call log, "opening cypress in dev mode using mocks 🌲")
-	@(./cypress-mocked.sh)
+playwright-e2e: clear
+	$(call log, "opening playwright 🎭")
+	@(./playwright-e2e.sh)
 
-cypress-ete: clear
-	$(call log, "opening cypress 🌲")
-	@(./cypress-ete.sh)
-
-cypress-ete-dev: export DEV_MODE = true
-cypress-ete-dev: clear
-	$(call log, "opening cypress 🌲")
-	@(./cypress-ete.sh)
+playwright-e2e-dev: export DEV_MODE = true
+playwright-e2e-dev: clear
+	$(call log, "opening playwright 🎭")
+	@(./playwright-e2e.sh)
 
 storybook: clear
 	$(call log, "opening storybook 📖")

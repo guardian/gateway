@@ -64,9 +64,8 @@ describe('Content Security Policy headers', () => {
 			const response = await request(server).get(route);
 			// Dynamically import getConfiguration so the changes to the environment
 			// variables are reflected inside the getConfiguration() call
-			const { getConfiguration } = await import(
-				'@/server/lib/getConfiguration'
-			);
+			const { getConfiguration } =
+				await import('@/server/lib/getConfiguration');
 			const { baseUri, apiDomain } = getConfiguration();
 			// Is the CSP header set?
 			expect(response.header).toHaveProperty('content-security-policy');
@@ -74,7 +73,7 @@ describe('Content Security Policy headers', () => {
 				response.header['content-security-policy'].split(';');
 			// Does the CSP header match what we expect it to be? If the CSP settings
 			// in Helmet are updated, we expect to need to update these tests.
-			expect(splitCSPHeader).toContain(`${baseUri} 'none'`);
+			expect(splitCSPHeader).toContain("base-uri 'none'");
 			expect(splitCSPHeader).toContain("default-src 'none'");
 			expect(splitCSPHeader).toContain(
 				`script-src ${baseUri} www.google.com www.gstatic.com assets.guim.co.uk 'unsafe-eval'`,

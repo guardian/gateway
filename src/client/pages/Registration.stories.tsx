@@ -18,15 +18,6 @@ Default.story = {
 	name: 'with defaults',
 };
 
-export const WithJobs = (args: RegistrationProps) => (
-	<Registration
-		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
-	/>
-);
-WithJobs.story = {
-	name: 'with Jobs terms',
-};
-
 export const WithPrintPromo = (args: RegistrationProps) => (
 	<Registration
 		{...{

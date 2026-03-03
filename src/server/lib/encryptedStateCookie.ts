@@ -66,7 +66,7 @@ export const setEncryptedStateCookie = (
 const getEncryptedStateCookie = (req: Request): string | undefined => {
 	// eslint-disable-next-line functional/no-let -- used to determine the cookie source, TODO: potential for refactoring to remove let
 	let cookieSource: CookieSource;
-	if (process.env.RUNNING_IN_CYPRESS === 'true') {
+	if (process.env.RUNNING_IN_PLAYWRIGHT === 'true') {
 		// If we're in testing, first try reading from signedCookies,
 		// and only then fall back to regular cookies.
 		if (Object.keys(req.signedCookies).includes(encryptedStateCookieName)) {
