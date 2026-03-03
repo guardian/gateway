@@ -173,7 +173,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     },
     "MembershipBrazeSqsArn": {
       "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-arn",
-      "Description": "The ARN of the role in membership account that allows access to SQS braze-emails-stage queue",
+      "Description": "The ARN of SQS queue for membership braze emails",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "MembershipBrazeSqsUrl": {
@@ -1865,6 +1865,7 @@ Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=\${MembersDataApiUrl}
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
 Environment=MEMBERSHIP_BRAZE_SQS_URL=\${MembershipBrazeSqsUrl}
+Environment=PrintPromoTopic=\${PrintPromoTopic}
 Environment=MEMBERSHIP_SQS_ROLE_ARN=\${MembershipSQSRoleToAssume}
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
@@ -2569,6 +2570,38 @@ systemctl start identity-gateway
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "PrintPromoTopic": {
+      "Properties": {
+        "DisplayName": "SendPrintPromoToMembership",
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Ref": "MembershipBrazeSqsArn",
+            },
+            "Protocol": "sqs",
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::Topic",
     },
     "RegisterInactivityAlarm": {
       "Condition": "IsProd",
