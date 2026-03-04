@@ -73,7 +73,7 @@ test.describe('New account newsletters page', () => {
 	test('should redirect to the Jobs T&C page if client is Jobs', async ({
 		page,
 	}) => {
-		const encodedReturnUrl = 'https://jobs.theguardian.com/';
+		const encodedReturnUrl = 'https%3A%2F%2Fjobs.theguardian.com%2F';
 		const unregisteredEmail = randomMailosaurEmail();
 
 		await page.goto(
