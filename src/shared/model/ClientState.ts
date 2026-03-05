@@ -55,6 +55,7 @@ export interface PageData {
 	consents?: Consent[];
 	page?: ConsentPath;
 	previousPage?: ConsentPath;
+	signInOrRegister?: 'SIGNIN' | 'REGISTER';
 
 	// reset password token specific
 	timeUntilTokenExpiry?: number;

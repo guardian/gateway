@@ -305,7 +305,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page.getByText('send again')).toBeVisible();
 			await expect(page.getByText('try another address')).toBeVisible();
 
-			const { body, codes } = await checkForEmailAndGetDetails(
+			const { id, body, codes } = await checkForEmailAndGetDetails(
 				unregisteredEmail,
 				timeRequestWasMade,
 			);
@@ -331,12 +331,24 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
 
+			// jobs T&C page
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
+			await expect(
+				page.getByText(
+					'Click ‘continue’ to automatically use your existing Guardian account to sign in with Guardian Jobs',
+				),
+			).toBeVisible();
+
+			await page.locator('input[name=firstName]').fill(id);
+			await page.locator('input[name=secondName]').fill(id);
+			await page.locator('button[type="submit"]').click();
+
+			// Complete Account page (with just Jobs newsletter)
 			await expect(page).toHaveURL(/\/welcome\/complete-account/);
 			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
 
 			await page.getByRole('button', { name: 'Next' }).click();
 
-			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 			await expect(page).toHaveURL(
 				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
 			);
