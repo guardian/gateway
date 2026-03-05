@@ -128,15 +128,17 @@ export class IdentityGateway extends GuStack {
 			{ mutable: false },
 		);
 
-		new CfnInclude(this, 'IdentityGateway', {
-			templateFile: '../cloudformation.yaml',
-			parameters: {
-				VpcId: vpcId.valueAsString,
-				RedisHost: redisHost.valueAsString,
-				IdentityArtifactBucket: artifactBucket.valueAsString,
-				IdentityConfigBucket: configBucket.valueAsString,
-			},
-		});
+		if (['TEST', 'PROD'].includes(stage)) {
+			new CfnInclude(this, 'IdentityGateway', {
+				templateFile: '../cloudformation.yaml',
+				parameters: {
+					VpcId: vpcId.valueAsString,
+					RedisHost: redisHost.valueAsString,
+					IdentityArtifactBucket: artifactBucket.valueAsString,
+					IdentityConfigBucket: configBucket.valueAsString,
+				},
+			});
+		}
 
 		const alarmEmail = new GuStringParameter(
 			this,
