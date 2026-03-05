@@ -233,6 +233,7 @@ router.get(
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email: encrypedCookieState?.email,
+					signInOrRegister: encrypedCookieState?.signInOrRegister,
 				},
 			}),
 		});

@@ -44,15 +44,22 @@ interface RegistrationConsentsList {
 	consentOrNewsletter: 'CONSENT' | 'NEWSLETTER';
 }
 
-export const getRegistrationConsentsList = (
-	isJobs: boolean,
-	geolocation?: GeoLocation,
-	appName?: AppName,
-): Array<RegistrationConsentsList> => {
+export const getRegistrationConsentsList = ({
+	isJobs,
+	geolocation,
+	appName,
+	signInOrRegister,
+}: {
+	isJobs: boolean;
+	geolocation?: GeoLocation;
+	appName?: AppName;
+	signInOrRegister?: 'REGISTER' | 'SIGNIN';
+}): Array<RegistrationConsentsList> => {
 	const registrationNewsletter = chooseNewsletter({
 		geolocation,
 		appName,
 		isJobs,
+		signInOrRegister,
 	});
 	const showMarketingConsent = !isJobs;
 

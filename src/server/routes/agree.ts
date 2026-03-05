@@ -12,6 +12,7 @@ import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { deleteOAuthTokenCookie } from '@/server/lib/okta/tokens';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 const { defaultReturnUri, signInPageUrl } = getConfiguration();
 
@@ -92,15 +93,15 @@ router.post(
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		const { queryParams } = state;
+		const { firstName, secondName } = req.body;
+
 		if (!requestStateHasOAuthTokens(state)) {
 			return res.redirect(
 				303,
-				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+				addQueryParamsToUntypedPath(signInPageUrl, queryParams),
 			);
 		}
-
-		const { returnUrl, fromURI } = state.queryParams;
-		const { firstName, secondName } = req.body;
 
 		try {
 			await setupJobsUserInOkta(
@@ -121,17 +122,12 @@ router.post(
 				error,
 			);
 			trackMetric('JobsGRSGroupAgree::Failure');
-		} finally {
-			// complete the oauth flow if coming from the okta sign in page
-			// through the oauth flow initiated by the jobs site
-			if (fromURI) {
-				// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-				return res.redirect(303, fromURI);
-			}
-			// otherwise try going to the return url
-			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-			return res.redirect(303, returnUrl);
 		}
+
+		return res.redirect(
+			303,
+			buildUrlWithQueryParams('/welcome/complete-account', {}, queryParams),
+		);
 	},
 );
 
