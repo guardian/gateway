@@ -5,7 +5,6 @@ import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import {
 	GuStack,
 	GuStringParameter,
-	GuVpcParameter,
 } from '@guardian/cdk/lib/constructs/core';
 import { GuAllowPolicy } from '@guardian/cdk/lib/constructs/iam';
 import type { GuAsgCapacity } from '@guardian/cdk/lib/types';
@@ -104,8 +103,6 @@ export class IdentityGateway extends GuStack {
 			{},
 		);
 
-		const vpcId = GuVpcParameter.getInstance(this);
-
 		const redisHost = new GuStringParameter(this, 'RedisHost', {
 			default: `/${stack}/${app}/${stage}/redis-host`,
 			fromSSM: true,
@@ -129,12 +126,6 @@ export class IdentityGateway extends GuStack {
 
 		new CfnInclude(this, 'IdentityGateway', {
 			templateFile: '../cloudformation.yaml',
-			parameters: {
-				VpcId: vpcId.valueAsString,
-				RedisHost: redisHost.valueAsString,
-				IdentityArtifactBucket: artifactBucket.valueAsString,
-				IdentityConfigBucket: configBucket.valueAsString,
-			},
 		});
 
 		const alarmEmail = new GuStringParameter(
