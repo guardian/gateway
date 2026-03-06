@@ -18,13 +18,15 @@ export const validateConsentToken = async ({
 	ip,
 	token,
 	browserId,
+	refViewId,
 }: {
 	ip: string | undefined;
 	token: string;
 	browserId: string | undefined;
+	refViewId: string | undefined;
 }) => {
 	const options = APIAddClientAccessToken(
-		APIPostOptions({ 'browser-id': browserId }),
+		APIPostOptions({ 'browser-id': browserId, refViewId }),
 		ip,
 	);
 

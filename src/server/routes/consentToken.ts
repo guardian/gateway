@@ -21,10 +21,11 @@ router.get(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const ip = req.ip;
 		const token = req.params.token;
-		const browserId = res.locals.ophanConfig.bwid ?? 'no-browser-id-available';
+		const browserId = res.locals.ophanConfig.bwid ?? undefined;
+		const { refViewId } = res.locals.queryParams;
 
 		try {
-			await validateConsentToken({ ip, token, browserId });
+			await validateConsentToken({ ip, token, browserId, refViewId });
 
 			trackMetric('ConsentToken::Success');
 
