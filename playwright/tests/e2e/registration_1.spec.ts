@@ -13,7 +13,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
-import { escapeRegExp } from '../../helpers/utils';
+import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
 import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 
 const existingUserSendEmailAndValidatePasscode = async ({
@@ -622,19 +622,22 @@ test.describe('Registration flow - Split 1/3', () => {
 			// email
 			expect(body).toContain('Your verification code');
 			expect(codes?.length).toBe(1);
-			const code = codes?.[0].value;
+			const code = codes?.[0].value || '0';
 			expect(code).toMatch(/^\d{6}$/);
 
 			// passcode page
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Submit verification code')).toBeVisible();
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = incrementPasscode(code);
+			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			await page.locator('input[name=code]').clear();
-			await page.locator('input[name=code]').fill(code!);
+			await page.locator('input[name=code]').fill(code);
 			await page.getByText('Submit verification code').click();
 
 			await expect(page).toHaveURL(/\/welcome\/review/);

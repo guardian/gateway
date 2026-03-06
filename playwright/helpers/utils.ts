@@ -4,3 +4,6 @@
  */
 export const escapeRegExp = (s: string) =>
 	s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+export const incrementPasscode = (inputCode: string) =>
+	String((+inputCode + 1) % 1000000).padStart(6, '0');
