@@ -7,7 +7,7 @@ import {
 	GuStringParameter,
 	GuVpcParameter,
 } from '@guardian/cdk/lib/constructs/core';
-import { GuAllowPolicy } from '@guardian/cdk/lib/constructs/iam';
+import { GuAllowPolicy, GuRole } from '@guardian/cdk/lib/constructs/iam';
 import type { GuAsgCapacity } from '@guardian/cdk/lib/types';
 import { type App, Duration, Tags } from 'aws-cdk-lib';
 import { ComparisonOperator, MathExpression, Metric, Unit } from 'aws-cdk-lib/aws-cloudwatch';
@@ -20,6 +20,7 @@ import {
 	SecurityGroup,
 	UserData,
 } from 'aws-cdk-lib/aws-ec2';
+import { Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'aws-cdk-lib/aws-iam';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
@@ -504,5 +505,29 @@ systemctl start ${app}
 			actionsEnabled: stage === 'PROD'
 		});
 		unsubscribeAllInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
+
+		// Allow Github Actions to send use SES to send emails from Playwright
+		if (['TEST', 'CODE'].includes(stage)) {
+			new GuRole(this, 'GithubSESSendEmailRole', {
+				assumedBy: new WebIdentityPrincipal(`arn:aws:iam::${this.account}:oidc-provider/token.actions.githubusercontent.com`,
+					{
+						StringLike: {
+							'token.actions.githubusercontent.com:sub': 'repo:guardian/gateway:*',
+						}
+					}
+				),
+				inlinePolicies: {
+					SendEmailSES: new PolicyDocument({
+						statements: [
+							new PolicyStatement({
+								actions: ['ses:SendEmail'],
+								resources: ['*'],
+								effect: Effect.ALLOW
+							})
+						]
+					})
+				}
+			})
+		}
 	}
 }
