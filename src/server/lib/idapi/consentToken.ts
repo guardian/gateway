@@ -26,7 +26,7 @@ export const validateConsentToken = async ({
 	refViewId: string | undefined;
 }) => {
 	const options = APIAddClientAccessToken(
-		APIPostOptions({ 'browser-id': browserId, refViewId: refViewId }),
+		APIPostOptions({ 'browser-id': browserId, refViewId }),
 		ip,
 	);
 
