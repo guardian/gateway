@@ -16,11 +16,8 @@ export const publishSnsEvent = async ({
 			identityId,
 			voucherType: 'registration-reward',
 		}),
-		TopicArn: process.env.MEMBERSHIP_SNS_TOPIC_ARN!,
+		TopicArn: '',
 	});
 	const response = await new SNSClient(awsConfig).send(command);
 	return response;
 };
-
-// Queue CODE : https://sqs.eu-west-1.amazonaws.com/865473395570/imovo-voucher-api-queue-CODE
-//   - Queue PROD : https://sqs.eu-west-1.amazonaws.com/865473395570/imovo-voucher-api-queue-PROD

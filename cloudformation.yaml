@@ -23,14 +23,7 @@ Parameters:
   MembersDataApiUrl:
     Description: The url for members-data-api
     Type: AWS::SSM::Parameter::Value<String>
-  MembershipBrazeSqsUrl:
-    Description: The url for membership braze SQS
-    Type: AWS::SSM::Parameter::Value<String>
     Default: /identity/identity-gateway/CODE/membership-braze-sqs-url
-  MembershipSQSRoleToAssume:
-    Description: The ARN of the role in membership account that allows access to SQS braze-emails-stage queue
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /identity/identity-gateway/CODE/membership-sqs-role
   MembershipBrazeSqsArn:
     Description: The ARN of SQS queue for membership braze emails
     Type: AWS::SSM::Parameter::Value<String>
@@ -186,14 +179,6 @@ Resources:
               - Effect: Allow
                 Action: sqs:SendMessage
                 Resource: !Ref MembershipBrazeSqsArn
-        - PolicyName: AssumeMembershipSNSPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action: sts:AssumeRole
-                Resource:
-                  Ref: MembershipSQSRoleToAssume
         - PolicyName: SSMTunnel
           PolicyDocument:
             Version: 2012-10-17
@@ -331,8 +316,6 @@ Resources:
                   OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-                  MEMBERSHIP_BRAZE_SQS_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/membership-braze-sqs-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-                  MEMBERSHIP_SQS_ROLE_ARN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/membership-sqs-role' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   then break
@@ -378,9 +361,6 @@ Resources:
               Environment=REDIS_SSL_ON=true
               Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
               Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
-              Environment=MEMBERSHIP_BRAZE_SQS_URL=${MembershipBrazeSqsUrl}
-              Environment=PRINT_PROMO_TOPIC_ARN=${PrintPromoTopicArn}
-              Environment=MEMBERSHIP_SQS_ROLE_ARN=${MembershipSQSRoleToAssume}
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 
@@ -394,7 +374,6 @@ Resources:
             - BaseUri: !FindInMap [StageVariables, !Ref Stage, BaseUri]
               DefaultReturnUri:
                 !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
-              PrintPromoTopicArn: !Ref PrintPromoTopic
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile

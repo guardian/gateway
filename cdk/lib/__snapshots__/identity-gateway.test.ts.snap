@@ -168,22 +168,13 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "MembersDataApiUrl": {
+      "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-url",
       "Description": "The url for members-data-api",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "MembershipBrazeSqsArn": {
       "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-arn",
       "Description": "The ARN of SQS queue for membership braze emails",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
-    "MembershipBrazeSqsUrl": {
-      "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-url",
-      "Description": "The url for membership braze SQS",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
-    "MembershipSQSRoleToAssume": {
-      "Default": "/identity/identity-gateway/CODE/membership-sqs-role",
-      "Description": "The ARN of the role in membership account that allows access to SQS braze-emails-stage queue",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "OauthBaseUrl": {
@@ -719,21 +710,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
               "Version": "2012-10-17",
             },
             "PolicyName": "SendSQSMessages",
-          },
-          {
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Action": "sts:AssumeRole",
-                  "Effect": "Allow",
-                  "Resource": {
-                    "Ref": "MembershipSQSRoleToAssume",
-                  },
-                },
-              ],
-              "Version": "2012-10-17",
-            },
-            "PolicyName": "AssumeMembershipSNSPolicy",
           },
           {
             "PolicyDocument": {
@@ -1817,8 +1793,6 @@ while true; do
     OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     USER_BENEFITS_API_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/user-benefits-api-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-    MEMBERSHIP_BRAZE_SQS_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/membership-braze-sqs-url' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-    MEMBERSHIP_SQS_ROLE_ARN=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/membership-sqs-role' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/\${Stack}/\${App}/\${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
     then break
@@ -1864,9 +1838,6 @@ Environment=REDIS_HOST=\${RedisHost}
 Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=\${MembersDataApiUrl}
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
-Environment=MEMBERSHIP_BRAZE_SQS_URL=\${MembershipBrazeSqsUrl}
-Environment=PRINT_PROMO_TOPIC_ARN=\${PrintPromoTopicArn}
-Environment=MEMBERSHIP_SQS_ROLE_ARN=\${MembershipSQSRoleToAssume}
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
 
@@ -1902,9 +1873,6 @@ systemctl start identity-gateway
                   },
                   "IdentityConfigBucket": {
                     "Ref": "IdentityConfigBucket",
-                  },
-                  "PrintPromoTopicArn": {
-                    "Ref": "PrintPromoTopic",
                   },
                   "RedisHost": {
                     "Ref": "RedisHost",
