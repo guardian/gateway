@@ -9,6 +9,7 @@ interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
 	appName?: AppName;
 	isJobs?: boolean;
+	signInOrRegister?: 'REGISTER' | 'SIGNIN';
 	onChange?: (id: string, checked: boolean) => void;
 }
 
@@ -16,12 +17,14 @@ export const RegistrationConsents = ({
 	geolocation,
 	appName,
 	isJobs,
+	signInOrRegister,
 }: RegistrationConsentsProps) => {
-	const consentList = getRegistrationConsentsList(
-		isJobs ?? false,
+	const consentList = getRegistrationConsentsList({
+		isJobs: isJobs ?? false,
 		geolocation,
 		appName,
-	);
+		signInOrRegister,
+	});
 	return (
 		<ToggleSwitchList>
 			{consentList.map((consentItem) => (

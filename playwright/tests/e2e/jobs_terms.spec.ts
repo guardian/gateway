@@ -13,10 +13,6 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			request,
 			page,
 		}) => {
-			await page.route('https://jobs.theguardian.com/', async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-
 			const { emailAddress, finalPassword } = await createTestUser(request, {
 				isUserEmailValidated: true,
 			});
@@ -24,11 +20,19 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			const visitUrl =
 				'/signin?clientId=jobs&returnUrl=https%3A%2F%2Fjobs.theguardian.com%2F&usePasswordSignIn=true';
 			await page.goto(visitUrl);
+
+			// Jobs T&C Page
 			await page.locator('input[name=email]').fill(emailAddress);
 			await page.locator('input[name=password]').fill(finalPassword);
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 			await page.locator('[data-cy="main-form-submit-button"]').click();
+
+			// Complete Account page (with just Jobs newsletter)
+			await expect(page).toHaveURL(/\/welcome\/complete-account/);
+			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
+
 			await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
 		});
 	});
@@ -181,7 +185,7 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 				isUserEmailValidated: true,
 			});
 
-			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://jobs.theguardian.com/`;
+			const termsAcceptPageUrl = `https://${process.env.BASE_URI}${JOBS_TOS_URI}?returnUrl=https://jobs.theguardian.com/&clientId=jobs`;
 
 			// load the consents page as its on the same domain
 			const postSignInReturnUrl = `https://${process.env.BASE_URI}/welcome/review`;
@@ -228,6 +232,11 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await page.locator('input[name=secondName]').fill('Second Name');
 
 			await page.getByRole('button', { name: 'Continue' }).click();
+
+			// Complete Account page (with just Jobs newsletter)
+			await expect(page).toHaveURL(/\/welcome\/complete-account/);
+			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
 
 			// Make sure the returnURL is respected.
 			await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);

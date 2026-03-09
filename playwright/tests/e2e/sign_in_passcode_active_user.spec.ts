@@ -7,7 +7,7 @@ import {
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getTestOktaUser } from '../../helpers/api/okta';
 import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
-import { escapeRegExp } from '../../helpers/utils';
+import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
 
 test.describe('Sign In flow, with passcode', () => {
 	// set up useful variables
@@ -327,7 +327,7 @@ test.describe('Sign In flow, with passcode', () => {
 				timeRequestWasMade,
 			);
 
-			const code = codes?.[0].value;
+			const code = codes?.[0].value || '0';
 			expect(code).toMatch(/^\d{6}$/);
 
 			// passcode page
@@ -335,15 +335,16 @@ test.describe('Sign In flow, with passcode', () => {
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 
-			// enter incorrect code
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = incrementPasscode(code);
+			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// enter correct code
 			await page.locator('input[name=code]').clear();
-			await page.locator('input[name=code]').fill(code!);
+			await page.locator('input[name=code]').fill(code);
 
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.getByText('Submit verification code').click();
@@ -378,39 +379,42 @@ test.describe('Sign In flow, with passcode', () => {
 			// email
 			expect(body).toContain('Your one-time passcode');
 			expect(codes?.length).toBe(1);
-			const code = codes?.[0].value;
+			const code = codes?.[0].value || '0';
 			expect(code).toMatch(/^\d{6}$/);
 
 			// passcode page
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = incrementPasscode(code);
+
 			// attempt 1
 			await expect(page.getByText('Submit verification code')).toBeVisible();
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 2
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 3
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 4
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			// attempt 5
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+			await page.locator('input[name=code]').fill(wrongCode);
 			await page.getByText('Submit verification code').click();
 			await expect(page).toHaveURL(/\/signin/);
 			await expect(page.getByText('Your code has expired')).toBeVisible();

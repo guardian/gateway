@@ -13,7 +13,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
-import { escapeRegExp } from '../../helpers/utils';
+import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
 import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 
 const existingUserSendEmailAndValidatePasscode = async ({
@@ -305,7 +305,7 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page.getByText('send again')).toBeVisible();
 			await expect(page.getByText('try another address')).toBeVisible();
 
-			const { body, codes } = await checkForEmailAndGetDetails(
+			const { id, body, codes } = await checkForEmailAndGetDetails(
 				unregisteredEmail,
 				timeRequestWasMade,
 			);
@@ -331,12 +331,24 @@ test.describe('Registration flow - Split 1/3', () => {
 			await expect(page.getByText('Submit verification code')).toBeVisible();
 			await page.locator('input[name=code]').fill(code!);
 
+			// jobs T&C page
+			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
+			await expect(
+				page.getByText(
+					'Click ‘continue’ to automatically use your existing Guardian account to sign in with Guardian Jobs',
+				),
+			).toBeVisible();
+
+			await page.locator('input[name=firstName]').fill(id);
+			await page.locator('input[name=secondName]').fill(id);
+			await page.locator('button[type="submit"]').click();
+
+			// Complete Account page (with just Jobs newsletter)
 			await expect(page).toHaveURL(/\/welcome\/complete-account/);
 			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
 
 			await page.getByRole('button', { name: 'Next' }).click();
 
-			await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 			await expect(page).toHaveURL(
 				new RegExp(escapeRegExp(encodeURIComponent(fromURI))),
 			);
@@ -610,19 +622,22 @@ test.describe('Registration flow - Split 1/3', () => {
 			// email
 			expect(body).toContain('Your verification code');
 			expect(codes?.length).toBe(1);
-			const code = codes?.[0].value;
+			const code = codes?.[0].value || '0';
 			expect(code).toMatch(/^\d{6}$/);
 
 			// passcode page
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Submit verification code')).toBeVisible();
-			await page.locator('input[name=code]').fill(`${+code! + 1}`);
+
+			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
+			const wrongCode = incrementPasscode(code);
+			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/passcode/);
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			await page.locator('input[name=code]').clear();
-			await page.locator('input[name=code]').fill(code!);
+			await page.locator('input[name=code]').fill(code);
 			await page.getByText('Submit verification code').click();
 
 			await expect(page).toHaveURL(/\/welcome\/review/);

@@ -5,7 +5,7 @@ import {
 	createTestUser,
 } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
-import { escapeRegExp } from '../../helpers/utils';
+import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
 
 test.describe('Password reset recovery flows - with Passcodes', () => {
 	test.describe('ACTIVE user with password', () => {
@@ -193,7 +193,7 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			// email
 			expect(body).toContain('Your one-time passcode');
 			expect(codes?.length).toBe(1);
-			const code = codes?.[0].value;
+			const code = codes?.[0].value || '0';
 			expect(code).toMatch(/^\d{6}$/);
 
 			// passcode page
@@ -202,7 +202,7 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
 
 			// ensure that the code is always 6 characters long (pad it with leading zeros if necasery)
-			const wrongCode = String((+code! + 1) % 1000000).padStart(6, '0');
+			const wrongCode = incrementPasscode(code);
 			await page.locator('input[name=code]').fill(wrongCode);
 
 			await expect(page).toHaveURL(/\/reset-password\/code/, {
@@ -212,7 +212,7 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			await expect(page.getByText('Incorrect code')).toBeVisible();
 
 			await page.locator('input[name=code]').clear();
-			await page.locator('input[name=code]').fill(code!);
+			await page.locator('input[name=code]').fill(code);
 			await page.getByText('Submit one-time code').click();
 
 			await expect(page).toHaveURL(/\/reset-password\/password/);
@@ -405,14 +405,14 @@ test.describe('Password reset recovery flows - with Passcodes', () => {
 			// email
 			expect(body).toContain('Your one-time passcode');
 			expect(codes?.length).toBe(1);
-			const code = codes?.[0].value;
+			const code = codes?.[0].value || '0';
 			expect(code).toMatch(/^\d{6}$/);
 
 			// passcode page
 			await expect(page).toHaveURL(/\/reset-password\/email-sent/);
 			await expect(page.getByText('Enter your one-time code')).toBeVisible();
 
-			const wrongCodeAgain = String((+code! + 1) % 1000000).padStart(6, '0');
+			const wrongCodeAgain = incrementPasscode(code);
 			// attempt 1 - auto submit
 			await expect(page.getByText('Submit one-time code')).toBeVisible();
 			await page.locator('input[name=code]').fill(wrongCodeAgain);

@@ -264,6 +264,9 @@ router.post(
 	handleRecaptcha,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const {
+			queryParams: { clientId },
+		} = res.locals;
 		const encryptedState = readEncryptedStateCookie(req);
 
 		// make sure we have the state handle
@@ -277,7 +280,8 @@ router.post(
 				return oktaIdxApiSignInPasscodeController({
 					req,
 					res,
-					confirmationPagePath: '/welcome/existing',
+					confirmationPagePath:
+						clientId === 'jobs' ? JOBS_TOS_URI : '/welcome/existing',
 				});
 			}
 
@@ -376,12 +380,12 @@ const oktaIdxCreateAccountOrSignIn = async (
 		getRegistrationLocation(req);
 
 	const getConfirmationPagePathForNewUser = (): RoutePaths => {
-		if (isCombinedSigninAndRegisterFlow) {
-			return '/welcome/complete-account';
-		}
-
 		if (clientId === 'jobs') {
 			return JOBS_TOS_URI;
+		}
+
+		if (isCombinedSigninAndRegisterFlow) {
+			return '/welcome/complete-account';
 		}
 
 		if (appClientId === 'printpromo') {
@@ -531,6 +535,10 @@ const oktaIdxCreateAccountOrSignIn = async (
 				trackMetric('ExistingUserInCreateAccountFlow');
 
 				const getConfirmationPagePathForExistingUser = (): RoutePaths => {
+					if (clientId === 'jobs') {
+						return JOBS_TOS_URI;
+					}
+
 					if (appClientId === 'printpromo') {
 						return '/welcome/print-promo';
 					}
