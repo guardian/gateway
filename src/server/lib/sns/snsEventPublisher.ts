@@ -16,7 +16,7 @@ export const publishSnsEvent = async ({
 			identityId,
 			voucherType: 'registration-reward',
 		}),
-		TopicArn: '',
+		TopicArn: process.env.PRINT_PROMO_SNS_TOPIC_ARN,
 	});
 	const response = await new SNSClient(awsConfig).send(command);
 	return response;

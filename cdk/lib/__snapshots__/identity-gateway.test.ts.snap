@@ -59,6 +59,8 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuStringParameter",
       "GuStringParameter",
       "GuStringParameter",
+      "GuStringParameter",
+      "GuAllowPolicy",
       "GuAllowPolicy",
       "GuAllowPolicy",
       "GuAllowPolicy",
@@ -176,6 +178,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     "MembershipBrazeSqsArn": {
       "Default": "/identity/identity-gateway/CODE/membership-braze-sqs-arn",
       "Description": "The ARN of SQS queue for membership braze emails",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "MembershipNewsletterAcquisitionQueueArn": {
+      "Default": "/identity/identity-gateway/TEST/membership-newsletter-acquisition-queue-arn",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "OauthBaseUrl": {
@@ -701,16 +707,16 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
             "PolicyDocument": {
               "Statement": [
                 {
-                  "Action": "sqs:SendMessage",
+                  "Action": "sns:Publish",
                   "Effect": "Allow",
                   "Resource": {
-                    "Ref": "MembershipBrazeSqsArn",
+                    "Ref": "PrintPromoTopic",
                   },
                 },
               ],
               "Version": "2012-10-17",
             },
-            "PolicyName": "SendSQSMessages",
+            "PolicyName": "SendSNSMessages",
           },
           {
             "PolicyDocument": {
@@ -1602,6 +1608,29 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "IdentityGatewaySNSPublishPolicy8453DD92": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Resource": {
+                "Ref": "PrintPromoSnsTopic6F25E569",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "IdentityGatewaySNSPublishPolicy8453DD92",
+        "Roles": [
+          {
+            "Ref": "InstanceRoleIdentitygatewayF5932C92",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
     "IdentityGatewaySSMReadPolicy861DB118": {
       "Properties": {
         "PolicyDocument": {
@@ -1844,6 +1873,7 @@ Environment=REDIS_PASSWORD=$REDIS_PASSWORD
 Environment=REDIS_HOST=\${RedisHost}
 Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=\${MembersDataApiUrl}
+Environment=PRINT_PROMO_SNS_TOPIC_ARN=TestPrintPromoSnsTopicArn
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
@@ -2191,6 +2221,18 @@ systemctl start identity-gateway
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
+    },
+    "MembershipNewsletterAcquisitionQueueIdentityGatewayPrintPromoSnsTopic88AEDF72DFDFF2EF": {
+      "Properties": {
+        "Endpoint": {
+          "Ref": "MembershipNewsletterAcquisitionQueueArn",
+        },
+        "Protocol": "sqs",
+        "TopicArn": {
+          "Ref": "PrintPromoSnsTopic6F25E569",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
     },
     "OAuthApplicationCallbackInactivityAlarm": {
       "Condition": "IsProd",
@@ -2548,6 +2590,30 @@ systemctl start identity-gateway
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "PrintPromoSnsTopic6F25E569": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "TopicName": "PrintPromoTopic",
+      },
+      "Type": "AWS::SNS::Topic",
     },
     "PrintPromoTopic": {
       "Properties": {
@@ -3765,6 +3831,11 @@ Environment=REDIS_HOST=",
                   "
 Environment=REDIS_SSL_ON=true
 Environment=MEMBERS_DATA_API_URL=https://members-data-api.code.dev-theguardian.com
+Environment=PRINT_PROMO_SNS_TOPIC_ARN=",
+                  {
+                    "Ref": "PrintPromoSnsTopic6F25E569",
+                  },
+                  "
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY

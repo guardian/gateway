@@ -49,7 +49,7 @@ import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { getUser } from '../lib/okta/api/users';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
-import { publishSnsEvent } from '../lib/sqs/snseventpublisher';
+import { publishSnsEvent } from '../lib/sns/snsEventPublisher';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
