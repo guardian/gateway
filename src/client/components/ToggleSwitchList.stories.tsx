@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 import React from 'react';
 
 import MinimalHeader from '@/client/components/MinimalHeader';

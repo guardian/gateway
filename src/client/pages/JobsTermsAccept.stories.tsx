@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { JobsTermsAccept } from '@/client/pages/JobsTermsAccept';
 

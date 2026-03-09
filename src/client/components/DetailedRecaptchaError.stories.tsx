@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { ErrorSummary } from '@guardian/source-development-kitchen/react-components';

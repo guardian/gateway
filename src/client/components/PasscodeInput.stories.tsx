@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { PasscodeInput } from '@/client/components/PasscodeInput';
 

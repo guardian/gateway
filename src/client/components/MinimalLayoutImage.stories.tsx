@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 import React from 'react';
 
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
