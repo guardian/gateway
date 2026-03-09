@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/preact';
 
 import { Welcome } from '@/client/pages/Welcome';
 

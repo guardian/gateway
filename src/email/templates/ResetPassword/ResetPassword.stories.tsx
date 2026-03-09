@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { ResetPassword } from './ResetPassword';
 import { renderMJML } from '../../testUtils';

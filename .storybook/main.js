@@ -1,19 +1,12 @@
-/* eslint-disable functional/immutable-data */
-/* eslint-disable @typescript-eslint/no-require-imports */
-const path = require('path');
-const { neutral } = require('@guardian/source/foundations');
-const deepmerge = require('deepmerge');
-const sharedLoader = require('../.swcrc.config');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { neutral } from '@guardian/source/foundations';
+
+const storybookDir = path.dirname(fileURLToPath(import.meta.url));
+
 const config = {
-	stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-	addons: [
-		'@storybook/addon-links',
-		'@storybook/addon-essentials',
-		'@storybook/addon-webpack5-compiler-babel',
-		'@storybook/addon-styling-webpack',
-		'@storybook/addon-themes',
-		'@chromatic-com/storybook',
-	],
+	stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
+	addons: ['@storybook/addon-themes', '@chromatic-com/storybook'],
 	previewHead: (/** @type {any} */ head) => `
     ${head}
     <style>
@@ -22,58 +15,43 @@ const config = {
       }
     </style>
   `,
-	webpackFinal: (
-		/** @type {{ resolve: { alias: any; }; module: { rules: any; }; }} */ config,
-	) => {
-		// Add the @client alias to prevent imports using it from failing
-		// Nb. __dirname is the current working directory, so .storybook in this case
-		config.resolve.alias = {
-			...config.resolve.alias,
-			'@': path.join(__dirname, '../src'),
-			react: 'preact/compat',
-			'react-dom/test-utils': 'preact/test-utils',
-			'react-dom': 'preact/compat',
-			// Must be below test-utils
-			'react/jsx-runtime': 'preact/jsx-runtime',
-			mjml: 'mjml-browser',
-			// We stub these libraries required by mjml because Storybook cannot run these on the client side.
-			'uglify-js': false,
-			'clean-css': false,
-		};
+	viteFinal: async (config) => {
+		const { mergeConfig } = await import('vite');
 
-		// transpile certain modules so we can get them to work with ie11 storybook
-		const transpileModules = {
-			include: [/node_modules[\\/]@guardian/],
-			test: /\.(m?)(j|t)s(x?)/,
-			use: [
-				deepmerge(sharedLoader, {
-					options: {
-						env: {
-							targets: {
-								chrome: '100',
-							},
-						},
-					},
-				}),
-			],
-		};
-
-		// Return the altered config
-		return {
-			...config,
-			module: {
-				...config.module,
-				rules: [...config.module.rules, transpileModules],
+		return mergeConfig(config, {
+			esbuild: {
+				jsx: 'automatic',
+				jsxImportSource: '@emotion/react',
 			},
-			target: ['web'],
-		};
+			optimizeDeps: {
+				include: ['preact', 'preact/hooks', 'preact/compat'],
+			},
+			resolve: {
+				dedupe: ['preact'],
+				alias: {
+					'@': path.join(storybookDir, '../src'),
+					mjml: 'mjml-browser',
+					react: 'preact/compat',
+					'react/jsx-runtime': 'preact/jsx-runtime',
+					'react-dom/test-utils': 'preact/test-utils',
+					'react-dom': 'preact/compat',
+				},
+			},
+		});
 	},
 	typescript: {
-		reactDocgen: 'react-docgen-typescript-plugin',
+		reactDocgen: 'react-docgen-typescript',
+		reactDocgenTypescriptOptions: {
+			tsconfigPath: '.storybook/tsconfig.json',
+		},
 	},
 	framework: {
-		name: '@storybook/preact-webpack5',
-		options: {},
+		name: '@storybook/preact-vite',
+		options: {
+			builder: {
+				viteConfigPath: '.storybook/vite.config.ts',
+			},
+		},
 	},
 	docs: {
 		autodocs: false,

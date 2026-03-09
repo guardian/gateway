@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { SignIn, SignInProps } from '@/client/pages/SignIn';
 import { PasscodeErrors, SignInErrors } from '@/shared/model/Errors';
