@@ -7,6 +7,7 @@ settings:
 overrides:
   minimatch@3.1.2: 3.1.4
   minimatch@>=9.0.0 <9.0.7: 9.0.7
+  serialize-javascript@6.0.2: 7.0.3
 
 importers:
 
@@ -6018,9 +6019,6 @@ packages:
     resolution: {integrity: sha512-uaW0WwXKpL9blXE2o0bRhoL2EGXIrZxQ2ZQ4mgcfoBxdFmQold+qWsD2jLrfZ0trjKL6vOw0j//eAwcALFjKSw==}
     engines: {node: '>= 18'}
 
-  serialize-javascript@6.0.2:
-    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
-
   serialize-javascript@7.0.3:
     resolution: {integrity: sha512-h+cZ/XXarqDgCjo+YSyQU/ulDEESGGf8AMK9pPNmhNSl/FzPl6L8pMp1leca5z6NuG6tvV/auC8/43tmovowww==}
     engines: {node: '>=20.0.0'}
@@ -10560,7 +10558,7 @@ snapshots:
       glob-parent: 6.0.2
       normalize-path: 3.0.0
       schema-utils: 4.3.2
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.3
       tinyglobby: 0.2.14
       webpack: 5.105.3(@swc/core@1.15.18)(esbuild@0.27.3)(webpack-cli@6.0.1)
 
@@ -11961,7 +11959,7 @@ snapshots:
   image-minimizer-webpack-plugin@4.1.4(imagemin@9.0.1)(sharp@0.34.4)(webpack@5.105.3):
     dependencies:
       schema-utils: 4.3.2
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.3
       webpack: 5.105.3(@swc/core@1.15.18)(esbuild@0.27.3)(webpack-cli@6.0.1)
     optionalDependencies:
       imagemin: 9.0.1
@@ -14009,10 +14007,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serialize-javascript@6.0.2:
-    dependencies:
-      randombytes: 2.1.0
-
   serialize-javascript@7.0.3: {}
 
   serve-static@2.2.0:
@@ -14405,7 +14399,7 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
-      serialize-javascript: 6.0.2
+      serialize-javascript: 7.0.3
       terser: 5.46.0
       webpack: 5.105.3(@swc/core@1.15.18)(esbuild@0.27.3)(webpack-cli@6.0.1)
     optionalDependencies:
