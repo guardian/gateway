@@ -22,7 +22,8 @@ import {
 } from 'aws-cdk-lib/aws-ec2';
 import { Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'aws-cdk-lib/aws-iam';
 import { Topic } from 'aws-cdk-lib/aws-sns';
-import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
+import { EmailSubscription, SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
+import { Queue } from 'aws-cdk-lib/aws-sqs';
 import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 type IdentityGatewayProps = GuStackProps & {
@@ -150,6 +151,19 @@ export class IdentityGateway extends GuStack {
 		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
 		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
 
+		const membershipNewsletterAcquisitionQueueArnParam = new GuStringParameter(
+			this,
+			'MembershipNewsletterAcquisitionQueueArn',
+			{
+				default: `/${stack}/${app}/${stage}/membership-newsletter-acquisition-queue-arn`,
+				fromSSM: true,
+			},
+		);
+		const membershipNewsletterAcquisitionQueue = Queue.fromQueueArn(this, 'MembershipNewsletterAcquisitionQueue', membershipNewsletterAcquisitionQueueArnParam.valueAsString);
+
+		const printPromoSnsTopic = new Topic(this, 'PrintPromoSnsTopic', { topicName: `${stack}-${app}-${stage}-PrintPromoTopic` });
+		printPromoSnsTopic.addSubscription(new SqsSubscription(membershipNewsletterAcquisitionQueue));
+
 		// Allow Gateway to read artefacts and configuration files from S3
 		const bucketPolicy = new GuAllowPolicy(
 			this,
@@ -181,6 +195,12 @@ export class IdentityGateway extends GuStack {
 		const pushMetricsPolicy = new GuAllowPolicy(this, 'IdentityGatewayCloudWatchPolicy', {
 			actions: ["cloudwatch:PutMetricData"],
 			resources: ["*"],
+		});
+
+		// Allow Gateway to publish messages to SNS topic for Print Promo signups
+		const snsPolicy = new GuAllowPolicy(this, 'IdentityGatewaySNSPublishPolicy', {
+			actions: ['sns:Publish'],
+			resources: [printPromoSnsTopic.topicArn],
 		});
 
 		const userData = UserData.custom(`#!/bin/bash -ev
@@ -274,6 +294,7 @@ Environment=MEMBERS_DATA_API_URL=${membersDataApiUrl}
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
+Environment=PRINT_PROMO_SNS_TOPIC_ARN=${printPromoSnsTopic.topicArn}
 
 [Install]
 WantedBy=multi-user.target
@@ -315,7 +336,7 @@ systemctl start ${app}
 				enabled: true,
 			},
 			roleConfiguration: {
-				additionalPolicies: [bucketPolicy, ssmPolicy, sesPolicy, pushMetricsPolicy],
+				additionalPolicies: [bucketPolicy, ssmPolicy, sesPolicy, pushMetricsPolicy, snsPolicy],
 			},
 		});
 
