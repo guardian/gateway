@@ -8,7 +8,7 @@ import {
 } from '@guardian/cdk/lib/constructs/core';
 import { GuAllowPolicy, GuRole } from '@guardian/cdk/lib/constructs/iam';
 import type { GuAsgCapacity } from '@guardian/cdk/lib/types';
-import { type App, Duration, Tags } from 'aws-cdk-lib';
+import { type App, Duration } from 'aws-cdk-lib';
 import { ComparisonOperator, MathExpression, Metric, Unit } from 'aws-cdk-lib/aws-cloudwatch';
 import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 import {
@@ -325,11 +325,6 @@ systemctl start ${app}
 				additionalPolicies: [bucketPolicy, ssmPolicy, sesPolicy, pushMetricsPolicy, snsPolicy],
 			},
 		});
-
-		// TODO: Remove this tag once the ASG is migrated to CDK.
-		// This is required or else Riff Raff panics when it identifies more than
-		// one ASG with the same Stack, Stage, App tags.
-		Tags.of(nodeApp.autoScalingGroup).add('gu:riffraff:new-asg', 'true');
 
 		nodeApp.autoScalingGroup.connections.addSecurityGroup(redisSecurityGroup);
 		nodeApp.autoScalingGroup.scaleOnCpuUtilization('CpuScalingPolicy', {

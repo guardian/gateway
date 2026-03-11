@@ -27,4 +27,3 @@ deployments:
       bucketSsmLookup: true
       bucketSsmKey: /account/services/identity.artifact.bucket
       prefixStack: false
-      asgMigrationInProgress: true
