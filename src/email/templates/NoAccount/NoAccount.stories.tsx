@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { NoAccount } from './NoAccount';
 import { renderMJML } from '../../testUtils';

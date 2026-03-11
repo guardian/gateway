@@ -53,9 +53,9 @@ const config: KnipConfig = {
 		'jest-environment-jsdom',
 		'mjml-browser',
 		'preact-render-to-string',
-		'react-docgen-typescript-plugin',
 		'sharp',
 		'source-map-support',
+		'vite',
 	],
 };
 

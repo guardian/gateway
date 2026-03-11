@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 import { Footer } from './Footer';
 import { renderMJMLComponent } from '../testUtils';

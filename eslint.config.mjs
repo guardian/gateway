@@ -140,18 +140,26 @@ const config = tseslint.config(
 		// rules specific to files that are not part of the main codebase
 		files: [
 			'__mocks__/**/*',
-			'.storybook/**/*',
 			'playwright/**/*',
 			'scripts/**/*',
 			'util/**/*',
 			'.swcrc.config.js',
-			'babel.config.js',
 			'playwright.config.ts',
 			'jest.config.js',
 			'webpack.config.js',
 			'webpack.development.js',
 		],
 
+		rules: {
+			'@eslint-community/eslint-comments/require-description': 'off',
+		},
+	},
+	{
+		// rules specific to storybook
+		files: ['.storybook/**/*'],
+		languageOptions: {
+			sourceType: 'module',
+		},
 		rules: {
 			'@eslint-community/eslint-comments/require-description': 'off',
 		},

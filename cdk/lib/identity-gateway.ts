@@ -148,6 +148,9 @@ export class IdentityGateway extends GuStack {
 			},
 		);
 
+		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
+		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
+
 		const membershipNewsletterAcquisitionQueueArnParam = new GuStringParameter(
 			this,
 			'MembershipNewsletterAcquisitionQueueArn',
@@ -158,11 +161,8 @@ export class IdentityGateway extends GuStack {
 		);
 		const membershipNewsletterAcquisitionQueue = Queue.fromQueueArn(this, 'MembershipNewsletterAcquisitionQueue', membershipNewsletterAcquisitionQueueArnParam.valueAsString);
 
-		const printPromoSnsTopic = new Topic(this, 'PrintPromoSnsTopic', { topicName: 'PrintPromoTopic' });
+		const printPromoSnsTopic = new Topic(this, 'PrintPromoSnsTopic', { topicName: `${stack}-${app}-${stage}-PrintPromoTopic` });
 		printPromoSnsTopic.addSubscription(new SqsSubscription(membershipNewsletterAcquisitionQueue));
-
-		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
-		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
 
 		// Allow Gateway to read artefacts and configuration files from S3
 		const bucketPolicy = new GuAllowPolicy(
@@ -197,6 +197,7 @@ export class IdentityGateway extends GuStack {
 			resources: ["*"],
 		});
 
+		// Allow Gateway to publish messages to SNS topic for Print Promo signups
 		const snsPolicy = new GuAllowPolicy(this, 'IdentityGatewaySNSPublishPolicy', {
 			actions: ['sns:Publish'],
 			resources: [printPromoSnsTopic.topicArn],
@@ -294,6 +295,7 @@ Environment=PRINT_PROMO_SNS_TOPIC_ARN=${printPromoSnsTopic.topicArn}
 Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
 Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
+Environment=PRINT_PROMO_SNS_TOPIC_ARN=${printPromoSnsTopic.topicArn}
 
 [Install]
 WantedBy=multi-user.target

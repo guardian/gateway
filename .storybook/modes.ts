@@ -1,4 +1,4 @@
-import type { Parameters } from '@storybook/react';
+import type { Parameters } from '@storybook/preact';
 
 export const allModes: Record<string, Parameters> = {
 	'dark mobile': {
