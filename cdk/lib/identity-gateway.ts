@@ -5,7 +5,6 @@ import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import {
 	GuStack,
 	GuStringParameter,
-	GuVpcParameter,
 } from '@guardian/cdk/lib/constructs/core';
 import { GuAllowPolicy, GuRole } from '@guardian/cdk/lib/constructs/iam';
 import type { GuAsgCapacity } from '@guardian/cdk/lib/types';
@@ -24,7 +23,6 @@ import { Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'a
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription, SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
-import { CfnInclude } from 'aws-cdk-lib/cloudformation-include';
 
 type IdentityGatewayProps = GuStackProps & {
 	scaling: GuAsgCapacity;
@@ -106,8 +104,6 @@ export class IdentityGateway extends GuStack {
 			{},
 		);
 
-		const vpcId = GuVpcParameter.getInstance(this);
-
 		const redisHost = new GuStringParameter(this, 'RedisHost', {
 			default: `/${stack}/${app}/${stage}/redis-host`,
 			fromSSM: true,
@@ -128,16 +124,6 @@ export class IdentityGateway extends GuStack {
 			redisSecurityGroupParam.valueAsString,
 			{ mutable: false },
 		);
-
-		new CfnInclude(this, 'IdentityGateway', {
-			templateFile: '../cloudformation.yaml',
-			parameters: {
-				VpcId: vpcId.valueAsString,
-				RedisHost: redisHost.valueAsString,
-				IdentityArtifactBucket: artifactBucket.valueAsString,
-				IdentityConfigBucket: configBucket.valueAsString,
-			},
-		});
 
 		const alarmEmail = new GuStringParameter(
 			this,
