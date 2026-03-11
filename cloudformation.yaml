@@ -23,11 +23,6 @@ Parameters:
   MembersDataApiUrl:
     Description: The url for members-data-api
     Type: AWS::SSM::Parameter::Value<String>
-    Default: /identity/identity-gateway/CODE/membership-braze-sqs-url
-  MembershipBrazeSqsArn:
-    Description: The ARN of SQS queue for membership braze emails
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /identity/identity-gateway/CODE/membership-braze-sqs-arn
   RedisHost:
     Description: The Redis server URL, used for rate limiting.
     Type: AWS::SSM::Parameter::Value<String>
@@ -172,13 +167,6 @@ Resources:
               - Effect: Allow
                 Action: ses:SendEmail
                 Resource: '*'
-        - PolicyName: SendSNSMessages
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action: sns:Publish
-                Resource: !Ref PrintPromoTopic
         - PolicyName: SSMTunnel
           PolicyDocument:
             Version: 2012-10-17
@@ -337,7 +325,6 @@ Resources:
               Environment=REDIS_HOST=${RedisHost}
               Environment=REDIS_SSL_ON=true
               Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
-              Environment=PRINT_PROMO_SNS_TOPIC_ARN=TestPrintPromoSnsTopicArn
               Environment=USER_BENEFITS_API_URL=$USER_BENEFITS_API_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL
               Environment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY
@@ -454,13 +441,6 @@ Resources:
       Subscription:
         - Endpoint: !Ref 'AlarmEmailAddress'
           Protocol: email
-  PrintPromoTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      DisplayName: SendPrintPromoToMembership
-      Subscription:
-        - Endpoint: !Ref 'MembershipBrazeSqsArn'
-          Protocol: sqs
   HighLatencyScalingAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd

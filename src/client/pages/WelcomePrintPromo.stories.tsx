@@ -1,5 +1,5 @@
 import { WelcomePrintPromo, WelcomePrintPromoProps } from './WelcomePrintPromo';
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/preact';
 
 export default {
 	title: 'Pages/WelcomePrintPromo',
