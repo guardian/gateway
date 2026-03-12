@@ -20,7 +20,6 @@ import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
-import { CookiesInTheBrowser } from '../components/CookiesInTheBrowser';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
@@ -104,7 +103,6 @@ export const RegisterWithEmail = ({
 					Sign in
 				</ThemedLink>
 			</MainBodyText>
-			<CookiesInTheBrowser />
 		</MinimalLayout>
 	);
 };
