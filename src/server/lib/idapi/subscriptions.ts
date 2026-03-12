@@ -66,17 +66,29 @@ const handleError = (
 	});
 };
 
-export const makeSubscriptionRequest = async (
-	subscriptionAction: SubscriptionAction,
-	emailType: EmailType,
-	subscriptionData: SubscriptionData,
-	token: string,
-	ip: string | undefined,
-): Promise<unknown> => {
+export const makeSubscriptionRequest = async ({
+	subscriptionAction,
+	emailType,
+	subscriptionData,
+	token,
+	ip,
+	refViewId,
+	browserId,
+}: {
+	subscriptionAction: SubscriptionAction;
+	emailType: EmailType;
+	subscriptionData: SubscriptionData;
+	token: string;
+	ip: string | undefined;
+	refViewId: string | undefined;
+	browserId: string | undefined;
+}): Promise<unknown> => {
 	const body = {
 		emailType,
 		...subscriptionData,
 		token,
+		refViewId,
+		browserId,
 	};
 
 	const options = APIAddClientAccessToken(APIPostOptions(body), ip);

@@ -103,6 +103,8 @@ const reviewHandler =
 const confirmHandler = (action: SubscriptionAction) =>
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { emailType, data, token } = req.params;
+		const { refViewId } = req.body.refViewId;
+		const browserId = res.locals.ophanConfig.bwid;
 
 		try {
 			if (!isValidEmailType(emailType)) {
@@ -111,13 +113,15 @@ const confirmHandler = (action: SubscriptionAction) =>
 
 			const subscriptionData = parseSubscriptionData(data);
 
-			await makeSubscriptionRequest(
-				action,
+			await makeSubscriptionRequest({
+				subscriptionAction: action,
 				emailType,
 				subscriptionData,
 				token,
-				req.ip,
-			);
+				ip: req.ip,
+				refViewId,
+				browserId,
+			});
 
 			trackMetric(`${subscriptionActionName(action)}::Success`);
 
