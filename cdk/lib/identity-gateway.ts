@@ -297,14 +297,16 @@ systemctl start ${app}
 				cidrRanges: [...fastlyCIDR],
 			},
 			monitoringConfiguration:
-				stage === 'PROD'
+				['PROD', 'TEST'].includes(stage)
 					? {
 							snsTopicName: alarmTopic.topicName,
 							http5xxAlarm: {
-								tolerated5xxPercentage: 0.05,
+								tolerated5xxPercentage: 0.1,
+								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							http4xxAlarm: {
-								tolerated4xxPercentage: 0.05,
+								tolerated4xxPercentage: 1,
+								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							unhealthyInstancesAlarm: true,
 						}
