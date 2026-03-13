@@ -19,7 +19,7 @@ import {
 	SecurityGroup,
 	UserData,
 } from 'aws-cdk-lib/aws-ec2';
-import { Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'aws-cdk-lib/aws-iam';
+import { ArnPrincipal, Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'aws-cdk-lib/aws-iam';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription, SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
@@ -137,6 +137,7 @@ export class IdentityGateway extends GuStack {
 		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
 		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
 
+		// We have a SNS topic that is subscribed to by the Membership team to trigger workflows when readers sign up to the print promo.
 		const membershipNewsletterAcquisitionQueueArnParam = new GuStringParameter(
 			this,
 			'MembershipNewsletterAcquisitionQueueArn',
@@ -145,10 +146,28 @@ export class IdentityGateway extends GuStack {
 				fromSSM: true,
 			},
 		);
+
+		const membershipAccountIam = new GuStringParameter(
+			this,
+			'MembershipAccountIamRoleArn',
+			{
+				default: `/${stack}/${app}/${stage}/membership-account-iam-role-arn`,
+				fromSSM: true,
+			},
+		);
+
 		const membershipNewsletterAcquisitionQueue = Queue.fromQueueArn(this, 'MembershipNewsletterAcquisitionQueue', membershipNewsletterAcquisitionQueueArnParam.valueAsString);
 
+		// Create SNS topic and allow Membership account to subscribe to it
 		const printPromoSnsTopic = new Topic(this, 'PrintPromoSnsTopic', { topicName: `${stack}-${app}-${stage}-PrintPromoTopic` });
 		printPromoSnsTopic.addSubscription(new SqsSubscription(membershipNewsletterAcquisitionQueue));
+		printPromoSnsTopic.addToResourcePolicy(new PolicyStatement({
+			sid: 'AllowMembershipAccountToSubscribe',
+			effect: Effect.ALLOW,
+			principals: [new ArnPrincipal(membershipAccountIam.valueAsString)],
+			actions: ['sns:Subscribe'],
+			resources: [printPromoSnsTopic.topicArn],
+		}));
 
 		// Allow Gateway to read artefacts and configuration files from S3
 		const bucketPolicy = new GuAllowPolicy(
