@@ -320,11 +320,11 @@ systemctl start ${app}
 					? {
 							snsTopicName: alarmTopic.topicName,
 							http5xxAlarm: {
-								tolerated5xxPercentage: 0.1,
+								tolerated5xxPercentage: 0.5,
 								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							http4xxAlarm: {
-								tolerated4xxPercentage: 2,
+								tolerated4xxPercentage: 3,
 								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							unhealthyInstancesAlarm: true,
