@@ -324,7 +324,7 @@ systemctl start ${app}
 								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							http4xxAlarm: {
-								tolerated4xxPercentage: 1,
+								tolerated4xxPercentage: 2,
 								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							unhealthyInstancesAlarm: true,
