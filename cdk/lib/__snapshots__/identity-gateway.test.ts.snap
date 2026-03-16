@@ -10,6 +10,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuStringParameter",
       "GuStringParameter",
       "GuStringParameter",
+      "GuStringParameter",
       "GuAllowPolicy",
       "GuAllowPolicy",
       "GuAllowPolicy",
@@ -88,6 +89,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     "LoggingStreamName": {
       "Default": "/account/services/logging.stream.name",
       "Description": "SSM parameter containing the Name (not ARN) on the kinesis stream",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "MembershipAccountIamRoleArn": {
+      "Default": "/identity/identity-gateway/TEST/membership-account-iam-role-arn",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "MembershipNewsletterAcquisitionQueueArn": {
@@ -1420,6 +1425,34 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "TopicName": "identity-identity-gateway-TEST-PrintPromoTopic",
       },
       "Type": "AWS::SNS::Topic",
+    },
+    "PrintPromoSnsTopicPolicyB251C505": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sns:Subscribe",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Ref": "MembershipAccountIamRoleArn",
+                },
+              },
+              "Resource": {
+                "Ref": "PrintPromoSnsTopic6F25E569",
+              },
+              "Sid": "AllowMembershipAccountToSubscribe",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Topics": [
+          {
+            "Ref": "PrintPromoSnsTopic6F25E569",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::TopicPolicy",
     },
     "RegisterInactivityAlarm1F5BC42F": {
       "Properties": {
