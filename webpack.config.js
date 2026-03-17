@@ -159,8 +159,7 @@ const server = () => ({
 	},
 });
 
-const browser = ({ isLegacy }) => {
-	const entry = ['./src/client/static/index.tsx'];
+const browser = ({ isLegacy, entry, bundle, chunkhash = true }) => {
 	const target = ['web'];
 	if (isLegacy) {
 		target.push('es5');
@@ -191,12 +190,12 @@ const browser = ({ isLegacy }) => {
 		},
 	});
 
-	const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
+	const filename = `${bundle}.[name]${isLegacy ? '.legacy' : ''}${chunkhash ? '.[chunkhash]' : ''}.js`;
 
 	const plugins = [
 		new AssetsPlugin({
 			path: path.resolve(__dirname, 'build'),
-			filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
+			filename: `${bundle}.${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
 		}),
 	];
 
@@ -205,7 +204,7 @@ const browser = ({ isLegacy }) => {
 			new BundleAnalyzerPlugin({
 				analyzerMode: 'static',
 				openAnalyzer: true,
-				reportFilename: `../webpack-report-${isLegacy ? 'legacy' : 'modern'
+				reportFilename: `../webpack-report-${bundle}-${isLegacy ? 'legacy' : 'modern'
 					}.html`,
 			}),
 		);
@@ -276,6 +275,8 @@ module.exports = [
 		}),
 		browser({
 			isLegacy: true,
+			entry: ['./src/client/static/index.tsx'],
+			bundle: 'browser',
 		}),
 	),
 	merge(
@@ -284,6 +285,19 @@ module.exports = [
 		}),
 		browser({
 			isLegacy: false,
+			entry: ['./src/client/static/index.tsx'],
+			bundle: 'browser',
 		}),
 	),
+	merge(
+		common({
+			platform: 'okta.legacy',
+		}),
+		browser({
+			isLegacy: true,
+			entry: ['./src/okta/index.ts'],
+			bundle: 'okta',
+			chunkhash: false,
+		}),
+	)
 ];

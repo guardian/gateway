@@ -64,10 +64,10 @@ note over ClientApp: The app manages the tokens, which can now be used to<br/>au
 
 ## Customising the interception code
 
-All the code for the interception is in the [`scripts/okta`](../../scripts/okta) folder with the following structure:
+All the code for the interception is in the [`src/okta`](../../src/okta/) folder with the following structure:
 
 ```
-scripts/okta
+src/okta
 ├── __tests__                           # Tests for the interception code
 │   ├─── getClientId.test.ts
 │   ├─── getMaxAge.test.ts
@@ -75,46 +75,18 @@ scripts/okta
 │   ├─── getRelayState.test.ts
 │   ├─── getThirdPartyClientId.test.ts
 │   └─── getThirdPartyReturnUrl.test.ts
-├── lib
-│   └─── helper.ts                      # Main helper functions for the interception code
-├── login-default.html                  # Default HTML for the Okta hosted login page, used in case we need to reset the custom HTML
-├── okta-login.html                     # The custom HTML for the Okta hosted login page, which includes the interception code
-├── okta-login.ts                       # The custom TypeScript file which is compiled to the okta-login.js file
-├── okta-login.js                       # The compiled JavaScript file which is used in the Okta hosted login page
-├── tsconfig.json                       # The TypeScript config for compiling the okta-login.ts file
-├── webpack.config.js                   # The Webpack config for compiling the okta-login.ts file
+├── static                              # Static HTML files to upload to Okta
+│   ├─── okta-login.CODE.html           # The custom HTML for the CODE Okta hosted login page, which includes the interception code
+│   ├─── okta-login.PROD.html           # The custom HTML for the PROD Okta hosted login page, which includes the interception code
+│   └─── login-default.html             # Default HTML for the Okta hosted login page, used in case we need to reset the custom HTML
+├── helper.ts                           # Main helper functions for the interception code
+├── index.ts                            # The custom TypeScript file which is compiled to the okta-login.js file
 └── window.d.ts                         # The TypeScript definition file for the window object
 ```
 
 The interception code is written in TypeScript, and is compiled to JavaScript using Webpack. The compiled JavaScript file is then used in the Okta hosted login page.
 
-````
-
-For development the first place to start is `okta-login.ts` where the interception code is written. The code is written in TypeScript, and the main functions are in the `lib/helper.ts` file which are imported into the `okta-login.ts` file.
-
-
-We use jsdelivr to load this script, the automatic minification reduces the size.
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@main/scripts/okta/okta-login.min.js"></script>
-````
-
-If testing out changes for a particular branch you can change the branch it's looking for in the custom HTML itself.
-
-e.g. for a branch called `feature-branch-xyz`:
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@feature-branch-xyz/scripts/okta/okta-login.min.js"></script>
-```
-
-or commit
-
-```html
-<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@df4557838d25ab7991130acc4cbe92e6ab063e6d/scripts/okta/okta-login.min.js"></script>
-```
-
-If you make changes to these files, be sure to run `pnpm run gen:okta-login` to compile the TypeScript and generate the Javascript file, `okta-login.js`.
-Then be sure to commit the updated Javascript file in order to use it with jsdelivr.
+For development the first place to start is `index.ts` where the interception code is written. The code is written in TypeScript, and the main functions are in the `helper.ts` file which are imported into the `index.ts` file.
 
 By writing these files in TypeScript, we can use modern syntax and features, and have the code compiled to ES5 JavaScript. It also allows us to use Jest to test this code, which will run as part of the CI pipeline, or manually using `make test` or `make test-unit`.
 
@@ -141,6 +113,13 @@ If present, we load the SDK and widget to handle social sign in, otherwise we re
 
 ## Deployment
 
-It's not possible to terraform the Okta hosted login page, so we have to manually update the HTML and JavaScript in the Okta dashboard.
+It's not possible to terraform the Okta hosted login page, so we have to manually update the HTML in the Okta dashboard.
 
 From the dashboard this is under "Customization" > "Brands" > "The Guardian - [STAGE]", and the one with the custom domain. Then under the "Pages" tab, and the "Configure" button for the "Sign-in Page". From there you can edit the HTML and JavaScript.
+
+Whenever making changes to the Javascript its recommended to bust the Fastly cache as the intercept Javascript bundle doesn't use file hashes unlike the rest of Gateway's javascript, meaning that it can take 24hrs for the Javascript to be reflected on all browsers unless we manually clear the cache.
+
+This can be done by navigating to the profile.theguardian.com service in Fastly and pressing the Purge button to purge the following 2 URLs:
+
+- https://profile.theguardian.com/static/okta.main.js
+- https://profile.theguardian.com/static/okta.runtime.js
