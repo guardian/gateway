@@ -19,7 +19,7 @@ import {
 	SecurityGroup,
 	UserData,
 } from 'aws-cdk-lib/aws-ec2';
-import { Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'aws-cdk-lib/aws-iam';
+import { ArnPrincipal, Effect, PolicyDocument, PolicyStatement, WebIdentityPrincipal } from 'aws-cdk-lib/aws-iam';
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription, SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
@@ -137,18 +137,37 @@ export class IdentityGateway extends GuStack {
 		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
 		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
 
-		const membershipNewsletterAcquisitionQueueArnParam = new GuStringParameter(
+		// We have a SNS topic that is subscribed to by the Membership team to trigger workflows when readers sign up to the print promo.
+		const imovoVoucherQueueArnParam = new GuStringParameter(
 			this,
-			'MembershipNewsletterAcquisitionQueueArn',
+			'ImovoQueueArn',
 			{
-				default: `/${stack}/${app}/${stage}/membership-newsletter-acquisition-queue-arn`,
+				default: `/${stack}/${app}/${stage}/membership-imovo-voucher-queue-arn`,
 				fromSSM: true,
 			},
 		);
-		const membershipNewsletterAcquisitionQueue = Queue.fromQueueArn(this, 'MembershipNewsletterAcquisitionQueue', membershipNewsletterAcquisitionQueueArnParam.valueAsString);
 
+		const membershipAccountIam = new GuStringParameter(
+			this,
+			'MembershipAccountIamRoleArn',
+			{
+				default: `/${stack}/${app}/${stage}/membership-account-iam-role-arn`,
+				fromSSM: true,
+			},
+		);
+
+		const imovoVoucherQueue = Queue.fromQueueArn(this, 'ImovoVoucherQueue', imovoVoucherQueueArnParam.valueAsString);
+
+		// Create SNS topic and allow Membership account to subscribe to it
 		const printPromoSnsTopic = new Topic(this, 'PrintPromoSnsTopic', { topicName: `${stack}-${app}-${stage}-PrintPromoTopic` });
-		printPromoSnsTopic.addSubscription(new SqsSubscription(membershipNewsletterAcquisitionQueue));
+		printPromoSnsTopic.addSubscription(new SqsSubscription(imovoVoucherQueue));
+		printPromoSnsTopic.addToResourcePolicy(new PolicyStatement({
+			sid: 'AllowMembershipAccountToSubscribe',
+			effect: Effect.ALLOW,
+			principals: [new ArnPrincipal(membershipAccountIam.valueAsString)],
+			actions: ['sns:Subscribe'],
+			resources: [printPromoSnsTopic.topicArn],
+		}));
 
 		// Allow Gateway to read artefacts and configuration files from S3
 		const bucketPolicy = new GuAllowPolicy(
@@ -297,14 +316,16 @@ systemctl start ${app}
 				cidrRanges: [...fastlyCIDR],
 			},
 			monitoringConfiguration:
-				stage === 'PROD'
+				['PROD', 'TEST'].includes(stage)
 					? {
 							snsTopicName: alarmTopic.topicName,
 							http5xxAlarm: {
-								tolerated5xxPercentage: 0.05,
+								tolerated5xxPercentage: 0.5,
+								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							http4xxAlarm: {
-								tolerated4xxPercentage: 0.05,
+								tolerated4xxPercentage: 3,
+								numberOfMinutesAboveThresholdBeforeAlarm: 3
 							},
 							unhealthyInstancesAlarm: true,
 						}
