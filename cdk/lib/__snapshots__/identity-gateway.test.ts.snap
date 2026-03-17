@@ -86,6 +86,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     "IdentityConfigBucket": {
       "Type": "String",
     },
+    "ImovoQueueArn": {
+      "Default": "/identity/identity-gateway/TEST/membership-imovo-voucher-queue-arn",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
     "LoggingStreamName": {
       "Default": "/account/services/logging.stream.name",
       "Description": "SSM parameter containing the Name (not ARN) on the kinesis stream",
@@ -93,10 +97,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     },
     "MembershipAccountIamRoleArn": {
       "Default": "/identity/identity-gateway/TEST/membership-account-iam-role-arn",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
-    "MembershipNewsletterAcquisitionQueueArn": {
-      "Default": "/identity/identity-gateway/TEST/membership-newsletter-acquisition-queue-arn",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "RedisHost": {
@@ -991,6 +991,18 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::IAM::Policy",
     },
+    "ImovoVoucherQueueIdentityGatewayPrintPromoSnsTopic88AEDF7230461F04": {
+      "Properties": {
+        "Endpoint": {
+          "Ref": "ImovoQueueArn",
+        },
+        "Protocol": "sqs",
+        "TopicArn": {
+          "Ref": "PrintPromoSnsTopic6F25E569",
+        },
+      },
+      "Type": "AWS::SNS::Subscription",
+    },
     "InstanceRoleIdentitygatewayF5932C92": {
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -1200,18 +1212,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "ToPort": 9233,
       },
       "Type": "AWS::EC2::SecurityGroupEgress",
-    },
-    "MembershipNewsletterAcquisitionQueueIdentityGatewayPrintPromoSnsTopic88AEDF72DFDFF2EF": {
-      "Properties": {
-        "Endpoint": {
-          "Ref": "MembershipNewsletterAcquisitionQueueArn",
-        },
-        "Protocol": "sqs",
-        "TopicArn": {
-          "Ref": "PrintPromoSnsTopic6F25E569",
-        },
-      },
-      "Type": "AWS::SNS::Subscription",
     },
     "OAuthApplicationCallbackInactivityAlarm00589919": {
       "Properties": {

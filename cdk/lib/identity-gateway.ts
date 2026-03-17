@@ -138,11 +138,11 @@ export class IdentityGateway extends GuStack {
 		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
 
 		// We have a SNS topic that is subscribed to by the Membership team to trigger workflows when readers sign up to the print promo.
-		const membershipNewsletterAcquisitionQueueArnParam = new GuStringParameter(
+		const imovoVoucherQueueArnParam = new GuStringParameter(
 			this,
-			'MembershipNewsletterAcquisitionQueueArn',
+			'ImovoQueueArn',
 			{
-				default: `/${stack}/${app}/${stage}/membership-newsletter-acquisition-queue-arn`,
+				default: `/${stack}/${app}/${stage}/membership-imovo-voucher-queue-arn`,
 				fromSSM: true,
 			},
 		);
@@ -156,11 +156,11 @@ export class IdentityGateway extends GuStack {
 			},
 		);
 
-		const membershipNewsletterAcquisitionQueue = Queue.fromQueueArn(this, 'MembershipNewsletterAcquisitionQueue', membershipNewsletterAcquisitionQueueArnParam.valueAsString);
+		const imovoVoucherQueue = Queue.fromQueueArn(this, 'ImovoVoucherQueue', imovoVoucherQueueArnParam.valueAsString);
 
 		// Create SNS topic and allow Membership account to subscribe to it
 		const printPromoSnsTopic = new Topic(this, 'PrintPromoSnsTopic', { topicName: `${stack}-${app}-${stage}-PrintPromoTopic` });
-		printPromoSnsTopic.addSubscription(new SqsSubscription(membershipNewsletterAcquisitionQueue));
+		printPromoSnsTopic.addSubscription(new SqsSubscription(imovoVoucherQueue));
 		printPromoSnsTopic.addToResourcePolicy(new PolicyStatement({
 			sid: 'AllowMembershipAccountToSubscribe',
 			effect: Effect.ALLOW,
