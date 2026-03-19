@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-let */
+/* eslint-disable functional/no-let -- We need to use let for mutable variables */
 /**
  * This file contains helper functions that are used in the okta-login.ts file.
  * Used to facilitate functionality to redirect users from the login page to our custom login/welcome page on Gateway.
