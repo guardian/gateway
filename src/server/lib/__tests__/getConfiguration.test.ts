@@ -47,7 +47,9 @@ describe('getConfiguration', () => {
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_URL =
 			'delete-account-step-function-url';
 		process.env.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY = 'delete-account-api-key';
-
+		const passcodesEnabled = true;
+		process.env.PASSCODES_ENABLED = passcodesEnabled.toString();
+		process.env.PRINT_PROMO_SNS_TOPIC_ARN = 'print-promo-sns-topic-arn';
 		const rateLimiterConfig = `{
       "enabled": true,
       "settings": {
@@ -135,6 +137,7 @@ describe('getConfiguration', () => {
 			},
 			membersDataApiUrl: 'members-data-api-url',
 			userBenefitsApiUrl: 'user-benefits-api-url',
+			printPromoSnsTopicArn: 'print-promo-sns-topic-arn',
 			passcodesEnabled: true,
 			deleteAccountStepFunction: {
 				url: 'delete-account-step-function-url',

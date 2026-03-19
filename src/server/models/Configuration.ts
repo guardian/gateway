@@ -26,6 +26,7 @@ export interface Configuration {
 	rateLimiter: RateLimiterConfiguration;
 	membersDataApiUrl: string;
 	userBenefitsApiUrl: string;
+	printPromoSnsTopicArn: string;
 	passcodesEnabled: boolean;
 	deleteAccountStepFunction: {
 		url: string;

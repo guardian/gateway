@@ -17,3 +17,15 @@ export const Default = (args: RegistrationProps) => <Registration {...args} />;
 Default.story = {
 	name: 'with defaults',
 };
+
+export const WithPrintPromo = (args: RegistrationProps) => (
+	<Registration
+		{...{
+			...args,
+			queryParams: { ...args.queryParams, appClientId: 'printpromo' },
+		}}
+	/>
+);
+WithPrintPromo.story = {
+	name: 'with Print Promo lead text',
+};

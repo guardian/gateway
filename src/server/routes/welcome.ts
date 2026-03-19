@@ -47,7 +47,9 @@ import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { getUser } from '../lib/okta/api/users';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { publishSnsEvent } from '../lib/sns/snsEventPublisher';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -442,6 +444,46 @@ router.get(
 			pageTitle: 'Welcome back',
 		});
 		return res.type('html').send(html);
+	},
+);
+
+router.get(
+	'/welcome/print-promo',
+	loginMiddlewareOAuth,
+	async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const continueLink = state.queryParams.returnUrl || '/';
+		const email = readEmailCookie(req);
+
+		if (email) {
+			const user = await getUser(email);
+			publishSnsEvent({ email, identityId: user.id })
+				.then(() => {
+					logger.info(
+						'Successfully published message to SNS topic for Print Promo sign up',
+					);
+				})
+				.catch((error) => {
+					logger.error(
+						'Error publishing message to SNS topic for Print Promo sign up',
+						{ error },
+					);
+				});
+		}
+
+		const encryptedCookieState = readEncryptedStateCookie(req);
+		const html = renderer('/welcome/print-promo', {
+			pageTitle: 'Welcome',
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					continueLink,
+					isRegistering:
+						encryptedCookieState?.userState === 'NOT_ACTIVE' ||
+						encryptedCookieState?.userState === 'NON_EXISTENT',
+				},
+			}),
+		});
+		res.type('html').send(html);
 	},
 );
 
