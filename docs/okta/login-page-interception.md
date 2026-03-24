@@ -77,7 +77,8 @@ src/okta
 │   └─── getThirdPartyReturnUrl.test.ts
 ├── static                              # Static HTML files to upload to Okta
 │   ├─── okta-login.CODE.html           # The custom HTML for the CODE Okta hosted login page, which includes the interception code
-│   ├─── okta-login.PROD.html           # The custom HTML for the PROD Okta hosted login page, which includes the interception code
+│   ├─── okta-login.code.html           # The custom HTML for the CODE Okta hosted login page, which includes the interception code
+│   ├─── okta-login.prod.html           # The custom HTML for the PROD Okta hosted login page, which includes the interception code
 │   └─── login-default.html             # Default HTML for the Okta hosted login page, used in case we need to reset the custom HTML
 ├── helper.ts                           # Main helper functions for the interception code
 ├── index.ts                            # The custom TypeScript file which is compiled to the okta-login.js file
