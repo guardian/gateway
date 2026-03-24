@@ -9,7 +9,6 @@
 		"build-storybook": "storybook build",
 		"build:analyze": "WEBPACK_ANALYZE_BUNDLE=true pnpm run build",
 		"clear:cache": "rm -rf ./node_modules/.cache",
-		"gen:okta-login": "tsc --project ./scripts/okta/tsconfig.json && webpack --config ./scripts/okta/webpack.config.js",
 		"gen:ratelimit:schema": "ts-node --transpileOnly ./scripts/generate-rate-limit-schema.ts",
 		"knip": "knip",
 		"lint": "eslint .",
