@@ -79,6 +79,19 @@ const pageHeaderStyles = (amIIframed: boolean) => css`
 	margin: 0;
 `;
 
+const ConditionalIframeThemeWrapper = ({
+	children,
+	overrideTheme,
+}: {
+	children: ReactNode | ReactElement;
+	overrideTheme: MinimalLayoutProps['overrideTheme'];
+}) =>
+	overrideTheme?.includes('iframe') ? (
+		<section css={iframeThemeWrapperStyles}>{children}</section>
+	) : (
+		children
+	);
+
 export const MinimalLayout = ({
 	children,
 	wide = false,
@@ -107,24 +120,13 @@ export const MinimalLayout = ({
 
 	const amIIframed = !!overrideTheme?.includes('iframe');
 
-	const ConditionalIframeThemeWrapper = ({
-		children,
-	}: {
-		children: ReactNode | ReactElement;
-	}) =>
-		overrideTheme?.includes('iframe') ? (
-			<section css={iframeThemeWrapperStyles}>{children}</section>
-		) : (
-			children
-		);
-
 	return (
 		<>
 			{getTheme()}
 			{!amIIframed && <MinimalHeader />}
 			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
-				<ConditionalIframeThemeWrapper>
+				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
 					{pageHeader && (
 						<header>
 							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>

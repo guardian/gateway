@@ -1,5 +1,4 @@
-import MailosaurClient from 'mailosaur';
-import { Message } from 'mailosaur/lib/models';
+import MailosaurClient, { Message } from 'mailosaur';
 
 const client = new MailosaurClient(process.env.CYPRESS_MAILOSAUR_API_KEY || '');
 

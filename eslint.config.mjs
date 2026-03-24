@@ -90,6 +90,9 @@ const config = tseslint.config(
 			'no-console': 'error',
 			'prefer-const': 'error',
 
+			// Requires some significant refactors to PasswordForm and SignedInAs components
+			'react-hooks/set-state-in-effect': 'off',
+
 			// disabled @guardian/eslint-config rules, we should enable some of them later
 			'import/order': 'off',
 			'@typescript-eslint/consistent-type-imports': 'off',

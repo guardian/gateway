@@ -134,7 +134,7 @@ const oktaIdxApiCheckHandler = async ({
 }: {
 	path: PasswordRoutePath;
 	pageTitle: PasswordPageTitle;
-	req: Request;
+	req: Request<{ token: string }>;
 	res: ResponseWithRequestState;
 	error?: Literal<typeof ChangePasswordErrors>;
 	fieldErrors?: FieldError[];
@@ -198,7 +198,7 @@ const oktaIdxApiCheckHandler = async ({
 export const checkTokenInOkta = async (
 	path: PasswordRoutePath,
 	pageTitle: PasswordPageTitle,
-	req: Request,
+	req: Request<{ token: string }>,
 	res: ResponseWithRequestState,
 	error?: Literal<typeof ChangePasswordErrors>,
 	fieldErrors?: FieldError[],
@@ -345,6 +345,8 @@ export const checkPasswordTokenController = (
 	path: PasswordRoutePath,
 	pageTitle: PasswordPageTitle,
 ) =>
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		await checkTokenInOkta(path, pageTitle, req, res);
-	});
+	handleAsyncErrors(
+		async (req: Request<{ token: string }>, res: ResponseWithRequestState) => {
+			await checkTokenInOkta(path, pageTitle, req, res);
+		},
+	);

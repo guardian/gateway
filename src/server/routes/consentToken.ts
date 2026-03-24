@@ -18,43 +18,45 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 // this endpoint, /consent-token/:token/accept.
 router.get(
 	'/consent-token/:token/accept',
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const ip = req.ip;
-		const token = req.params.token;
-		const browserId = res.locals.ophanConfig.bwid ?? undefined;
-		const { refViewId } = res.locals.queryParams;
+	handleAsyncErrors(
+		async (req: Request<{ token: string }>, res: ResponseWithRequestState) => {
+			const ip = req.ip;
+			const token = req.params.token;
+			const browserId = res.locals.ophanConfig.bwid ?? undefined;
+			const { refViewId } = res.locals.queryParams;
 
-		try {
-			await validateConsentToken({ ip, token, browserId, refViewId });
+			try {
+				await validateConsentToken({ ip, token, browserId, refViewId });
 
-			trackMetric('ConsentToken::Success');
+				trackMetric('ConsentToken::Success');
 
-			return res.redirect(
-				303,
-				buildUrlWithQueryParams(
-					'/subscribe/success',
-					{},
-					res.locals.queryParams,
-				),
-			);
-		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl} Error`, error);
+				return res.redirect(
+					303,
+					buildUrlWithQueryParams(
+						'/subscribe/success',
+						{},
+						res.locals.queryParams,
+					),
+				);
+			} catch (error) {
+				logger.error(`${req.method} ${req.originalUrl} Error`, error);
 
-			trackMetric('ConsentToken::Failure');
+				trackMetric('ConsentToken::Failure');
 
-			// On an error we assume the token is invalid and render a page
-			// where the user can request a new consent email.
-			const html = renderer('/consent-token/error', {
-				pageTitle: 'Resend Consent Email',
-				requestState: mergeRequestState(res.locals, {
-					pageData: {
-						token,
-					},
-				}),
-			});
-			return res.type('html').status(200).send(html);
-		}
-	}),
+				// On an error we assume the token is invalid and render a page
+				// where the user can request a new consent email.
+				const html = renderer('/consent-token/error', {
+					pageTitle: 'Resend Consent Email',
+					requestState: mergeRequestState(res.locals, {
+						pageData: {
+							token,
+						},
+					}),
+				});
+				return res.type('html').status(200).send(html);
+			}
+		},
+	),
 );
 
 router.get(

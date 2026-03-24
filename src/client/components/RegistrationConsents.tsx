@@ -30,6 +30,7 @@ export const RegistrationConsents = ({
 			{consentList.map((consentItem) => (
 				<ToggleSwitchInput
 					id={consentItem.id}
+					key={consentItem.id}
 					title={consentItem.title}
 					description={consentItem.description}
 					defaultChecked={true}
