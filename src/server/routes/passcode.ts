@@ -207,10 +207,10 @@ router.post(
 	handleRecaptcha,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const encrypedCookieState = readEncryptedStateCookie(req);
-		const { appClientId } = res.locals.queryParams;
+		const { clientId } = res.locals.queryParams;
 		const getConfirmationPagePath = () => {
 			if (encrypedCookieState?.signInOrRegister === 'REGISTER') {
-				if (appClientId === 'printpromo') {
+				if (clientId === 'printpromo') {
 					return '/welcome/print-promo';
 				}
 				return '/welcome/review';

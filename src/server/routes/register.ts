@@ -142,7 +142,7 @@ router.get(
 				pageData: {},
 				queryParams: {
 					...state.queryParams,
-					appClientId: 'printpromo',
+					clientId: 'printpromo',
 				},
 			}),
 			pageTitle: 'Register',
@@ -388,7 +388,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			return '/welcome/complete-account';
 		}
 
-		if (appClientId === 'printpromo') {
+		if (clientId === 'printpromo') {
 			return '/welcome/print-promo';
 		}
 
@@ -539,7 +539,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 						return JOBS_TOS_URI;
 					}
 
-					if (appClientId === 'printpromo') {
+					if (clientId === 'printpromo') {
 						return '/welcome/print-promo';
 					}
 

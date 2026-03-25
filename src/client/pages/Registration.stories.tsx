@@ -22,7 +22,7 @@ export const WithPrintPromo = (args: RegistrationProps) => (
 	<Registration
 		{...{
 			...args,
-			queryParams: { ...args.queryParams, appClientId: 'printpromo' },
+			queryParams: { ...args.queryParams, clientId: 'printpromo' },
 		}}
 	/>
 );

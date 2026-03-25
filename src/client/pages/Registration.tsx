@@ -37,13 +37,9 @@ export const Registration = ({
 }: RegistrationProps) => {
 	const formTrackingName = 'register';
 
-	const { appClientId } = queryParams;
-	const isPrintPromo = appClientId === 'printpromo';
+	const isPrintPromo = queryParams.clientId === 'printpromo';
 
 	const providers = (): AuthButtonProvider[] => {
-		if (isPrintPromo) {
-			return ['email'];
-		}
 		return ['social', 'email'];
 	};
 
