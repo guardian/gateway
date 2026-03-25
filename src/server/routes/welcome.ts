@@ -49,7 +49,7 @@ import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { getUser } from '../lib/okta/api/users';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
-import { publishSnsEvent } from '../lib/sns/snsEventPublisher';
+import { publishImovoSnsEvent } from '../lib/sns/snsEventPublisher';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -457,7 +457,7 @@ router.get(
 
 		if (email) {
 			const user = await getUser(email);
-			publishSnsEvent({ email, identityId: user.id })
+			publishImovoSnsEvent({ email, identityId: user.id })
 				.then(() => {
 					logger.info(
 						'Successfully published message to SNS topic for Print Promo sign up',
@@ -514,6 +514,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			const user = await register({
 				email,
 				appClientId: state.queryParams.appClientId,
+				clientId: state.queryParams.clientId,
 				ip: req.ip,
 			});
 

@@ -379,6 +379,8 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
+	const isPromo = clientId === 'printpromo';
+
 	const getConfirmationPagePathForNewUser = (): RoutePaths => {
 		if (clientId === 'jobs') {
 			return JOBS_TOS_URI;
@@ -388,7 +390,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			return '/welcome/complete-account';
 		}
 
-		if (clientId === 'printpromo') {
+		if (isPromo) {
 			return '/welcome/print-promo';
 		}
 
@@ -427,7 +429,9 @@ const oktaIdxCreateAccountOrSignIn = async (
 				isGuardianUser: true,
 				registrationLocation,
 				registrationLocationState,
-				registrationPlatform: await getRegistrationPlatform(appClientId),
+				registrationPlatform: isPromo
+					? 'printpromo'
+					: await getRegistrationPlatform(appClientId),
 			},
 			req.ip,
 		);
@@ -707,7 +711,7 @@ export const oktaRegistrationOrSignin = async (
 	const { email = '' } = req.body;
 
 	const {
-		queryParams: { appClientId, ref, refViewId, useOktaClassic },
+		queryParams: { appClientId, clientId, ref, refViewId, useOktaClassic },
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -734,6 +738,7 @@ export const oktaRegistrationOrSignin = async (
 			email,
 			registrationLocation,
 			appClientId,
+			clientId,
 			consents,
 			ref,
 			refViewId,
@@ -813,6 +818,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			const user = await registerWithOkta({
 				email,
 				appClientId: queryParams?.appClientId,
+				clientId: queryParams?.clientId,
 				ref: queryParams?.ref,
 				refViewId: queryParams?.refViewId,
 				ip: req.ip,
