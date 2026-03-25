@@ -379,7 +379,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
-	const isPromo = clientId === 'printpromo';
+	const isPrintPromo = clientId === 'printpromo';
 
 	const getConfirmationPagePathForNewUser = (): RoutePaths => {
 		if (clientId === 'jobs') {
@@ -390,7 +390,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			return '/welcome/complete-account';
 		}
 
-		if (isPromo) {
+		if (isPrintPromo) {
 			return '/welcome/print-promo';
 		}
 
@@ -429,7 +429,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 				isGuardianUser: true,
 				registrationLocation,
 				registrationLocationState,
-				registrationPlatform: isPromo
+				registrationPlatform: isPrintPromo
 					? 'printpromo'
 					: await getRegistrationPlatform(appClientId),
 			},

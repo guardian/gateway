@@ -27,7 +27,6 @@ import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
 import { emailSendMetric } from '@/server/models/Metrics';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
-import { publishImovoSnsEvent } from '../sns/snsEventPublisher';
 
 const { okta } = getConfiguration();
 
@@ -469,22 +468,6 @@ export const register = async ({
 			ref,
 			refViewId,
 		});
-
-		if (isPrintPromo) {
-			await publishImovoSnsEvent({ email: emailAddress, identityId: id })
-				.then(() => {
-					logger.info(
-						'Successfully published message to SNS topic for Print Promo sign up',
-					);
-				})
-				.catch((error) => {
-					logger.error(
-						'Error publishing message to SNS topic for Print Promo sign up',
-						{ error },
-					);
-				});
-		}
-
 		if (!emailIsSent) {
 			trackMetric(emailSendMetric('OktaCompleteRegistration', 'Failure'));
 			throw new OktaError({

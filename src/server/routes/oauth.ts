@@ -43,6 +43,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { publishImovoSnsEvent } from '../lib/sns/snsEventPublisher';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -54,6 +55,7 @@ interface OAuthError {
 interface CustomClaims extends IdTokenClaims {
 	user_groups?: string[];
 	email_validated?: boolean;
+	legacy_identity_id?: string;
 }
 
 /**
@@ -158,7 +160,8 @@ const authenticationHandler = async (
 		// Okta profile before carrying on. This is surfaced via the legacy_identity_id
 		// claim in the access token.
 		const refreshToken = tokenSet.refresh_token;
-		const { legacy_identity_id } = tokenSet.claims();
+		const { legacy_identity_id }: CustomClaims = tokenSet.claims();
+
 		if (!refreshToken && !legacy_identity_id) {
 			// We can't do this step without the refresh token, so if it's missing, just continue
 			// to the callback function - we may encounter errors there.
@@ -398,6 +401,22 @@ const authenticationHandler = async (
 			accessToken: tokenSet.access_token,
 			res,
 		});
+
+		const isPrintPromo = authState.queryParams.clientId === 'printpromo';
+
+		if (isPrintPromo && email && legacy_identity_id) {
+			try {
+				await publishImovoSnsEvent({
+					email: email,
+					identityId: legacy_identity_id,
+				});
+			} catch (error) {
+				logger.error(
+					'Error publishing message to SNS topic for Print Promo sign up',
+					{ error },
+				);
+			}
+		}
 
 		// clear any existing oauth application cookies if they exist
 		checkAndDeleteOAuthTokenCookies(req, res);
