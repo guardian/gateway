@@ -28,7 +28,6 @@ import { TrackingQueryParams } from '@/shared/model/QueryParams';
 import { emailSendMetric } from '@/server/models/Metrics';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { publishImovoSnsEvent } from '../sns/snsEventPublisher';
-import { is } from 'zod/v4/locales';
 
 const { okta } = getConfiguration();
 

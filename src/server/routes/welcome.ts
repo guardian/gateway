@@ -450,7 +450,7 @@ router.get(
 router.get(
 	'/welcome/print-promo',
 	loginMiddlewareOAuth,
-	async (req: Request, res: ResponseWithRequestState) => {
+	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const continueLink = state.queryParams.returnUrl || '/';
 		// const email = readEmailCookie(req);
