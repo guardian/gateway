@@ -42,7 +42,7 @@ export const PasscodeUsed = ({ path, queryParams, shortRequestId }: Props) => {
 	const { useSetPassword, appClientId } = queryParams;
 
 	/**
-	 * @summary If its a passwordless new account, we want to redirect to the review page
+	 * @summary If it's a passwordless new account, we want to redirect to the review page
 	 * instead of the password page.
 	 * @return {*}  {AllRoutes}
 	 */
