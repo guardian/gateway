@@ -27,6 +27,8 @@ import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
 import { emailSendMetric } from '@/server/models/Metrics';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
+import { publishImovoSnsEvent } from '../sns/snsEventPublisher';
+import { is } from 'zod/v4/locales';
 
 const { okta } = getConfiguration();
 
@@ -401,6 +403,7 @@ export const register = async ({
 	email,
 	registrationLocation,
 	appClientId,
+	clientId,
 	consents,
 	ref,
 	refViewId,
@@ -409,10 +412,13 @@ export const register = async ({
 	email: string;
 	registrationLocation?: RegistrationLocation;
 	appClientId?: string;
+	clientId?: string;
 	consents?: RegistrationConsents;
 	ip?: string;
 } & TrackingQueryParams): Promise<UserResponse> => {
 	try {
+		const isPrintPromo = clientId === 'printpromo';
+
 		// Create the user in Okta, but do not send the activation email
 		// because we send the email ourselves through Gateway.
 		const userResponse = await createUser(
@@ -421,7 +427,9 @@ export const register = async ({
 					email,
 					login: email,
 					isGuardianUser: true,
-					registrationPlatform: await getRegistrationPlatform(appClientId),
+					registrationPlatform: isPrintPromo
+						? 'printpromo'
+						: await getRegistrationPlatform(appClientId),
 					registrationLocation: registrationLocation,
 				},
 				groupIds: [okta.groupIds.GuardianUserAll],
@@ -462,6 +470,22 @@ export const register = async ({
 			ref,
 			refViewId,
 		});
+
+		if (isPrintPromo) {
+			await publishImovoSnsEvent({ email: emailAddress, identityId: id })
+				.then(() => {
+					logger.info(
+						'Successfully published message to SNS topic for Print Promo sign up',
+					);
+				})
+				.catch((error) => {
+					logger.error(
+						'Error publishing message to SNS topic for Print Promo sign up',
+						{ error },
+					);
+				});
+		}
+
 		if (!emailIsSent) {
 			trackMetric(emailSendMetric('OktaCompleteRegistration', 'Failure'));
 			throw new OktaError({
