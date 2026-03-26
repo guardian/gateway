@@ -29,7 +29,7 @@ export const SubscriptionSuccess = ({
 	const getLeadText = () => {
 		if (emailTitle && action === 'subscribe') {
 			return (
-				<MainBodyText>You're now subscribed to {emailTitle}.</MainBodyText>
+				<MainBodyText>You&apos;re now subscribed to {emailTitle}.</MainBodyText>
 			);
 		} else if (action === 'unsubscribe') {
 			return (

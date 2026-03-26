@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta, StoryFn } from '@storybook/preact';
 
 import { Welcome } from '@/client/pages/Welcome';
+import { FieldError } from '@/shared/model/ClientState';
 
 export default {
 	title: 'Pages/Welcome',
@@ -13,6 +14,10 @@ const Template: StoryFn<typeof Welcome> = ({
 	fieldErrors = [],
 	queryParams = { returnUrl: '#' },
 	...otherProps
+}: {
+	submitUrl?: string;
+	fieldErrors?: FieldError[];
+	queryParams?: { returnUrl: string };
 }) => (
 	<Welcome
 		submitUrl={submitUrl}

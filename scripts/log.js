@@ -18,7 +18,7 @@ const logIt = (messages = [], color = dim) => {
 
 const log = (...messages) => logIt(messages);
 const warn = (...messages) => logIt(messages, red);
-const prompt = (...messages) => logIt(messages, yellow);
+const localPrompt = (...messages) => logIt(messages, yellow);
 
 // can be used as a normal script too
 const [, , messages, method] = process.argv;
@@ -28,7 +28,7 @@ if (messages) {
 			warn(messages);
 			break;
 		case 'prompt':
-			prompt(messages);
+			localPrompt(messages);
 			break;
 		default:
 			log(messages);
@@ -40,5 +40,5 @@ if (messages) {
 module.exports = {
 	log,
 	warn,
-	prompt,
+	prompt: localPrompt,
 };

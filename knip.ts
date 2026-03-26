@@ -5,7 +5,6 @@ const config: KnipConfig = {
 	// but still allows us to see the issues and fix them
 	rules: {
 		binaries: 'warn',
-		classMembers: 'warn',
 		dependencies: 'warn',
 		devDependencies: 'warn',
 		duplicates: 'warn',
