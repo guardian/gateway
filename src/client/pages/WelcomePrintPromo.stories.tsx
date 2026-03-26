@@ -15,7 +15,7 @@ export const Default = (args: WelcomePrintPromoProps) => (
 );
 
 export const Registering = (args: WelcomePrintPromoProps) => (
-	<WelcomePrintPromo {...args} isRegistering={true} />
+	<WelcomePrintPromo {...args} />
 );
 
 Registering.story = {
