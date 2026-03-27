@@ -111,7 +111,6 @@ const config = tseslint.config(
 			'@typescript-eslint/no-unsafe-enum-comparison': 'off',
 			'import/no-named-as-default-member': 'off',
 			'import/no-cycle': 'off',
-			'@typescript-eslint/only-throw-error': 'off',
 		},
 	},
 	{
