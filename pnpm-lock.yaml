@@ -9,6 +9,7 @@ overrides:
   minimatch@>=9.0.0 <9.0.7: 9.0.7
   serialize-javascript@6.0.2: 7.0.3
   fast-xml-parser@5.4.1: 5.5.6
+  playwright-core: 1.57.0
 
 importers:
 
@@ -471,7 +472,7 @@ packages:
   '@axe-core/playwright@4.11.1':
     resolution: {integrity: sha512-mKEfoUIB1MkVTht0BGZFXtSAEKXMJoDkyV5YZ9jbBmZCcWDz71tegNsdTkIN8zc/yMi5Gm2kx7Z5YQ9PfWNAWw==}
     peerDependencies:
-      playwright-core: '>= 1.0.0'
+      playwright-core: 1.57.0
 
   '@babel/code-frame@7.26.0':
     resolution: {integrity: sha512-INCKxTtbXtcNbUZ3YXutwMpEleqttcswhAdee7dhuoVrD2cnuc3PqtERBtxkX5nziX9vnBL8WXmSGwv8CuPV6g==}
@@ -5802,11 +5803,6 @@ packages:
 
   playwright-core@1.57.0:
     resolution: {integrity: sha512-agTcKlMw/mjBWOnD6kFZttAAGHgi/Nw0CZ2o6JqWSbMlI219lAFLZZCyqByTsvVAJq5XA5H8cA6PrvBRpBWEuQ==}
-    engines: {node: '>=18'}
-    hasBin: true
-
-  playwright-core@1.58.2:
-    resolution: {integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -13587,8 +13583,6 @@ snapshots:
       find-up: 4.1.0
 
   playwright-core@1.57.0: {}
-
-  playwright-core@1.58.2: {}
 
   playwright@1.57.0:
     dependencies:
