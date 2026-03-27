@@ -109,7 +109,6 @@ const config = tseslint.config(
 			'@typescript-eslint/no-unsafe-return': 'off',
 			'import/no-named-as-default': 'off',
 			'@typescript-eslint/no-unsafe-enum-comparison': 'off',
-			'import/no-named-as-default-member': 'off',
 		},
 	},
 	{
