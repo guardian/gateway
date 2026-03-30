@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex,nofollow" />
+		<link
+			rel="icon"
+			href="https://static.guim.co.uk/images/favicon-32x32.ico"
+		/>
+		<title>The Guardian | Login</title>
+		<script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Ces2022%2Cfetch%2CglobalThis%2CURLSearchParams"></script>
+		{{{SignInWidgetResources}}}
+		<style>
+			/* hiding the container by default, so it's not shown during social sign in */
+			#okta-login-container {
+				visibility: hidden;
+			}
+			/* basic noscript styling */
+			#noscript {
+				color: #121212;
+				font-family:
+					'Guardian Text Sans Web', 'Helvetica Neue', Helvetica, Arial,
+					sans-serif;
+				font-size: 16px;
+				line-height: 1.5;
+				margin: 10px auto;
+				max-width: 600px;
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<noscript>
+			<div id="noscript">
+				<p>
+					<b>The Guardian</b>
+				</p>
+				<p>
+					<b>
+						Please
+						<a
+							href="https://www.whatismybrowser.com/guides/how-to-enable-javascript/"
+							>enable JavaScript</a
+						>
+						in your browser/device settings and try again.
+					</b>
+				</p>
+				<p>
+					We use JavaScript to provide a seamless and secure authentication
+					experience.
+				</p>
+				<p>
+					For further help please contact our customer service team at
+					<a href="mailto:signinsupport@theguardian.com"
+						>signinsupport@theguardian.com</a
+					>.
+				</p>
+			</div>
+		</noscript>
+		<div id="okta-login-container"></div>
+		{{{OktaUtil}}}
+		<script src="https://profile.code.dev-theguardian.com/static/okta.main.legacy.js"></script>
+		<script src="https://profile.code.dev-theguardian.com/static/okta.runtime.legacy.js"></script>
+	</body>
+</html>

@@ -26,7 +26,7 @@ export const GatewayErrorSummary = (props: GateWayErrorSummaryProps) => {
 		// so enrich it with some extra details about how to enable cookies.
 		...(structuredError?.severity === 'CSRF'
 			? [
-					<p>
+					<p key={'CSRF'}>
 						If the problem persists please check if your browser has cookies
 						enabled. You can find details on how to enable cookies in our{' '}
 						<a href="https://www.theguardian.com/info/cookies#how-to-manage-cookies-at-the-guardian">

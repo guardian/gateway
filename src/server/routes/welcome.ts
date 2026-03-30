@@ -56,7 +56,7 @@ const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 router.get(
 	'/welcome/:app/complete',
 	loginMiddlewareOAuth,
-	(req: Request, res: ResponseWithRequestState) => {
+	(req: Request<{ app: string }>, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const { app } = req.params;
 		if (!requestStateHasOAuthTokens(state)) {

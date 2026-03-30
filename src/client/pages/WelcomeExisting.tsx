@@ -35,8 +35,8 @@ export const WelcomeExisting = ({
 				.
 			</MainBodyText>
 			<MainBodyText>
-				You're now signed in and can access all the benefits of your Guardian
-				account.
+				You&apos;re now signed in and can access all the benefits of your
+				Guardian account.
 			</MainBodyText>
 			<ExternalLinkButton
 				cssOverrides={primaryButtonStyles()}

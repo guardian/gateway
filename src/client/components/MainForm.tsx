@@ -342,9 +342,12 @@ export const MainForm = ({
 						{hasGuardianTerms && <GuardianTerms />}
 						{hasJobsTerms && <JobsTerms />}
 						{additionalTerms &&
-							additionalTerms.map((specificTermsItem) => {
+							additionalTerms.map((specificTermsItem, index) => {
 								return (
-									<InformationBoxText isGoogleOneTap={isGoogleOneTap}>
+									<InformationBoxText
+										key={index}
+										isGoogleOneTap={isGoogleOneTap}
+									>
 										{specificTermsItem}
 									</InformationBoxText>
 								);

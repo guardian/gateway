@@ -22,7 +22,7 @@ interface Assets {
 
 export const getAssets = (isLegacy = false): Assets => {
 	try {
-		const assetsFilePath = `${path.resolve(__dirname)}/${
+		const assetsFilePath = `${path.resolve(__dirname)}/browser.${
 			isLegacy ? 'legacy.' : ''
 		}webpack-assets.json`;
 		if (!fs.existsSync(assetsFilePath)) {

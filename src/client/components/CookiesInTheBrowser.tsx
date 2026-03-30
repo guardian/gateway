@@ -28,8 +28,8 @@ export const CookiesInTheBrowser = () => {
 					If you read the Guardian ad free or subscribe to Guardian Ad-Lite, you
 					can manage the use of cookies on our site for personalised
 					advertising, and disable the sharing of data with partners for
-					personalised advertising purposes by clicking the "Privacy settings"
-					link in the footer of every page of our site.
+					personalised advertising purposes by clicking the &quot;Privacy
+					settings&quot; link in the footer of every page of our site.
 				</MainBodyText>
 			</details>
 		</MainBodyText>
