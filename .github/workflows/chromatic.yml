@@ -7,13 +7,14 @@ on:
       - main
   pull_request:
     types: ['review_requested', 'labeled']
+  merge_group:
 
 # List of jobs
 jobs:
   chromatic-deployment:
     # Operating System
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'run_tests')  ||  github.ref == 'refs/heads/main'
+    if: contains(github.event.pull_request.labels.*.name, 'run_tests')  ||  github.ref == 'refs/heads/main' || github.event_name == 'merge_group'
     # Job steps
     steps:
       - uses: actions/checkout@v5
