@@ -17,18 +17,18 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'run_tests')  ||  github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
       - name: Setup node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
       - name: Get pnpm cache directory path
         id: pnpm-cache-dir
         run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm modules and Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: pnpm-cache
         with:
           path: |
@@ -44,7 +44,7 @@ jobs:
       - name: 'Zip build'
         run: zip -r -q build.zip ./build
       - name: 'Upload build'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build
           path: build.zip
