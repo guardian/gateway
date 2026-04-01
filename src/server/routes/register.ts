@@ -133,6 +133,25 @@ const handleRegisterByPasscode = (
 	return html;
 };
 router.get(
+	'/print-promo',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const html = renderer('/print-promo', {
+			requestState: mergeRequestState(state, {
+				pageData: {},
+				queryParams: {
+					...state.queryParams,
+					clientId: 'printpromo',
+				},
+			}),
+			pageTitle: 'Register',
+		});
+		return res.type('html').send(html);
+	},
+);
+
+router.get(
 	'/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
@@ -360,17 +379,30 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
+	const isPrintPromo = clientId === 'printpromo';
+
+	const getConfirmationPagePathForNewUser = (): RoutePaths => {
+		if (clientId === 'jobs') {
+			return JOBS_TOS_URI;
+		}
+
+		if (isCombinedSigninAndRegisterFlow) {
+			return '/welcome/complete-account';
+		}
+
+		if (isPrintPromo) {
+			return '/welcome/print-promo';
+		}
+
+		return '/welcome/review';
+	};
+
 	try {
 		const introspectResponse = await startIdxFlow({
 			req,
 			res,
 			authorizationCodeFlowOptions: {
-				confirmationPagePath:
-					clientId === 'jobs'
-						? JOBS_TOS_URI
-						: isCombinedSigninAndRegisterFlow
-							? '/welcome/complete-account'
-							: '/welcome/review',
+				confirmationPagePath: getConfirmationPagePathForNewUser(),
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
@@ -397,7 +429,9 @@ const oktaIdxCreateAccountOrSignIn = async (
 				isGuardianUser: true,
 				registrationLocation,
 				registrationLocationState,
-				registrationPlatform: await getRegistrationPlatform(appClientId),
+				registrationPlatform: isPrintPromo
+					? 'printpromo'
+					: await getRegistrationPlatform(appClientId),
 			},
 			req.ip,
 		);
@@ -504,12 +538,22 @@ const oktaIdxCreateAccountOrSignIn = async (
 				// will implement when full passwordless is implemented
 				trackMetric('ExistingUserInCreateAccountFlow');
 
+				const getConfirmationPagePathForExistingUser = (): RoutePaths => {
+					if (clientId === 'jobs') {
+						return JOBS_TOS_URI;
+					}
+
+					if (clientId === 'printpromo') {
+						return '/welcome/print-promo';
+					}
+
+					return '/welcome/existing';
+				};
 				// instead we use the passcode sign in controller, and redirect to /welcome/existing at the end
 				return oktaIdxApiSignInPasscodeController({
 					req,
 					res,
-					confirmationPagePath:
-						clientId === 'jobs' ? JOBS_TOS_URI : '/welcome/existing',
+					confirmationPagePath: getConfirmationPagePathForExistingUser(),
 				});
 			}
 		}
@@ -667,7 +711,7 @@ export const oktaRegistrationOrSignin = async (
 	const { email = '' } = req.body;
 
 	const {
-		queryParams: { appClientId, ref, refViewId, useOktaClassic },
+		queryParams: { appClientId, clientId, ref, refViewId, useOktaClassic },
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
@@ -694,6 +738,7 @@ export const oktaRegistrationOrSignin = async (
 			email,
 			registrationLocation,
 			appClientId,
+			clientId,
 			consents,
 			ref,
 			refViewId,
@@ -773,6 +818,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			const user = await registerWithOkta({
 				email,
 				appClientId: queryParams?.appClientId,
+				clientId: queryParams?.clientId,
 				ref: queryParams?.ref,
 				refViewId: queryParams?.refViewId,
 				ip: req.ip,

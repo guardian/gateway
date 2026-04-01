@@ -43,6 +43,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { publishImovoSnsEvent } from '../lib/sns/snsEventPublisher';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -54,6 +55,7 @@ interface OAuthError {
 interface CustomClaims extends IdTokenClaims {
 	user_groups?: string[];
 	email_validated?: boolean;
+	legacy_identity_id?: string;
 }
 
 /**
@@ -158,7 +160,8 @@ const authenticationHandler = async (
 		// Okta profile before carrying on. This is surfaced via the legacy_identity_id
 		// claim in the access token.
 		const refreshToken = tokenSet.refresh_token;
-		const { legacy_identity_id } = tokenSet.claims();
+		const { legacy_identity_id }: CustomClaims = tokenSet.claims();
+
 		if (!refreshToken && !legacy_identity_id) {
 			// We can't do this step without the refresh token, so if it's missing, just continue
 			// to the callback function - we may encounter errors there.
@@ -237,6 +240,18 @@ const authenticationHandler = async (
 				const [registrationLocation] = getRegistrationLocation(req);
 				const registrationPlatform = authState.data?.appLabel ?? 'profile';
 
+				const getRegistrationPlatform = (): string => {
+					if (isGoogleOneTap) {
+						return 'googleOneTap';
+					}
+
+					if (authState.queryParams.clientId === 'printpromo') {
+						return 'printpromo';
+					}
+
+					return registrationPlatform;
+				};
+
 				// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 				// updated the user profile emailValidated to true
@@ -245,9 +260,7 @@ const authenticationHandler = async (
 						emailValidated: true,
 						// If the social registration is also via Google One Tap, we want to set the registrationPlatform
 						// so that we can keep track of how many users in total have registered via Google One Tap
-						registrationPlatform: isGoogleOneTap
-							? 'googleOneTap'
-							: registrationPlatform,
+						registrationPlatform: getRegistrationPlatform(),
 						registrationLocation,
 					},
 				});
@@ -388,6 +401,22 @@ const authenticationHandler = async (
 			accessToken: tokenSet.access_token,
 			res,
 		});
+
+		const isPrintPromo = authState.queryParams.clientId === 'printpromo';
+
+		if (isPrintPromo && email && legacy_identity_id) {
+			try {
+				await publishImovoSnsEvent({
+					email: email,
+					identityId: legacy_identity_id,
+				});
+			} catch (error) {
+				logger.error(
+					'Error publishing message to SNS topic for Print Promo sign up',
+					{ error },
+				);
+			}
+		}
 
 		// clear any existing oauth application cookies if they exist
 		checkAndDeleteOAuthTokenCookies(req, res);
