@@ -6,6 +6,8 @@ updates:
       interval: 'weekly'
       day: monday
       time: '08:00'
+    cooldown:
+      default-days: 2
     labels:
       - 'dependencies'
     groups:
