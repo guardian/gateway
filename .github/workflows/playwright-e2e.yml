@@ -74,7 +74,7 @@ jobs:
       RUNNING_IN_PLAYWRIGHT: true
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Setup OS, Nginx, and Certs
         run: |
           sudo apt-get update -y
@@ -91,25 +91,25 @@ jobs:
           sudo cp ./scripts/nginx.conf /etc/nginx/nginx.conf
           sudo dev-nginx restart-nginx
       - name: Configure AWS credentials for SES
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
       - name: Download build
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: pnpm/action-setup@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
       - name: Get pnpm cache directory path
         id: pnpm-cache-dir
         run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm modules and Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: pnpm-cache
         with:
           path: |
@@ -128,7 +128,7 @@ jobs:
         run: pnpm run wait-on:server
       - name: Run Playwright E2E tests
         run: pnpm exec playwright test --project=e2e --shard=${{ matrix.shard }}/${{ matrix.shardTotal }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report-e2e-${{ matrix.shard }}
