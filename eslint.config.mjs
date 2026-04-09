@@ -107,11 +107,6 @@ const config = tseslint.config(
 			'@typescript-eslint/prefer-nullish-coalescing': 'off',
 			'@typescript-eslint/no-unsafe-call': 'off',
 			'@typescript-eslint/no-unsafe-return': 'off',
-			'import/no-named-as-default': 'off',
-			'@typescript-eslint/no-unsafe-enum-comparison': 'off',
-			'import/no-named-as-default-member': 'off',
-			'import/no-cycle': 'off',
-			'@typescript-eslint/only-throw-error': 'off',
 		},
 	},
 	{
