@@ -278,20 +278,12 @@ const authenticationHandler = async (
 						(playwrightMockStateCookie === 'google' ||
 							playwrightMockStateCookie === 'apple'))
 				) {
-					const getSocialProviderPath = () => {
-						if (authState.queryParams.clientId === 'printpromo') {
-							return `print-promo`;
-						}
-
-						return (
-							authState.data?.socialProvider ||
-							(playwrightMockStateCookie as SocialProvider)
-						);
-					};
-
+					const path =
+						authState.data?.socialProvider ||
+						(playwrightMockStateCookie as SocialProvider);
 					// if there is a social provider in the response (which there should be), then show the social consents page
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
-					authState.confirmationPage = `/welcome/${getSocialProviderPath()}`;
+					authState.confirmationPage = `/welcome/${path}`;
 				} else {
 					// otherwise fall back to the default consents review page
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
