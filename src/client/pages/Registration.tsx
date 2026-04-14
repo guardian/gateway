@@ -1,9 +1,6 @@
 import React from 'react';
 import { QueryParams } from '@/shared/model/QueryParams';
-import {
-	AuthButtonProvider,
-	AuthProviderButtons,
-} from '@/client/components/AuthProviderButtons';
+import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { GuardianTerms } from '@/client/components/Terms';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
@@ -39,13 +36,6 @@ export const Registration = ({
 
 	const isPrintPromo = queryParams.clientId === 'printpromo';
 
-	const providers = (): AuthButtonProvider[] => {
-		// if (isPrintPromo) {
-		// 	return ['email'];
-		// }
-		return ['social', 'email'];
-	};
-
 	usePageLoadOphanInteraction(formTrackingName);
 
 	return (
@@ -61,7 +51,10 @@ export const Registration = ({
 			}
 		>
 			<RegistrationTerms />
-			<AuthProviderButtons queryParams={queryParams} providers={providers()} />
+			<AuthProviderButtons
+				queryParams={queryParams}
+				providers={['social', 'email']}
+			/>
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 			<MainBodyText>
 				Already have an account?{' '}
