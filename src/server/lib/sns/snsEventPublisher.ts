@@ -10,6 +10,8 @@ interface SNSMembershipMessage {
 	identityId: string;
 }
 
+const snsClient = new SNSClient(awsConfig);
+
 export const publishImovoSnsEvent = async (message: SNSMembershipMessage) => {
 	const input: PublishCommandInput = {
 		Message: JSON.stringify({
@@ -24,6 +26,6 @@ export const publishImovoSnsEvent = async (message: SNSMembershipMessage) => {
 
 const publishSnsEvent = async (input: PublishCommandInput) => {
 	const command = new PublishCommand(input);
-	const response = await new SNSClient(awsConfig).send(command);
+	const response = await snsClient.send(command);
 	return response;
 };
