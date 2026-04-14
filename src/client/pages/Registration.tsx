@@ -40,9 +40,9 @@ export const Registration = ({
 	const isPrintPromo = queryParams.clientId === 'printpromo';
 
 	const providers = (): AuthButtonProvider[] => {
-		if (isPrintPromo) {
-			return ['email'];
-		}
+		// if (isPrintPromo) {
+		// 	return ['email'];
+		// }
 		return ['social', 'email'];
 	};
 
