@@ -452,15 +452,11 @@ router.get(
 		const state = res.locals;
 		const continueLink = state.queryParams.returnUrl || '/';
 
-		const encryptedCookieState = readEncryptedStateCookie(req);
 		const html = renderer('/welcome/print-promo', {
 			pageTitle: 'Welcome',
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					continueLink,
-					isRegistering:
-						encryptedCookieState?.userState === 'NOT_ACTIVE' ||
-						encryptedCookieState?.userState === 'NON_EXISTENT',
 				},
 			}),
 		});
