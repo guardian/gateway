@@ -183,7 +183,13 @@ router.post(
 
 			return res.status(200).send();
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+			const isWarning =
+				error instanceof Object && 'status' in error && error.status === 400;
+			logger.log(
+				isWarning ? 'warn' : 'error',
+				`${req.method} ${req.originalUrl}  Error`,
+				error,
+			);
 
 			trackMetric(`UnsubscribeAll::Failure`);
 

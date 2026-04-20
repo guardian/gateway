@@ -53,7 +53,13 @@ const read = async ({
 			})) as ConsentAPIResponse[]
 		).map(responseToEntity);
 	} catch (error) {
-		logger.error(`IDAPI Error consents read '/consents'`, error);
+		const isWarning =
+			error instanceof Object && 'status' in error && error.status === 400;
+		logger.log(
+			isWarning ? 'warn' : 'error',
+			`IDAPI Error consents read '/consents'`,
+			error,
+		);
 		return handleError();
 	}
 };
@@ -70,7 +76,13 @@ const readUserConsents = async ({
 			options,
 		})) as UserConsent[];
 	} catch (error) {
-		logger.error(`IDAPI Error consents read '/users/me/consents'`, error);
+		const isWarning =
+			error instanceof Object && 'status' in error && error.status === 400;
+		logger.log(
+			isWarning ? 'warn' : 'error',
+			`IDAPI Error consents read '/users/me/consents'`,
+			error,
+		);
 		return handleError();
 	}
 };
@@ -97,7 +109,13 @@ export const update = async ({
 		});
 		return;
 	} catch (error) {
-		logger.error(`IDAPI Error consents update  '/users/me/consents'`, error);
+		const isWarning =
+			error instanceof Object && 'status' in error && error.status === 400;
+		logger.log(
+			isWarning ? 'warn' : 'error',
+			`IDAPI Error consents update  '/users/me/consents'`,
+			error,
+		);
 		return handleError();
 	}
 };
