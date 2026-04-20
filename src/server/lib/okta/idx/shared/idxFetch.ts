@@ -28,7 +28,13 @@ const IGNORED_ERRORS = [
 	 */
 	'registration.error.notUniqueWithinOrg',
 	/**
-	 * User Error when a user enters an invalid passcode during the authentication process.
+	 * User error.
+	 * This error is thrown when a user enters an email in an invalid format.
+	 */
+	'registration.error.doesNotMatchPattern',
+	/**
+	 * User error.
+	 * This error is thrown when a user enters an invalid passcode during the authentication process.
 	 */
 	'api.authn.error.PASSCODE_INVALID',
 ];
