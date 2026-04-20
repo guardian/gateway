@@ -445,6 +445,25 @@ router.get(
 	},
 );
 
+router.get(
+	'/welcome/print-promo',
+	loginMiddlewareOAuth,
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const continueLink = state.queryParams.returnUrl || '/';
+
+		const html = renderer('/welcome/print-promo', {
+			pageTitle: 'Welcome',
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					continueLink,
+				},
+			}),
+		});
+		res.type('html').send(html);
+	},
+);
+
 // welcome page, check token and display set password page
 router.get(
 	'/welcome/:token',
@@ -472,6 +491,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			const user = await register({
 				email,
 				appClientId: state.queryParams.appClientId,
+				clientId: state.queryParams.clientId,
 				ip: req.ip,
 			});
 
