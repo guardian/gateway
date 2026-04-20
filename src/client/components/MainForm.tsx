@@ -9,11 +9,7 @@ import React, {
 import { css } from '@emotion/react';
 import { Button, ButtonLink } from '@guardian/source/react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import {
-	GuardianTerms,
-	JobsTerms,
-	RecaptchaTerms,
-} from '@/client/components/Terms';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { textSansBold15 } from '@guardian/source/foundations';
 import {
 	RecaptchaWrapper,
@@ -75,7 +71,6 @@ export interface MainFormProps {
 	largeFormMarginTop?: boolean;
 	displayInline?: boolean;
 	submitButtonLink?: boolean;
-	hideRecaptchaMessage?: boolean;
 	additionalTerms?: ReactNode[];
 	primaryTermsPosition?: boolean;
 	termsStyle?: TermsStyle;
@@ -121,7 +116,6 @@ export const MainForm = ({
 	formErrorContextFromParent,
 	displayInline = false,
 	submitButtonLink,
-	hideRecaptchaMessage,
 	additionalTerms,
 	primaryTermsPosition = true,
 	termsStyle = 'primary',
@@ -334,10 +328,7 @@ export const MainForm = ({
 		const BoxContainer = theme === 'primary' ? InformationBox : 'div';
 		return (
 			<>
-				{(additionalTerms ||
-					hasGuardianTerms ||
-					hasJobsTerms ||
-					(recaptchaEnabled && !hideRecaptchaMessage)) && (
+				{(additionalTerms || hasGuardianTerms || hasJobsTerms) && (
 					<BoxContainer>
 						{hasGuardianTerms && <GuardianTerms />}
 						{hasJobsTerms && <JobsTerms />}
@@ -352,9 +343,6 @@ export const MainForm = ({
 									</InformationBoxText>
 								);
 							})}
-						{recaptchaEnabled && !hideRecaptchaMessage && (
-							<RecaptchaTerms isIframed={isIframed} />
-						)}
 					</BoxContainer>
 				)}
 			</>

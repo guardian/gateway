@@ -28,47 +28,12 @@ export const MultipleInputFields = () => (
 );
 MultipleInputFields.storyName = 'MultipleInputFields';
 
-export const FormWithRecaptcha = () => (
-	<MainForm
-		formAction=""
-		submitButtonText="Send me a link"
-		recaptchaSiteKey="test"
-	>
-		<EmailInput />
-	</MainForm>
-);
-FormWithRecaptcha.storyName = 'FormWithRecaptcha';
-
 export const FormWithGuardianTerms = () => (
 	<MainForm formAction="" submitButtonText="Send me a link" hasGuardianTerms>
 		<EmailInput />
 	</MainForm>
 );
 FormWithGuardianTerms.storyName = 'FormWithGuardianTerms';
-
-export const FormWithRecaptchaGuardianTerms = () => (
-	<MainForm
-		formAction=""
-		submitButtonText="Send me a link"
-		recaptchaSiteKey="test"
-		hasGuardianTerms
-	>
-		<EmailInput />
-	</MainForm>
-);
-FormWithRecaptchaGuardianTerms.storyName = 'FormWithRecaptchaGuardianTerms';
-
-export const FormWithRecaptchaJobsTerms = () => (
-	<MainForm
-		formAction=""
-		submitButtonText="Send me a link"
-		recaptchaSiteKey="test"
-		hasJobsTerms
-	>
-		<EmailInput />
-	</MainForm>
-);
-FormWithRecaptchaJobsTerms.storyName = 'FormWithRecaptchaJobsTerms';
 
 export const TertiarySubmitButton = () => (
 	<MainForm

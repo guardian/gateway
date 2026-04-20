@@ -87,7 +87,6 @@ export const EmailSentInformationBox = ({
 								formErrorMessageFromParent={formError}
 								displayInline
 								submitButtonLink
-								hideRecaptchaMessage
 								shortRequestId={shortRequestId}
 								disabled={!!(sendAgainTimerInSeconds && !timer.isComplete)}
 								isIframed={isIframed}
