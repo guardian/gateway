@@ -766,7 +766,7 @@ router.get(
 			// b) someone is trying to attack the oauth flow
 			// for example with an invalid state cookie, or without the state cookie
 			// the state cookie is used to prevent CSRF attacks
-			logger.error('Missing auth state cookie on OAuth Callback!', undefined);
+			logger.warn('Missing auth state cookie on OAuth Callback!', undefined);
 			trackMetric('OAuthAuthorization::Failure');
 			return redirectForGenericError(req, res);
 		}
