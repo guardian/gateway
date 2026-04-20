@@ -20,6 +20,7 @@ import {
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
+import { isHttpErrorWithStatus } from '@/server/lib/httpErrors';
 
 const { accountManagementUrl } = getConfiguration();
 
@@ -183,10 +184,8 @@ router.post(
 
 			return res.status(200).send();
 		} catch (error) {
-			const isWarning =
-				error instanceof Object && 'status' in error && error.status === 400;
 			logger.log(
-				isWarning ? 'warn' : 'error',
+				isHttpErrorWithStatus(error, 400) ? 'warn' : 'error',
 				`${req.method} ${req.originalUrl}  Error`,
 				error,
 			);

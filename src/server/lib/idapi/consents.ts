@@ -14,6 +14,7 @@ import {
 } from './invertOptOutConsents';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 import { UserConsent } from '@/shared/model/UserConsents';
+import { isHttpErrorWithStatus } from '@/server/lib/httpErrors';
 
 const handleError = (): never => {
 	throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
@@ -53,10 +54,8 @@ const read = async ({
 			})) as ConsentAPIResponse[]
 		).map(responseToEntity);
 	} catch (error) {
-		const isWarning =
-			error instanceof Object && 'status' in error && error.status === 400;
 		logger.log(
-			isWarning ? 'warn' : 'error',
+			isHttpErrorWithStatus(error, 400) ? 'warn' : 'error',
 			`IDAPI Error consents read '/consents'`,
 			error,
 		);
@@ -76,10 +75,8 @@ const readUserConsents = async ({
 			options,
 		})) as UserConsent[];
 	} catch (error) {
-		const isWarning =
-			error instanceof Object && 'status' in error && error.status === 400;
 		logger.log(
-			isWarning ? 'warn' : 'error',
+			isHttpErrorWithStatus(error, 400) ? 'warn' : 'error',
 			`IDAPI Error consents read '/users/me/consents'`,
 			error,
 		);
@@ -109,10 +106,8 @@ export const update = async ({
 		});
 		return;
 	} catch (error) {
-		const isWarning =
-			error instanceof Object && 'status' in error && error.status === 400;
 		logger.log(
-			isWarning ? 'warn' : 'error',
+			isHttpErrorWithStatus(error, 400) ? 'warn' : 'error',
 			`IDAPI Error consents update  '/users/me/consents'`,
 			error,
 		);
