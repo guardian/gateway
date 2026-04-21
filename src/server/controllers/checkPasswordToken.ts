@@ -31,6 +31,7 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import { Literal } from '@/shared/types';
+import { fourZeroZeroMiddleware } from '../lib/middleware/400';
 
 const { defaultReturnUri, passcodesEnabled } = getConfiguration();
 
@@ -134,7 +135,7 @@ const oktaIdxApiCheckHandler = async ({
 }: {
 	path: PasswordRoutePath;
 	pageTitle: PasswordPageTitle;
-	req: Request<{ token: string }>;
+	req: Request<{ token?: string }>;
 	res: ResponseWithRequestState;
 	error?: Literal<typeof ChangePasswordErrors>;
 	fieldErrors?: FieldError[];
@@ -198,13 +199,18 @@ const oktaIdxApiCheckHandler = async ({
 export const checkTokenInOkta = async (
 	path: PasswordRoutePath,
 	pageTitle: PasswordPageTitle,
-	req: Request<{ token: string }>,
+	req: Request<{ token?: string }>,
 	res: ResponseWithRequestState,
 	error?: Literal<typeof ChangePasswordErrors>,
 	fieldErrors?: FieldError[],
 ) => {
 	const state = res.locals;
 	const { token } = req.params;
+
+	if (token === undefined) {
+		logger.warn('No token provided in URL parameters');
+		return fourZeroZeroMiddleware(req, res);
+	}
 
 	// OKTA IDX API FLOW
 	// If the user is using the passcode flow for registration/reset password,
@@ -346,7 +352,7 @@ export const checkPasswordTokenController = (
 	pageTitle: PasswordPageTitle,
 ) =>
 	handleAsyncErrors(
-		async (req: Request<{ token: string }>, res: ResponseWithRequestState) => {
+		async (req: Request<{ token?: string }>, res: ResponseWithRequestState) => {
 			await checkTokenInOkta(path, pageTitle, req, res);
 		},
 	);
