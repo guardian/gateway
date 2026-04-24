@@ -44,7 +44,7 @@ const getText = (textType: TextType): Text => {
 				successOverride: 'Email with verification code sent',
 				sentTextWithEmail: 'We’ve sent a temporary verification code to',
 				sentTextWithoutEmail:
-					'We’ve sent you a temporary verification code. Please check your inbox.',
+					'We’ve sent you a temporary verification code. Please check your inbox in a separate window.',
 				securityText:
 					'For your security, the verification code will expire in 30 minutes.',
 				passcodeInputLabel: 'Verification code',
@@ -57,7 +57,7 @@ const getText = (textType: TextType): Text => {
 				sentTextWithEmail:
 					'For security reasons we need you to change your password. We’ve sent a 6-digit verification code to',
 				sentTextWithoutEmail:
-					'For security reasons we need you to change your password. We’ve sent you a 6-digit verification code. Please check your inbox.',
+					'For security reasons we need you to change your password. We’ve sent you a 6-digit verification code. Please check your inbox in a separate window.',
 				securityText: 'For your security, the code will expire in 30 minutes.',
 				passcodeInputLabel: 'Verification code',
 				submitButtonText: 'Submit verification code',
@@ -69,7 +69,7 @@ const getText = (textType: TextType): Text => {
 				successOverride: 'Email with one time code sent',
 				sentTextWithEmail: 'We’ve sent a 6-digit code to',
 				sentTextWithoutEmail:
-					'We’ve sent you a 6-digit code. Please check your inbox.',
+					'We’ve sent you a 6-digit code. Please check your inbox in a separate window.',
 				securityText: 'For your security, the code will expire in 30 minutes.',
 				passcodeInputLabel: 'One-time code',
 				submitButtonText: 'Submit one-time code',
