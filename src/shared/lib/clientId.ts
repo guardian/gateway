@@ -5,6 +5,7 @@ export const validClientId = [
 	'comments',
 	'subscriptions',
 	'printpromo',
+	'web',
 ] as const;
 
 export type ValidClientId = (typeof validClientId)[number];
