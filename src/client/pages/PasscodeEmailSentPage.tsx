@@ -13,7 +13,8 @@ export const PasscodeEmailSentPage = () => {
 		recaptchaConfig,
 		shortRequestId,
 	} = clientState;
-	const { email, fieldErrors, token, passcodeSendAgainTimer } = pageData;
+	const { email, fieldErrors, token, passcodeSendAgainTimer, appName } =
+		pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -39,6 +40,7 @@ export const PasscodeEmailSentPage = () => {
 			textType="verification"
 			sendAgainTimerInSeconds={passcodeSendAgainTimer}
 			showSignInWithPasswordOption
+			appName={appName}
 		/>
 	);
 };

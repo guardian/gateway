@@ -41,6 +41,7 @@ export const ResetPasswordEmailSentPage = () => {
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
+	const { appName } = pageData;
 
 	const queryString = buildQueryParamsString(queryParams, {
 		emailSentSuccess: true,
@@ -68,6 +69,7 @@ export const ResetPasswordEmailSentPage = () => {
 				noAccountInfo
 				textType="generic"
 				sendAgainTimerInSeconds={passcodeSendAgainTimer}
+				appName={appName}
 			/>
 		);
 	}

@@ -38,7 +38,7 @@ const text: Text = {
 	title: 'Enter your code',
 	sentTextWithEmail: 'We’ve sent a temporary verification code to',
 	sentTextWithoutEmail:
-		'We’ve sent you a temporary verification code. Please check your inbox.',
+		'We’ve sent you a temporary verification code. Please check your inbox in a separate window.',
 	securityText:
 		'For your security, the verification code will expire in 30 minutes.',
 	passcodeInputLabel: 'Verification code',
@@ -193,7 +193,7 @@ export const IframedPasscodeEmailSent = ({
 			{email ? (
 				<MainBodyText>
 					{text.sentTextWithEmail} <strong>{email}</strong>. Please check your
-					inbox.
+					inbox in a separate window.
 				</MainBodyText>
 			) : (
 				<MainBodyText>{text.sentTextWithoutEmail}</MainBodyText>

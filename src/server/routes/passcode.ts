@@ -17,8 +17,9 @@ import { getErrorMessageFromQueryParams } from './signIn';
 import { registerPasscodeHandler } from './register';
 import handleRecaptcha from '../lib/recaptcha';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { getAppNameFromRegistrationPlatform } from '@/server/lib/getAppNameFromRegistrationPlatform';
 
-router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
+router.get('/passcode', async (req: Request, res: ResponseWithRequestState) => {
 	res.set('Cache-Control', 'no-store');
 	const state = res.locals;
 	const encrypedCookieState = readEncryptedStateCookie(req);
@@ -108,6 +109,10 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 		}
 
 		if (!encrypedCookieState.passcodeUsed) {
+			const appName = await getAppNameFromRegistrationPlatform(
+				res.locals.queryParams.appClientId,
+			);
+
 			const html = renderer('/passcode', {
 				requestState: mergeRequestState(state, {
 					pageData: {
@@ -115,6 +120,7 @@ router.get('/passcode', (req: Request, res: ResponseWithRequestState) => {
 						timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
 							encrypedCookieState.stateHandleExpiresAt,
 						),
+						appName,
 					},
 					queryParams: {
 						...res.locals.queryParams,

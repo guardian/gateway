@@ -27,6 +27,7 @@ import { forgotPassword } from '@/server/lib/okta/api/users';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { GenericErrors, PasscodeErrors } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/serverSideLogger';
+import { getAppNameFromRegistrationPlatform } from '@/server/lib/getAppNameFromRegistrationPlatform';
 
 /**
  * Helper method to determine if a global error should show on the reset password page
@@ -83,11 +84,16 @@ router.post(
 // reset password email sent page
 router.get(
 	'/reset-password/email-sent',
-	(req: Request, res: ResponseWithRequestState) => {
+	async (req: Request, res: ResponseWithRequestState) => {
+		const appName = await getAppNameFromRegistrationPlatform(
+			res.locals.queryParams.appClientId,
+		);
+
 		const html = renderer('/reset-password/email-sent', {
 			pageTitle: 'Check Your Inbox',
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
+					appName,
 					email: readEmailCookie(req),
 					resendEmailAction: '/reset-password',
 					changeEmailPage: '/reset-password',
