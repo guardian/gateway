@@ -7,6 +7,7 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { PasscodeInput } from '@/client/components/PasscodeInput';
 import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 import { EmailSentProps } from '@/client/pages/EmailSent';
+import { QueryParams } from '@/shared/model/QueryParams';
 
 type TextType = 'verification' | 'security' | 'generic' | 'signin';
 
@@ -21,6 +22,7 @@ type Props = {
 	textType?: TextType;
 	showSignInWithPasswordOption?: boolean;
 	sendAgainTimerInSeconds?: number;
+	queryParams?: QueryParams;
 };
 
 type PasscodeEmailSentProps = EmailSentProps & Props;
@@ -35,7 +37,7 @@ type Text = {
 	submitButtonText: string;
 };
 
-const getText = (textType: TextType): Text => {
+const getText = (textType: TextType, isWeb: boolean): Text => {
 	switch (textType) {
 		case 'verification':
 		case 'signin':
@@ -43,8 +45,7 @@ const getText = (textType: TextType): Text => {
 				title: 'Enter your one-time code',
 				successOverride: 'Email with verification code sent',
 				sentTextWithEmail: 'We’ve sent a temporary verification code to',
-				sentTextWithoutEmail:
-					'We’ve sent you a temporary verification code. Please check your inbox.',
+				sentTextWithoutEmail: `We’ve sent you a temporary verification code. Please check your inbox ${isWeb ? 'in a separate window' : ''}.`,
 				securityText:
 					'For your security, the verification code will expire in 30 minutes.',
 				passcodeInputLabel: 'Verification code',
@@ -56,8 +57,7 @@ const getText = (textType: TextType): Text => {
 				successOverride: 'Email with verification code sent',
 				sentTextWithEmail:
 					'For security reasons we need you to change your password. We’ve sent a 6-digit verification code to',
-				sentTextWithoutEmail:
-					'For security reasons we need you to change your password. We’ve sent you a 6-digit verification code. Please check your inbox.',
+				sentTextWithoutEmail: `For security reasons we need you to change your password. We’ve sent you a 6-digit verification code. Please check your inbox ${isWeb ? 'in a separate window' : ''}.`,
 				securityText: 'For your security, the code will expire in 30 minutes.',
 				passcodeInputLabel: 'Verification code',
 				submitButtonText: 'Submit verification code',
@@ -68,8 +68,7 @@ const getText = (textType: TextType): Text => {
 				title: 'Enter your one-time code',
 				successOverride: 'Email with one time code sent',
 				sentTextWithEmail: 'We’ve sent a 6-digit code to',
-				sentTextWithoutEmail:
-					'We’ve sent you a 6-digit code. Please check your inbox.',
+				sentTextWithoutEmail: `We’ve sent you a 6-digit code. Please check your inbox ${isWeb ? 'in a separate window' : ''}.`,
 				securityText: 'For your security, the code will expire in 30 minutes.',
 				passcodeInputLabel: 'One-time code',
 				submitButtonText: 'Submit one-time code',
@@ -96,13 +95,15 @@ export const PasscodeEmailSent = ({
 	textType = 'generic',
 	showSignInWithPasswordOption,
 	sendAgainTimerInSeconds,
+	queryParams,
 }: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
 	const formRef = useRef<HTMLFormElement>(null);
 
-	const text = getText(textType);
+	const isWeb = queryParams?.clientId === 'web';
+	const text = getText(textType, isWeb);
 
 	useEffect(() => {
 		// we only want this to run in the browser as window is not
@@ -149,7 +150,7 @@ export const PasscodeEmailSent = ({
 			{email ? (
 				<MainBodyText>
 					{text.sentTextWithEmail} <strong>{email}</strong>. Please check your
-					inbox.
+					inbox{isWeb ? ' in a separate window' : ''}.
 				</MainBodyText>
 			) : (
 				<MainBodyText>{text.sentTextWithoutEmail}</MainBodyText>

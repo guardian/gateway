@@ -39,6 +39,7 @@ export const PasscodeEmailSentPage = () => {
 			textType="verification"
 			sendAgainTimerInSeconds={passcodeSendAgainTimer}
 			showSignInWithPasswordOption
+			queryParams={queryParams}
 		/>
 	);
 };
