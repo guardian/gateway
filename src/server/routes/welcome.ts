@@ -6,10 +6,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
-import {
-	RequestState,
-	ResponseWithRequestState,
-} from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import {
 	addQueryParamsToPath,
 	addQueryParamsToUntypedPath,
@@ -302,7 +299,7 @@ router.get(
 				pageData: {
 					...consentsData,
 				},
-			} as RequestState);
+			});
 
 			trackMetric('NewAccountReview::Success');
 		} catch (error) {
