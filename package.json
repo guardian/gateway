@@ -36,7 +36,7 @@
 		"watch:server": "mkdir -p ./build && touch ./build/server.js && nodemon --inspect ./build/server.js --watch ./build/server.js --watch .ratelimit.json"
 	},
 	"devDependencies": {
-		"@axe-core/playwright": "4.11.1",
+		"@axe-core/playwright": "4.11.2",
 		"@chromatic-com/storybook": "5.1.2",
 		"@eslint/js": "9.39.4",
 		"@guardian/eslint-config": "14.0.1",
@@ -45,9 +45,9 @@
 		"@storybook/addon-themes": "10.3.5",
 		"@storybook/preact": "10.3.5",
 		"@storybook/preact-vite": "10.3.5",
-		"@swc/core": "1.15.26",
+		"@swc/core": "1.15.32",
 		"@swc/jest": "0.2.39",
-		"@swc/plugin-emotion": "14.8.0",
+		"@swc/plugin-emotion": "14.9.0",
 		"@testing-library/jest-dom": "6.9.1",
 		"@testing-library/preact": "3.2.4",
 		"@testing-library/react": "npm:@testing-library/preact",
@@ -84,18 +84,18 @@
 		"jest": "30.3.0",
 		"jest-environment-jsdom": "30.3.0",
 		"jest-mock": "30.3.0",
-		"knip": "6.4.1",
+		"knip": "6.7.0",
 		"mailosaur": "11.1.0",
 		"nodemon": "3.1.14",
 		"prettier": "3.8.3",
 		"sharp": "0.34.5",
 		"storybook": "10.3.5",
 		"swc-loader": "0.2.7",
-		"terser-webpack-plugin": "5.4.0",
+		"terser-webpack-plugin": "5.5.0",
 		"ts-node": "10.9.2",
 		"typescript": "5.9.3",
-		"typescript-eslint": "8.58.2",
-		"vite": "8.0.8",
+		"typescript-eslint": "8.59.1",
+		"vite": "8.0.10",
 		"wait-on": "9.0.5",
 		"webpack": "5.106.2",
 		"webpack-bundle-analyzer": "5.3.0",
@@ -104,10 +104,10 @@
 		"webpack-node-externals": "3.0.0"
 	},
 	"dependencies": {
-		"@aws-sdk/client-sns": "3.1030.0",
-		"@aws-sdk/client-cloudwatch": "3.1030.0",
-		"@aws-sdk/client-sesv2": "3.1030.0",
-		"@aws-sdk/credential-providers": "3.1030.0",
+		"@aws-sdk/client-cloudwatch": "3.1038.0",
+		"@aws-sdk/client-sesv2": "3.1038.0",
+		"@aws-sdk/client-sns": "3.1038.0",
+		"@aws-sdk/credential-providers": "3.1038.0",
 		"@emotion/react": "11.14.0",
 		"@faire/mjml-react": "3.5.3",
 		"@guardian/ab-core": "9.0.0",
@@ -116,7 +116,7 @@
 		"@guardian/source": "12.2.1",
 		"@guardian/source-development-kitchen": "27.0.0",
 		"@okta/jwt-verifier": "4.0.2",
-		"@smithy/node-http-handler": "4.5.2",
+		"@smithy/node-http-handler": "4.6.1",
 		"awesome-debounce-promise": "2.1.0",
 		"body-parser": "2.2.2",
 		"bowser": "2.14.1",
@@ -143,13 +143,7 @@
 	},
 	"pnpm": {
 		"overrides": {
-			"minimatch@3.1.2": "3.1.4",
-			"minimatch@>=9.0.0 <9.0.7": "9.0.7",
-			"serialize-javascript@6.0.2": "7.0.3",
-			"fast-xml-parser@5.4.1": "5.5.6",
-			"playwright-core": "1.59.1",
-			"path-to-regexp@8.3.0": "8.4.0",
-			"glob@10.4.5": "10.5.0"
+			"minimatch@>=9.0.0 <9.0.7": "9.0.7"
 		},
 		"onlyBuiltDependencies": [
 			"@playwright/test",
@@ -158,5 +152,5 @@
 			"sharp"
 		]
 	},
-	"packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
+	"packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
 }

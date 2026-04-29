@@ -1,10 +1,6 @@
 /* eslint-disable functional/no-let */
 import Redis from 'ioredis-mock';
 import rateLimit, { BucketValues } from '@/server/lib/rate-limit';
-import { Pipeline, Command } from 'ioredis';
-
-// Construct a mock redis client type that overlaps with the ioredis type until the @types/ioredis-mock package is updated.
-type IORedis = Pipeline & Command;
 
 // mock the server side logger
 jest.mock('@/server/lib/serverSideLogger');
@@ -40,7 +36,7 @@ describe('rateLimit', () => {
 		const applyGlobalRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					globalBucket: { addTokenMs: 500, capacity: 5 },
 				},
@@ -68,7 +64,7 @@ describe('rateLimit', () => {
 		const applyIpRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					ipBucket: { addTokenMs: 500, capacity: 5 },
 					globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -100,7 +96,7 @@ describe('rateLimit', () => {
 		const applyEmailRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					emailBucket: { addTokenMs: 500, capacity: 5 },
 					globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -132,7 +128,7 @@ describe('rateLimit', () => {
 		const applyIpRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					accessTokenBucket: { addTokenMs: 500, capacity: 5 },
 					globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -164,7 +160,7 @@ describe('rateLimit', () => {
 		const applyOktaRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					oktaIdentifierBucket: { addTokenMs: 500, capacity: 5 },
 					globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -196,7 +192,7 @@ describe('rateLimit', () => {
 		const applyIpRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					globalBucket: { capacity: 2, addTokenMs: 50 },
 				},
@@ -233,7 +229,7 @@ describe('rateLimit', () => {
 		const applyRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					oktaIdentifierBucket: { capacity: 5, addTokenMs: 500 },
 					emailBucket: { capacity: 5, addTokenMs: 500 },
@@ -252,7 +248,7 @@ describe('rateLimit', () => {
 		const applyRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					globalBucket: { capacity: 100, addTokenMs: 500 },
 				},
@@ -273,7 +269,7 @@ describe('rateLimit', () => {
 		const applyRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					oktaIdentifierBucket: { capacity: 100, addTokenMs: 500 },
 					emailBucket: { capacity: 5, addTokenMs: 500 },
@@ -299,7 +295,7 @@ describe('rateLimit', () => {
 		const applyDisabledRateLimit = async () =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				bucketConfiguration: {
 					enabled: false,
 					globalBucket: { addTokenMs: 500, capacity: 2 },
@@ -317,7 +313,7 @@ describe('rateLimit', () => {
 		const applyRateLimit = async (bucketValues?: BucketValues) =>
 			await rateLimit({
 				route: '/signin',
-				redisClient: new Redis() as IORedis,
+				redisClient: new Redis(),
 				// Buckets are declared in order of precedence.
 				bucketConfiguration: {
 					oktaIdentifierBucket: { capacity: 4, addTokenMs: 10000 },

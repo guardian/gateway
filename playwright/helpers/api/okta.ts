@@ -97,7 +97,7 @@ export async function resetOktaUserPassword(
 
 		const body = await response.json();
 		const token = body.resetPasswordUrl.split('/').slice(-1)[0];
-		return { token } as TokenResponse;
+		return { token };
 	} catch (error) {
 		throw new Error(
 			`Failed to reset password for Okta test user: ${JSON.stringify(error)}`,
