@@ -529,6 +529,30 @@ systemctl start ${app}
 		});
 		unsubscribeAllInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
 
+
+		const newsletterSignupInactivityAlarm = new GuAlarm(this, 'NewsletterSignupInactivityAlarm', {
+			snsTopicName: alarmTopic.topicName,
+			alarmName: `${alarmPriorities.P2} - ${app} ${stage} has had no successful newsletter signups in the last 6 hours - CDK`,
+			alarmDescription: 'No one has successfully signed up a newsletter in the last 6 hours.',
+			metric: new Metric({
+				namespace: 'Gateway',
+				metricName: 'ConsentToken::Success',
+				dimensionsMap: {
+					Stage: stage,
+					ApiMode: app
+				},
+				period: Duration.hours(6),
+				statistic: 'Sum',
+				unit: Unit.COUNT
+			}),
+			comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
+			threshold: 1,
+			evaluationPeriods: 1,
+			app,
+			actionsEnabled: stage === 'PROD'
+		});
+		newsletterSignupInactivityAlarm.addInsufficientDataAction(new SnsAction(alarmTopic));
+
 		// Allow Github Actions to send use SES to send emails from Playwright
 		if (['TEST', 'CODE'].includes(stage)) {
 			new GuRole(this, 'GithubSESSendEmailRole', {

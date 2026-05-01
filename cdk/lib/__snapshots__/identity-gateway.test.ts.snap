@@ -46,6 +46,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "GuAlarm",
       "GuAlarm",
       "GuAlarm",
+      "GuAlarm",
       "GuRole",
     ],
     "gu:cdk:version": "TEST",
@@ -1212,6 +1213,75 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "ToPort": 9233,
       },
       "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "NewsletterSignupInactivityAlarm79FF2B1A": {
+      "Properties": {
+        "ActionsEnabled": false,
+        "AlarmActions": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:sns:eu-west-1:",
+                {
+                  "Ref": "AWS::AccountId",
+                },
+                ":",
+                {
+                  "Fn::GetAtt": [
+                    "IdentityGatewayAlarmTopicEEA18544",
+                    "TopicName",
+                  ],
+                },
+              ],
+            ],
+          },
+        ],
+        "AlarmDescription": "No one has successfully signed up a newsletter in the last 6 hours.",
+        "AlarmName": "URGENT 9-5 - identity-gateway TEST has had no successful newsletter signups in the last 6 hours - CDK",
+        "ComparisonOperator": "LessThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "ApiMode",
+            "Value": "identity-gateway",
+          },
+          {
+            "Name": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "IdentityGatewayAlarmTopicEEA18544",
+          },
+        ],
+        "MetricName": "ConsentToken::Success",
+        "Namespace": "Gateway",
+        "Period": 21600,
+        "Statistic": "Sum",
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+        "Unit": "Count",
+      },
+      "Type": "AWS::CloudWatch::Alarm",
     },
     "OAuthApplicationCallbackInactivityAlarm00589919": {
       "Properties": {
