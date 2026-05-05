@@ -95,7 +95,8 @@ type UnconditionalMetrics =
 			| 'StrongPassword'}`
 	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`
 	| `ExistingUserInCreateAccountFlow`
-	| `UserFlow-${UserFlow}-${string}`;
+	| `UserFlow-${UserFlow}-${string}`
+	| 'RateLimitBucketCapacity';
 
 // Combine all the metrics above together into a type
 export type Metrics =
