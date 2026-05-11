@@ -12,12 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6.3.0
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
       - run: ./ci.sh
-      - uses: guardian/actions-riff-raff@v4
+      - uses: guardian/actions-riff-raff@v4.3.2
         with:
           projectName: identity:identity-gateway
           roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
