@@ -210,7 +210,7 @@ describe('okta#idx#validateChallengeRemediation', () => {
 		expect(() =>
 			validateChallengeRemediation(
 				responseWithPassword,
-				'select-authenticator-enroll' as 'challenge-authenticator', // hack to test the error
+				'select-authenticator-enroll', // hack to test the error
 				'password',
 				true,
 			),
@@ -235,7 +235,7 @@ describe('okta#idx#validateChallengeRemediation', () => {
 		expect(
 			validateChallengeRemediation(
 				responseWithPassword,
-				'select-authenticator-enroll' as 'challenge-authenticator', // hack to test the error
+				'select-authenticator-enroll', // hack to test the error
 				'password',
 				true,
 				false,

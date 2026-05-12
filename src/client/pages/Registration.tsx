@@ -34,13 +34,21 @@ export const Registration = ({
 }: RegistrationProps) => {
 	const formTrackingName = 'register';
 
+	const isPrintPromo = queryParams.clientId === 'printpromo';
+
 	usePageLoadOphanInteraction(formTrackingName);
 
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
-			pageHeader="Create a free account"
-			leadText="One account to access all Guardian products."
+			pageHeader={
+				isPrintPromo ? 'Register for your reward' : 'Create a free account'
+			}
+			leadText={
+				isPrintPromo
+					? 'Create your account to receive your reward and access free Guardian newsletters.'
+					: 'One account to access all Guardian products.'
+			}
 		>
 			<RegistrationTerms />
 			<AuthProviderButtons

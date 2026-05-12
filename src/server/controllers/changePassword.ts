@@ -64,7 +64,7 @@ const oktaIdxApiPasswordHandler = async ({
 	password,
 	path,
 }: {
-	req: Request<{ token: string }>;
+	req: Request<{ token?: string }>;
 	res: ResponseWithRequestState;
 	pageTitle: PasswordPageTitle;
 	password: string;
@@ -131,7 +131,7 @@ export const setPasswordController = (
 	successRedirectPath: RoutePaths,
 ) =>
 	handleAsyncErrors(
-		async (req: Request<{ token: string }>, res: ResponseWithRequestState) => {
+		async (req: Request<{ token?: string }>, res: ResponseWithRequestState) => {
 			const { token: encryptedRecoveryToken } = req.params;
 			const { password, firstName, secondName } = req.body;
 			const { clientId, useOktaClassic } = res.locals.queryParams;

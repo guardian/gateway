@@ -37,6 +37,7 @@ jobs:
       OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
       MEMBERS_DATA_API_URL: http://localhost:9000
       USER_BENEFITS_API_URL: http://localhost:9000
+      PRINT_PROMO_SNS_TOPIC_ARN: fakearn
       IS_HTTPS: true
       APP_SECRET: devsecret
       CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
@@ -90,9 +91,9 @@ jobs:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
       - name: Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.3.0
         with:
           node-version-file: '.nvmrc'
       - name: Get pnpm cache directory path

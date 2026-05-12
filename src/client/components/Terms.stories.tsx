@@ -1,11 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/preact';
 
-import {
-	GuardianTerms,
-	JobsTerms,
-	RecaptchaTerms,
-} from '@/client/components/Terms';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { InformationBox } from '@/client/components/InformationBox';
 
 export default {
@@ -19,7 +15,6 @@ export default {
 export const Default = () => (
 	<InformationBox>
 		<GuardianTerms />
-		<RecaptchaTerms />
 	</InformationBox>
 );
 
@@ -28,7 +23,6 @@ Default.storyName = 'Terms';
 export const Jobs = () => (
 	<InformationBox>
 		<JobsTerms />
-		<RecaptchaTerms />
 	</InformationBox>
 );
 

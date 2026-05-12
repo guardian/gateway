@@ -12,6 +12,33 @@ import { IDXPath } from '@/server/lib/okta/idx/shared/paths';
 
 const { okta } = getConfiguration();
 
+/**
+ * List of error messages that we want to ignore and not track in our monitoring
+ * These are errors that we expect to happen during the normal authentication process,
+ * and don't indicate a problem with our integration or the IDX API.
+ *
+ * We will still throw these errors and handle them in the same way as other errors,
+ * but we won't track them in our monitoring to avoid noise.
+ */
+const IGNORED_ERRORS = [
+	/**
+	 * This error is thrown when a user enters an existing email during registration.
+	 * Since the registration and sign in flows are combined, its expected that users
+	 * will enter an existing email during registration.
+	 */
+	'registration.error.notUniqueWithinOrg',
+	/**
+	 * User error.
+	 * This error is thrown when a user enters an email in an invalid format.
+	 */
+	'registration.error.doesNotMatchPattern',
+	/**
+	 * User error.
+	 * This error is thrown when a user enters an invalid passcode during the authentication process.
+	 */
+	'api.authn.error.PASSCODE_INVALID',
+];
+
 // Schema for when the authentication process is completed, and we return a base user object
 export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
@@ -111,8 +138,11 @@ export const idxFetch = async <ResponseType, BodyType>({
 
 		return parsed;
 	} catch (error) {
-		trackMetric(`OktaIDX::${path}::Failure`);
-		logger.error(`Okta IDX ${path}`, error);
+		if (!(error instanceof OAuthError && IGNORED_ERRORS.includes(error.name))) {
+			trackMetric(`OktaIDX::${path}::Failure`);
+			logger.error(`Okta IDX ${path}`, error);
+		}
+
 		throw error;
 	}
 };

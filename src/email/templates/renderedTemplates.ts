@@ -26,52 +26,52 @@ type EmailRenderResult = {
 	html: string;
 };
 
-export const renderedAccidentalEmail = {
+export const renderedAccidentalEmail: EmailRenderResult = {
 	plain: AccidentalEmailText(),
 	html: render(AccidentalEmail()).html,
-} as EmailRenderResult;
+};
 
-export const renderedAccountExists = {
+export const renderedAccountExists: EmailRenderResult = {
 	plain: AccountExistsText(),
 	html: render(AccountExists()).html,
-} as EmailRenderResult;
+};
 
-export const renderedAccountWithoutPasswordExists = {
+export const renderedAccountWithoutPasswordExists: EmailRenderResult = {
 	plain: AccountWithoutPasswordExistsText(),
 	html: render(AccountWithoutPasswordExists()).html,
-} as EmailRenderResult;
+};
 
-export const renderedCreatePassword = {
+export const renderedCreatePassword: EmailRenderResult = {
 	plain: CreatePasswordText(),
 	html: render(CreatePassword()).html,
-} as EmailRenderResult;
+};
 
-export const renderedNoAccount = {
+export const renderedNoAccount: EmailRenderResult = {
 	plain: NoAccountText(),
 	html: render(NoAccount()).html,
-} as EmailRenderResult;
+};
 
-export const renderedResetPassword = {
+export const renderedResetPassword: EmailRenderResult = {
 	plain: ResetPasswordText(),
 	html: render(ResetPassword()).html,
-} as EmailRenderResult;
+};
 
-export const renderedUnvalidatedEmailResetPassword = {
+export const renderedUnvalidatedEmailResetPassword: EmailRenderResult = {
 	plain: UnvalidatedEmailResetPasswordText(),
 	html: render(UnvalidatedEmailResetPassword()).html,
-} as EmailRenderResult;
+};
 
-export const renderedCompleteRegistration = {
+export const renderedCompleteRegistration: EmailRenderResult = {
 	plain: CompleteRegistrationText(),
 	html: render(CompleteRegistration()).html,
-} as EmailRenderResult;
+};
 
-export const renderedRegistrationPasscode = {
+export const renderedRegistrationPasscode: EmailRenderResult = {
 	plain: RegistrationPasscodeText(),
 	html: render(RegistrationPasscode({})).html,
-} as EmailRenderResult;
+};
 
-export const renderedEmailChallengePasscode = {
+export const renderedEmailChallengePasscode: EmailRenderResult = {
 	plain: EmailChallengePasscodeText(),
 	html: render(EmailChallengePasscode({})).html,
 };

@@ -401,6 +401,7 @@ export const register = async ({
 	email,
 	registrationLocation,
 	appClientId,
+	clientId,
 	consents,
 	ref,
 	refViewId,
@@ -409,10 +410,13 @@ export const register = async ({
 	email: string;
 	registrationLocation?: RegistrationLocation;
 	appClientId?: string;
+	clientId?: string;
 	consents?: RegistrationConsents;
 	ip?: string;
 } & TrackingQueryParams): Promise<UserResponse> => {
 	try {
+		const isPrintPromo = clientId === 'printpromo';
+
 		// Create the user in Okta, but do not send the activation email
 		// because we send the email ourselves through Gateway.
 		const userResponse = await createUser(
@@ -421,7 +425,9 @@ export const register = async ({
 					email,
 					login: email,
 					isGuardianUser: true,
-					registrationPlatform: await getRegistrationPlatform(appClientId),
+					registrationPlatform: isPrintPromo
+						? 'printpromo'
+						: await getRegistrationPlatform(appClientId),
 					registrationLocation: registrationLocation,
 				},
 				groupIds: [okta.groupIds.GuardianUserAll],

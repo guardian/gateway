@@ -20,6 +20,7 @@ import {
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
+import { isHttpErrorWithStatus } from '@/server/lib/httpErrors';
 
 const { accountManagementUrl } = getConfiguration();
 
@@ -183,7 +184,11 @@ router.post(
 
 			return res.status(200).send();
 		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+			logger.log(
+				isHttpErrorWithStatus(error, 400) ? 'warn' : 'error',
+				`${req.method} ${req.originalUrl}  Error`,
+				error,
+			);
 
 			trackMetric(`UnsubscribeAll::Failure`);
 

@@ -47,6 +47,7 @@ const defaultEnv = {
 	REDIS_SSL: 'false',
 	DELETE_ACCOUNT_STEP_FUNCTION_URL: 'delete-account-step-function-url',
 	DELETE_ACCOUNT_STEP_FUNCTION_API_KEY: 'delete-account-api-key',
+	PRINT_PROMO_SNS_TOPIC_ARN: 'print-promo-sns-topic-arn',
 };
 
 export const getServerInstance = async (

@@ -767,31 +767,6 @@ test.describe('Registration flow - Split 4/4', () => {
 	});
 
 	test.describe('Terms and Conditions links', () => {
-		test('links to the Google terms of service page', async ({ page }) => {
-			const googleTermsUrl = 'https://policies.google.com/terms';
-			// Intercept the external redirect page.
-			await page.route(googleTermsUrl, async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-			await page.goto('/register/email');
-			await page.getByText('terms of service').click();
-			await expect(page).toHaveURL(googleTermsUrl);
-		});
-
-		test('links to the Google privacy policy page', async ({ page }) => {
-			const googlePrivacyPolicyUrl = 'https://policies.google.com/privacy';
-			// Intercept the external redirect page.
-			await page.route(googlePrivacyPolicyUrl, async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-			await page.goto('/register/email');
-			await page
-				.getByText('This service is protected by reCAPTCHA and the Google')
-				.getByText('privacy policy')
-				.click();
-			await expect(page).toHaveURL(googlePrivacyPolicyUrl);
-		});
-
 		test('links to the Guardian terms and conditions page', async ({
 			page,
 		}) => {

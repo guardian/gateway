@@ -29,14 +29,6 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-  "pnpm": {
-    "overrides": {
-      "minimatch@3.1.2": "3.1.4",
-      "minimatch@>=9.0.0 <9.0.7": "9.0.7",
-      "fast-xml-parser@5.3.6": "5.5.6",
-      "handlebars@4.7.8": "4.7.9"
-    }
-  },
   "prettier": "@guardian/prettier",
   "jest": {
     "testMatch": [
@@ -49,5 +41,5 @@
       "./jest.setup.js"
     ]
   },
-  "packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac"
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

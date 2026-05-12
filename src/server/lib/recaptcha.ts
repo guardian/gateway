@@ -62,10 +62,13 @@ const handleRecaptcha = async (
 		const recaptchaResponseJson =
 			(await recaptchaResponse.json()) as RecaptchaAPIResponse;
 		if (!recaptchaResponseJson.success) {
+			// https://developers.google.com/recaptcha/docs/verify#error_code_reference
 			const formattedErrorCodes = recaptchaResponseJson['error-codes']?.length
 				? recaptchaResponseJson['error-codes']?.join(', ')
 				: 'unknown';
-			logger.error(
+			const isWarning = formattedErrorCodes === 'timeout-or-duplicate';
+			logger.log(
+				isWarning ? 'warn' : 'error',
 				'Problem verifying reCAPTCHA, error response',
 				formattedErrorCodes,
 			);

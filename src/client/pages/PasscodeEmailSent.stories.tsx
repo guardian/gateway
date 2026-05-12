@@ -453,3 +453,16 @@ export const WithSignInWithPasswordOption = () => (
 WithSignInWithPasswordOption.story = {
 	name: 'with sign in with password option - signin',
 };
+
+export const WithRequestComingFromApp = () => (
+	<PasscodeEmailSent
+		passcodeAction="#"
+		expiredPage="#"
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		appName="ios_live_app"
+	/>
+);
+WithRequestComingFromApp.story = {
+	name: 'with request coming from app',
+};

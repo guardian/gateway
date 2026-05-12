@@ -18,29 +18,6 @@ const returnUrl =
 
 test.describe('Sign in flow, Okta enabled - split 1', () => {
 	test.describe('Page tests', () => {
-		test('links to the Google terms of service page', async ({ page }) => {
-			const googleTermsUrl = 'https://policies.google.com/terms';
-			await page.route(googleTermsUrl, async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-			await page.goto('/signin');
-			await page.getByText('terms of service').click();
-			await expect(page).toHaveURL(googleTermsUrl);
-		});
-
-		test('links to the Google privacy policy page', async ({ page }) => {
-			const googlePrivacyPolicyUrl = 'https://policies.google.com/privacy';
-			await page.route(googlePrivacyPolicyUrl, async (route) => {
-				await route.fulfill({ status: 200 });
-			});
-			await page.goto('/signin');
-			await page
-				.getByText('This service is protected by reCAPTCHA and the Google')
-				.getByRole('link', { name: 'privacy policy' })
-				.click();
-			await expect(page).toHaveURL(googlePrivacyPolicyUrl);
-		});
-
 		test('links to the Guardian terms and conditions page', async ({
 			page,
 		}) => {

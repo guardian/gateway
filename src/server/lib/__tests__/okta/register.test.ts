@@ -22,7 +22,7 @@ import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAcco
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
-import { ErrorCause, OktaError } from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
 import { Group } from '@/server/models/okta/Group';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { AuthenticationTransaction } from '@/server/models/okta/Authentication';
@@ -150,7 +150,7 @@ const userExistsError = {
 		{
 			errorSummary:
 				'login: An object with this field already exists in the current organization',
-		} as ErrorCause,
+		},
 	],
 };
 
@@ -186,7 +186,7 @@ describe('okta#register', () => {
 
 		mockedCreateOktaUser.mockReturnValueOnce(Promise.resolve(user));
 		mockedActivateOktaUser.mockReturnValueOnce(
-			Promise.resolve({ token: 'sometoken' } as TokenResponse),
+			Promise.resolve({ token: 'sometoken' }),
 		);
 		mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
 		const result = await register({ email });
@@ -198,7 +198,7 @@ describe('okta#register', () => {
 
 		mockedCreateOktaUser.mockReturnValueOnce(Promise.resolve(user));
 		mockedActivateOktaUser.mockReturnValueOnce(
-			Promise.resolve({ token: 'sometoken' } as TokenResponse),
+			Promise.resolve({ token: 'sometoken' }),
 		);
 		mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
 		const result = await register({
@@ -221,7 +221,7 @@ describe('okta#register', () => {
 		mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
 		mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
 		mockedActivateOktaUser.mockReturnValueOnce(
-			Promise.resolve({ token: 'sometoken' } as TokenResponse),
+			Promise.resolve({ token: 'sometoken' }),
 		);
 		mockedSendAccountWithoutPasswordExistsEmail.mockReturnValueOnce(
 			Promise.resolve(true),
@@ -247,7 +247,7 @@ describe('okta#register', () => {
 		mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
 		mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
 		mockedReactivateOktaUser.mockReturnValueOnce(
-			Promise.resolve({ token: 'sometoken' } as TokenResponse),
+			Promise.resolve({ token: 'sometoken' }),
 		);
 		mockedSendAccountWithoutPasswordExistsEmail.mockReturnValueOnce(
 			Promise.resolve(true),

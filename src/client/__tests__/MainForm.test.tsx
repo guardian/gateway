@@ -48,28 +48,6 @@ test('terms and conditions not in the document when hasGuardianTerms is false', 
 	});
 });
 
-test('does not render the reCAPTCHA terms and conditions when recaptchaSiteKey is undefined', async () => {
-	const { queryByText } = setup();
-	const terms = queryByText(
-		'This service is protected by reCAPTCHA and the Google',
-		{ exact: false },
-	);
-	await waitFor(() => {
-		expect(terms).toBeNull();
-	});
-});
-
-test('renders the reCAPTCHA terms and conditions when recaptchaSiteKey is defined', async () => {
-	const { queryByText } = setup({ recaptchaSiteKey: 'invalid-key' });
-	const terms = queryByText(
-		'This service is protected by reCAPTCHA and the Google',
-		{ exact: false },
-	);
-	await waitFor(() => {
-		expect(terms).toBeInTheDocument();
-	});
-});
-
 test('calls method to set an error message when reCAPTCHA does not load correctly', async () => {
 	const setRecaptchaErrorMessage = jest.fn();
 	setup({

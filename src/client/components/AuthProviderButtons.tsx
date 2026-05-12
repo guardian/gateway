@@ -14,7 +14,7 @@ import {
 	secondaryButtonStyles,
 } from '@/client/styles/Shared';
 
-type AuthButtonProvider = 'social' | 'email';
+export type AuthButtonProvider = 'social' | 'email';
 
 type AuthProviderButtonsProps = {
 	queryParams: QueryParams;

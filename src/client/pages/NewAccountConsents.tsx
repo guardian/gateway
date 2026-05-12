@@ -89,9 +89,7 @@ export const NewAccountConsents = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms={[newsletterAdditionalTerms, isJobs === false].filter(
-					Boolean,
-				)}
+				additionalTerms={[newsletterAdditionalTerms]}
 				shortRequestId={shortRequestId}
 			>
 				<RegistrationConsents

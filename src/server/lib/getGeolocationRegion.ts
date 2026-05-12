@@ -30,7 +30,7 @@ const countryCodeToRegion = (
 		case 'GB':
 		case 'US':
 		case 'AU':
-			return countryCode as GeoLocation;
+			return countryCode;
 		default:
 			return 'ROW';
 	}
