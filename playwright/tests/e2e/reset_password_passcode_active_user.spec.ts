@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -6,6 +6,7 @@ import {
 } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Password reset recovery flows - with Passcodes', () => {
 	test.describe('ACTIVE user with password', () => {

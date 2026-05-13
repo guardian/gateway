@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import { randomMailosaurEmail, randomPassword } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
@@ -6,6 +6,7 @@ import { getTestOktaUser } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
 import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Registration flow - Split 1/4', () => {
 	test.describe('Registering with Okta', () => {
