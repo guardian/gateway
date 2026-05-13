@@ -1,5 +1,5 @@
 import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
-import { OphanComponentEvent } from '@guardian/libs';
+import { ComponentEvent } from '@guardian/ophan-tracker-js';
 
 export const record = (event: OphanEvent) => {
 	if (window.guardian?.ophan?.record) {
@@ -34,6 +34,5 @@ export const trackFormFocusBlur = (
 	}
 };
 
-export const sendOphanComponentEvent = (
-	componentEvent: OphanComponentEvent,
-): void => record({ componentEvent });
+export const sendOphanComponentEvent = (componentEvent: ComponentEvent): void =>
+	record({ componentEvent });

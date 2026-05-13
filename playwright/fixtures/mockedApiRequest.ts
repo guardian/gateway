@@ -4,10 +4,12 @@ import {
 	test as base,
 	request as playwrightRequest,
 	APIRequestContext,
+	Page,
 } from '@playwright/test';
 
 type CustomFixtures = {
 	mockApi: APIRequestContext;
+	page: Page;
 };
 
 export const test = base.extend<CustomFixtures>({
@@ -17,5 +19,9 @@ export const test = base.extend<CustomFixtures>({
 		});
 		await use(mockApiContext);
 		await mockApiContext.dispose();
+	},
+	page: async ({ page }, use) => {
+		await page.route('**://ophan.theguardian.com/**', (route) => route.abort());
+		await use(page);
 	},
 });
