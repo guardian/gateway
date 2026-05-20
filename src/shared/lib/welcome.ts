@@ -11,12 +11,10 @@ import { JOBS_TOS_URI } from '../model/Configuration';
  */
 export const getNextWelcomeFlowPage = ({
 	geolocation,
-	fromURI,
 	returnUrl,
 	queryParams,
 }: {
 	geolocation?: GeoLocation;
-	fromURI?: string;
 	returnUrl: string;
 	queryParams: QueryParams;
 }): string => {
@@ -26,20 +24,7 @@ export const getNextWelcomeFlowPage = ({
 		return addQueryParamsToPath(JOBS_TOS_URI, queryParams);
 	}
 
-	// if there is a fromURI, we need to complete the oauth flow by redirecting to it
-	if (fromURI) {
-		return fromURI;
-	}
-
-	// Otherwise (web), we select based on geolocation.
-	switch (geolocation) {
-		case 'US':
-		case 'AU':
-		case 'GB':
-		case 'ROW':
-		case 'EU':
-			return addQueryParamsToPath('/welcome/newsletters', queryParams);
-		default:
-			return returnUrl;
-	}
+	return geolocation
+		? addQueryParamsToPath('/welcome/newsletters', queryParams)
+		: returnUrl;
 };

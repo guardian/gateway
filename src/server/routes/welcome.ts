@@ -371,7 +371,7 @@ router.post(
 				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
 			);
 		}
-		const { returnUrl } = state.queryParams;
+		const { returnUrl, fromURI } = state.queryParams;
 
 		try {
 			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
@@ -421,7 +421,7 @@ router.post(
 			trackMetric('NewAccountNewslettersSubmit::Failure');
 		} finally {
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-			return res.redirect(303, returnUrl);
+			return res.redirect(303, fromURI ?? returnUrl);
 		}
 	},
 );

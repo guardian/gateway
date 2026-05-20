@@ -9,7 +9,6 @@ export const NewAccountReviewPage = () => {
 
 	const nextPage = getNextWelcomeFlowPage({
 		geolocation: pageData.geolocation,
-		fromURI: queryParams.fromURI,
 		returnUrl: queryParams.returnUrl,
 		queryParams,
 	});
