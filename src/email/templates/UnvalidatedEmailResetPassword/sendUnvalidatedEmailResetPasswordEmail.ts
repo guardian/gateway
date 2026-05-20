@@ -9,7 +9,7 @@ type Props = {
 	resetPasswordToken: string;
 } & TrackingQueryParams;
 
-export const sendUnvalidatedEmailResetPasswordEmail = ({
+export const sendUnvalidatedEmailResetPasswordEmail = async ({
 	to,
 	subject = 'Reset your theguardian.com password',
 	resetPasswordToken,
@@ -22,12 +22,12 @@ export const sendUnvalidatedEmailResetPasswordEmail = ({
 		ref,
 		refViewId,
 	});
+
+	const renderedEmail = await renderedUnvalidatedEmailResetPassword;
+
 	return send({
-		html: renderedUnvalidatedEmailResetPassword.html.replace(
-			'$passwordResetLink',
-			resetPasswordUrl,
-		),
-		plainText: renderedUnvalidatedEmailResetPassword.plain.replace(
+		html: renderedEmail.html.replace('$passwordResetLink', resetPasswordUrl),
+		plainText: renderedEmail.plain.replace(
 			'$passwordResetLink',
 			resetPasswordUrl,
 		),

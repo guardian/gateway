@@ -26,52 +26,78 @@ type EmailRenderResult = {
 	html: string;
 };
 
-export const renderedAccidentalEmail: EmailRenderResult = {
-	plain: AccidentalEmailText(),
-	html: render(AccidentalEmail()).html,
-};
+export const renderedAccidentalEmail: Promise<EmailRenderResult> =
+	(async () => {
+		return {
+			plain: AccidentalEmailText(),
+			html: (await render(AccidentalEmail())).html,
+		};
+	})();
 
-export const renderedAccountExists: EmailRenderResult = {
-	plain: AccountExistsText(),
-	html: render(AccountExists()).html,
-};
+export const renderedAccountExists: Promise<EmailRenderResult> = (async () => {
+	return {
+		plain: AccountExistsText(),
+		html: (await render(AccountExists())).html,
+	};
+})();
 
-export const renderedAccountWithoutPasswordExists: EmailRenderResult = {
-	plain: AccountWithoutPasswordExistsText(),
-	html: render(AccountWithoutPasswordExists()).html,
-};
+export const renderedAccountWithoutPasswordExists: Promise<EmailRenderResult> =
+	(async () => {
+		return {
+			plain: AccountWithoutPasswordExistsText(),
+			html: (await render(AccountWithoutPasswordExists())).html,
+		};
+	})();
 
-export const renderedCreatePassword: EmailRenderResult = {
-	plain: CreatePasswordText(),
-	html: render(CreatePassword()).html,
-};
+export const renderedCreatePassword: Promise<EmailRenderResult> = (async () => {
+	return {
+		plain: CreatePasswordText(),
+		html: (await render(CreatePassword())).html,
+	};
+})();
 
-export const renderedNoAccount: EmailRenderResult = {
-	plain: NoAccountText(),
-	html: render(NoAccount()).html,
-};
+export const renderedNoAccount: Promise<EmailRenderResult> = (async () => {
+	return {
+		plain: NoAccountText(),
+		html: (await render(NoAccount())).html,
+	};
+})();
 
-export const renderedResetPassword: EmailRenderResult = {
-	plain: ResetPasswordText(),
-	html: render(ResetPassword()).html,
-};
+export const renderedResetPassword: Promise<EmailRenderResult> = (async () => {
+	return {
+		plain: ResetPasswordText(),
+		html: (await render(ResetPassword())).html,
+	};
+})();
 
-export const renderedUnvalidatedEmailResetPassword: EmailRenderResult = {
-	plain: UnvalidatedEmailResetPasswordText(),
-	html: render(UnvalidatedEmailResetPassword()).html,
-};
+export const renderedUnvalidatedEmailResetPassword: Promise<EmailRenderResult> =
+	(async () => {
+		return {
+			plain: UnvalidatedEmailResetPasswordText(),
+			html: (await render(UnvalidatedEmailResetPassword())).html,
+		};
+	})();
 
-export const renderedCompleteRegistration: EmailRenderResult = {
-	plain: CompleteRegistrationText(),
-	html: render(CompleteRegistration()).html,
-};
+export const renderedCompleteRegistration: Promise<EmailRenderResult> =
+	(async () => {
+		return {
+			plain: CompleteRegistrationText(),
+			html: (await render(CompleteRegistration())).html,
+		};
+	})();
 
-export const renderedRegistrationPasscode: EmailRenderResult = {
-	plain: RegistrationPasscodeText(),
-	html: render(RegistrationPasscode({})).html,
-};
+export const renderedRegistrationPasscode: Promise<EmailRenderResult> =
+	(async () => {
+		return {
+			plain: RegistrationPasscodeText(),
+			html: (await render(RegistrationPasscode({}))).html,
+		};
+	})();
 
-export const renderedEmailChallengePasscode: EmailRenderResult = {
-	plain: EmailChallengePasscodeText(),
-	html: render(EmailChallengePasscode({})).html,
-};
+export const renderedEmailChallengePasscode: Promise<EmailRenderResult> =
+	(async () => {
+		return {
+			plain: EmailChallengePasscodeText(),
+			html: (await render(EmailChallengePasscode({}))).html,
+		};
+	})();

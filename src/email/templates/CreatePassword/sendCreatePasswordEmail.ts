@@ -9,7 +9,7 @@ type Props = {
 	setPasswordToken: string;
 } & TrackingQueryParams;
 
-export const sendCreatePasswordEmail = ({
+export const sendCreatePasswordEmail = async ({
 	to,
 	subject = 'Nearly there...',
 	setPasswordToken,
@@ -22,13 +22,11 @@ export const sendCreatePasswordEmail = ({
 		ref,
 		refViewId,
 	});
+	const renderedEmail = await renderedCreatePassword;
 
 	return send({
-		html: renderedCreatePassword.html.replace(
-			'$createPasswordLink',
-			setPasswordUrl,
-		),
-		plainText: renderedCreatePassword.plain.replace(
+		html: renderedEmail.html.replace('$createPasswordLink', setPasswordUrl),
+		plainText: renderedEmail.plain.replace(
 			'$createPasswordLink',
 			setPasswordUrl,
 		),

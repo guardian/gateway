@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { SubHeader } from './SubHeader';
-import { renderMJMLComponent } from '../testUtils';
+import { RenderMJML } from '../testUtils';
 
 export default {
 	title: 'Email/Components/SubHeader',
@@ -18,6 +18,10 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJMLComponent(<SubHeader>My subheader text</SubHeader>);
+	return (
+		<RenderMJML wrap={true}>
+			<SubHeader>My subheader text</SubHeader>
+		</RenderMJML>
+	);
 };
 Default.storyName = 'Default sub header';

@@ -9,7 +9,7 @@ type Props = {
 	resetPasswordToken: string;
 } & TrackingQueryParams;
 
-export const sendResetPasswordEmail = ({
+export const sendResetPasswordEmail = async ({
 	to,
 	subject = 'Reset your password',
 	resetPasswordToken,
@@ -22,12 +22,10 @@ export const sendResetPasswordEmail = ({
 		ref,
 		refViewId,
 	});
+	const renderedEmail = await renderedResetPassword;
 	return send({
-		html: renderedResetPassword.html.replace(
-			'$passwordResetLink',
-			resetPasswordUrl,
-		),
-		plainText: renderedResetPassword.plain.replace(
+		html: renderedEmail.html.replace('$passwordResetLink', resetPasswordUrl),
+		plainText: renderedEmail.plain.replace(
 			'$passwordResetLink',
 			resetPasswordUrl,
 		),

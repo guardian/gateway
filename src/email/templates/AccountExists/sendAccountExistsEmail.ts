@@ -9,7 +9,7 @@ type Props = {
 	activationToken?: string;
 } & TrackingQueryParams;
 
-export const sendAccountExistsEmail = ({
+export const sendAccountExistsEmail = async ({
 	to,
 	subject = 'Nearly there...',
 	activationToken,
@@ -29,11 +29,12 @@ export const sendAccountExistsEmail = ({
 		ref,
 		refViewId,
 	});
+	const renderedEmail = await renderedAccountExists;
 	return send({
-		html: renderedAccountExists.html
+		html: renderedEmail.html
 			.replace('$passwordResetLink', resetPasswordUrl)
 			.replace('$signInLink', signInUrl),
-		plainText: renderedAccountExists.plain
+		plainText: renderedEmail.plain
 			.replace('$passwordResetLink', resetPasswordUrl)
 			.replace('$signInLink', signInUrl),
 		subject,

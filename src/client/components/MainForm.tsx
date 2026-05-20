@@ -96,6 +96,40 @@ const buttonLinkStyles = css`
 	}
 `;
 
+const Terms = ({
+	additionalTerms,
+	hasGuardianTerms,
+	hasJobsTerms,
+	isGoogleOneTap,
+	theme,
+}: {
+	additionalTerms?: ReactNode[];
+	hasGuardianTerms?: boolean;
+	hasJobsTerms?: boolean;
+	isGoogleOneTap?: boolean;
+	theme: TermsStyle;
+}) => {
+	const BoxContainer = theme === 'primary' ? InformationBox : 'div';
+	return (
+		<>
+			{(additionalTerms || hasGuardianTerms || hasJobsTerms) && (
+				<BoxContainer>
+					{hasGuardianTerms && <GuardianTerms />}
+					{hasJobsTerms && <JobsTerms />}
+					{additionalTerms &&
+						additionalTerms.map((specificTermsItem, index) => {
+							return (
+								<InformationBoxText key={index} isGoogleOneTap={isGoogleOneTap}>
+									{specificTermsItem}
+								</InformationBoxText>
+							);
+						})}
+				</BoxContainer>
+			)}
+		</>
+	);
+};
+
 export const MainForm = ({
 	children,
 	wideLayout = false,
@@ -324,31 +358,6 @@ export const MainForm = ({
 		setRecaptchaErrorMessage,
 	]);
 
-	const Terms = ({ theme }: { theme: TermsStyle }) => {
-		const BoxContainer = theme === 'primary' ? InformationBox : 'div';
-		return (
-			<>
-				{(additionalTerms || hasGuardianTerms || hasJobsTerms) && (
-					<BoxContainer>
-						{hasGuardianTerms && <GuardianTerms />}
-						{hasJobsTerms && <JobsTerms />}
-						{additionalTerms &&
-							additionalTerms.map((specificTermsItem, index) => {
-								return (
-									<InformationBoxText
-										key={index}
-										isGoogleOneTap={isGoogleOneTap}
-									>
-										{specificTermsItem}
-									</InformationBoxText>
-								);
-							})}
-					</BoxContainer>
-				)}
-			</>
-		);
-	};
-
 	return (
 		<form
 			css={formStyles(displayInline, isIframed)}
@@ -386,7 +395,15 @@ export const MainForm = ({
 			<CsrfFormField />
 			<RefTrackingFormFields />
 			{children}
-			{primaryTermsPosition && <Terms theme={termsStyle} />}
+			{primaryTermsPosition && (
+				<Terms
+					additionalTerms={additionalTerms}
+					hasGuardianTerms={hasGuardianTerms}
+					hasJobsTerms={hasJobsTerms}
+					isGoogleOneTap={isGoogleOneTap}
+					theme={termsStyle}
+				/>
+			)}
 
 			{submitButtonLink ? (
 				<ButtonLink
@@ -416,7 +433,15 @@ export const MainForm = ({
 					{submitButtonText}
 				</Button>
 			)}
-			{!primaryTermsPosition && <Terms theme={termsStyle} />}
+			{!primaryTermsPosition && (
+				<Terms
+					additionalTerms={additionalTerms}
+					hasGuardianTerms={hasGuardianTerms}
+					hasJobsTerms={hasJobsTerms}
+					isGoogleOneTap={isGoogleOneTap}
+					theme={termsStyle}
+				/>
+			)}
 		</form>
 	);
 };

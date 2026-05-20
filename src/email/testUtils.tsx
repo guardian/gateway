@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- see comment below */
-import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import React, { useEffect, useState } from 'react';
+import { renderToMjml } from '@faire/mjml-react/utils/renderToMjml';
 import mjml2html from 'mjml';
 
 /**
@@ -10,26 +9,24 @@ import mjml2html from 'mjml';
  * Thankfully this is only used by storybook to render email components, and can get away with using `any` here.
  */
 
-const render = (component: any) => ({
-	__html: mjml2html(renderToStaticMarkup(component)).html,
-});
+const render = async (component: React.ReactElement, wrap: boolean) => {
+	const mjml = renderToMjml(component);
 
-const renderComponent = (component: any) => ({
-	__html: mjml2html(`
-    <mjml>
-      <mj-body>
-          <mj-container>
-              ${renderToStaticMarkup(component)}
-          </mj-container>
-      </mj-body>
-    </mjml>
-  `).html,
-});
+	return mjml2html(wrap ? `<mjml><mj-body>${mjml}</mj-body></mjml>` : mjml);
+};
 
-export const renderMJMLComponent = (component: any) => (
-	<div dangerouslySetInnerHTML={renderComponent(component)} />
-);
+export const RenderMJML = ({
+	children,
+	wrap = false,
+}: {
+	children: React.ReactElement;
+	wrap?: boolean;
+}) => {
+	const [html, setHtml] = useState<string>('');
 
-export const renderMJML = (component: any) => (
-	<div dangerouslySetInnerHTML={render(component)} />
-);
+	useEffect(() => {
+		void render(children, wrap).then(({ html }) => setHtml(html));
+	}, [children, wrap]);
+
+	return <div dangerouslySetInnerHTML={{ __html: html }} />;
+};

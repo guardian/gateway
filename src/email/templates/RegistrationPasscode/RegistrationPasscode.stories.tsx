@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { RegistrationPasscode } from './RegistrationPasscode';
-import { renderMJML } from '../../testUtils';
+import { RenderMJML } from '../../testUtils';
 
 export default {
 	title: 'Email/Templates/RegistrationPasscode',
@@ -18,11 +18,19 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJML(<RegistrationPasscode />);
+	return (
+		<RenderMJML>
+			<RegistrationPasscode />
+		</RenderMJML>
+	);
 };
 Default.storyName = 'with defaults';
 
 export const Passcode = () => {
-	return renderMJML(<RegistrationPasscode storybookPasscode="123456" />);
+	return (
+		<RenderMJML>
+			<RegistrationPasscode storybookPasscode="123456" />
+		</RenderMJML>
+	);
 };
 Passcode.storyName = 'with passcode';

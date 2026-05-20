@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { Text } from './Text';
-import { renderMJMLComponent } from '../testUtils';
+import { RenderMJML } from '../testUtils';
 
 export default {
 	title: 'Email/Components/Text',
@@ -18,10 +18,13 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJMLComponent(
-		<Text>
-			Edward Snowden&apos;s choice of Hong Kong as haven is a high-stakes gamble
-		</Text>,
+	return (
+		<RenderMJML wrap={true}>
+			<Text>
+				Edward Snowden&apos;s choice of Hong Kong as haven is a high-stakes
+				gamble
+			</Text>
+		</RenderMJML>
 	);
 };
 Default.storyName = 'Default text';
