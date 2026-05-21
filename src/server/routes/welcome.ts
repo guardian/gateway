@@ -372,6 +372,7 @@ router.post(
 			);
 		}
 		const { returnUrl, fromURI } = state.queryParams;
+		const { appName } = state.pageData;
 
 		try {
 			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
@@ -420,8 +421,11 @@ router.post(
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 			trackMetric('NewAccountNewslettersSubmit::Failure');
 		} finally {
+			const redirectUrl =
+				fromURI && appName === 'Guardian' ? fromURI : returnUrl;
+
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
-			return res.redirect(303, fromURI ?? returnUrl);
+			return res.redirect(303, redirectUrl);
 		}
 	},
 );
