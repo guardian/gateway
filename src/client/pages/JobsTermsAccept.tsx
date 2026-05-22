@@ -6,7 +6,6 @@ import {
 	neutral,
 	remSpace,
 	textSans15,
-	textSansBold15,
 	until,
 } from '@guardian/source/foundations';
 import ThemedLink from '@/client/components/ThemedLink';
@@ -44,10 +43,6 @@ const text = css`
 	margin: 0;
 	${textSans15}
 	color: var(--color-text);
-`;
-
-const leadText = css`
-	${textSansBold15}
 `;
 
 const textSpacing = css`
@@ -142,26 +137,6 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 				</>
 			) : (
 				<>
-					<MainBodyText cssOverrides={leadText}>
-						Click &lsquo;continue&rsquo; to automatically use your existing
-						Guardian account to sign in with Guardian&nbsp;Jobs.
-					</MainBodyText>
-					<MainBodyText>
-						By activating your Guardian&nbsp;Jobs account you will receive a
-						welcome email detailing the range of career-enhancing features that
-						can be set up on our jobs site. These include:
-					</MainBodyText>
-					<ul css={[text, listBullets]}>
-						<li>
-							Creating a job alert and receiving relevant jobs straight to your
-							inbox
-						</li>
-						<li>
-							Shortlisting jobs that interest you so you can access them later
-							on different devices
-						</li>
-						<li>Uploading your CV and let employers find you</li>
-					</ul>
 					<MainForm
 						submitButtonText="Continue"
 						hasJobsTerms={true}
@@ -176,6 +151,16 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 							firstName={firstName}
 							secondName={secondName}
 						/>
+						<MainBodyText>
+							By activating your Guardian&nbsp;Jobs account you will receive a
+							welcome email detailing the range of career-enhancing features
+							that can be set up on our jobs site. These include:
+						</MainBodyText>
+						<ul css={[text, listBullets]}>
+							<li>Getting job alerts straight to your inbox</li>
+							<li>Shortlisting jobs that interest you</li>
+							<li>Uploading your CV and letting employers find you</li>
+						</ul>
 					</MainForm>
 					<MainBodyText>
 						Or <ThemedLink href={'/signout'}>sign out and continue</ThemedLink>
