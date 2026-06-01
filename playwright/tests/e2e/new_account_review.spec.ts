@@ -109,9 +109,7 @@ test.describe('New account newsletters page', () => {
 		// jobs T&C page
 		await expect(page).toHaveURL(new RegExp(escapeRegExp(JOBS_TOS_URI)));
 		await expect(
-			page.getByText(
-				'Click ‘continue’ to automatically use your existing Guardian account to sign in with Guardian Jobs',
-			),
+			page.getByText('By activating your guardian jobs account'),
 		).toBeVisible();
 
 		await page.locator('input[name=firstName]').fill(id);

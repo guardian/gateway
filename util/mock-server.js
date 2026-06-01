@@ -4,7 +4,6 @@
 /* eslint-disable functional/no-let */
 // Very simple mocking server for mimicking IDAPI
 
-/* eslint-env node */
 const bodyParser = require('body-parser');
 const express = require('express');
 const PORT = 9000;

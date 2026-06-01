@@ -2,6 +2,7 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { JOBS_TOS_URI } from '../model/Configuration';
+import { AppName } from '@/shared/lib/appNameUtils';
 
 /**
  * Returns the next page in the welcome flow based on the user's geolocation
@@ -14,11 +15,13 @@ export const getNextWelcomeFlowPage = ({
 	fromURI,
 	returnUrl,
 	queryParams,
+	appName,
 }: {
 	geolocation?: GeoLocation;
 	fromURI?: string;
 	returnUrl: string;
 	queryParams: QueryParams;
+	appName?: AppName;
 }): string => {
 	// Jobs users need to accept additional Jobs terms and conditions
 	// and submit their first and last name.
@@ -26,20 +29,11 @@ export const getNextWelcomeFlowPage = ({
 		return addQueryParamsToPath(JOBS_TOS_URI, queryParams);
 	}
 
-	// if there is a fromURI, we need to complete the oauth flow by redirecting to it
-	if (fromURI) {
+	if (fromURI && appName !== 'Guardian') {
 		return fromURI;
 	}
 
-	// Otherwise (web), we select based on geolocation.
-	switch (geolocation) {
-		case 'US':
-		case 'AU':
-		case 'GB':
-		case 'ROW':
-		case 'EU':
-			return addQueryParamsToPath('/welcome/newsletters', queryParams);
-		default:
-			return returnUrl;
-	}
+	return geolocation
+		? addQueryParamsToPath('/welcome/newsletters', queryParams)
+		: returnUrl;
 };
