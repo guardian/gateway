@@ -112,7 +112,7 @@
 		"@faire/mjml-react": "3.5.4",
 		"@guardian/ab-core": "9.0.0",
 		"@guardian/libs": "32.0.0",
-		"@guardian/ophan-tracker-js": "2.8.0",
+		"@guardian/ophan-tracker-js": "3.1.0",
 		"@guardian/source": "12.2.1",
 		"@guardian/source-development-kitchen": "28.0.0",
 		"@okta/jwt-verifier": "4.0.2",
