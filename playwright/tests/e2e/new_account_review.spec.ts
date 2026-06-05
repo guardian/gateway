@@ -1,8 +1,9 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { randomMailosaurEmail } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('New account newsletters page', () => {
 	['GB', 'FR', 'AU', 'US'].forEach((geoLocation) => {

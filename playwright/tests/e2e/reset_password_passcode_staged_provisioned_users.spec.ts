@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
@@ -7,6 +7,7 @@ import {
 } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getTestOktaUser, activateTestOktaUser } from '../../helpers/api/okta';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Password reset recovery flows - with Passcodes', () => {
 	test.describe('STAGED user', () => {

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createTestUser } from '../../helpers/api/idapi';
 import {
 	getTestOktaUser,
@@ -6,6 +6,7 @@ import {
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Jobs terms and conditions flow in Okta', () => {
 	test.describe('Shows the terms and conditions page on Sign In', () => {

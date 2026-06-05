@@ -1,6 +1,7 @@
-import { test, expect, Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import crypto from 'crypto';
 import { createTestUser } from '../../helpers/api/idapi';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Unsubscribe newsletter/marketing email', () => {
 	const newsletterId = 'today-uk';

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import { randomMailosaurEmail, createTestUser } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
@@ -9,6 +9,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { escapeRegExp } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Registration flow - Split 3/4', () => {
 	test.describe('Existing users asking for an email to be resent after attempting to register with Okta - useOktaClassic', () => {

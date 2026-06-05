@@ -17,6 +17,7 @@ import idxEnrollNewExistingUserResponse from '../../fixtures/okta-responses/erro
 import { identifyResponse } from '../../fixtures/okta-responses/success/idx-identify-response';
 import idxChallengeResponseEmail from '../../fixtures/okta-responses/success/idx-challenge-response-email.json';
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
+import { loadPage } from '../../helpers/load-page';
 
 // IDX passcode registration mocks
 const baseIdxPasscodeRegistrationMocks = async (mockApi: APIRequestContext) => {
@@ -90,7 +91,7 @@ userStatuses.forEach((status) => {
 				await setEncryptedStateCookie(context, {
 					email: 'example@example.com',
 				});
-				await page.goto('/register/email-sent');
+				await loadPage(page, '/register/email-sent');
 			});
 
 			switch (status) {
@@ -376,7 +377,7 @@ userStatuses.forEach((status) => {
 				await setEncryptedStateCookie(context, {
 					email: 'example@example.com',
 				});
-				await page.goto('/welcome/email-sent');
+				await loadPage(page, '/welcome/email-sent');
 			});
 
 			switch (status) {
@@ -644,7 +645,7 @@ userStatuses.forEach((status) => {
 		// ==========================================
 		test.describe('When I submit the form on /welcome/resend', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/welcome/resend');
+				await loadPage(page, '/welcome/resend');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -814,7 +815,7 @@ userStatuses.forEach((status) => {
 		// ==========================================
 		test.describe('When I submit the form on /welcome/expired', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/welcome/expired');
+				await loadPage(page, '/welcome/expired');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 

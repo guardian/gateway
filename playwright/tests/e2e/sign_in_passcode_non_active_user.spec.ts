@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import { createTestUser } from '../../helpers/api/idapi';
 import {
@@ -8,6 +8,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Sign In flow, with passcode (part 1)', () => {
 	const returnUrl =
