@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Sign in flow', () => {
 	test.beforeEach(async ({ mockApi }) => {
@@ -11,7 +12,7 @@ test.describe('Sign in flow', () => {
 		test('Has no detectable a11y violations on sign in page', async ({
 			page,
 		}) => {
-			await page.goto('/signin?usePasswordSignIn=true');
+			await loadPage(page, '/signin?usePasswordSignIn=true');
 			await injectAndCheckAxe(page);
 		});
 
@@ -19,7 +20,7 @@ test.describe('Sign in flow', () => {
 			page,
 			mockApi,
 		}) => {
-			await page.goto('/signin?usePasswordSignIn=true');
+			await loadPage(page, '/signin?usePasswordSignIn=true');
 			await page.locator('input[name="email"]').fill('Invalid email');
 			await page.locator('input[name="password"]').fill('Invalid password');
 			await mockApi.post('/mock/permanent-pattern', {
@@ -42,7 +43,7 @@ test.describe('Sign in flow', () => {
 					body: { status: 'ok', email: 'test@test.com' },
 				},
 			});
-			await page.goto('/signin?encryptedEmail=bdfalrbagbgu');
+			await loadPage(page, '/signin?encryptedEmail=bdfalrbagbgu');
 			await expect(page.locator('input[name="email"]')).toHaveValue(
 				'test@test.com',
 			);
@@ -61,7 +62,8 @@ test.describe('Sign in flow', () => {
 			await page.route(/.*google.com\/recaptcha\/.*/, async (route) => {
 				await route.abort('failed');
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&usePasswordSignIn=true',
 			);
 			await page.locator('input[name="email"]').fill('placeholder@example.com');
@@ -84,7 +86,8 @@ test.describe('Sign in flow', () => {
 			await mockApi.post('/mock/permanent-pattern', {
 				data: { pattern: '/api/v1/users/.*', status: 500, body: {} },
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin&usePasswordSignIn=true',
 			);
 			await page.locator('input[name="email"]').fill('example@example.com');

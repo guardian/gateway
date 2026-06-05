@@ -13,6 +13,7 @@ import idxChallengeResponseEmail from '../../fixtures/okta-responses/success/idx
 import idxChallengeResponsePassword from '../../fixtures/okta-responses/success/idx-challenge-response-password.json';
 import idxChallengeAnswerPasswordEnrollEmailResponse from '../../fixtures/okta-responses/success/idx-challenge-answer-password-enroll-email-response.json';
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
+import { loadPage } from '../../helpers/load-page';
 
 const baseIdxPasscodeRegistrationMocks = async (mockApi: APIRequestContext) => {
 	await Promise.all([
@@ -73,7 +74,7 @@ userStatuses.forEach((status) => {
 	test.describe(`Given I am a ${status || 'nonexistent'} user`, () => {
 		test.describe('When I submit the form on /register', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/register/email');
+				await loadPage(page, '/register/email');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 

@@ -1,5 +1,6 @@
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Welcome and set password page', () => {
 	const defaultEmail = 'someone@theguardian.com';
@@ -29,7 +30,7 @@ test.describe('Welcome and set password page', () => {
 					body: checkTokenSuccessResponse(),
 				},
 			});
-			await page.goto(`/welcome/fake_token`);
+			await loadPage(page, `/welcome/fake_token`);
 			await injectAndCheckAxe(page);
 		});
 
@@ -53,7 +54,7 @@ test.describe('Welcome and set password page', () => {
 					},
 				}),
 			]);
-			await page.goto(`/welcome/fake_token`);
+			await loadPage(page, `/welcome/fake_token`);
 			await page.locator('input[name="password"]').fill('short');
 			await page.locator('button[type="submit"]').click();
 			await injectAndCheckAxe(page);
@@ -62,7 +63,7 @@ test.describe('Welcome and set password page', () => {
 		test('has no detectable a11y violations on the resend page', async ({
 			page,
 		}) => {
-			await page.goto(`/welcome/resend`);
+			await loadPage(page, `/welcome/resend`);
 			await injectAndCheckAxe(page);
 		});
 
@@ -70,7 +71,7 @@ test.describe('Welcome and set password page', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto(`/welcome/resend`);
+			await loadPage(page, `/welcome/resend`);
 
 			// Mock user lookup to fail with 500
 			await mockApi.post('/mock/permanent-pattern', {
@@ -91,7 +92,7 @@ test.describe('Welcome and set password page', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto(`/welcome/resend`);
+			await loadPage(page, `/welcome/resend`);
 
 			// Mock user lookup to succeed (triggers email resend flow)
 			await mockApi.post('/mock/permanent-pattern', {
@@ -129,7 +130,7 @@ test.describe('Welcome and set password page', () => {
 		test('has no detectable a11y violations on the email sent page without resend box', async ({
 			page,
 		}) => {
-			await page.goto(`/welcome/email-sent`);
+			await loadPage(page, `/welcome/email-sent`);
 			await injectAndCheckAxe(page);
 		});
 	});

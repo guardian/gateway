@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('POST requests return a user-facing error message when encountering a rate limit from Okta', () => {
 	const v1Users429Response = {
@@ -20,7 +21,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 				body: v1Users429Response,
 			},
 		});
-		await page.goto('/signin?usePasswordSignIn=true');
+		await loadPage(page, '/signin?usePasswordSignIn=true');
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 
@@ -31,7 +32,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /reauthenticate', async ({ mockApi, page }) => {
-		await page.goto('/reauthenticate?usePasswordSignIn=true');
+		await loadPage(page, '/reauthenticate?usePasswordSignIn=true');
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 
@@ -49,7 +50,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /register', async ({ mockApi, page }) => {
-		await page.goto('/register/email');
+		await loadPage(page, '/register/email');
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -66,7 +67,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /reset-password', async ({ mockApi, page }) => {
-		await page.goto('/reset-password');
+		await loadPage(page, '/reset-password');
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -83,7 +84,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /welcome/resend', async ({ mockApi, page }) => {
-		await page.goto(`/welcome/resend`);
+		await loadPage(page, `/welcome/resend`);
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -100,7 +101,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /welcome/expired', async ({ mockApi, page }) => {
-		await page.goto(`/welcome/expired`);
+		await loadPage(page, `/welcome/expired`);
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -117,7 +118,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /reset-password/resend', async ({ mockApi, page }) => {
-		await page.goto(`/reset-password/resend`);
+		await loadPage(page, `/reset-password/resend`);
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -134,7 +135,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /reset-password/expired', async ({ mockApi, page }) => {
-		await page.goto(`/reset-password/expired`);
+		await loadPage(page, `/reset-password/expired`);
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -151,7 +152,7 @@ test.describe('POST requests return a user-facing error message when encounterin
 	});
 
 	test('Submit /set-password/resend', async ({ mockApi, page }) => {
-		await page.goto(`/set-password/resend`);
+		await loadPage(page, `/set-password/resend`);
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
@@ -161,14 +162,16 @@ test.describe('POST requests return a user-facing error message when encounterin
 				body: v1Users429Response,
 			},
 		});
-		await page.locator('button[type=submit]').click();
+		await page.locator('button[type=submit]').click({
+			noWaitAfter: true,
+		});
 		await expect(
 			page.getByText('Sorry, something went wrong. Please try again.'),
 		).toBeVisible();
 	});
 
 	test('Submit /set-password/expired', async ({ mockApi, page }) => {
-		await page.goto(`/set-password/expired`);
+		await loadPage(page, `/set-password/expired`);
 		await page.locator('input[name="email"]').fill('example@example.com');
 
 		await mockApi.post('/mock/permanent-pattern', {
