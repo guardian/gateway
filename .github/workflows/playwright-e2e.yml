@@ -92,7 +92,7 @@ jobs:
           sudo cp ./scripts/nginx.conf /etc/nginx/nginx.conf
           sudo dev-nginx restart-nginx
       - name: Configure AWS credentials for SES
-        uses: aws-actions/configure-aws-credentials@v6.1.3
+        uses: aws-actions/configure-aws-credentials@v6.2.0
         with:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
