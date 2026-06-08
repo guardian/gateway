@@ -9,7 +9,7 @@ type Props = {
 	activationToken: string;
 } & TrackingQueryParams;
 
-export const sendCompleteRegistration = ({
+export const sendCompleteRegistration = async ({
 	to,
 	subject = 'Complete your Guardian account',
 	activationToken,
@@ -22,15 +22,10 @@ export const sendCompleteRegistration = ({
 		ref,
 		refViewId,
 	});
+	const renderedEmail = await renderedCompleteRegistration;
 	return send({
-		html: renderedCompleteRegistration.html.replace(
-			'$activateLink',
-			activateUrl,
-		),
-		plainText: renderedCompleteRegistration.plain.replace(
-			'$activateLink',
-			activateUrl,
-		),
+		html: renderedEmail.html.replace('$activateLink', activateUrl),
+		plainText: renderedEmail.plain.replace('$activateLink', activateUrl),
 		subject,
 		to,
 	});

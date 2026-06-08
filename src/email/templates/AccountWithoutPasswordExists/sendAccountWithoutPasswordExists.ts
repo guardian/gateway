@@ -9,7 +9,7 @@ type Props = {
 	activationToken: string;
 } & TrackingQueryParams;
 
-export const sendAccountWithoutPasswordExistsEmail = ({
+export const sendAccountWithoutPasswordExistsEmail = async ({
 	to,
 	subject = 'Nearly there...',
 	activationToken,
@@ -22,13 +22,11 @@ export const sendAccountWithoutPasswordExistsEmail = ({
 		ref,
 		refViewId,
 	});
+	const renderedEmail = await renderedAccountWithoutPasswordExists;
 
 	return send({
-		html: renderedAccountWithoutPasswordExists.html.replace(
-			'$createPasswordLink',
-			setPasswordUrl,
-		),
-		plainText: renderedAccountWithoutPasswordExists.plain.replace(
+		html: renderedEmail.html.replace('$createPasswordLink', setPasswordUrl),
+		plainText: renderedEmail.plain.replace(
 			'$createPasswordLink',
 			setPasswordUrl,
 		),

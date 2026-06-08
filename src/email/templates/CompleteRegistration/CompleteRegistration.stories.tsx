@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { CompleteRegistration } from './CompleteRegistration';
-import { renderMJML } from '../../testUtils';
+import { RenderMJML } from '../../testUtils';
 
 export default {
 	title: 'Email/Templates/CompleteRegistration',
@@ -18,6 +18,10 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJML(<CompleteRegistration />);
+	return (
+		<RenderMJML>
+			<CompleteRegistration />
+		</RenderMJML>
+	);
 };
 Default.storyName = 'with defaults';
