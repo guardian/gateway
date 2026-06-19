@@ -6,6 +6,7 @@ import { IframedSignIn } from './IframedSignIn';
 interface Props {
 	isReauthenticate?: boolean;
 	hideSocialButtons?: boolean;
+	showNameForm?: boolean;
 }
 
 export const IframedSignInPage = ({
@@ -19,7 +20,7 @@ export const IframedSignInPage = ({
 		queryParams,
 		recaptchaConfig,
 	} = clientState;
-	const { email, formError } = pageData;
+	const { email, showNameForm, formError } = pageData;
 	const { error: pageError } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -48,6 +49,7 @@ export const IframedSignInPage = ({
 			isReauthenticate={isReauthenticate}
 			shortRequestId={clientState.shortRequestId}
 			hideSocialButtons={hideSocialButtons}
+			showNameForm={showNameForm}
 		/>
 	);
 };

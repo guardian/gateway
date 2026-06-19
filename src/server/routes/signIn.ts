@@ -118,6 +118,7 @@ const handleSigninRender = async (
 			pageData: {
 				email: overrideEmailAddress || email,
 				focusPasswordField: !!email,
+				showNameForm: true,
 			},
 			globalMessage: {
 				error: getErrorMessageFromQueryParams(error, error_description),
@@ -148,6 +149,8 @@ router.get(
 		const prepopulatedEmail = prepopulatedEmailParamEncoded
 			? decodeURIComponent(prepopulatedEmailParamEncoded)
 			: null;
+		const showNameFormParamEncoded =
+			params.has('showNameForm') && params.get('showNameForm') !== 'false';
 
 		const html = await handleSigninRender(req, res, prepopulatedEmail);
 		return res.type('html').send(html);

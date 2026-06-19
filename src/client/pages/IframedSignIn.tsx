@@ -23,6 +23,7 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
 import IframeThemedEmailInput from '../components/IframeThemedEmailInput';
 import { disableAutofillBackground } from '../styles/Shared';
+import NameInputField from '../components/NameInputField';
 
 export type IframedSignInProps = {
 	queryParams: QueryParams;
@@ -38,6 +39,7 @@ export type IframedSignInProps = {
 	usePasscodeSignIn?: boolean;
 	hideSocialButtons?: boolean;
 	focusPasswordField?: boolean;
+	showNameForm?: boolean;
 };
 
 const socialButtonDivider = css`
@@ -138,6 +140,7 @@ export const IframedSignIn = ({
 	isReauthenticate = false,
 	shortRequestId,
 	hideSocialButtons = false,
+	showNameForm,
 }: IframedSignInProps) => {
 	const formTrackingName = 'sign-in';
 
@@ -201,6 +204,8 @@ export const IframedSignIn = ({
 				) : (
 					<EmailInput label="Email address" defaultValue={email} />
 				)}
+
+				{showNameForm && <NameInputField></NameInputField>}
 
 				<input type="hidden" name="passcode" value="passcode" />
 			</MainForm>
