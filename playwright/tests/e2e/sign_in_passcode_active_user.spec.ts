@@ -134,6 +134,52 @@ test.describe('Sign In flow, with passcode', () => {
 			expect(updatedUser.profile.emailValidated).toBe(true);
 		});
 
+		test('should sign in with passcode - preserve lastName & firstName', async ({
+			request,
+			page,
+		}) => {
+			const { emailAddress } = await createTestUser(request, {
+				isUserEmailValidated: true,
+			});
+
+			await page.goto(`/signin?appClientId=${appClientId}`);
+			const element = await page.locator('input[name=email]').elementHandle();
+
+			// TODO: Use real form elements once implemented.
+			await element?.evaluate((element) => {
+				/* eslint-disable functional/immutable-data */
+				const firstNameInput = document.createElement('input');
+				firstNameInput.name = 'firstName';
+				firstNameInput.value = 'TestFirstName';
+				element.append(firstNameInput);
+				const secondNameInput = document.createElement('input');
+				secondNameInput.name = 'secondName';
+				secondNameInput.value = 'TestLastName';
+				element.append(secondNameInput);
+				/* eslint-enable functional/immutable-data */
+			});
+
+			await page.locator('input[name=email]').fill(emailAddress);
+
+			const timeRequestWasMade = new Date();
+			await page.locator('[data-cy="main-form-submit-button"]').click();
+
+			await expect(page).toHaveURL(/\/passcode/);
+			await expect(page.getByText('Enter your one-time code')).toBeVisible();
+
+			const { codes } = await checkForEmailAndGetDetails(
+				emailAddress,
+				timeRequestWasMade,
+			);
+
+			const code = codes?.[0].value;
+			await page.locator('input[name=code]').fill(code!);
+
+			const updatedUser = await getTestOktaUser(request, emailAddress);
+			expect(updatedUser.profile.firstName).toBe('TestFirstName');
+			expect(updatedUser.profile.lastName).toBe('TestLastName');
+		});
+
 		test('selects password option to sign in from initial sign in page', async ({
 			request,
 			page,

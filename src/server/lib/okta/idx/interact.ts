@@ -95,6 +95,8 @@ export const interact = async (
 				codeVerifier,
 				flow: extraData?.flow,
 				appLabel: extraData?.appLabel,
+				firstName: extraData?.firstName,
+				lastName: extraData?.lastName,
 			},
 		);
 		setAuthorizationStateCookie(authState, res);
