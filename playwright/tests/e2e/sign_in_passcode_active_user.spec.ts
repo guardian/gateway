@@ -134,7 +134,7 @@ test.describe('Sign In flow, with passcode', () => {
 			expect(updatedUser.profile.emailValidated).toBe(true);
 		});
 
-		test('should sign in with passcode - preserve lastName & firstName', async ({
+		test('should sign in with passcode - preserve firstName & lastName', async ({
 			request,
 			page,
 		}) => {
@@ -161,7 +161,7 @@ test.describe('Sign In flow, with passcode', () => {
 
 			await page.locator('input[name=email]').fill(emailAddress);
 
-			const timeRequestWasMade = new Date();
+			const passcodeRequestTime = new Date();
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 
 			await expect(page).toHaveURL(/\/passcode/);
@@ -169,7 +169,7 @@ test.describe('Sign In flow, with passcode', () => {
 
 			const { codes } = await checkForEmailAndGetDetails(
 				emailAddress,
-				timeRequestWasMade,
+				passcodeRequestTime,
 			);
 
 			const code = codes?.[0].value;
