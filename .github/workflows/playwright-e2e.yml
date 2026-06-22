@@ -75,7 +75,7 @@ jobs:
       RUNNING_IN_PLAYWRIGHT: true
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Setup OS, Nginx, and Certs
         run: |
           sudo apt-get update -y
