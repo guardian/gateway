@@ -87,6 +87,9 @@ export interface PageData {
 
 	// sign in with password specific
 	focusPasswordField?: boolean;
+
+	// iframe specific
+	showNameForm?: boolean;
 }
 
 export interface RecaptchaConfig {
