@@ -110,7 +110,7 @@
 		"@aws-sdk/credential-providers": "3.1075.0",
 		"@emotion/react": "11.14.0",
 		"@faire/mjml-react": "4.0.1",
-		"@guardian/ab-core": "9.0.0",
+		"@guardian/ab-core": "10.0.0",
 		"@guardian/libs": "32.0.0",
 		"@guardian/ophan-tracker-js": "2.0.3",
 		"@guardian/source": "12.2.1",
