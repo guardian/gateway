@@ -91,16 +91,14 @@ type UnconditionalMetrics =
 	| 'VerifyEmailPage::Accessed'
 	| `${RateLimitMetrics}GatewayRateLimitHit`
 	| `User-${'EmailValidated' | 'EmailNotValidated'}-${
-			| 'WeakPassword'
-			| 'StrongPassword'}`
+			'WeakPassword' | 'StrongPassword'}`
 	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`
 	| `ExistingUserInCreateAccountFlow`
 	| `UserFlow-${UserFlow}-${string}`;
 
 // Combine all the metrics above together into a type
 export type Metrics =
-	| `${ConditionalMetrics}::${'Success' | 'Failure'}`
-	| UnconditionalMetrics;
+	`${ConditionalMetrics}::${'Success' | 'Failure'}` | UnconditionalMetrics;
 
 // type safe helper method for email sending metrics
 export const emailSendMetric = (

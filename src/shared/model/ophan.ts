@@ -12,6 +12,4 @@ interface OphanBase {
 }
 
 export type OphanEvent =
-	| OphanBase
-	| OphanInteraction
-	| { componentEvent: OphanComponentEvent };
+	OphanBase | OphanInteraction | { componentEvent: OphanComponentEvent };

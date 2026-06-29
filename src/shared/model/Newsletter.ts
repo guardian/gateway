@@ -69,11 +69,7 @@ export type NewslettersWithImages =
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
 type RegistrationNewsletterFormIds =
-	| 'saturdayEdition'
-	| 'feast'
-	| 'jobs'
-	| 'auBundle'
-	| 'usBundle';
+	'saturdayEdition' | 'feast' | 'jobs' | 'auBundle' | 'usBundle';
 
 export interface RegistrationNewsletterFormFields {
 	id: Literal<typeof Newsletters>;

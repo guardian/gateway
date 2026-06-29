@@ -130,11 +130,7 @@ export interface BucketKeys {
  * Union type representing all buckets available for rate limiting.
  */
 export type BucketType =
-	| 'email'
-	| 'global'
-	| 'ip'
-	| 'accessToken'
-	| 'oktaIdentifier';
+	'email' | 'global' | 'ip' | 'accessToken' | 'oktaIdentifier';
 
 /**
  * Container for two promises holding the state of the pipelined read request sent to Redis.

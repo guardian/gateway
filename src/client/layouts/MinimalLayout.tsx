@@ -68,14 +68,16 @@ const iframeThemeWrapperStyles = css`
 
 const pageHeaderStyles = (amIIframed: boolean) => css`
 	color: var(--color-heading);
-	${amIIframed
-		? `
+	${
+		amIIframed
+			? `
             ${headlineMedium24};
             ${from.mobileLandscape} {
                 ${headlineMedium28};
             }
         `
-		: headlineBold28};
+			: headlineBold28
+	};
 	margin: 0;
 `;
 

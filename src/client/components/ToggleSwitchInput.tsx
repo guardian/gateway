@@ -42,9 +42,11 @@ const labelStyles = (hasFocus: boolean, hasImage: boolean) => css`
 	border: ${switchVariables.border}px solid
 		var(--color-toggle-inactive-background);
 	display: grid;
-	grid-template-columns: ${hasImage
-		? `${imageSize}px calc(100% - ${switchComputedWidth}px - ${imageSize}px) ${switchComputedWidth}px`
-		: `calc(100% - ${switchComputedWidth}px) ${switchComputedWidth}px`};
+	grid-template-columns: ${
+		hasImage
+			? `${imageSize}px calc(100% - ${switchComputedWidth}px - ${imageSize}px) ${switchComputedWidth}px`
+			: `calc(100% - ${switchComputedWidth}px) ${switchComputedWidth}px`
+	};
 	/*
 	 * FOCUS LOGIC
 	 * Modern browsers which support :has
@@ -53,10 +55,12 @@ const labelStyles = (hasFocus: boolean, hasImage: boolean) => css`
 		${focusHalo};
 	}
 	/* React-based fallback for browsers which don't support :has */
-	${hasFocus &&
-	`
+	${
+		hasFocus &&
+		`
 		${focusHalo};
-	`}
+	`
+	}
 `;
 
 const labelTextContainerStyles = (isFirstItem: boolean) => css`
