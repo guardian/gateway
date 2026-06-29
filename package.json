@@ -40,7 +40,7 @@
 		"@chromatic-com/storybook": "5.2.1",
 		"@eslint/js": "9.39.4",
 		"@guardian/eslint-config": "15.0.0",
-		"@guardian/prettier": "10.0.0",
+		"@guardian/prettier": "11.0.0",
 		"@playwright/test": "1.61.1",
 		"@storybook/addon-themes": "10.4.6",
 		"@storybook/preact": "10.4.6",
