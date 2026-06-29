@@ -88,7 +88,7 @@
 		"mailosaur": "11.1.1",
 		"nodemon": "3.1.14",
 		"prettier": "3.9.3",
-		"sharp": "0.34.5",
+		"sharp": "0.35.2",
 		"storybook": "10.4.6",
 		"swc-loader": "0.2.7",
 		"terser-webpack-plugin": "5.6.1",
