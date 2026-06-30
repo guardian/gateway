@@ -8,11 +8,13 @@ const containerStyles = (columns: 1 | 2) => css`
 	gap: ${SECTION_GAP};
 
 	grid-template-columns: 1fr;
-	${columns === 2 &&
-	`
+	${
+		columns === 2 &&
+		`
 	${from.tablet} {
 		grid-template-columns: repeat(2, 1fr);
-	}`};
+	}`
+	};
 `;
 
 interface Props extends PropsWithChildren {

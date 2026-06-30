@@ -182,9 +182,7 @@ export const MainForm = ({
 
 	const submitHandlerResponseIsErrorObject = (
 		submitHandler:
-			| SubmitHandlerErrorObject
-			| Promise<SubmitHandlerErrorObject>
-			| undefined,
+			SubmitHandlerErrorObject | Promise<SubmitHandlerErrorObject> | undefined,
 	): submitHandler is SubmitHandlerErrorObject => {
 		if (!submitHandler) {
 			return false;

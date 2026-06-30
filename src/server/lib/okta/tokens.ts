@@ -16,8 +16,7 @@ const { okta, baseUri, stage } = getConfiguration();
  * OAuth Token Name Type
  */
 type OAuthCookieNames =
-	| typeof OAuthAccessTokenCookieName
-	| typeof OAuthIdTokenCookieName;
+	typeof OAuthAccessTokenCookieName | typeof OAuthIdTokenCookieName;
 
 /**
  * Name of the OAuth Access Token cookie to set
