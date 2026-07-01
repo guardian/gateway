@@ -60,10 +60,10 @@ describe('addQueryParamsToPath', () => {
 			componentEventParams: 'componentEventParams',
 		};
 
-		const output = addQueryParamsToPath('/newsletters', input);
+		const output = addQueryParamsToPath('/consents', input);
 
 		expect(output).toEqual(
-			'/newsletters?clientId=jobs&componentEventParams=componentEventParams&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+			'/consents?clientId=jobs&componentEventParams=componentEventParams&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
 		);
 	});
 
@@ -87,10 +87,10 @@ describe('addQueryParamsToPath', () => {
 			encryptedEmail: 'an encrypted email',
 		};
 
-		const output = addQueryParamsToPath('/newsletters', input, inputOverride);
+		const output = addQueryParamsToPath('/consents', input, inputOverride);
 
 		expect(output).toEqual(
-			'/newsletters?clientId=jobs&componentEventParams=componentEventParams&csrfError=true&encryptedEmail=an+encrypted+email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+			'/consents?clientId=jobs&componentEventParams=componentEventParams&csrfError=true&encryptedEmail=an+encrypted+email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
 		);
 	});
 
@@ -108,10 +108,10 @@ describe('addQueryParamsToPath', () => {
 			componentEventParams: 'componentEventParams',
 		};
 
-		const output = addQueryParamsToPath('/newsletters', input);
+		const output = addQueryParamsToPath('/consents', input);
 
 		expect(output).toEqual(
-			'/newsletters?clientId=jobs&componentEventParams=componentEventParams&returnUrl=returnUrl',
+			'/consents?clientId=jobs&componentEventParams=componentEventParams&returnUrl=returnUrl',
 		);
 	});
 });
