@@ -10,7 +10,7 @@ Team - [P&E/Identity & Trust](https://chat.google.com/room/AAAAFdv9gK8)
 
 **_Having issues with authentication, or would like to report an issue?_**
 
-**_Contact our customer service team at [signinsupport@theguardian.com](mailto:signinsupport@theguardian.com)_**
+**_Contact our customer service team at [customer.help@theguardian.com](mailto:customer.help@theguardian.com)_**
 
 ## Architecture/Overview
 
