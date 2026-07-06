@@ -23,7 +23,7 @@
     "constructs": "10.6.0",
     "eslint": "9.39.4",
     "jest": "30.4.2",
-    "prettier": "3.9.3",
+    "prettier": "3.9.4",
     "source-map-support": "0.5.21",
     "ts-jest": "29.4.11",
     "ts-node": "10.9.2",
