@@ -55,6 +55,11 @@ export async function mockNextRequest(
 	response: MockResponse,
 ): Promise<void> {
 	await page.route('**/*', async (route: Route) => {
+		if (route.request().url().includes('ophan')) {
+			await route.continue();
+			return;
+		}
+
 		await route.fulfill({
 			status: response.status,
 			contentType: 'application/json',

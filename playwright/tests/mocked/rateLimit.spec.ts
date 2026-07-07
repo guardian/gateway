@@ -20,7 +20,19 @@ test.describe('POST requests return a user-facing error message when encounterin
 				body: v1Users429Response,
 			},
 		});
+
 		await page.goto('/signin?usePasswordSignIn=true');
+
+		page.on('request', (req) =>
+			// eslint-disable-next-line no-console
+			console.log('TEST LOGGING REQUEST: ', req.method(), req.url()),
+		);
+
+		page.on('response', (res) =>
+			// eslint-disable-next-line no-console
+			console.log('TEST LOGGING RESPONSE: ', res.status(), res.url()),
+		);
+
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 
