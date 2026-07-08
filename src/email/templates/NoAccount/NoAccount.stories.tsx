@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { NoAccount } from './NoAccount';
-import { renderMJML } from '../../testUtils';
+import { RenderMJML } from '../../testUtils';
 
 export default {
 	title: 'Email/Templates/NoAccount',
@@ -18,6 +18,10 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJML(<NoAccount />);
+	return (
+		<RenderMJML>
+			<NoAccount />
+		</RenderMJML>
+	);
 };
 Default.storyName = 'with defaults';

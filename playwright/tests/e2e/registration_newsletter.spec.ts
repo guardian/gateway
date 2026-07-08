@@ -10,7 +10,7 @@ const RegistrationNewsletterDescriptions = {
 	auBundle:
 		"Get an exclusive, curated view of the week's best Guardian journalism from editor-in-chief Katharine Viner, and the local view from Guardian Australia's editors.",
 	usBundle:
-		"Get an exclusive, curated view of the week's best Guardian journalism from editor-in-chief Katharine Viner and more on the latest news from the US.",
+		'Start your day with the most important news from the US and around the world. On Saturdays, you’ll get an exclusive email from Katharine Viner, the Guardian’s editor-in-chief, highlighting the best journalism from our global newsroom',
 };
 
 // Geolocation codes
@@ -144,8 +144,10 @@ test.describe('Saturday Edition Geolocation', () => {
 			await route.continue({ headers });
 		});
 		await page.goto(`/register/email`);
-		await expect(page.getByText('Saturday Edition')).not.toBeVisible();
-		await expect(page.getByText('Weekend newsletters')).toBeVisible();
+		await expect(
+			page.getByText('First Thing and Saturday Edition newsletters'),
+		).toBeVisible();
+		await expect(page.getByText('Weekend newsletters')).not.toBeVisible();
 		await expect(
 			page.getByText(RegistrationNewsletterDescriptions.usBundle),
 		).toBeVisible();
@@ -163,8 +165,10 @@ test.describe('Saturday Edition Geolocation', () => {
 		await page.locator('input[name=password]').fill(finalPassword);
 		await page.locator('[data-cy="main-form-submit-button"]').click();
 		await expect(page).toHaveURL(/\/welcome\/google/);
-		await expect(page.getByText('Saturday Edition')).not.toBeVisible();
-		await expect(page.getByText('Weekend newsletters')).toBeVisible();
+		await expect(
+			page.getByText('First Thing and Saturday Edition newsletters'),
+		).toBeVisible();
+		await expect(page.getByText('Weekend newsletters')).not.toBeVisible();
 		await expect(
 			page.getByText(RegistrationNewsletterDescriptions.usBundle),
 		).toBeVisible();

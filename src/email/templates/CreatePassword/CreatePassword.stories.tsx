@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { CreatePassword } from './CreatePassword';
-import { renderMJML } from '../../testUtils';
+import { RenderMJML } from '../../testUtils';
 
 export default {
 	title: 'Email/Templates/CreatePassword',
@@ -18,6 +18,10 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJML(<CreatePassword />);
+	return (
+		<RenderMJML>
+			<CreatePassword />
+		</RenderMJML>
+	);
 };
 Default.storyName = 'with defaults';

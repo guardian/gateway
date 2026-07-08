@@ -20,9 +20,9 @@ type EmailRenderResult = {
 	html: string;
 };
 
-const renderEmailTemplate = (
+const renderEmailTemplate = async (
 	template: EmailTemplateType,
-): EmailRenderResult | undefined => {
+): Promise<EmailRenderResult | undefined> => {
 	switch (template) {
 		case 'accidental-email':
 			return renderedAccidentalEmail;
@@ -42,12 +42,12 @@ const renderEmailTemplate = (
  * Returns 404 for invalid template names. */
 router.get(
 	'/email/:template',
-	(req: Request, res: ResponseWithRequestState) => {
+	async (req: Request, res: ResponseWithRequestState) => {
 		const template = req.params.template as EmailTemplateType;
 		const templateIsValid = emailTemplateTypes.includes(template);
 
 		return templateIsValid
-			? res.json(renderEmailTemplate(template))
+			? res.json(await renderEmailTemplate(template))
 			: res.sendStatus(404);
 	},
 );

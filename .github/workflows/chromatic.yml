@@ -16,7 +16,7 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'run_tests')  ||  github.ref == 'refs/heads/main'
     # Job steps
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # 👈 Required to retrieve git history
       - uses: pnpm/action-setup@v6
@@ -28,7 +28,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
-        uses: chromaui/action@v17
+        uses: chromaui/action@v17.7.2
         # Chromatic GitHub Action options
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

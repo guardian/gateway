@@ -142,11 +142,13 @@ const wrapperStyles = (hasFocus?: boolean) => css`
 		padding: 0;
 	}
 	/* React-based fallback for browsers which don't support :has */
-	${hasFocus &&
-	`
+	${
+		hasFocus &&
+		`
 		border: 2px solid var(--color-input-text);
 		padding: 0;
-	`}
+	`
+	}
 `;
 
 const labelStyles = css`

@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { Button } from './Button';
-import { renderMJMLComponent } from '../testUtils';
+import { RenderMJML } from '../testUtils';
 
 export default {
 	title: 'Email/Components/Button',
@@ -18,6 +18,10 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJMLComponent(<Button href="">Test Email Button</Button>);
+	return (
+		<RenderMJML wrap={true}>
+			<Button href="">Test Email Button</Button>
+		</RenderMJML>
+	);
 };
 Default.storyName = 'Default email button';

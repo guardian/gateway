@@ -40,6 +40,7 @@ export const Newsletters = {
 	FEAST: '6002',
 	WEEKEND_MAIL_AU: '6043',
 	WEEKEND_US: '6044',
+	FIRST_THING: '4300',
 	// Registration newsletter bundles (parsed to individual newsletters in the backend)
 	AU_BUNDLE: 'auBundle',
 	US_BUNDLE: 'usBundle',
@@ -68,11 +69,7 @@ export type NewslettersWithImages =
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
 type RegistrationNewsletterFormIds =
-	| 'saturdayEdition'
-	| 'feast'
-	| 'jobs'
-	| 'auBundle'
-	| 'usBundle';
+	'saturdayEdition' | 'feast' | 'jobs' | 'auBundle' | 'usBundle';
 
 export interface RegistrationNewsletterFormFields {
 	id: Literal<typeof Newsletters>;
@@ -110,9 +107,9 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 	},
 	usBundle: {
 		id: Newsletters.US_BUNDLE,
-		label: 'Weekend newsletters',
+		label: 'First Thing and Saturday Edition newsletters',
 		context:
-			"Get an exclusive, curated view of the week's best Guardian journalism from editor-in-chief Katharine Viner and more on the latest news from the US.",
+			'Start your day with the most important news from the US and around the world. On Saturdays, you’ll get an exclusive email from Katharine Viner, the Guardian’s editor-in-chief, highlighting the best journalism from our global newsroom.',
 	},
 };
 
@@ -121,7 +118,7 @@ export const newsletterBundleToIndividualNewsletters = (
 ): Literal<typeof Newsletters>[] => {
 	switch (bundleId) {
 		case Newsletters.US_BUNDLE:
-			return [Newsletters.SATURDAY_EDITION, Newsletters.WEEKEND_US];
+			return [Newsletters.SATURDAY_EDITION, Newsletters.FIRST_THING];
 		case Newsletters.AU_BUNDLE:
 			return [Newsletters.SATURDAY_EDITION, Newsletters.WEEKEND_MAIL_AU];
 		default:

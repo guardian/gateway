@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/preact';
 
 import { Header } from './Header';
-import { renderMJMLComponent } from '../testUtils';
+import { RenderMJML } from '../testUtils';
 
 export default {
 	title: 'Email/Components/Header',
@@ -18,6 +18,10 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return renderMJMLComponent(<Header />);
+	return (
+		<RenderMJML wrap={true}>
+			<Header />
+		</RenderMJML>
+	);
 };
 Default.storyName = 'Default header';
