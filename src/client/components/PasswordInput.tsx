@@ -109,9 +109,10 @@ const EyeSymbol = ({
 			type="button"
 			css={buttonStyles}
 			onClick={onClick}
-			title="show or hide password text"
 			data-cy="password-input-eye-button"
-			aria-label="Show password"
+			title={isOpen ? 'Hide password' : 'Show password'}
+			aria-label={isOpen ? 'Hide password' : 'Show password'}
+			aria-pressed={isOpen}
 			onFocus={() => setPasswordButtonIsFocused(true)}
 			onBlur={() => setPasswordButtonIsFocused(false)}
 		>
