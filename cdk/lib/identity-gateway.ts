@@ -390,7 +390,7 @@ systemctl start ${app}
 				}
 			}),
 			comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
-			threshold: 4,
+			threshold: 1,
 			evaluationPeriods: 4,
 			app,
 			actionsEnabled: stage === 'PROD'
@@ -428,7 +428,7 @@ systemctl start ${app}
 				}
 			}),
 			comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
-			threshold: 12,
+			threshold: 1,
 			evaluationPeriods: 12,
 			app,
 			actionsEnabled: stage === 'PROD'
