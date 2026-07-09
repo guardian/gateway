@@ -11,5 +11,5 @@ export const getPasscodeSendAgainTimer = (req: Request): number => {
 		}
 	}
 
-	return 30; // 30 seconds
+	return 60; // 60 seconds
 };
