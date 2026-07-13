@@ -46,7 +46,6 @@ const getErrorContext = (pageError?: string) => {
 
 export const NewAccountConsents = ({
 	email,
-	recaptchaSiteKey,
 	queryParams,
 	formError,
 	geolocation,
@@ -81,7 +80,6 @@ export const NewAccountConsents = ({
 					queryParams,
 				)}
 				submitButtonText="Next"
-				recaptchaSiteKey={recaptchaSiteKey}
 				formTrackingName={formTrackingName}
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
