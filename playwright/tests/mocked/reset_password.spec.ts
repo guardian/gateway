@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { loadPage } from '../../helpers/load-page';
 
 const CONTENT = {
 	ERRORS: {
@@ -16,7 +17,7 @@ const emailNotRegistered = 'notregistered@example.com';
 test.describe('Password reset flow', () => {
 	test.beforeEach(async ({ mockApi, page }) => {
 		await mockApi.get('/mock/purge');
-		await page.goto('/reset-password');
+		await loadPage(page, '/reset-password');
 	});
 
 	test.describe('A11y checks', () => {
@@ -102,7 +103,7 @@ test.describe('Password reset flow', () => {
 			 * navigate again to /reset-password as the beforeEach block at the top of
 			 * this file would navigate and happen before the recaptcha network request intercept
 			 */
-			await page.goto('/reset-password');
+			await loadPage(page, '/reset-password');
 
 			await page.locator('input[name="email"]').fill(emailNotRegistered);
 			await page.getByText('Request password reset').click();

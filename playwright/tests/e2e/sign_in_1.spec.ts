@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -12,6 +12,7 @@ import {
 	findEmailValidatedOktaGroupId,
 } from '../../helpers/api/okta';
 import { escapeRegExp } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 const returnUrl =
 	'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';

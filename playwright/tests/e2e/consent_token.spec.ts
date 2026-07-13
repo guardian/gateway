@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createTestUser, sendConsentEmail } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Consent token flow', () => {
 	test('shows the success page when supplied a valid token by a logged in user', async ({

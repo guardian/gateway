@@ -1,5 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createTestUser } from '../../helpers/api/idapi';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Sign out flow', () => {
 	const DotComCookies = [

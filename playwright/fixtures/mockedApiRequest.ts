@@ -4,10 +4,12 @@ import {
 	test as base,
 	request as playwrightRequest,
 	APIRequestContext,
+	Page,
 } from '@playwright/test';
 
 type CustomFixtures = {
 	mockApi: APIRequestContext;
+	page: Page;
 };
 
 export const test = base.extend<CustomFixtures>({

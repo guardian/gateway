@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createTestUser } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getCurrentOktaSession } from '../../helpers/api/okta';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Reauthenticate flow, Okta enabled, password default', () => {
 	test('keeps User A signed in when User A attempts to reauthenticate', async ({
