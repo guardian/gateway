@@ -426,6 +426,20 @@ const authenticationHandler = async (
 			}
 		}
 
+		// Update the users first and last name if they exist in the authState
+		if (authState.data?.firstName || authState.data?.lastName) {
+			try {
+				await updateUser(sub, {
+					profile: {
+						firstName: authState.data.firstName,
+						lastName: authState.data.lastName,
+					},
+				});
+			} catch (error) {
+				logger.error('OAuth authentication: failed to update user name', error);
+			}
+		}
+
 		// clear any existing oauth application cookies if they exist
 		checkAndDeleteOAuthTokenCookies(req, res);
 
