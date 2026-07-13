@@ -17,5 +17,5 @@ if (
 	typeof redisClient !== 'undefined' &&
 	rateLimiter.settings?.trackBucketCapacity === true
 ) {
-	startGlobalBucketCapacityLogger(redisClient, 5000);
+	startGlobalBucketCapacityLogger(redisClient, 60000);
 }
