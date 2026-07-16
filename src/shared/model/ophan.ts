@@ -1,5 +1,7 @@
-import { OphanABEvent, OphanComponentEvent } from '@guardian/libs';
-
+import {
+	ComponentEvent,
+	AbTestRegisterEntry,
+} from '@guardian/ophan-tracker-js';
 export interface OphanInteraction {
 	component: string;
 	value?: string;
@@ -8,8 +10,8 @@ export interface OphanInteraction {
 
 interface OphanBase {
 	experiences?: string;
-	abTestRegister?: Record<string, OphanABEvent>;
+	abTestRegister?: Record<string, AbTestRegisterEntry>;
 }
 
 export type OphanEvent =
-	OphanBase | OphanInteraction | { componentEvent: OphanComponentEvent };
+	OphanBase | OphanInteraction | { componentEvent: ComponentEvent };
