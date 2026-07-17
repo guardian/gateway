@@ -88,14 +88,15 @@ router.get(
 			const issuedTimeUnixSeconds = state.oauthState.accessToken.claims.iat;
 			const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
 
-			const secondsSinceSignin = currentTimeUnixSeconds - issuedTimeUnixSeconds
-			const recentSignIn = issuedTimeUnixSeconds
-				? secondsSinceSignin < 30 * 60
-				: false;
-			if (!recentSignIn) {
-				logger.warn('NOT RECENT SIGNING secondsSinceSignin seconds');
+			//the iat (issued at) claim is optional. If it's not there we assume the user has not signed in recently. I'm not sure if okta would issue a token without this
+			const secondsSinceSignin = issuedTimeUnixSeconds
+				? currentTimeUnixSeconds - issuedTimeUnixSeconds
+				: -1;
+
+			if (secondsSinceSignin < 0 || secondsSinceSignin > 60 * 30) {
+				logger.warn('NOT RECENT SIGNIN ' + secondsSinceSignin);
 			} else {
-				logger.warn('RECENT SIGNIN + secondsSinceSignin seconds');
+				logger.warn('RECENT SIGNIN ' + secondsSinceSignin);
 			}
 
 			// get the user's attributes from the members data api
