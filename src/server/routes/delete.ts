@@ -85,13 +85,15 @@ router.get(
 				});
 				return res.type('html').send(html);
 			}
-			const issuedTimeUnixSeconds = state.oauthState.accessToken.claims.iat;
+
 			const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
 
-			//the iat (issued at) claim is optional. If it's not there we assume the user has not signed in recently. I'm not sure if okta would issue a token without this
-			const secondsSinceSignin = issuedTimeUnixSeconds
-				? currentTimeUnixSeconds - issuedTimeUnixSeconds
-				: -1;
+			//the auth time claim is optional. If it's not there we assume the user has not signed in recently. I'm not sure if okta would issue a token without this
+			const secondsSinceSignin =
+				typeof state.oauthState.accessToken.claims['auth_time'] === 'number'
+					? currentTimeUnixSeconds -
+						state.oauthState.accessToken.claims['auth_time']
+					: -1;
 
 			if (secondsSinceSignin < 0 || secondsSinceSignin > 60 * 30) {
 				logger.warn('NOT RECENT SIGNIN ' + secondsSinceSignin);
