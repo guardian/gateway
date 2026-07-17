@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
 import { RadioGroup, Radio } from '@guardian/source/react-components';
 import { MainForm } from '@/client/components/MainForm';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { PasswordInput } from '@/client/components/PasswordInput';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -37,15 +35,10 @@ const radioGroupStyles = css`
 
 export const DeleteAccount = ({
 	queryParams,
-	fieldErrors = [],
 	formError,
 	error,
 	shortRequestId,
 }: Props) => {
-	const [passwordError] = useState<string | undefined>(
-		fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
-	);
-
 	return (
 		<MinimalLayout
 			shortRequestId={shortRequestId}
@@ -228,16 +221,6 @@ export const DeleteAccount = ({
 				<MainBodyText>
 					<strong>Confirm account deletion</strong>
 				</MainBodyText>
-				<MainBodyText>
-					Please re-enter password to confirm the you have understood the
-					conditions and would like to proceed with account deletion.
-				</MainBodyText>
-				{/* password input */}
-				<PasswordInput
-					error={passwordError}
-					label="Password"
-					autoComplete="current-password"
-				/>
 			</MainForm>
 			<DeleteAccountReturnLink />
 		</MinimalLayout>
