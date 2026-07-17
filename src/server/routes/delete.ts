@@ -9,7 +9,6 @@ import { ApiError } from '@/server/models/Error';
 import { logger } from '@/server/lib/serverSideLogger';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getUser } from '@/server/lib/okta/api/users';
-import { authenticate } from '@/server/lib/okta/api/authentication';
 import { OktaError } from '@/server/models/okta/Error';
 import {
 	performAuthorizationCodeFlow,
@@ -87,29 +86,19 @@ router.get(
 				return res.type('html').send(html);
 			}
 
-			// check if the user has a password set
-			if (
-				!user.credentials.password ||
-				/**
-				 * Playwright Test
-				 *
-				 * This code checks if we're running in Playwright to
-				 * mock the user's password
-				 */
-				(runningInPlaywright && playwrightMockStateCookie === 'noPassword')
-			) {
-				// if not, ask them to set a password
-				const html = renderer('/delete-set-password', {
-					pageTitle: 'Create Password',
-					requestState: mergeRequestState(state, {
-						queryParams: {
-							...state.queryParams,
-							// force the returnUrl to be the delete page after setting a password
-							returnUrl: joinUrl(profileUrl, req.path),
-						},
-					}),
-				});
-				return res.type('html').send(html);
+			const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
+
+			//the auth time claim is optional. If it's not there we assume the user has not signed in recently. I'm not sure if okta would issue a token without this
+			const secondsSinceSignin =
+				typeof state.oauthState.accessToken.claims['auth_time'] === 'number'
+					? currentTimeUnixSeconds -
+						state.oauthState.accessToken.claims['auth_time']
+					: -1;
+
+			if (secondsSinceSignin < 0 || secondsSinceSignin > 60 * 30) {
+				logger.warn('NOT RECENT SIGNIN ' + secondsSinceSignin);
+			} else {
+				logger.warn('RECENT SIGNIN ' + secondsSinceSignin);
 			}
 
 			// get the user's attributes from the members data api
@@ -251,31 +240,7 @@ router.post(
 			);
 		}
 
-		const { password = '' } = req.body;
-
 		try {
-			const { email } = state.oauthState.idToken.claims;
-
-			// attempt to authenticate with okta
-			// if authentication fails, it will fall through to the catch
-			const response = await authenticate(
-				{
-					username: email as string,
-					password,
-				},
-				req.ip,
-			);
-
-			// we only support the SUCCESS status for Okta authentication in gateway
-			// Other statuses could be supported in the future https://developer.okta.com/docs/reference/api/authn/#transaction-state
-			if (response.status !== 'SUCCESS') {
-				throw new ApiError({
-					message:
-						'User authenticating was blocked due to unsupported Okta Authentication status property',
-					status: 403,
-				});
-			}
-
 			// perform the authorization code flow to get an access token specifically for deleting the user
 			return performAuthorizationCodeFlow(req, res, {
 				redirectUri: ProfileOpenIdClientRedirectUris.DELETE,
@@ -294,7 +259,7 @@ router.post(
 							fieldErrors: [
 								{
 									field: 'password',
-									message: 'Password is incorrect',
+									message: 'Password is incorrect', //todo
 								},
 							],
 						},
