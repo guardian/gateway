@@ -85,6 +85,17 @@ router.get(
 				});
 				return res.type('html').send(html);
 			}
+			const issuedTimeUnixSeconds = state.oauthState.accessToken.claims.iat;
+			const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
+
+			const recentSignIn = issuedTimeUnixSeconds
+				? currentTimeUnixSeconds - issuedTimeUnixSeconds < 30 * 60
+				: false;
+			if (!recentSignIn) {
+				logger.warn('NOT RECENT SIGNIN');
+			} else {
+				logger.warn('RECENT SIGNIN');
+			}
 
 			// get the user's attributes from the members data api
 			const userAttributes = await getUserAttributes({
