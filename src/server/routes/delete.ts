@@ -88,13 +88,14 @@ router.get(
 			const issuedTimeUnixSeconds = state.oauthState.accessToken.claims.iat;
 			const currentTimeUnixSeconds = Math.floor(Date.now() / 1000);
 
+			const secondsSinceSignin = currentTimeUnixSeconds - issuedTimeUnixSeconds
 			const recentSignIn = issuedTimeUnixSeconds
-				? currentTimeUnixSeconds - issuedTimeUnixSeconds < 30 * 60
+				? secondsSinceSignin < 30 * 60
 				: false;
 			if (!recentSignIn) {
-				logger.warn('NOT RECENT SIGNIN');
+				logger.warn('NOT RECENT SIGNING secondsSinceSignin seconds');
 			} else {
-				logger.warn('RECENT SIGNIN');
+				logger.warn('RECENT SIGNIN + secondsSinceSignin seconds');
 			}
 
 			// get the user's attributes from the members data api
