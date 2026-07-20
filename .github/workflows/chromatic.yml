@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-depth: 0 # 👈 Required to retrieve git history
       - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6.4.0
+      - uses: actions/setup-node@v7.0.0
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
@@ -28,7 +28,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
-        uses: chromaui/action@v17.7.2
+        uses: chromaui/action@v18.0.1
         # Chromatic GitHub Action options
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
