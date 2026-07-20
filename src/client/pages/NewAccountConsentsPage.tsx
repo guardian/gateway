@@ -6,20 +6,17 @@ export const NewAccountConsentsPage = () => {
 	const clientState = useClientState();
 	const {
 		pageData = {},
-		recaptchaConfig,
 		queryParams,
 		shortRequestId,
 		globalMessage = {},
 	} = clientState;
 	const { email, formError, signInOrRegister } = pageData;
-	const { recaptchaSiteKey } = recaptchaConfig;
 	const { error: pageError } = globalMessage;
 
 	return (
 		<NewAccountConsents
 			formError={formError}
 			email={email}
-			recaptchaSiteKey={recaptchaSiteKey}
 			queryParams={queryParams}
 			geolocation={pageData.geolocation}
 			appName={pageData.appName}

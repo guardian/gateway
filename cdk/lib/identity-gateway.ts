@@ -365,6 +365,7 @@ systemctl start ${app}
 			alarmDescription: 'No one has successfully signed ins in the last 20 minutes.',
 			metric: new MathExpression({
 				expression: 'oktaSignInCount + oktaIdxSignInCount',
+				period: Duration.minutes(5),
 				usingMetrics: {
 					'oktaSignInCount': new Metric({
 						namespace: 'Gateway',
@@ -373,7 +374,6 @@ systemctl start ${app}
 							Stage: stage,
 							ApiMode: app
 						},
-						period: Duration.minutes(20),
 						statistic: 'Sum',
 						unit: Unit.COUNT
 					}),
@@ -384,7 +384,6 @@ systemctl start ${app}
 							Stage: stage,
 							ApiMode: app
 						},
-						period: Duration.minutes(20),
 						statistic: 'Sum',
 						unit: Unit.COUNT
 					})
@@ -392,7 +391,7 @@ systemctl start ${app}
 			}),
 			comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
 			threshold: 1,
-			evaluationPeriods: 1,
+			evaluationPeriods: 4,
 			app,
 			actionsEnabled: stage === 'PROD'
 		});
@@ -404,6 +403,7 @@ systemctl start ${app}
 			alarmDescription: 'No one has successfully registered in the last hour.',
 			metric: new MathExpression({
 				expression: 'oktaIdxRegistrationCount + oktaRegistrationCount',
+				period: Duration.minutes(5),
 				usingMetrics: {
 					'oktaRegistrationCount': new Metric({
 						namespace: 'Gateway',
@@ -412,7 +412,6 @@ systemctl start ${app}
 							Stage: stage,
 							ApiMode: app
 						},
-						period: Duration.hours(1),
 						statistic: 'Sum',
 						unit: Unit.COUNT
 					}),
@@ -423,7 +422,6 @@ systemctl start ${app}
 							Stage: stage,
 							ApiMode: app
 						},
-						period: Duration.hours(1),
 						statistic: 'Sum',
 						unit: Unit.COUNT
 					})
@@ -431,7 +429,7 @@ systemctl start ${app}
 			}),
 			comparisonOperator: ComparisonOperator.LESS_THAN_THRESHOLD,
 			threshold: 1,
-			evaluationPeriods: 1,
+			evaluationPeriods: 12,
 			app,
 			actionsEnabled: stage === 'PROD'
 		});

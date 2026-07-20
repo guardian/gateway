@@ -1550,7 +1550,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "AlarmDescription": "No one has successfully registered in the last hour.",
         "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new registrations in the last hour - CDK",
         "ComparisonOperator": "LessThanThreshold",
-        "EvaluationPeriods": 1,
+        "EvaluationPeriods": 12,
         "InsufficientDataActions": [
           {
             "Ref": "IdentityGatewayAlarmTopicEEA18544",
@@ -1876,7 +1876,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "AlarmDescription": "No one has successfully signed ins in the last 20 minutes.",
         "AlarmName": "CRITICAL Respond Immediately - identity-gateway TEST has had no new sign-ins in the last 20 minutes - CDK",
         "ComparisonOperator": "LessThanThreshold",
-        "EvaluationPeriods": 1,
+        "EvaluationPeriods": 4,
         "InsufficientDataActions": [
           {
             "Ref": "IdentityGatewayAlarmTopicEEA18544",
