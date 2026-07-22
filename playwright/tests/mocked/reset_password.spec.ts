@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
+import { setMockClientRecaptchaShouldFail } from '../../helpers/network/recaptcha';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
 
 const CONTENT = {
@@ -95,14 +96,12 @@ test.describe('Password reset flow', () => {
 		test('shows recaptcha error message when reCAPTCHA token request fails', async ({
 			page,
 		}) => {
-			await page.route(/.*google\.com\/recaptcha\/.*/, async (route) => {
-				await route.abort('failed');
-			});
 			/*
 			 * navigate again to /reset-password as the beforeEach block at the top of
 			 * this file would navigate and happen before the recaptcha network request intercept
 			 */
 			await page.goto('/reset-password');
+			await setMockClientRecaptchaShouldFail(page, true);
 
 			await page.locator('input[name="email"]').fill(emailNotRegistered);
 			await page.getByText('Request password reset').click();

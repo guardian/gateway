@@ -6,6 +6,7 @@ import {
 	APIRequestContext,
 	BrowserContext,
 } from '@playwright/test';
+import { mockClientRecaptcha } from '../helpers/network/recaptcha';
 
 type CustomFixtures = {
 	mockApi: APIRequestContext;
@@ -28,5 +29,9 @@ export const test = base.extend<CustomFixtures>({
 			}),
 		);
 		await use(context);
+	},
+	page: async ({ page }, use) => {
+		await mockClientRecaptcha(page);
+		await use(page);
 	},
 });
