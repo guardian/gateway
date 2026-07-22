@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/e2e';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -11,6 +11,7 @@ import {
 	addOktaUserToGroup,
 	findEmailValidatedOktaGroupId,
 } from '../../helpers/api/okta';
+import { setMockClientRecaptchaShouldFail } from '../../helpers/network/recaptcha';
 import { escapeRegExp } from '../../helpers/utils';
 
 const returnUrl =
@@ -583,17 +584,7 @@ test.describe('Sign in flow, Okta enabled - split 1', () => {
 			});
 			await page.goto('/signin?usePasswordSignIn=true');
 
-			// Intercept reCAPTCHA POST requests once to simulate failure
-			// eslint-disable-next-line functional/no-let -- easiest way to control single recaptcha interception
-			let recaptchaIntercepted = false;
-			await page.route('**/www.google.com/recaptcha/api2/**', async (route) => {
-				if (!recaptchaIntercepted && route.request().method() === 'POST') {
-					recaptchaIntercepted = true;
-					await route.fulfill({ status: 500 });
-				} else {
-					await route.continue();
-				}
-			});
+			await setMockClientRecaptchaShouldFail(page, true);
 
 			await page.locator('input[name=email]').fill(emailAddress);
 			await page.locator('input[name=password]').fill(finalPassword);
@@ -606,6 +597,7 @@ test.describe('Sign in flow, Okta enabled - split 1', () => {
 				page.getByText('If the problem persists please try the following:'),
 			).toBeVisible();
 
+			await setMockClientRecaptchaShouldFail(page, false);
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 
 			await expect(

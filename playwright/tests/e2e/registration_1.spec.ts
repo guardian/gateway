@@ -1,11 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/e2e';
 import { Status } from '../../../src/server/models/okta/User';
 import { randomMailosaurEmail, randomPassword } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getTestOktaUser } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
-import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 
 test.describe('Registration flow - Split 1/4', () => {
 	test.describe('Registering with Okta', () => {
@@ -63,7 +62,7 @@ test.describe('Registration flow - Split 1/4', () => {
 			 */
 			expect(oktaUser.profile.registrationPlatform).toBe('profile');
 
-			await expect(page).toHaveURL(/\/welcome\/review/, { timeout: 10000 });
+			await expect(page).toHaveURL(/\/welcome\/review/);
 		});
 
 		test('successfully registers using an email with no existing account using a passcode - using the combined signin/register flow', async ({
@@ -139,9 +138,6 @@ test.describe('Registration flow - Split 1/4', () => {
 					await route.fulfill({ status: 200 });
 				},
 			);
-			// block recaptcha client script to prevent google from robot checking playwright
-			await mockClientRecaptcha(page);
-
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();

@@ -4,10 +4,13 @@ import {
 	test as base,
 	request as playwrightRequest,
 	APIRequestContext,
+	BrowserContext,
 } from '@playwright/test';
+import { mockClientRecaptcha } from '../helpers/network/recaptcha';
 
 type CustomFixtures = {
 	mockApi: APIRequestContext;
+	context: BrowserContext;
 };
 
 export const test = base.extend<CustomFixtures>({
@@ -17,5 +20,18 @@ export const test = base.extend<CustomFixtures>({
 		});
 		await use(mockApiContext);
 		await mockApiContext.dispose();
+	},
+	context: async ({ context }, use) => {
+		await context.route('**://ophan.theguardian.com/**', (route) =>
+			route.fulfill({
+				status: 204,
+				body: '',
+			}),
+		);
+		await use(context);
+	},
+	page: async ({ page }, use) => {
+		await mockClientRecaptcha(page);
+		await use(page);
 	},
 });

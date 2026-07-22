@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { setMockClientRecaptchaShouldFail } from '../../helpers/network/recaptcha';
 
 test.describe('Registration flow', () => {
 	test.beforeEach(async ({ mockApi }) => {
@@ -39,13 +40,10 @@ test.describe('Registration flow', () => {
 		test('shows recaptcha error message when reCAPTCHA token request fails', async ({
 			page,
 		}) => {
-			await page.route(/.*google\.com\/recaptcha\/.*/, async (route) => {
-				await route.abort('failed');
-			});
-
 			await page.goto(
 				'/register/email?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout',
 			);
+			await setMockClientRecaptchaShouldFail(page, true);
 			await page.locator('input[name="email"]').fill('placeholder@example.com');
 			await page.locator('[data-cy=main-form-submit-button]').click();
 			await expect(

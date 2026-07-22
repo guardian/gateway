@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { setMockClientRecaptchaShouldFail } from '../../helpers/network/recaptcha';
 
 test.describe('Sign in flow', () => {
 	test.beforeEach(async ({ mockApi }) => {
@@ -58,12 +59,10 @@ test.describe('Sign in flow', () => {
 					await route.fulfill({ status: 200 });
 				},
 			);
-			await page.route(/.*google.com\/recaptcha\/.*/, async (route) => {
-				await route.abort('failed');
-			});
 			await page.goto(
 				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&usePasswordSignIn=true',
 			);
+			await setMockClientRecaptchaShouldFail(page, true);
 			await page.locator('input[name="email"]').fill('placeholder@example.com');
 			await page
 				.locator('input[name="password"]')
