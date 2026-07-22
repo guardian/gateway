@@ -100,7 +100,6 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: build
-          github-token: ${{ github.token }}
       - name: Unzip build
         run: unzip -q build.zip
       - uses: pnpm/action-setup@v6
