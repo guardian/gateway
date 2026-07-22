@@ -1,21 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/e2e';
 import { createTestUser } from '../../helpers/api/idapi';
 import {
 	getTestOktaUser,
 	updateOktaTestUserProfile,
 	closeCurrentOktaSession,
 } from '../../helpers/api/okta';
-import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 
 const returnUrl =
 	'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 
 test.describe('Sign in flow, Okta enabled - split 2', () => {
-	test.beforeEach(async ({ page }) => {
-		await mockClientRecaptcha(page);
-	});
-
 	test.describe('Social sign in', () => {
 		test('redirects correctly for social sign in', async ({ page }) => {
 			await page.goto(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);

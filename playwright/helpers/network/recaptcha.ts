@@ -3,6 +3,9 @@ import { Page } from '@playwright/test';
 
 interface WindowWIthGrecaptcha {
 	grecaptcha?: unknown;
+	_recaptchaCallback?: (token: string) => void;
+	_recaptchaErrorCallback?: () => void;
+	_mockRecaptchaShouldFail?: boolean;
 }
 
 export const mockClientRecaptcha = async (page: Page) => {
@@ -13,13 +16,14 @@ export const mockClientRecaptcha = async (page: Page) => {
 			ready: (callback: () => void) => callback(),
 			render: (
 				element: string | HTMLElement,
-				options: { callback?: (token: string) => void },
+				options: {
+					callback?: (token: string) => void;
+					'error-callback'?: () => void;
+				},
 			) => {
-				(
-					window as typeof window & {
-						_recaptchaCallback?: (token: string) => void;
-					}
-				)._recaptchaCallback = options.callback;
+				const mockWindow = window as WindowWIthGrecaptcha;
+				mockWindow._recaptchaCallback = options.callback;
+				mockWindow._recaptchaErrorCallback = options['error-callback'];
 
 				// Create the hidden input that Google reCAPTCHA normally creates
 				// This input is submitted with the form as 'g-recaptcha-response'
@@ -39,6 +43,12 @@ export const mockClientRecaptcha = async (page: Page) => {
 			},
 			reset: () => {},
 			execute: () => {
+				const mockWindow = window as WindowWIthGrecaptcha;
+				if (mockWindow._mockRecaptchaShouldFail) {
+					mockWindow._recaptchaErrorCallback?.();
+					return;
+				}
+
 				// Set the token value in the hidden input
 				const input = document.getElementById(
 					'g-recaptcha-response',
@@ -47,11 +57,7 @@ export const mockClientRecaptcha = async (page: Page) => {
 					input.value = FAKE_TOKEN;
 				}
 
-				const callback = (
-					window as typeof window & {
-						_recaptchaCallback?: (token: string) => void;
-					}
-				)._recaptchaCallback;
+				const callback = mockWindow._recaptchaCallback;
 				if (callback) {
 					callback(FAKE_TOKEN);
 				}
@@ -81,4 +87,13 @@ export const mockClientRecaptcha = async (page: Page) => {
 			});
 		},
 	);
+};
+
+export const setMockClientRecaptchaShouldFail = async (
+	page: Page,
+	shouldFail: boolean,
+) => {
+	await page.evaluate((value) => {
+		(window as WindowWIthGrecaptcha)._mockRecaptchaShouldFail = value;
+	}, shouldFail);
 };

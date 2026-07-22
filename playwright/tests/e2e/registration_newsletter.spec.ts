@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/e2e';
 import { createTestUser } from '../../helpers/api/idapi';
 import { oktaGetApps } from '../../helpers/api/okta-apps';
 

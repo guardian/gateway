@@ -1,4 +1,4 @@
-import { test, expect, Request } from '@playwright/test';
+import { test, expect, Request } from '../../fixtures/e2e';
 import {
 	randomMailosaurEmail,
 	randomPassword,
