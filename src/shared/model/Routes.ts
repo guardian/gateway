@@ -129,7 +129,7 @@ export type ApiRoutePaths =
 	| '/consents'
 	| '/consent-email/:token'
 	| '/consent-email/resend/:token'
-	| '/newsletters'
+	| '/newsletters-v2'
 	| '/signin-token/token/:token'
 	| '/unauth'
 	| '/user/change-email'

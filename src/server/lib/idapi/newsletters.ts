@@ -15,10 +15,10 @@ interface NewsletterAPIResponse {
 	id: string;
 	theme: string;
 	name: string;
-	description: string;
+	signUpDescription?: string | null;
+	signUpEmbedDescription?: string | null;
 	frequency: string;
-	subscribed: boolean;
-	exactTargetListId: number;
+	listId: number;
 }
 
 const handleError = () => {
@@ -26,10 +26,17 @@ const handleError = () => {
 };
 
 const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
-	const { name, description, frequency, exactTargetListId, id } = newsletter;
+	const {
+		name,
+		signUpDescription,
+		signUpEmbedDescription,
+		frequency,
+		listId,
+		id,
+	} = newsletter;
 	return {
-		id: exactTargetListId.toString(),
-		description,
+		id: listId.toString(),
+		description: signUpDescription ?? signUpEmbedDescription ?? '',
 		name,
 		frequency,
 		nameId: id,
@@ -41,12 +48,12 @@ export const read = async (): Promise<NewsLetter[]> => {
 	try {
 		return (
 			(await idapiFetch({
-				path: '/newsletters',
+				path: '/newsletters-v2',
 				options,
 			})) as NewsletterAPIResponse[]
 		).map(responseToEntity);
 	} catch (error) {
-		logger.error(`IDAPI Error newsletters read '/newsletters'`, error);
+		logger.error(`IDAPI Error newsletters read '/newsletters-v2'`, error);
 		return handleError();
 	}
 };
