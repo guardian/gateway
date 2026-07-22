@@ -139,6 +139,7 @@ export const IframedSignIn = ({
 	shortRequestId,
 	hideSocialButtons = false,
 }: IframedSignInProps) => {
+	const isMultipleAccountFlow = queryParams.appClientId === 'maj';
 	const formTrackingName = 'sign-in';
 
 	// The page level error is equivalent to this enum if social signin has been blocked.
@@ -151,8 +152,12 @@ export const IframedSignIn = ({
 		<MinimalLayout
 			errorContext={getErrorContext(pageError, queryParams)}
 			errorOverride={pageError}
-			pageHeader="Sign in to your account"
-			leadText="This unlocks your premium experience, online and in the app."
+			pageHeader={isMultipleAccountFlow ? undefined : 'Sign in to your account'}
+			leadText={
+				isMultipleAccountFlow
+					? undefined
+					: 'This unlocks your premium experience, online and in the app.'
+			}
 			shortRequestId={shortRequestId}
 			overrideTheme="iframe-light"
 		>

@@ -159,3 +159,17 @@ export const NoSocialButtonsEmail = (args: IframedSignInProps) => (
 NoSocialButtonsEmail.story = {
 	name: 'no social buttons with email',
 };
+
+export const MultipleAccountJourney = (args: IframedSignInProps) => (
+	<IframedSignIn
+		{...args}
+		hideSocialButtons={true}
+		queryParams={{
+			returnUrl: 'https://www.theguardian.com/uk',
+			appClientId: 'maj',
+		}}
+	/>
+);
+MultipleAccountJourney.story = {
+	name: 'multiple account journey',
+};
