@@ -20,7 +20,8 @@ import {
 	SignInErrors,
 } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { IdTokenClaims, TokenSet } from 'openid-client';
+import type { IDToken } from 'openid-client';
+import type { OidcTokenSet } from '@/server/lib/okta/openid-connect';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
 import {
@@ -52,16 +53,20 @@ interface OAuthError {
 	error_description: string;
 }
 
-interface CustomClaims extends IdTokenClaims {
+interface CustomClaims extends IDToken {
 	user_groups?: string[];
 	email_validated?: boolean;
 	legacy_identity_id?: string;
+	// IDToken (v6) does not explicitly declare `email`; it falls through to the
+	// index signature as JsonValue | undefined.  Declare it here so that
+	// destructuring gives the expected string type.
+	email?: string;
 }
 
 /**
  * Type guard to check that a given error is an OAuth error.
  * By checking for the `error` and `error_description` properties
- * @param {unknown} obj
+ * @param {unknown} maybeOAuthError
  * @return {boolean}
  */
 const isOAuthError = (
@@ -97,7 +102,7 @@ const redirectForGenericError = (_: Request, res: ResponseWithRequestState) => {
 const authenticationHandler = async (
 	req: Request,
 	res: ResponseWithRequestState,
-	tokenSet: TokenSet,
+	tokenSet: OidcTokenSet,
 	authState: AuthorizationState,
 	openIdClient: OpenIdClient,
 ): Promise<void> => {
@@ -160,7 +165,7 @@ const authenticationHandler = async (
 		// Okta profile before carrying on. This is surfaced via the legacy_identity_id
 		// claim in the access token.
 		const refreshToken = tokenSet.refresh_token;
-		const { legacy_identity_id }: CustomClaims = tokenSet.claims();
+		const { legacy_identity_id } = tokenSet.claims() as CustomClaims;
 
 		if (!refreshToken && !legacy_identity_id) {
 			// We can't do this step without the refresh token, so if it's missing, just continue
@@ -608,7 +613,7 @@ const authenticationHandler = async (
 const applicationHandler = (
 	req: Request,
 	res: ResponseWithRequestState,
-	tokenSet: TokenSet,
+	tokenSet: OidcTokenSet,
 	authState: AuthorizationState,
 ) => {
 	try {
@@ -652,7 +657,7 @@ const applicationHandler = (
 const deleteHandler = async (
 	req: Request,
 	res: ResponseWithRequestState,
-	tokenSet: TokenSet,
+	tokenSet: OidcTokenSet,
 	authState: AuthorizationState,
 ) => {
 	try {
@@ -665,7 +670,7 @@ const deleteHandler = async (
 			return redirectForGenericError(req, res);
 		}
 
-		const claims = tokenSet.claims();
+		const claims = tokenSet.claims() as CustomClaims;
 
 		const response = await fetch(deleteAccountStepFunction.url, {
 			method: 'POST',

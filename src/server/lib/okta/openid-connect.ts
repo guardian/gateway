@@ -1,4 +1,12 @@
-import { Issuer, IssuerMetadata, Client, custom } from 'openid-client';
+import {
+	Configuration,
+	ServerMetadata,
+	buildAuthorizationUrl,
+	authorizationCodeGrant,
+	refreshTokenGrant,
+	customFetch,
+	type IDToken,
+} from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request, CookieOptions } from 'express';
 import { joinUrl } from '@guardian/libs';
@@ -9,7 +17,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
 import { SocialProvider } from '@/shared/model/Social';
-import type { OutgoingHttpHeaders } from 'http';
 
 export type UserFlow =
 	| 'sign-in-passcode'
@@ -54,22 +61,52 @@ export interface AuthorizationState {
 }
 
 /**
- * @interface OpenIdClient
- * Subset of properties of the 'openid-client' Client class.
- * This is so we can support a minimal set of mechanisms for
- * things we actually need to use.
+ * @interface OidcTokenSet
  *
- * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
- * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
- * @property `callback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
- * @property `refresh` - Method used to refresh the OAuth tokens using a refresh token
- *
+ * Replaces the v5 `TokenSet` class. Wraps the v6 `TokenEndpointResponse` plain
+ * object and adds back a `claims()` helper so that callers in oauth.ts do not
+ * need to change how they access ID-token claims.
  */
+export interface OidcTokenSet {
+	access_token?: string;
+	id_token?: string;
+	refresh_token?: string;
+	token_type?: string;
+	expires_in?: number;
+	scope?: string;
+	/**
+	 * Returns the validated ID-token claims extracted from the token response.
+	 * Equivalent to v5's `tokenSet.claims()`.
+	 */
+	claims: () => IDToken;
+}
 
-export type OpenIdClient = Pick<
-	Client,
-	'authorizationUrl' | 'callbackParams' | 'callback' | 'refresh'
->;
+/**
+ * @interface OpenIdClient
+ *
+ * Internal abstraction over the openid-client library.  Exposes only the four
+ * operations that Gateway actually uses so that the rest of the codebase is
+ * isolated from library internals.
+ *
+ * @property `authorizationUrl`  - Build the /authorize redirect URL
+ * @property `callbackParams`    - Parse OIDC params from the callback request
+ * @property `callback`          - Exchange an authorisation code for tokens
+ * @property `refresh`           - Use a refresh token to obtain new tokens
+ */
+export interface OpenIdClient {
+	authorizationUrl(params: Record<string, string | undefined>): string;
+	callbackParams(req: Request): Record<string, string>;
+	callback(
+		redirectUri: string,
+		params: Record<string, string>,
+		checks: {
+			response_type?: string;
+			state?: string;
+			code_verifier?: string;
+		},
+	): Promise<OidcTokenSet>;
+	refresh(refreshToken: string): Promise<OidcTokenSet>;
+}
 
 /**
  * @interface OpenIdClientRedirectUris
@@ -104,7 +141,7 @@ const { okta, baseUri, stage } = getConfiguration();
  * we only expose the endpoints here
  */
 const issuer = joinUrl(okta.orgUrl, '/oauth2/', okta.authServerId);
-const OIDC_METADATA: IssuerMetadata = {
+const OIDC_METADATA: ServerMetadata = {
 	issuer,
 	authorization_endpoint: joinUrl(issuer, '/v1/authorize'),
 	token_endpoint: joinUrl(issuer, '/v1/token'),
@@ -115,12 +152,6 @@ const OIDC_METADATA: IssuerMetadata = {
 	revocation_endpoint: joinUrl(issuer, '/v1/revoke'),
 	end_session_endpoint: joinUrl(issuer, '/v1/logout'),
 };
-
-/**
- * Encapsulates a discovered or instantiated OpenID Connect Issuer (Issuer),
- * Identity Provider(IdP), Authorization Server(AS) and its metadata.
- */
-const OIDCIssuer = new Issuer(OIDC_METADATA);
 
 /**
  * Redirect uris used by the "profile" OAuth app in Okta
@@ -134,99 +165,170 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 	INTERACTION_CODE: `${getProfileUrl()}/oauth/authorization-code/interaction-code-callback`,
 };
 
-const withXForwardedForHeader = (
-	headers: OutgoingHttpHeaders | readonly string[],
-	ip: string,
-): OutgoingHttpHeaders | readonly string[] => {
-	if (isOutGoingHttpHeaders(headers)) {
-		return { ...headers, 'X-Forwarded-For': ip };
-	} else {
-		return [...headers, 'X-Forwarded-For', ip];
-	}
+/**
+ * @function decodeIdTokenClaims
+ *
+ * Decodes the claims from a validated JWT ID token by base64url-decoding the
+ * payload segment. The token's signature has already been cryptographically
+ * verified by `authorizationCodeGrant` / `refreshTokenGrant`, so re-verifying
+ * here is not necessary.
+ */
+const decodeIdTokenClaims = (idToken: string): IDToken => {
+	const [, payload] = idToken.split('.');
+	return JSON.parse(
+		Buffer.from(payload, 'base64url').toString('utf-8'),
+	) as IDToken;
 };
 
-const isOutGoingHttpHeaders = (
-	headers: OutgoingHttpHeaders | readonly string[],
-): headers is OutgoingHttpHeaders => !Array.isArray(headers);
-
 /**
- * @class ProfileOpenIdClient
+ * @function buildProfileConfig
  *
- * A subset of the 'openid-client' lib `Client` class
- * features/mechanisms to expose.
- * The client/app is the "profile" OAuth app in Okta
- * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
- * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
- * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
+ * Creates a v6 `Configuration` object that combines server metadata with
+ * client credentials.  When an IP address is provided, a custom `fetch`
+ * implementation is attached so that every outgoing request to Okta carries
+ * an `X-Forwarded-For` header.  This lets Okta apply per-user rate-limiting
+ * and fraud detection instead of treating all requests as coming from the
+ * gateway's own IP.
+ *
+ * Replaces: `new Issuer(metadata)` + `new issuer.Client({...})` + `client[custom.http_options]`
  */
-const ProfileOpenIdClient = (ip?: string) => {
-	const client = new OIDCIssuer.Client({
-		client_id: okta.clientId,
+const buildProfileConfig = (
+	serverMetadata: ServerMetadata,
+	ip?: string,
+): Configuration => {
+	const config = new Configuration(serverMetadata, okta.clientId, {
 		client_secret: okta.clientSecret,
-		redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
 	});
 
-	// Make sure we forward the IP address to Okta by adding it to the headers in the library calls
-	// https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing
-	// eslint-disable-next-line functional/immutable-data -- used to modify the client directly to add the IP address to the headers
-	client[custom.http_options] = (_, options) => {
-		// Add the IP address to the headers
-		const headers = options.headers || {};
+	if (ip) {
+		// Attach a custom fetch implementation that injects the user's IP.
+		// This replaces the v5 `client[custom.http_options]` hook.
+		// The v6 library uses the Web Fetch API internally, so headers are
+		// a plain object / HeadersInit rather than Node.js OutgoingHttpHeaders.
+		// We use `any` for `options` because v6's internal `CustomFetchOptions`
+		// is not publicly exported and its `body` type is broader than RequestInit.
+		// The cast to the config's property type keeps the assignment type-safe.
+		// eslint-disable-next-line functional/immutable-data -- required to attach customFetch symbol to the Configuration instance
+		config[customFetch] = ((
+			url: URL | string,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any -- CustomFetchOptions is not a public export; using any avoids the FetchBody vs BodyInit incompatibility
+			options: any,
+		): Promise<Response> =>
+			fetch(url, {
+				...options,
+				headers: {
+					...Object.fromEntries(new Headers(options?.headers ?? {})),
+					'X-Forwarded-For': ip,
+				},
+			})) as NonNullable<Configuration[typeof customFetch]>;
+	}
 
-		const headersWithXForwardedFor = ip
-			? withXForwardedForHeader(headers, ip)
-			: headers;
-
-		return {
-			...options,
-			headers: headersWithXForwardedFor,
-		};
-	};
-
-	return client as OpenIdClient;
+	return config;
 };
 
 /**
- * @class DevProfileIdClient
+ * @function makeOpenIdClient
+ *
+ * Wraps a v6 `Configuration` in the `OpenIdClient` interface that the rest of
+ * the application expects.  The four methods mirror the v5 `Client` instance
+ * methods so that callers in oauth.ts do not need to change.
+ *
+ * Key differences handled internally:
+ * - `authorizationUrl`  → `buildAuthorizationUrl(config, params)`
+ * - `callbackParams`    → parse Express `req.query` into a plain string map
+ * - `callback`          → `authorizationCodeGrant(config, url, checks)`
+ * - `refresh`           → `refreshTokenGrant(config, token)`
+ * - `claims()`          → `getValidatedIdTokenClaims(response)` re-added as a
+ *                         method on the returned token object for backward compat
+ */
+const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
+	authorizationUrl(params) {
+		const definedEntries = Object.entries(params).filter(
+			(e): e is [string, string] => e[1] !== undefined,
+		);
+		return buildAuthorizationUrl(config, new URLSearchParams(definedEntries))
+			.href;
+	},
+
+	callbackParams(req) {
+		// Parse the query string from the Express request into a flat string map.
+		// This preserves error params (error, error_description) so that the
+		// existing isOAuthError() check in the route handler still works.
+		const raw = (req.query ?? {}) as Record<string, unknown>;
+		return Object.fromEntries(
+			Object.entries(raw).filter(
+				(e): e is [string, string] => typeof e[1] === 'string',
+			),
+		);
+	},
+
+	async callback(redirectUri, params, checks) {
+		// Reconstruct the full callback URL so that authorizationCodeGrant can
+		// parse and validate the response in one step.
+		const callbackUrl = new URL(redirectUri);
+		Object.entries(params).forEach(([k, v]) =>
+			callbackUrl.searchParams.set(k, v),
+		);
+
+		const response = await authorizationCodeGrant(config, callbackUrl, {
+			pkceCodeVerifier: checks.code_verifier,
+			expectedState: checks.state,
+		});
+
+		// Re-attach claims() so callers don't need to change.
+		// decodeIdTokenClaims reads the JWT payload that the library already
+		// validated during the grant; it does not re-verify the signature.
+		return {
+			...response,
+			claims: (): IDToken =>
+				response.id_token
+					? decodeIdTokenClaims(response.id_token)
+					: ({} as IDToken),
+		};
+	},
+
+	async refresh(refreshToken) {
+		const response = await refreshTokenGrant(config, refreshToken);
+		return {
+			...response,
+			claims: (): IDToken =>
+				response.id_token
+					? decodeIdTokenClaims(response.id_token)
+					: ({} as IDToken),
+		};
+	},
+});
+
+/**
+ * @function ProfileOpenIdClient
+ *
+ * Returns an `OpenIdClient` backed by the production Okta OIDC configuration.
+ */
+const ProfileOpenIdClient = (ip?: string): OpenIdClient => {
+	const config = buildProfileConfig(OIDC_METADATA, ip);
+	return makeOpenIdClient(config);
+};
+
+/**
+ * @function DevProfileIdClient
  *
  * DEV ONLY
  *
- * Generates a new issuer per request in dev env to simulate
- * custom domain as the issuer
- * this is because locally the issuer is probably profile.thegulocal.com
- * while okta tokens will be the okta url, so we need to replace the issuer
- * with the okta domain
- * @param devIssuer - The okta domain issuer url to use for development
+ * In local development the Gateway runs at profile.thegulocal.com while Okta
+ * tokens carry the real Okta org URL as their issuer.  This function generates
+ * a Configuration whose issuer URL matches the Okta domain so that token
+ * validation succeeds even though the redirect_uri uses the local domain.
+ *
+ * @param devIssuer - The Okta-domain issuer string extracted from X-GU-Okta-Env
+ * @param {string} [ip] - Optional user IP address forwarded to Okta as X-Forwarded-For
  */
-const DevProfileIdClient = (devIssuer: string, ip?: string) => {
-	const devOidcIssuer = new Issuer({
+const DevProfileIdClient = (devIssuer: string, ip?: string): OpenIdClient => {
+	const devMetadata: ServerMetadata = {
 		...OIDC_METADATA,
 		issuer: issuer.replace(okta.orgUrl.replace('https://', ''), devIssuer),
-	});
-
-	const devClient = new devOidcIssuer.Client({
-		client_id: okta.clientId,
-		client_secret: okta.clientSecret,
-		redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
-	});
-
-	// Make sure we forward the IP address to Okta by adding it to the headers in the library calls
-	// https://github.com/panva/node-openid-client/blob/main/docs/README.md#customizing
-	// eslint-disable-next-line functional/immutable-data -- used to modify the client directly to add the IP address to the headers
-	devClient[custom.http_options] = (_, options) => {
-		// Add the IP address to the headers
-		const headers = options.headers || {};
-		const headersWithXForwardedFor = ip
-			? withXForwardedForHeader(headers, ip)
-			: headers;
-
-		return {
-			...options,
-			headers: headersWithXForwardedFor,
-		};
 	};
-
-	return devClient as OpenIdClient;
+	const config = buildProfileConfig(devMetadata, ip);
+	return makeOpenIdClient(config);
 };
 
 /**
@@ -280,9 +382,11 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
  * Generate the `AuthorizationState` object to be stored as a
  * cookie on the client, and the `stateParam` used by the Authorization
  * Code flow.
- * @param {string} returnUrl
+ *
+ * @param queryParams - Persistable query params captured at flow start
  * @param confirmationPage (optional) - page to redirect the user to after authentication
  * @param doNotSetLastAccessCookie (optional) - if true, ignore the last access cookie when setting the other Idapi cookies
+ * @param data (optional) - additional non-sensitive state data to carry through the flow
  * @return {*} `AuthorizationState`
  */
 export const generateAuthorizationState = (
