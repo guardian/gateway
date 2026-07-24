@@ -76,6 +76,7 @@ router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 					<li><a href="/signout">Sign Out</a></li>
 					<li><a href="/delete">Delete Account</a></li>
 					<li><a href="/maintenance">Maintenance</a></li>
+					<li><a href="/signin?newOnboardingFlow=true">New Onboarding Flow</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="/signin">Old Onboarding Flow</a></li>
 				</ul>
 			</body>
 		</html>
