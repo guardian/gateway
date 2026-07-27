@@ -28,7 +28,8 @@ const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 // Filter removes any falsey values
 const frameAncestors = [
 	stage === 'PROD' && 'https://support.theguardian.com',
-	stage === 'CODE' && 'https://support.code.dev-theguardian.com',
+	stage === 'CODE' &&
+		'https://support.code.dev-theguardian.com support.thegulocal.com',
 	stage === 'DEV' && 'support.thegulocal.com',
 ].filter((element) => !!element) as string[];
 
