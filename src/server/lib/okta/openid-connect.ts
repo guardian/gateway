@@ -6,6 +6,8 @@ import {
 	refreshTokenGrant,
 	customFetch,
 	type IDToken,
+	type TokenEndpointResponse,
+	type TokenEndpointResponseHelpers,
 } from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request, CookieOptions } from 'express';
@@ -165,19 +167,16 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 	INTERACTION_CODE: `${getProfileUrl()}/oauth/authorization-code/interaction-code-callback`,
 };
 
-/**
- * @function decodeIdTokenClaims
- *
- * Decodes the claims from a validated JWT ID token by base64url-decoding the
- * payload segment. The token's signature has already been cryptographically
- * verified by `authorizationCodeGrant` / `refreshTokenGrant`, so re-verifying
- * here is not necessary.
- */
-const decodeIdTokenClaims = (idToken: string): IDToken => {
-	const [, payload] = idToken.split('.');
-	return JSON.parse(
-		Buffer.from(payload, 'base64url').toString('utf-8'),
-	) as IDToken;
+type OidcTokenResponse = TokenEndpointResponse & TokenEndpointResponseHelpers;
+
+const toOidcTokenSet = (response: TokenEndpointResponse): OidcTokenSet => {
+	const withHelpers = response as OidcTokenResponse;
+
+	return {
+		...response,
+		// v6 returns helper methods on the response object; keep v5-style claims().
+		claims: (): IDToken => withHelpers.claims?.() ?? ({} as IDToken),
+	};
 };
 
 /**
@@ -275,27 +274,12 @@ const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 			expectedState: checks.state,
 		});
 
-		// Re-attach claims() so callers don't need to change.
-		// decodeIdTokenClaims reads the JWT payload that the library already
-		// validated during the grant; it does not re-verify the signature.
-		return {
-			...response,
-			claims: (): IDToken =>
-				response.id_token
-					? decodeIdTokenClaims(response.id_token)
-					: ({} as IDToken),
-		};
+		return toOidcTokenSet(response);
 	},
 
 	async refresh(refreshToken) {
 		const response = await refreshTokenGrant(config, refreshToken);
-		return {
-			...response,
-			claims: (): IDToken =>
-				response.id_token
-					? decodeIdTokenClaims(response.id_token)
-					: ({} as IDToken),
-		};
+		return toOidcTokenSet(response);
 	},
 });
 
