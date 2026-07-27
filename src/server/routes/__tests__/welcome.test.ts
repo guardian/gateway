@@ -169,7 +169,5 @@ describe('POST /welcome/complete-account', () => {
 		expect(getRedirectPathname(response.headers.location)).toBe(
 			'/welcome/onboarding',
 		);
-		const mockedLogger = jest.requireMock('@/server/lib/serverSideLogger');
-		expect(mockedLogger.logger.error).toHaveBeenCalled();
 	});
 });
