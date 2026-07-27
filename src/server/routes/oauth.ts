@@ -57,9 +57,6 @@ interface CustomClaims extends IDToken {
 	user_groups?: string[];
 	email_validated?: boolean;
 	legacy_identity_id?: string;
-	// IDToken (v6) does not explicitly declare `email`; it falls through to the
-	// index signature as JsonValue | undefined.  Declare it here so that
-	// destructuring gives the expected string type.
 	email?: string;
 }
 

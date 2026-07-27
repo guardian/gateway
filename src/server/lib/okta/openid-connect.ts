@@ -65,8 +65,8 @@ export interface AuthorizationState {
 /**
  * @interface OidcTokenSet
  *
- * Replaces the v5 `TokenSet` class. Wraps the v6 `TokenEndpointResponse` plain
- * object and adds back a `claims()` helper so that callers in oauth.ts do not
+ * Wraps the v6 `TokenEndpointResponse` plain object and adds
+ * back a `claims()` helper so that callers in oauth.ts do not
  * need to change how they access ID-token claims.
  */
 export interface OidcTokenSet {
@@ -76,10 +76,6 @@ export interface OidcTokenSet {
 	token_type?: string;
 	expires_in?: number;
 	scope?: string;
-	/**
-	 * Returns the validated ID-token claims extracted from the token response.
-	 * Equivalent to v5's `tokenSet.claims()`.
-	 */
 	claims: () => IDToken;
 }
 
@@ -180,16 +176,12 @@ const toOidcTokenSet = (response: TokenEndpointResponse): OidcTokenSet => {
 };
 
 /**
- * @function buildProfileConfig
- *
  * Creates a v6 `Configuration` object that combines server metadata with
- * client credentials.  When an IP address is provided, a custom `fetch`
+ * client credentials. When an IP address is provided, a custom `fetch`
  * implementation is attached so that every outgoing request to Okta carries
  * an `X-Forwarded-For` header.  This lets Okta apply per-user rate-limiting
  * and fraud detection instead of treating all requests as coming from the
  * gateway's own IP.
- *
- * Replaces: `new Issuer(metadata)` + `new issuer.Client({...})` + `client[custom.http_options]`
  */
 const buildProfileConfig = (
 	serverMetadata: ServerMetadata,
@@ -200,13 +192,6 @@ const buildProfileConfig = (
 	});
 
 	if (ip) {
-		// Attach a custom fetch implementation that injects the user's IP.
-		// This replaces the v5 `client[custom.http_options]` hook.
-		// The v6 library uses the Web Fetch API internally, so headers are
-		// a plain object / HeadersInit rather than Node.js OutgoingHttpHeaders.
-		// We use `any` for `options` because v6's internal `CustomFetchOptions`
-		// is not publicly exported and its `body` type is broader than RequestInit.
-		// The cast to the config's property type keeps the assignment type-safe.
 		// eslint-disable-next-line functional/immutable-data -- required to attach customFetch symbol to the Configuration instance
 		config[customFetch] = ((
 			url: URL | string,
@@ -226,19 +211,8 @@ const buildProfileConfig = (
 };
 
 /**
- * @function makeOpenIdClient
- *
  * Wraps a v6 `Configuration` in the `OpenIdClient` interface that the rest of
- * the application expects.  The four methods mirror the v5 `Client` instance
- * methods so that callers in oauth.ts do not need to change.
- *
- * Key differences handled internally:
- * - `authorizationUrl`  → `buildAuthorizationUrl(config, params)`
- * - `callbackParams`    → parse Express `req.query` into a plain string map
- * - `callback`          → `authorizationCodeGrant(config, url, checks)`
- * - `refresh`           → `refreshTokenGrant(config, token)`
- * - `claims()`          → `getValidatedIdTokenClaims(response)` re-added as a
- *                         method on the returned token object for backward compat
+ * the application expects.
  */
 const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 	authorizationUrl(params) {
@@ -262,8 +236,6 @@ const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 	},
 
 	async callback(redirectUri, params, checks) {
-		// Reconstruct the full callback URL so that authorizationCodeGrant can
-		// parse and validate the response in one step.
 		const callbackUrl = new URL(redirectUri);
 		Object.entries(params).forEach(([k, v]) =>
 			callbackUrl.searchParams.set(k, v),

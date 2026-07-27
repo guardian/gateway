@@ -79,7 +79,6 @@ export const interact = async (
 		// see https://www.oauth.com/oauth2-servers/pkce/authorization-request/
 		// the `code_verifier` is a cryptographically random string
 		// the `code_challenge` is the `code_verifier` hashed with SHA-256 and then base64url encoded
-		// Note: calculatePKCECodeChallenge is async in v6 because it uses the Web Crypto API
 		const codeVerifier = randomPKCECodeVerifier();
 		const codeChallenge = await calculatePKCECodeChallenge(codeVerifier);
 
@@ -106,7 +105,6 @@ export const interact = async (
 		// set up the authorization parameters to send to the /interact endpoint
 		// in order to start the interaction code flow
 		// see https://developer.okta.com/docs/concepts/interaction-code/
-		// AuthorizationParameters type was removed in openid-client v6; use a plain Record instead
 		const authorizationParams: Record<string, string> = {
 			// the client_id is the id of the client application
 			client_id: okta.clientId,
