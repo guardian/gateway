@@ -1,4 +1,6 @@
-.PHONY: build dev tsc lint fix test ci playwright clean-build clean-deps install reinstall upgrade clear setup
+.DEFAULT_GOAL := list
+
+.PHONY: list build dev tsc lint fix test ci playwright clean-build clean-deps install reinstall upgrade clear setup
 
 # these means you can run the binaries in node_modules
 # like with npm scripts
@@ -14,6 +16,30 @@ endef
 define banner
 		@node scripts/banner $(1)
 endef
+
+list:
+	@echo "make list"
+	@echo "make build"
+	@echo "make build-analyze"
+	@echo "make setup"
+	@echo "make dev"
+	@echo "make tsc"
+	@echo "make lint"
+	@echo "make fix"
+	@echo "make test"
+	@echo "make test-unit"
+	@echo "make ci"
+	@echo "make playwright-mocked"
+	@echo "make playwright-e2e"
+	@echo "make playwright-e2e-dev"
+	@echo "make storybook"
+
+	@echo "make clean-build"
+	@echo "make clean-deps"
+	@echo "make install"
+	@echo "make reinstall"
+	@echo "make upgrade"
+	@echo "make clear"
 
 # prod
 build: clear clean-build setup install
