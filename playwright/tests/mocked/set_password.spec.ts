@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
+import { setMockClientRecaptchaShouldFail } from '../../helpers/network/recaptcha';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
 
 test.describe('Password set/create flow', () => {
@@ -134,10 +135,8 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.route(/.*google\.com\/recaptcha\/.*/, async (route) => {
-				await route.abort('failed');
-			});
 			await page.goto('/set-password/fake_token');
+			await setMockClientRecaptchaShouldFail(page, true);
 			await expect(page.getByText('This link has expired')).toBeVisible();
 			await page.locator('input[name="email"]').fill('some@email.com');
 			await page.locator('button[type="submit"]').click();

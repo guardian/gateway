@@ -62,7 +62,7 @@ test.describe('Registration flow - Split 1/4', () => {
 			 */
 			expect(oktaUser.profile.registrationPlatform).toBe('profile');
 
-			await expect(page).toHaveURL(/\/welcome\/review/, { timeout: 10000 });
+			await expect(page).toHaveURL(/\/welcome\/review/);
 		});
 
 		test('successfully registers using an email with no existing account using a passcode - using the combined signin/register flow', async ({
