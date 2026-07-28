@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { escapeRegExp } from '../../helpers/utils';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Sign in flow', () => {
 	test.describe('Signing in - Okta', () => {
@@ -54,7 +55,7 @@ test.describe('Sign in flow', () => {
 				},
 			]);
 
-			await page.goto('/signin');
+			await loadPage(page, '/signin');
 
 			await expect(page.getByText('Sign in to the Guardian')).toBeVisible();
 			await expect(page.getByText('You are signed in with')).toBeVisible();
@@ -134,9 +135,10 @@ test.describe('Sign in flow', () => {
 					},
 				}),
 			]);
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?appClientId=123&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
-				{ waitUntil: 'domcontentloaded' },
+				'domcontentloaded',
 			);
 
 			await expect(page.getByText('Sign in to the Guardian app')).toBeVisible();
@@ -216,7 +218,8 @@ test.describe('Sign in flow', () => {
 				},
 			]);
 
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?appClientId=456&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
 
@@ -297,7 +300,8 @@ test.describe('Sign in flow', () => {
 				},
 			]);
 
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?appClientId=456&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
 
@@ -378,7 +382,8 @@ test.describe('Sign in flow', () => {
 				},
 			]);
 
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?clientId=jobs&fromURI=/oauth2/v1/authorize/redirect?okta_key=oktaKey',
 			);
 
@@ -413,7 +418,7 @@ test.describe('Sign in flow', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto('/signin?useOktaClassic=true');
+			await loadPage(page, '/signin?useOktaClassic=true');
 			await page.locator('input[name="email"]').fill('example@example.com');
 			await page.locator('input[name="password"]').fill('password');
 
@@ -440,7 +445,7 @@ test.describe('Sign in flow', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto('/signin?useOktaClassic=true');
+			await loadPage(page, '/signin?useOktaClassic=true');
 			await page.locator('input[name="email"]').fill('example@example.com');
 			await page.locator('input[name="password"]').fill('password');
 			await mockApi.post('/mock/permanent', {
@@ -466,7 +471,7 @@ test.describe('Sign in flow', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto('/signin?useOktaClassic=true');
+			await loadPage(page, '/signin?useOktaClassic=true');
 			await page.locator('input[name="email"]').fill('example@example.com');
 			await page.locator('input[name="password"]').fill('password');
 			await mockApi.post('/mock/permanent', {
@@ -492,7 +497,8 @@ test.describe('Sign in flow', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto(
+			await loadPage(
+				page,
 				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useOktaClassic=true',
 			);
 			await page.locator('input[name="email"]').fill('example@example.com');
@@ -559,7 +565,7 @@ test.describe('Sign in flow', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto('/signin?useOktaClassic=true');
+			await loadPage(page, '/signin?useOktaClassic=true');
 			await page.locator('input[name="email"]').fill('example@example.com');
 			await page.locator('input[name="password"]').fill('password');
 

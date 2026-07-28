@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
@@ -13,6 +13,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { existingUserSendEmailAndValidatePasscode } from '../../helpers/register';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Registration flow - Split 2/4', () => {
 	test.describe('existing user going through registration flow', () => {

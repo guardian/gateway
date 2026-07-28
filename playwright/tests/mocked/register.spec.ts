@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Registration flow', () => {
 	test.beforeEach(async ({ mockApi }) => {
@@ -11,9 +12,9 @@ test.describe('Registration flow', () => {
 		test('Has no detectable a11y violations on registration page', async ({
 			page,
 		}) => {
-			await page.goto('/register');
+			await loadPage(page, '/register');
 			await injectAndCheckAxe(page);
-			await page.goto('/register/email');
+			await loadPage(page, '/register/email');
 			await injectAndCheckAxe(page);
 		});
 
@@ -21,7 +22,7 @@ test.describe('Registration flow', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto('/register/email');
+			await loadPage(page, '/register/email');
 			await page.locator('input[name="email"]').fill('Invalid email');
 			await mockApi.post('/mock/permanent-pattern', {
 				data: {
@@ -43,7 +44,8 @@ test.describe('Registration flow', () => {
 				await route.abort('failed');
 			});
 
-			await page.goto(
+			await loadPage(
+				page,
 				'/register/email?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout',
 			);
 			await page.locator('input[name="email"]').fill('placeholder@example.com');
@@ -66,7 +68,8 @@ test.describe('Registration flow', () => {
 					body: {},
 				},
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/register/email?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin',
 			);
 

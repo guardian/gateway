@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createTestUser } from '../../helpers/api/idapi';
 import {
 	getTestOktaUser,
@@ -6,6 +6,7 @@ import {
 	closeCurrentOktaSession,
 } from '../../helpers/api/okta';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { test } from '../../fixtures/e2eFixture';
 
 const returnUrl =
 	'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';

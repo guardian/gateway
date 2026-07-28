@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
@@ -11,6 +11,7 @@ import {
 	resetOktaUserPassword,
 	expireOktaUserPassword,
 } from '../../helpers/api/okta';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Password reset recovery flows - with Passcodes', () => {
 	test.describe('RECOVERY user', () => {

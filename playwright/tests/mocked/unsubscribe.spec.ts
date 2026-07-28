@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Unsubscribe newsletter/marketing email', () => {
 	test.beforeEach(async ({ mockApi }) => {
@@ -19,7 +20,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 					body: {},
 				},
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A1677075570/token',
 			);
 			await injectAndCheckAxe(page);
@@ -53,7 +55,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 					body: {},
 				},
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A1677075570/token',
 			);
 			await injectAndCheckAxe(page);
@@ -72,7 +75,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 					body: {},
 				},
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A1677075570/token',
 			);
 			await expect(
@@ -122,7 +126,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 					body: {},
 				},
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/marketing/supporter%3A1000000%3A1677075570/token',
 			);
 			await expect(
@@ -147,7 +152,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 		test('should be able to handle a unsubscribe error if emailType is not newsletter/marketing', async ({
 			page,
 		}) => {
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/fake/supporter%3A1000000%3A1677075570/token',
 			);
 			await expect(page.getByText('Unable to unsubscribe.')).toBeVisible();
@@ -157,7 +163,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A16770755abc70/token',
 			);
 
@@ -180,12 +187,16 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 
 			await expect(page.getByText('Unable to unsubscribe.')).toBeVisible();
 
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/newsletter/pushing-buttons%3A1000000%3A/token',
 			);
 			await expect(page.getByText('Unable to unsubscribe.')).toBeVisible();
 
-			await page.goto('/unsubscribe/newsletter/pushing-buttons-bad-data/token');
+			await loadPage(
+				page,
+				'/unsubscribe/newsletter/pushing-buttons-bad-data/token',
+			);
 			await expect(page.getByText('Unable to unsubscribe.')).toBeVisible();
 		});
 
@@ -200,7 +211,8 @@ test.describe('Unsubscribe newsletter/marketing email', () => {
 					body: {},
 				},
 			});
-			await page.goto(
+			await loadPage(
+				page,
 				'/unsubscribe/fake/supporter%3A1000000%3A1677075570/token',
 			);
 			await expect(page.getByText('Unable to unsubscribe.')).toBeVisible();

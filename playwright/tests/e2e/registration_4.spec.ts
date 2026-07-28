@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
@@ -14,6 +14,7 @@ import {
 	getTestOktaUser,
 } from '../../helpers/api/okta';
 import { escapeRegExp } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Registration flow - Split 4/4', () => {
 	// a few tests to check if the Okta Classic flow is still working using the useOktaClassic flag

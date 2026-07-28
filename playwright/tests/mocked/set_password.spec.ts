@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { injectAndCheckAxe } from '../../helpers/accessibility';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Password set/create flow', () => {
 	test.beforeEach(async ({ mockApi }) => {
@@ -19,7 +20,7 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await injectAndCheckAxe(page);
 		});
 
@@ -34,7 +35,7 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await injectAndCheckAxe(page);
 		});
 
@@ -49,7 +50,7 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await page.locator('input[name="password"]').fill('short');
 			await page.locator('button[type="submit"]').click();
 			await injectAndCheckAxe(page);
@@ -69,7 +70,7 @@ test.describe('Password set/create flow', () => {
 			const breachCheckPromise = page.waitForRequest(
 				'https://api.pwnedpasswords.com/range/*',
 			);
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await page
 				.locator('input[name="password"]')
 				.fill('thisisalongandunbreachedpassword');
@@ -91,7 +92,7 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await expect(page.locator('input[name="password"]')).toHaveAttribute(
 				'type',
 				'password',
@@ -119,7 +120,7 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await expect(page.getByText('This link has expired')).toBeVisible();
 		});
 
@@ -137,7 +138,7 @@ test.describe('Password set/create flow', () => {
 			await page.route(/.*google\.com\/recaptcha\/.*/, async (route) => {
 				await route.abort('failed');
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await expect(page.getByText('This link has expired')).toBeVisible();
 			await page.locator('input[name="email"]').fill('some@email.com');
 			await page.locator('button[type="submit"]').click();
@@ -159,7 +160,7 @@ test.describe('Password set/create flow', () => {
 					body: {},
 				},
 			});
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await expect(page.getByText('This link has expired')).toBeVisible();
 		});
 	});
@@ -202,7 +203,7 @@ test.describe('Password set/create flow', () => {
 			const breachCheckPromise = page.waitForRequest(
 				'https://api.pwnedpasswords.com/range/*',
 			);
-			await page.goto('/set-password/fake_token');
+			await loadPage(page, '/set-password/fake_token');
 			await page
 				.locator('input[name="password"]')
 				.fill('thisisalongandunbreachedpassword');

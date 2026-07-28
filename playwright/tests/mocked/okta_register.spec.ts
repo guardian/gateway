@@ -1,13 +1,14 @@
 import { BrowserContext, expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { mockRequestPattern } from '../../helpers/network/mocking';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Okta Register flow', () => {
 	test.beforeEach(async ({ mockApi, page, context }) => {
 		await mockApi.get('/mock/purge');
 		await context.clearCookies();
 		// we visit the healthcheck page to make sure the cookies are cleared from the browser
-		await page.goto('/healthcheck');
+		await loadPage(page, '/healthcheck');
 	});
 
 	const setIdxCookie = async (context: BrowserContext) => {
@@ -41,7 +42,7 @@ test.describe('Okta Register flow', () => {
 			await mockApi.get('/mock/purge');
 			await context.clearCookies();
 			// we visit the healthcheck page to make sure the cookies are cleared from the browser
-			await page.goto('/healthcheck');
+			await loadPage(page, '/healthcheck');
 		});
 		test('should redirect to homepage if the idx Okta session cookie is valid', async ({
 			mockApi,
@@ -65,7 +66,7 @@ test.describe('Okta Register flow', () => {
 				data: {},
 			});
 
-			await page.goto('/register/email');
+			await loadPage(page, '/register/email');
 
 			await setIdxCookie(context);
 
@@ -129,9 +130,9 @@ test.describe('Okta Register flow', () => {
 			await setIdxCookie(context);
 
 			// visit healthcheck to set the cookie
-			await page.goto('/healthcheck');
+			await loadPage(page, '/healthcheck');
 
-			await page.goto('/register');
+			await loadPage(page, '/register');
 
 			await expect(page).toHaveURL(/\/reauthenticate/);
 
@@ -146,7 +147,7 @@ test.describe('Okta Register flow', () => {
 			await mockApi.get('/mock/purge');
 			await context.clearCookies();
 			// we visit the healthcheck page to make sure the cookies are cleared from the browser
-			await page.goto('/healthcheck');
+			await loadPage(page, '/healthcheck');
 		});
 		test('should redirect to homepage if the idx Okta session cookie is valid', async ({
 			mockApi,
@@ -173,9 +174,9 @@ test.describe('Okta Register flow', () => {
 
 			await setIdxCookie(context);
 
-			await page.goto('/healthcheck');
+			await loadPage(page, '/healthcheck');
 
-			await page.goto('/register');
+			await loadPage(page, '/register');
 
 			await expect(page.getByText('Sign in to the Guardian')).toBeVisible();
 			await expect(page.getByText('You are signed in with')).toBeVisible();
@@ -214,9 +215,9 @@ test.describe('Okta Register flow', () => {
 			await setIdxCookie(context);
 
 			// visit healthcheck to set the cookie
-			await page.goto('/healthcheck');
+			await loadPage(page, '/healthcheck');
 
-			await page.goto('/register');
+			await loadPage(page, '/register');
 
 			await expect(page).toHaveURL(/\/reauthenticate/);
 

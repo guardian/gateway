@@ -1,4 +1,4 @@
-import { test, expect, Request } from '@playwright/test';
+import { expect, Request } from '@playwright/test';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -12,6 +12,7 @@ import {
 	expireOktaUserPassword,
 } from '../../helpers/api/okta';
 import { escapeRegExp } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Password reset recovery flows', () => {
 	test.describe('Passcode limbo state - user does not set password after using passcode', () => {

@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { createTestUser } from '../../helpers/api/idapi';
 import { oktaGetApps } from '../../helpers/api/okta-apps';
+import { test } from '../../fixtures/e2eFixture';
 
 // Newsletter descriptions
 const RegistrationNewsletterDescriptions = {

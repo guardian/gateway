@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { randomMailosaurEmail } from '../../helpers/api/idapi';
 import { createTestUser, updateTestUser } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Change email', () => {
 	test.describe('successful and unsuccesful flows', () => {

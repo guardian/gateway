@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -8,6 +8,7 @@ import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getTestOktaUser } from '../../helpers/api/okta';
 import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
+import { test } from '../../fixtures/e2eFixture';
 
 test.describe('Sign In flow, with passcode', () => {
 	// set up useful variables

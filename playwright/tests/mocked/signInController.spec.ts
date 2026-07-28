@@ -10,6 +10,7 @@ import idxChallengeAnswerPassword401Response from '../../fixtures/okta-responses
 import userResponse from '../../fixtures/okta-responses/success/user.json';
 import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
 import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
+import { loadPage } from '../../helpers/load-page';
 
 const baseIdxPasscodeResetPasswordMocks = async (
 	mockApi: APIRequestContext,
@@ -37,7 +38,7 @@ const baseIdxPasscodeResetPasswordMocks = async (
 test.describe('When I submit the form on /signin - useOktaClassic', () => {
 	test.beforeEach(async ({ mockApi, page }) => {
 		await mockApi.get('/mock/purge');
-		await page.goto('/signin?useOktaClassic=true');
+		await loadPage(page, '/signin?useOktaClassic=true');
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 	});
@@ -96,7 +97,7 @@ test.describe('When I submit the form on /signin - useOktaClassic', () => {
 test.describe('When I submit the form on /signin - idx api', () => {
 	test.beforeEach(async ({ mockApi, page }) => {
 		await mockApi.get('/mock/purge');
-		await page.goto('/signin?usePasswordSignIn=true');
+		await loadPage(page, '/signin?usePasswordSignIn=true');
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 	});
@@ -222,7 +223,7 @@ test.describe('When I submit the form on /signin - idx api', () => {
 test.describe('When I submit the form on /reauthenticate - useOktaClassic', () => {
 	test.beforeEach(async ({ mockApi, page }) => {
 		await mockApi.get('/mock/purge');
-		await page.goto('/reauthenticate?useOktaClassic=true');
+		await loadPage(page, '/reauthenticate?useOktaClassic=true');
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 	});
@@ -281,7 +282,7 @@ test.describe('When I submit the form on /reauthenticate - useOktaClassic', () =
 test.describe('When I submit the form on /reauthenticate - idx api', () => {
 	test.beforeEach(async ({ mockApi, page }) => {
 		await mockApi.get('/mock/purge');
-		await page.goto('/reauthenticate?usePasswordSignIn=true');
+		await loadPage(page, '/reauthenticate?usePasswordSignIn=true');
 		await page.locator('input[name="email"]').fill('example@example.com');
 		await page.locator('input[name="password"]').fill('password');
 	});

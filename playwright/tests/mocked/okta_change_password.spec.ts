@@ -20,6 +20,7 @@
 import { APIRequestContext, expect } from '@playwright/test';
 import { test } from '../../fixtures/mockedApiRequest';
 import { randomPassword } from '../../helpers/api/idapi';
+import { loadPage } from '../../helpers/load-page';
 
 test.describe('Change password in Okta', () => {
 	const email = 'mrtest@theguardian.com';
@@ -156,7 +157,7 @@ test.describe('Change password in Okta', () => {
 		await mockPasswordResetInvalidStateTokenFailure(mockApi);
 		await mockValidateRecoveryTokenFailure(mockApi);
 
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 
 		await page.locator('input[name="password"]').fill(randomPassword());
 		await page.locator('button[type="submit"]').click();
@@ -173,7 +174,7 @@ test.describe('Change password in Okta', () => {
 		await mockPasswordResetInvalidStateTokenFailure(mockApi);
 		await mockValidateRecoveryTokenSuccess(mockApi);
 
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 
 		await page.locator('input[name="password"]').fill(randomPassword());
 		await page.locator('button[type="submit"]').click();
@@ -198,7 +199,7 @@ test.describe('Change password in Okta', () => {
 		await mockValidateRecoveryTokenSuccess(mockApi);
 		await mockValidateRecoveryTokenFailure(mockApi);
 
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 		await context.clearCookies({ name: 'GU_GATEWAY_STATE' });
 
 		await page.locator('input[name="password"]').fill(randomPassword());
@@ -214,7 +215,7 @@ test.describe('Change password in Okta', () => {
 		await mockApi.post('/mock', {
 			headers: { 'Content-Type': 'application/json', 'x-status': '500' },
 		});
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 		await expect(page.getByText('Link expired')).toBeVisible();
 	});
 
@@ -228,7 +229,7 @@ test.describe('Change password in Okta', () => {
 		});
 		await mockValidateRecoveryTokenSuccess(mockApi);
 
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 
 		await page.locator('input[name="password"]').fill(randomPassword());
 		await page.locator('button[type="submit"]').click();
@@ -255,7 +256,7 @@ test.describe('Change password in Okta', () => {
 		);
 		await mockValidateRecoveryTokenSuccess(mockApi);
 
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 
 		// even though this test is for a short password, we enter a valid password here to bypass
 		// client-side password complexity checks in order to test the server-side response
@@ -281,7 +282,7 @@ test.describe('Change password in Okta', () => {
 		);
 		await mockValidateRecoveryTokenSuccess(mockApi);
 
-		await page.goto('/reset-password/token');
+		await loadPage(page, '/reset-password/token');
 
 		await page.locator('input[name="password"]').fill(randomPassword());
 		await page.locator('button[type="submit"]').click();

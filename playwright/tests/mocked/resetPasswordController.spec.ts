@@ -18,6 +18,7 @@ import idxChallengeAnswerPasswordEnrollEmailResponse from '../../fixtures/okta-r
 import idxInteractResponse from '../../fixtures/okta-responses/success/idx-interact-response.json';
 import idxIntrospectDefaultResponse from '../../fixtures/okta-responses/success/idx-introspect-default-response.json';
 import { dangerouslySetPlaceholderPasswordMocks } from '../../helpers/api/placeholder-password-mock';
+import { loadPage } from '../../helpers/load-page';
 
 // ============================================
 // Helper Functions
@@ -486,7 +487,7 @@ userStatuses.forEach((status) => {
 		test.describe('When I submit the form on /reset-password', () => {
 			test.beforeEach(async ({ page, context }) => {
 				await setEncryptedStateCookie(context, {});
-				await page.goto('/reset-password?useOktaClassic=true');
+				await loadPage(page, '/reset-password?useOktaClassic=true');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -622,7 +623,7 @@ userStatuses.forEach((status) => {
 				await setEncryptedStateCookie(context, {
 					email: 'example@example.com',
 				});
-				await page.goto('/reset-password/email-sent?useOktaClassic=true');
+				await loadPage(page, '/reset-password/email-sent?useOktaClassic=true');
 			});
 
 			switch (status) {
@@ -753,7 +754,7 @@ userStatuses.forEach((status) => {
 		// ------------------------------------------
 		test.describe('When I submit the form on /reset-password/resend', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/reset-password/resend?useOktaClassic=true');
+				await loadPage(page, '/reset-password/resend?useOktaClassic=true');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -885,7 +886,7 @@ userStatuses.forEach((status) => {
 		// ------------------------------------------
 		test.describe('When I submit the form on /reset-password/expired', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/reset-password/expired?useOktaClassic=true');
+				await loadPage(page, '/reset-password/expired?useOktaClassic=true');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1020,7 +1021,7 @@ userStatuses.forEach((status) => {
 				await setEncryptedStateCookie(context, {
 					email: 'example@example.com',
 				});
-				await page.goto('/set-password/email-sent?useOktaClassic=true');
+				await loadPage(page, '/set-password/email-sent?useOktaClassic=true');
 			});
 
 			switch (status) {
@@ -1151,7 +1152,7 @@ userStatuses.forEach((status) => {
 		// ------------------------------------------
 		test.describe('When I submit the form on /set-password/resend', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/set-password/resend?useOktaClassic=true');
+				await loadPage(page, '/set-password/resend?useOktaClassic=true');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1283,7 +1284,7 @@ userStatuses.forEach((status) => {
 		// ------------------------------------------
 		test.describe('When I submit the form on /set-password/expired', () => {
 			test.beforeEach(async ({ page }) => {
-				await page.goto('/set-password/expired?useOktaClassic=true');
+				await loadPage(page, '/set-password/expired?useOktaClassic=true');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1421,7 +1422,7 @@ userStatuses.forEach((status) => {
 		test.describe('When I submit the form on /reset-password', () => {
 			test.beforeEach(async ({ page, context }) => {
 				await setEncryptedStateCookie(context, {});
-				await page.goto('/reset-password');
+				await loadPage(page, '/reset-password');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1503,7 +1504,7 @@ userStatuses.forEach((status) => {
 					).toISOString(),
 					email: 'test@example.com',
 				});
-				await page.goto('/reset-password/email-sent');
+				await loadPage(page, '/reset-password/email-sent');
 			});
 
 			switch (status) {
@@ -1578,7 +1579,7 @@ userStatuses.forEach((status) => {
 		test.describe('When I submit the form on /reset-password/resend', () => {
 			test.beforeEach(async ({ page, context }) => {
 				await setEncryptedStateCookie(context, {});
-				await page.goto('/reset-password/resend');
+				await loadPage(page, '/reset-password/resend');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1654,7 +1655,7 @@ userStatuses.forEach((status) => {
 		test.describe('When I submit the form on /reset-password/expired', () => {
 			test.beforeEach(async ({ page, context }) => {
 				await setEncryptedStateCookie(context, {});
-				await page.goto('/reset-password/expired');
+				await loadPage(page, '/reset-password/expired');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1730,7 +1731,7 @@ userStatuses.forEach((status) => {
 		test.describe('When I submit the form on /set-password/resend', () => {
 			test.beforeEach(async ({ page, context }) => {
 				await setEncryptedStateCookie(context, {});
-				await page.goto('/set-password/resend');
+				await loadPage(page, '/set-password/resend');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1806,7 +1807,7 @@ userStatuses.forEach((status) => {
 		test.describe('When I submit the form on /set-password/expired', () => {
 			test.beforeEach(async ({ page, context }) => {
 				await setEncryptedStateCookie(context, {});
-				await page.goto('/set-password/expired');
+				await loadPage(page, '/set-password/expired');
 				await page.locator('input[name="email"]').fill('example@example.com');
 			});
 
@@ -1885,7 +1886,7 @@ userStatuses.forEach((status) => {
 			mockApi,
 			page,
 		}) => {
-			await page.goto('/reset-password');
+			await loadPage(page, '/reset-password');
 			await page.locator('input[name="email"]').fill('test@example.com');
 
 			const response = { ...userResponse.response, status };
