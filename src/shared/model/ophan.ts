@@ -1,4 +1,4 @@
-import {
+import type {
 	ComponentEvent,
 	AbTestRegisterEntry,
 } from '@guardian/ophan-tracker-js';

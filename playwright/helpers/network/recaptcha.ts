@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data --- only used for playwright test setup */
 import { Page } from '@playwright/test';
 
-interface WindowWIthGrecaptcha {
+interface WindowWithGrecaptcha {
 	grecaptcha?: unknown;
 	_recaptchaCallback?: (token: string) => void;
 	_recaptchaErrorCallback?: () => void;
@@ -12,7 +12,7 @@ export const mockClientRecaptcha = async (page: Page) => {
 	await page.addInitScript(() => {
 		const FAKE_TOKEN = 'fake-recaptcha-token';
 
-		(window as WindowWIthGrecaptcha).grecaptcha = {
+		(window as WindowWithGrecaptcha).grecaptcha = {
 			ready: (callback: () => void) => callback(),
 			render: (
 				element: string | HTMLElement,
@@ -21,7 +21,7 @@ export const mockClientRecaptcha = async (page: Page) => {
 					'error-callback'?: () => void;
 				},
 			) => {
-				const mockWindow = window as WindowWIthGrecaptcha;
+				const mockWindow = window as WindowWithGrecaptcha;
 				mockWindow._recaptchaCallback = options.callback;
 				mockWindow._recaptchaErrorCallback = options['error-callback'];
 
@@ -43,7 +43,7 @@ export const mockClientRecaptcha = async (page: Page) => {
 			},
 			reset: () => {},
 			execute: () => {
-				const mockWindow = window as WindowWIthGrecaptcha;
+				const mockWindow = window as WindowWithGrecaptcha;
 				if (mockWindow._mockRecaptchaShouldFail) {
 					mockWindow._recaptchaErrorCallback?.();
 					return;
@@ -94,6 +94,6 @@ export const setMockClientRecaptchaShouldFail = async (
 	shouldFail: boolean,
 ) => {
 	await page.evaluate((value) => {
-		(window as WindowWIthGrecaptcha)._mockRecaptchaShouldFail = value;
+		(window as WindowWithGrecaptcha)._mockRecaptchaShouldFail = value;
 	}, shouldFail);
 };
