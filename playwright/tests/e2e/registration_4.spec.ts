@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/e2e';
 import { Status } from '../../../src/server/models/okta/User';
 import {
 	randomMailosaurEmail,
@@ -13,6 +13,7 @@ import {
 	suspendOktaUser,
 	getTestOktaUser,
 } from '../../helpers/api/okta';
+import { setMockClientRecaptchaShouldFail } from '../../helpers/network/recaptcha';
 import { escapeRegExp } from '../../helpers/utils';
 
 test.describe('Registration flow - Split 4/4', () => {
@@ -646,17 +647,6 @@ test.describe('Registration flow - Split 4/4', () => {
 			page,
 			request,
 		}) => {
-			// mechanism to block POST requests to recaptcha
-			// eslint-disable-next-line functional/no-let -- easiest way to control single recaptcha interception
-			let blockRecaptcha = false;
-			await page.route(/.*google\.com\/recaptcha\/api2\/.*/, async (route) => {
-				if (blockRecaptcha && route.request().method() === 'POST') {
-					await route.fulfill({ status: 500 });
-				} else {
-					await route.continue();
-				}
-			});
-
 			await page.context().addCookies([
 				{
 					name: 'playwright-mock-state',
@@ -687,7 +677,7 @@ test.describe('Registration flow - Split 4/4', () => {
 				timeRequestWasMadeInitialEmail,
 			);
 
-			blockRecaptcha = true;
+			await setMockClientRecaptchaShouldFail(page, true);
 
 			await page.waitForTimeout(1000); // wait for the send again button to be enabled
 			await page.getByText('send again').click();
@@ -701,7 +691,7 @@ test.describe('Registration flow - Split 4/4', () => {
 			const timeRequestWasMade = new Date();
 			await page.waitForTimeout(1000); // wait for the send again button to be enabled
 
-			blockRecaptcha = false;
+			await setMockClientRecaptchaShouldFail(page, false);
 
 			await page.getByText('send again').click();
 
