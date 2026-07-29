@@ -5,6 +5,7 @@ import { AxeBuilder } from '@axe-core/playwright';
  * Inject and check accessibility on the current page.
  */
 export async function injectAndCheckAxe(page: Page): Promise<void> {
+	await page.waitForLoadState('networkidle');
 	const results = await new AxeBuilder({ page })
 		.disableRules(['color-contrast'])
 		.analyze();
