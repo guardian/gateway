@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from '../../fixtures/e2e';
 import crypto from 'crypto';
 import { createTestUser } from '../../helpers/api/idapi';
 

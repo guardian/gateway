@@ -66,6 +66,7 @@ const helmetConfig: HelmetOptions = {
 				CSP_VALID_URI.HAVEIBEENPWNED,
 				idapiOrigin,
 				CSP_VALID_URI.GOOGLE_RECAPTCHA,
+				CSP_VALID_URI.OPHAN,
 			],
 			frameSrc: [CSP_VALID_URI.GOOGLE_RECAPTCHA],
 			formAction: null,

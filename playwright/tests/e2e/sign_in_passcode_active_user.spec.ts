@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/e2e';
 import {
 	randomMailosaurEmail,
 	randomPassword,
@@ -6,7 +6,6 @@ import {
 } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
 import { getTestOktaUser } from '../../helpers/api/okta';
-import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 import { escapeRegExp, incrementPasscode } from '../../helpers/utils';
 
 test.describe('Sign In flow, with passcode', () => {
@@ -18,7 +17,6 @@ test.describe('Sign In flow, with passcode', () => {
 	const fromURI = '/oauth2/v1/authorize';
 
 	test.beforeEach(async ({ page }) => {
-		await mockClientRecaptcha(page);
 		// Intercept the external redirect pages.
 		// We just want to check that the redirect happens, not that the page loads.
 		await page.route('https://m.code.dev-theguardian.com/', async (route) => {
