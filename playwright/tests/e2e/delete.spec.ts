@@ -1,7 +1,6 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from '../../fixtures/e2e';
 import { randomPassword, createTestUser } from '../../helpers/api/idapi';
 import { checkForEmailAndGetDetails } from '../../helpers/api/mailosaur';
-import { mockClientRecaptcha } from '../../helpers/network/recaptcha';
 
 test.describe('Delete my account flow in Okta', () => {
 	const signInAndVisitDeletePage = async (
@@ -21,10 +20,6 @@ test.describe('Delete my account flow in Okta', () => {
 
 		await page.goto(`/delete`);
 	};
-
-	test.beforeEach(async ({ page }) => {
-		await mockClientRecaptcha(page);
-	});
 
 	test('successfully deletes a user account', async ({ request, page }) => {
 		const { emailAddress, finalPassword } = await createTestUser(request, {
