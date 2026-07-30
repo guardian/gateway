@@ -25,11 +25,17 @@ Default.story = {
 	name: 'with defaults',
 };
 
-export const Email = (args: RegistrationProps) => (
-	<IframedRegisterWithEmail {...args} email="someone@theguardian.com" />
+export const MultipleAccountJourney = (args: RegistrationProps) => (
+	<IframedRegisterWithEmail
+		{...args}
+		queryParams={{
+			returnUrl: 'https://www.theguardian.com/uk',
+			appClientId: 'maj',
+		}}
+	/>
 );
-Email.story = {
-	name: 'with email',
+MultipleAccountJourney.story = {
+	name: 'with multiple account journey',
 };
 
 export const InvalidRecaptcha = (args: RegistrationProps) => (

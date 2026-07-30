@@ -30,7 +30,7 @@ import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
 	wide?: boolean;
-	pageHeader: string;
+	pageHeader?: string;
 	leadText?: React.ReactNode;
 	imageId?: DecorativeImageId;
 	successOverride?: string;

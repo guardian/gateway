@@ -12,6 +12,7 @@ import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import { PasscodeErrors } from '@/shared/model/Errors';
 import IframeThemedEmailInput from '../components/IframeThemedEmailInput';
 import { disableAutofillBackground } from '../styles/Shared';
+import { RegistrationConsents } from '../components/RegistrationConsents';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	shortRequestId?: string;
@@ -47,6 +48,7 @@ export const IframedRegisterWithEmail = ({
 	shortRequestId,
 	pageError,
 }: RegisterWithEmailProps) => {
+	const isMultipleAccountFlow = queryParams.appClientId === 'maj';
 	const formTrackingName = 'register-iframed';
 
 	usePageLoadOphanInteraction(formTrackingName);
@@ -54,7 +56,11 @@ export const IframedRegisterWithEmail = ({
 	return (
 		<MinimalLayout
 			pageHeader="Create your account"
-			leadText="Unlock your premium experience, online and in the app."
+			leadText={
+				isMultipleAccountFlow
+					? 'Redeem your invitation and start exploring your full Guardian access.'
+					: 'Unlock your premium experience, online and in the app.'
+			}
 			shortRequestId={shortRequestId}
 			errorContext={getErrorContext(pageError)}
 			errorOverride={pageError}
@@ -94,6 +100,7 @@ export const IframedRegisterWithEmail = ({
 						autoComplete="off"
 					/>
 				)}
+				{isMultipleAccountFlow && <RegistrationConsents />}
 			</MainForm>
 		</MinimalLayout>
 	);
