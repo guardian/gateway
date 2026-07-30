@@ -55,10 +55,10 @@ export const IframedRegisterWithEmail = ({
 
 	return (
 		<MinimalLayout
-			pageHeader={isMultipleAccountFlow ? undefined : 'Create your account'}
+			pageHeader="Create your account"
 			leadText={
 				isMultipleAccountFlow
-					? undefined
+					? 'Redeem your invitation and start exploring your full Guardian access.'
 					: 'Unlock your premium experience, online and in the app.'
 			}
 			shortRequestId={shortRequestId}

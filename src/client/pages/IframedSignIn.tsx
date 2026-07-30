@@ -1,4 +1,3 @@
-import React from 'react';
 import {
 	extractMessage,
 	GatewayError,
@@ -152,10 +151,10 @@ export const IframedSignIn = ({
 		<MinimalLayout
 			errorContext={getErrorContext(pageError, queryParams)}
 			errorOverride={pageError}
-			pageHeader={isMultipleAccountFlow ? undefined : 'Sign in to your account'}
+			pageHeader="Sign in to your account"
 			leadText={
 				isMultipleAccountFlow
-					? undefined
+					? 'To redeem your invitation and unlock your premium experience, online and in the app.'
 					: 'This unlocks your premium experience, online and in the app.'
 			}
 			shortRequestId={shortRequestId}
