@@ -28,8 +28,7 @@ const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 // Filter removes any falsey values
 const frameAncestors = [
 	stage === 'PROD' && 'https://support.theguardian.com',
-	stage === 'CODE' &&
-		'https://support.code.dev-theguardian.com support.thegulocal.com',
+	stage === 'CODE' && 'https://support.code.dev-theguardian.com',
 	stage === 'DEV' && 'support.thegulocal.com',
 ].filter((element) => !!element) as string[];
 
@@ -74,7 +73,6 @@ const helmetConfig: HelmetOptions = {
 		},
 	},
 	crossOriginEmbedderPolicy: false,
-	xFrameOptions: false, // Use CSP frame-ancestors instead of X-Frame-Options
 };
 
 export const helmetMiddleware = helmet(helmetConfig);
