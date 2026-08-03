@@ -5,6 +5,7 @@ import {
 	authorizationCodeGrant,
 	refreshTokenGrant,
 	customFetch,
+	allowInsecureRequests,
 	type IDToken,
 	type TokenEndpointResponse,
 	type TokenEndpointResponseHelpers,
@@ -182,6 +183,10 @@ const toOidcTokenSet = (response: TokenEndpointResponse): OidcTokenSet => {
  * an `X-Forwarded-For` header.  This lets Okta apply per-user rate-limiting
  * and fraud detection instead of treating all requests as coming from the
  * gateway's own IP.
+ *
+ * When the issuer URL uses HTTP (e.g. in local development or CI tests),
+ * `allowInsecureRequests` is called so that openid-client v6 does not reject
+ * the non-TLS endpoints.
  */
 const buildProfileConfig = (
 	serverMetadata: ServerMetadata,
@@ -190,6 +195,13 @@ const buildProfileConfig = (
 	const config = new Configuration(serverMetadata, okta.clientId, {
 		client_secret: okta.clientSecret,
 	});
+
+	// openid-client v6 enforces HTTPS-only by default; allow HTTP for
+	// non-production environments (e.g. local development and CI tests) where
+	// the Okta org URL is an http:// address.
+	if (!serverMetadata.issuer.startsWith('https:')) {
+		allowInsecureRequests(config);
+	}
 
 	if (ip) {
 		// eslint-disable-next-line functional/immutable-data -- required to attach customFetch symbol to the Configuration instance

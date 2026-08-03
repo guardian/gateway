@@ -29,6 +29,7 @@ jest.mock('openid-client', () => {
 
 	return {
 		customFetch: customFetchSymbol,
+		allowInsecureRequests: jest.fn(),
 		Configuration: class {
 			serverMetadata: unknown;
 			clientId: string;
