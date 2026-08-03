@@ -76,6 +76,8 @@ router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 					<li><a href="/signout">Sign Out</a></li>
 					<li><a href="/delete">Delete Account</a></li>
 					<li><a href="/maintenance">Maintenance</a></li>
+					<li><a href="/iframed/signin">Iframed Sign-in</a> | <a href="/iframed/signin?appClientId=maj">Iframed Sign-in (Multiple Account)</a></li>
+					<li><a href="/iframed/register/email">Iframed Register</a> | <a href="/iframed/register/email?appClientId=maj">Iframed Register (Multiple Account)</a></li>
 				</ul>
 			</body>
 		</html>
