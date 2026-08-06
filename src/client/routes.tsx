@@ -41,6 +41,7 @@ import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage'
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { UnvalidatedEmailEmailSentPage } from '@/client/pages/UnvalidatedEmailEmailSentPage';
 import { VerifyEmailResetPasswordPage } from '@/client/pages/VerifyEmailResetPasswordPage';
+import { OnboardingPage } from '@/client/pages/OnboardingPage';
 import { WelcomeExistingPage } from '@/client/pages/WelcomeExistingPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
@@ -225,6 +226,10 @@ const routes: Array<{
 	{
 		path: '/welcome/newsletters',
 		element: <NewAccountNewslettersPage />,
+	},
+	{
+		path: '/welcome/onboarding',
+		element: <OnboardingPage />,
 	},
 	{
 		path: '/welcome/:token',

@@ -54,6 +54,7 @@ export const parseExpressQueryParams = (
 		useOktaClassic,
 		usePasswordSignIn,
 		useSetPassword,
+		newOnboardingFlow,
 		signInEmail,
 	}: Record<keyof QueryParams, string | undefined>, // parameters from req.query
 	// some parameters may be manually passed in req.body too,
@@ -81,6 +82,7 @@ export const parseExpressQueryParams = (
 		useOktaClassic: isStringBoolean(useOktaClassic),
 		usePasswordSignIn: isStringBoolean(usePasswordSignIn),
 		useSetPassword: isStringBoolean(useSetPassword),
+		newOnboardingFlow: isStringBoolean(newOnboardingFlow),
 		signInEmail,
 	};
 };

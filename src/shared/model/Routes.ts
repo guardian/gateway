@@ -102,6 +102,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/complete-account',
 	'/welcome/review',
 	'/welcome/newsletters',
+	'/welcome/onboarding',
 	'/welcome/password',
 ] as const;
 
