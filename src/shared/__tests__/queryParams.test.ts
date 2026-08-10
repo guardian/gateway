@@ -23,6 +23,7 @@ describe('getPersistableQueryParams', () => {
 			componentEventParams: 'componentEventParams',
 			fromURI: 'fromURI',
 			appClientId: 'appClientId',
+			newOnboardingFlow: true,
 		};
 
 		const output = getPersistableQueryParams(input);
@@ -39,6 +40,7 @@ describe('getPersistableQueryParams', () => {
 			listName: undefined,
 			usePasswordSignIn: undefined,
 			useSetPassword: undefined,
+			newOnboardingFlow: true,
 		};
 
 		expect(output).toStrictEqual(expected);
@@ -58,12 +60,13 @@ describe('addQueryParamsToPath', () => {
 			ref: 'ref',
 			refViewId: 'refViewId',
 			componentEventParams: 'componentEventParams',
+			newOnboardingFlow: true,
 		};
 
 		const output = addQueryParamsToPath('/consents', input);
 
 		expect(output).toEqual(
-			'/consents?clientId=jobs&componentEventParams=componentEventParams&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+			'/consents?clientId=jobs&componentEventParams=componentEventParams&newOnboardingFlow=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
 		);
 	});
 
@@ -112,6 +115,19 @@ describe('addQueryParamsToPath', () => {
 
 		expect(output).toEqual(
 			'/consents?clientId=jobs&componentEventParams=componentEventParams&returnUrl=returnUrl',
+		);
+	});
+
+	it('preserves newOnboardingFlow=true in welcome redirect URLs', () => {
+		const input: QueryParams = {
+			returnUrl: 'https://www.theguardian.com',
+			newOnboardingFlow: true,
+		};
+
+		const output = addQueryParamsToPath('/welcome/onboarding', input);
+
+		expect(output).toEqual(
+			'/welcome/onboarding?newOnboardingFlow=true&returnUrl=https%3A%2F%2Fwww.theguardian.com',
 		);
 	});
 });

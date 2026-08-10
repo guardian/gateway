@@ -150,6 +150,35 @@ describe('parseExpressQueryParams', () => {
 			expect(output.fromURI).toEqual(undefined);
 		});
 	});
+
+	describe('newOnboardingFlow', () => {
+		test('it should parse a true string to boolean true', () => {
+			const input = {
+				newOnboardingFlow: 'true',
+			};
+
+			const output = parseExpressQueryParams('GET', input);
+			expect(output.newOnboardingFlow).toEqual(true);
+		});
+
+		test('it should parse a false string to boolean false', () => {
+			const input = {
+				newOnboardingFlow: 'false',
+			};
+
+			const output = parseExpressQueryParams('GET', input);
+			expect(output.newOnboardingFlow).toEqual(false);
+		});
+
+		test('it should parse non-true values to boolean false', () => {
+			const input = {
+				newOnboardingFlow: 'not-boolean',
+			};
+
+			const output = parseExpressQueryParams('GET', input);
+			expect(output.newOnboardingFlow).toEqual(false);
+		});
+	});
 });
 
 describe('addReturnUrlToPath', () => {

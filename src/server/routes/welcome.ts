@@ -45,6 +45,8 @@ import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { QueryParams } from '@/shared/model/QueryParams';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -260,10 +262,7 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
-			const redirectPath =
-				state.queryParams.clientId === 'jobs'
-					? JOBS_TOS_URI
-					: '/welcome/review';
+			const redirectPath = getPostRegistrationRedirectPath(state.queryParams);
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
 				303,
@@ -323,6 +322,28 @@ router.get(
 
 		return res.type('html').send(html);
 	}),
+);
+
+router.get(
+	'/welcome/onboarding',
+	loginMiddlewareOAuth,
+	(_: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
+		const html = renderer('/welcome/onboarding', {
+			pageTitle: 'Onboarding',
+			requestState: state,
+		});
+
+		return res.type('html').send(html);
+	},
 );
 
 router.get(
@@ -476,6 +497,21 @@ router.post(
 	'/welcome/:token',
 	setPasswordController('/welcome', 'Welcome', '/welcome/review'),
 );
+
+const getPostRegistrationRedirectPath = ({
+	clientId,
+	newOnboardingFlow,
+}: Pick<QueryParams, 'clientId' | 'newOnboardingFlow'>): RoutePaths => {
+	if (clientId === 'jobs') {
+		return JOBS_TOS_URI;
+	}
+
+	if (newOnboardingFlow) {
+		return '/welcome/onboarding';
+	}
+
+	return '/welcome/review';
+};
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;

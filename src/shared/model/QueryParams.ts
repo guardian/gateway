@@ -50,6 +50,8 @@ export interface PersistableQueryParams
 	usePasswordSignIn?: boolean;
 	// Flag to force the create account flow to force the user to set a password, useful for testing/using previous behaviour
 	useSetPassword?: boolean;
+	// Flag to opt users into the new onboarding flow
+	newOnboardingFlow?: boolean;
 }
 
 /**
