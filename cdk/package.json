@@ -29,6 +29,13 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
+	"pnpm" : {
+		"overrides":
+		{
+			"brace-expansion@5.0.8": "5.0.9",
+			"js-yaml@^4.0.0": "4.3.1"
+		}
+	},
   "prettier": "@guardian/prettier",
   "jest": {
     "testMatch": [
