@@ -150,6 +150,29 @@ describe('okta openid-connect v6 compatibility layer', () => {
 		);
 	});
 
+	test('claims() throws when id_token is absent', async () => {
+		(authorizationCodeGrant as jest.Mock).mockResolvedValue({
+			access_token: 'access-token',
+			// no id_token, no claims helper
+		});
+
+		const req = {
+			ip: '127.0.0.1',
+			get: () => undefined,
+		} as unknown as Request;
+		const openIdClient = getOpenIdClient(req);
+
+		const result = await openIdClient.callback(
+			'https://profile.theguardian.com/oauth/authorization-code/callback',
+			{ code: 'abc', state: 'state-value' },
+			{ state: 'state-value' },
+		);
+
+		expect(() => result.claims()).toThrow(
+			'id_token not present in token response',
+		);
+	});
+
 	test('adds X-Forwarded-For header to openid-client requests when ip is present', async () => {
 		const fetchMock = jest
 			.spyOn(globalThis, 'fetch')

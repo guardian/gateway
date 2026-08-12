@@ -171,8 +171,13 @@ const toOidcTokenSet = (response: TokenEndpointResponse): OidcTokenSet => {
 
 	return {
 		...response,
-		// v6 returns helper methods on the response object; keep v5-style claims().
-		claims: (): IDToken => withHelpers.claims?.() ?? ({} as IDToken),
+		claims: (): IDToken => {
+			const claimsData = withHelpers.claims?.();
+			if (!claimsData) {
+				throw new TypeError('id_token not present in token response');
+			}
+			return claimsData;
+		},
 	};
 };
 
