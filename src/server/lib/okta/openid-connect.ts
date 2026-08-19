@@ -99,7 +99,6 @@ export interface OpenIdClient {
 		redirectUri: string,
 		params: Record<string, string>,
 		checks: {
-			response_type?: string;
 			state?: string;
 			code_verifier?: string;
 		},

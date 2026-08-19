@@ -851,8 +851,6 @@ router.get(
 			callbackParams,
 			// checks to make sure that everything is valid
 			{
-				// we're doing the auth code flow, so check for the correct type
-				response_type: 'code',
 				// check that the stateParam is the same
 				state: authState.stateParam,
 				// code verifier is required for PKCE if we're using it
