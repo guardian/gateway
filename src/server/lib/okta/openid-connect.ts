@@ -257,10 +257,45 @@ const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 			callbackUrl.searchParams.set(k, v),
 		);
 
-		const response = await authorizationCodeGrant(config, callbackUrl, {
-			pkceCodeVerifier: checks.code_verifier,
-			expectedState: checks.state,
-		});
+		const response: TokenEndpointResponse = await (async () => {
+			try {
+				return await authorizationCodeGrant(config, callbackUrl, {
+					pkceCodeVerifier: checks.code_verifier,
+					expectedState: checks.state,
+				});
+			} catch (error) {
+				const errorRecord = error as {
+					name?: string;
+					message?: string;
+					code?: string;
+					cause?: {
+						name?: string;
+						message?: string;
+						code?: string;
+						error?: string;
+						error_description?: string;
+					};
+				};
+
+				logger.error('openid authorizationCodeGrant failed', {
+					errorName: errorRecord.name,
+					errorMessage: errorRecord.message,
+					errorCode: errorRecord.code,
+					causeName: errorRecord.cause?.name,
+					causeMessage: errorRecord.cause?.message,
+					causeCode: errorRecord.cause?.code,
+					causeError: errorRecord.cause?.error,
+					causeErrorDescription: errorRecord.cause?.error_description,
+					callbackParamKeys: Object.keys(params),
+					hasCodeParam: typeof params.code === 'string',
+					hasStateParam: typeof params.state === 'string',
+					hasPkceCodeVerifier: typeof checks.code_verifier === 'string',
+					redirectPath: callbackUrl.pathname,
+				});
+
+				throw error;
+			}
+		})();
 
 		return toOidcTokenSet(response);
 	},
