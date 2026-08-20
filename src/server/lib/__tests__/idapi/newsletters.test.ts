@@ -34,7 +34,7 @@ describe('idapi newsletters calls', () => {
 		it('maps listId to newsletter id', async () => {
 			mockIdapiFetch.mockResolvedValue([
 				{
-					id: 'morning-briefing-uk',
+					identityName: 'morning-briefing-uk',
 					name: 'Morning Briefing',
 					theme: 'news',
 					frequency: 'Every weekday',
@@ -107,7 +107,7 @@ describe('idapi newsletters calls', () => {
 		it('maps all fields correctly', async () => {
 			mockIdapiFetch.mockResolvedValue([
 				{
-					id: 'morning-briefing-uk',
+					identityName: 'morning-briefing-uk',
 					name: 'Morning Briefing',
 					theme: 'news',
 					frequency: 'Every weekday',
