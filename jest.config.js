@@ -19,15 +19,16 @@ module.exports = {
 		'cdk',
 	],
 	transformIgnorePatterns: [
-		// Don't try to transform any node_modules except Preact and @testing-library/preact
+		// Don't try to transform any node_modules except the packages we know ship ESM
+		// and are imported by our test graph.
 		// Since updating to Jest 30 trying to import these dependencies has resulted in
 		// unsupported ESM getting imported instead of CJS. Possibly because due to
 		// some siginificant changes in how Jest handles ESM under the hood?
 		// See:  https://jestjs.io/docs/upgrading-to-jest30#esm-module-support-and-internal-restructuring
-		'/node_modules/.pnpm/(?!(preact|@testing-library))',
+		'/node_modules/.pnpm/(?!(preact|@testing-library|openid-client|oauth4webapi|jose))',
 	],
 	transform: {
-		'^.+\\.(ts|tsx|jsx|mjs|module.js)?$': [
+		'^.+\\.(ts|tsx|js|jsx|mjs)$': [
 			'@swc/jest',
 			{
 				...config.options,
