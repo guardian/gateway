@@ -46,6 +46,7 @@ export type UserFlow =
  */
 export interface AuthorizationState {
 	stateParam: string;
+	createdAt?: number;
 	queryParams: PersistableQueryParams;
 	confirmationPage?: RoutePaths;
 	doNotSetLastAccessCookie?: boolean;
@@ -101,6 +102,16 @@ export interface OpenIdClient {
 		checks: {
 			state?: string;
 			code_verifier?: string;
+			logContext?: {
+				callbackParam?: string;
+				authStateAgeMs?: number;
+				authStateFlow?: UserFlow;
+				authStateSocialProvider?: SocialProvider;
+				hasStateToken?: boolean;
+				hasConfirmationPage?: boolean;
+				callbackStateMatchesExpected?: boolean;
+				codeVerifierType?: string;
+			};
 		},
 	): Promise<OidcTokenSet>;
 	refresh(refreshToken: string): Promise<OidcTokenSet>;
@@ -290,7 +301,16 @@ const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 					hasCodeParam: typeof params.code === 'string',
 					hasStateParam: typeof params.state === 'string',
 					hasPkceCodeVerifier: typeof checks.code_verifier === 'string',
+					codeVerifierType: typeof checks.code_verifier,
 					redirectPath: callbackUrl.pathname,
+					callbackParam: checks.logContext?.callbackParam,
+					authStateAgeMs: checks.logContext?.authStateAgeMs,
+					authStateFlow: checks.logContext?.authStateFlow,
+					authStateSocialProvider: checks.logContext?.authStateSocialProvider,
+					hasStateToken: checks.logContext?.hasStateToken,
+					hasConfirmationPage: checks.logContext?.hasConfirmationPage,
+					callbackStateMatchesExpected:
+						checks.logContext?.callbackStateMatchesExpected,
 				});
 
 				throw error;
@@ -403,6 +423,7 @@ export const generateAuthorizationState = (
 	data?: AuthorizationState['data'],
 ): AuthorizationState => ({
 	stateParam: generateRandomString(),
+	createdAt: Date.now(),
 	queryParams,
 	confirmationPage,
 	doNotSetLastAccessCookie,
