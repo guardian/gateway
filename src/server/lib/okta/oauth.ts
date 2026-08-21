@@ -156,7 +156,7 @@ export const performAuthorizationCodeFlow = async (
 		// otherwise we'll use the prompt parameter provided
 		prompt: idp && !loginHint ? 'login' : prompt,
 		// The sessionToken from authentication to exchange for session cookie
-		sessionToken: sessionToken ?? undefined,
+		sessionToken,
 		// we send the generated stateParam as the state parameter
 		state: authState.stateParam,
 		// any scopes, by default the 'openid' scope is required
