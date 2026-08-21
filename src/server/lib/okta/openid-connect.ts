@@ -255,6 +255,23 @@ const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 		// This preserves error params (error, error_description) so that the
 		// existing isOAuthError() check in the route handler still works.
 		const raw = (req.query ?? {}) as Record<string, unknown>;
+		const droppedParamTypes = Object.fromEntries(
+			Object.entries(raw).flatMap(([key, value]) => {
+				if (typeof value === 'string' || value === undefined) {
+					return [];
+				}
+
+				return [[key, Array.isArray(value) ? 'array' : typeof value]];
+			}),
+		);
+
+		if (Object.keys(droppedParamTypes).length > 0) {
+			logger.warn('OAuth callback params contained non-string values', {
+				rawQueryKeys: Object.keys(raw),
+				droppedParamTypes,
+			});
+		}
+
 		return Object.fromEntries(
 			Object.entries(raw).filter(
 				(e): e is [string, string] => typeof e[1] === 'string',
