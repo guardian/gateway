@@ -103,7 +103,7 @@ export interface OpenIdClient {
 			state?: string;
 			code_verifier?: string;
 			logContext?: {
-				callbackParam?: string;
+				callbackParam?: string | string[];
 				authStateAgeMs?: number;
 				authStateFlow?: UserFlow;
 				authStateSocialProvider?: SocialProvider;
