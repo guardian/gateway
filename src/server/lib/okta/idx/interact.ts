@@ -1,10 +1,7 @@
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
-import {
-	randomPKCECodeVerifier,
-	calculatePKCECodeChallenge,
-} from 'openid-client';
+import { AuthorizationParameters, generators } from 'openid-client';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
 	AuthorizationState,
@@ -79,8 +76,8 @@ export const interact = async (
 		// see https://www.oauth.com/oauth2-servers/pkce/authorization-request/
 		// the `code_verifier` is a cryptographically random string
 		// the `code_challenge` is the `code_verifier` hashed with SHA-256 and then base64url encoded
-		const codeVerifier = randomPKCECodeVerifier();
-		const codeChallenge = await calculatePKCECodeChallenge(codeVerifier);
+		const codeVerifier = generators.codeVerifier(64);
+		const codeChallenge = generators.codeChallenge(codeVerifier);
 
 		// generate and store a "state"
 		// as a http only, secure, signed session cookie
@@ -105,7 +102,7 @@ export const interact = async (
 		// set up the authorization parameters to send to the /interact endpoint
 		// in order to start the interaction code flow
 		// see https://developer.okta.com/docs/concepts/interaction-code/
-		const authorizationParams: Record<string, string> = {
+		const authorizationParams: AuthorizationParameters = {
 			// the client_id is the id of the client application
 			client_id: okta.clientId,
 			// only use the interaction code flow callback uri, everything else is handled by standard authorization code flow
@@ -120,7 +117,9 @@ export const interact = async (
 			state: authState.stateParam,
 		};
 
-		const authorizationSearchParams = new URLSearchParams(authorizationParams);
+		const authorizationSearchParams = new URLSearchParams(
+			authorizationParams as Record<string, string>,
+		);
 
 		const response = await fetch(
 			joinUrl(okta.orgUrl, '/oauth2/', okta.authServerId, '/v1/interact'),
