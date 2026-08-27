@@ -12,7 +12,7 @@ import { IdapiError } from '@/server/models/Error';
 import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 interface NewsletterAPIResponse {
-	identityName: string;
+	id: string;
 	theme: string;
 	name: string;
 	signUpDescription?: string | null;
@@ -32,14 +32,14 @@ const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
 		signUpEmbedDescription,
 		frequency,
 		listId,
-		identityName,
+		id,
 	} = newsletter;
 	return {
 		id: listId.toString(),
 		description: signUpDescription ?? signUpEmbedDescription ?? '',
 		name,
 		frequency,
-		nameId: identityName,
+		nameId: id,
 	};
 };
 
