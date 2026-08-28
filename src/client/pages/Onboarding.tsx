@@ -1,11 +1,15 @@
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { OnboardingNewsletters } from '../components/OnboardingNewsletters';
 import { NewsLetter } from '@/shared/model/Newsletter';
+import { css } from '@emotion/react';
 
 export interface OnboardingProps {
 	shortRequestId?: string;
 }
 
+const minimalLayoutStyles = css`
+	background-color: white;
+`;
 const AU_NEWSLETTERS: NewsLetter[] = [
 	{
 		frequency: 'Every weekday',
@@ -47,6 +51,7 @@ export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 		pageHeader="Welcome to the Guardian"
 		leadText="Thank you for signing up."
 		imageId="welcome"
+		cssOverrides={minimalLayoutStyles}
 	>
 		<OnboardingNewsletters newsletters={AU_NEWSLETTERS} />
 	</MinimalLayout>
