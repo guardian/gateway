@@ -128,6 +128,32 @@ const showAuthProviderButtons = (
 	}
 };
 
+const renderPreFormSection = ({
+	hideSocialButtons,
+	isMultipleAccountFlow,
+	socialSigninBlocked,
+	queryParams,
+}: {
+	hideSocialButtons: boolean;
+	isMultipleAccountFlow: boolean;
+	socialSigninBlocked: boolean;
+	queryParams: QueryParams;
+}) => {
+	if (!hideSocialButtons) {
+		return showAuthProviderButtons(socialSigninBlocked, queryParams);
+	}
+
+	if (isMultipleAccountFlow) {
+		return (
+			<InformationBox>
+				<GuardianTerms />
+			</InformationBox>
+		);
+	}
+
+	return null;
+};
+
 export const IframedSignIn = ({
 	email,
 	pageError,
@@ -160,9 +186,12 @@ export const IframedSignIn = ({
 			shortRequestId={shortRequestId}
 			overrideTheme="iframe-light"
 		>
-			{/* AuthProviderButtons component with show boolean */}
-			{!hideSocialButtons &&
-				showAuthProviderButtons(socialSigninBlocked, queryParams)}
+			{renderPreFormSection({
+				hideSocialButtons,
+				isMultipleAccountFlow,
+				socialSigninBlocked,
+				queryParams,
+			})}
 			<MainForm
 				shortRequestId={shortRequestId}
 				formErrorMessageFromParent={formError}
