@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/jest-globals';
 import type { ComponentProps } from 'react';
