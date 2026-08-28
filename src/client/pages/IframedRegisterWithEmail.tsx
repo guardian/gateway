@@ -1,4 +1,3 @@
-import React from 'react';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -6,6 +5,8 @@ import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphan
 import { RegistrationProps } from '@/client/pages/Registration';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { GuardianTerms } from '@/client/components/Terms';
+import { InformationBox } from '@/client/components/InformationBox';
 import ThemedLink from '@/client/components/ThemedLink';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
@@ -40,6 +41,18 @@ const getErrorContext = (pageError?: string) => {
 	}
 };
 
+const renderGuardianTerms = (isMultipleAccountFlow: boolean) => {
+	if (!isMultipleAccountFlow) {
+		return null;
+	}
+
+	return (
+		<InformationBox>
+			<GuardianTerms />
+		</InformationBox>
+	);
+};
+
 export const IframedRegisterWithEmail = ({
 	email,
 	recaptchaSiteKey,
@@ -66,6 +79,7 @@ export const IframedRegisterWithEmail = ({
 			errorOverride={pageError}
 			overrideTheme="iframe-light"
 		>
+			{renderGuardianTerms(isMultipleAccountFlow)}
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
 				submitButtonText="Create your account"
