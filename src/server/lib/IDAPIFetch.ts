@@ -37,7 +37,7 @@ const handleResponseFailure = async (
 	} catch (_) {
 		err = raw;
 	}
-	throw { error: err, status: response.status };
+	throw new Error(raw, { cause: { error: err, status: response.status } });
 };
 
 const handleResponseSuccess = async (response: Response) => {
