@@ -50,6 +50,8 @@ export interface AuthorizationState {
 		// used to track the flow the user is in for basic metrics/analytics
 		flow?: UserFlow; // password reset, and email verification flows outside of create account
 		appLabel?: string; // used to track the app used to start the flow
+		firstName?: string; // used to persist the first name during the signin flow, so that we can set it after login
+		lastName?: string; // used to persist the last name during the signin flow, so that we can set it after login
 	};
 }
 
