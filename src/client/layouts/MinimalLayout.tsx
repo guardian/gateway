@@ -12,7 +12,11 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { IframeLightTheme, Theme } from '@/client/styles/Theme';
+import {
+	IframeLightTheme,
+	OnboardingFlowLightTheme,
+	Theme,
+} from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -38,7 +42,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light';
+	overrideTheme?: 'iframe-light' | 'onboarding-light';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -117,6 +121,11 @@ export const MinimalLayout = ({
 		if (overrideTheme === 'iframe-light') {
 			return <IframeLightTheme />;
 		}
+
+		if (overrideTheme === 'onboarding-light') {
+			return <OnboardingFlowLightTheme />;
+		}
+
 		return <Theme />;
 	};
 
