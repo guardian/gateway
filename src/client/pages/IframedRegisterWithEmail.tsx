@@ -79,7 +79,11 @@ export const IframedRegisterWithEmail = ({
 			errorOverride={pageError}
 			overrideTheme="iframe-light"
 		>
-			{renderGuardianTerms(isMultipleAccountFlow)}
+			{isMultipleAccountFlow && (
+				<InformationBox>
+					<GuardianTerms />
+				</InformationBox>
+			)}
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
 				submitButtonText="Create your account"
