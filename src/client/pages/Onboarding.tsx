@@ -8,5 +8,6 @@ export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 	<MinimalLayout
 		shortRequestId={shortRequestId}
 		pageHeader="Welcome to the Guardian"
+		overrideTheme="onboarding-light"
 	/>
 );
