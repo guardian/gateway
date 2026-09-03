@@ -759,10 +759,6 @@ router.get(
 		// and "returnUrl" so we can get the user back to the page they
 		// initially landed on sign in from
 		const authState = getAuthorizationStateCookie(req);
-		const authStateAgeMs =
-			typeof authState?.createdAt === 'number'
-				? Date.now() - authState.createdAt
-				: undefined;
 
 		// check if the state cookie exists, this should be set at the start of the OAuth flow
 		// e.g. at sign in
@@ -772,12 +768,7 @@ router.get(
 			// b) someone is trying to attack the oauth flow
 			// for example with an invalid state cookie, or without the state cookie
 			// the state cookie is used to prevent CSRF attacks
-			logger.warn('Missing auth state cookie on OAuth Callback!', {
-				callbackParam: req.params.callbackParam,
-				queryKeys: Object.keys(req.query ?? {}),
-				hasCodeParam: typeof req.query.code === 'string',
-				hasStateParam: typeof req.query.state === 'string',
-			});
+			logger.warn('Missing auth state cookie on OAuth Callback!', undefined);
 			trackMetric('OAuthAuthorization::Failure');
 			return redirectForGenericError(req, res);
 		}
@@ -810,20 +801,6 @@ router.get(
 		// if there were any errors, then an "error", and "error_description" params
 		// will be returned instead
 		const callbackParams = openIdClient.callbackParams(req);
-
-		logger.info('OAuth callback received', {
-			callbackParam: req.params.callbackParam,
-			callbackParamKeys: Object.keys(callbackParams),
-			authStateAgeMs,
-			authStateFlow: authState.data?.flow,
-			authStateSocialProvider: authState.data?.socialProvider,
-			hasPkceCodeVerifier: typeof authState.data?.codeVerifier === 'string',
-			codeVerifierType: typeof authState.data?.codeVerifier,
-			hasStateToken: typeof authState.data?.stateToken === 'string',
-			hasConfirmationPage: authState.confirmationPage !== undefined,
-			callbackStateMatchesExpected:
-				callbackParams.state === authState.stateParam,
-		});
 
 		// we have the Authorization State now, so the cookie is
 		// no longer required, so mark cookie for deletion in the response
@@ -878,17 +855,6 @@ router.get(
 				state: authState.stateParam,
 				// code verifier is required for PKCE if we're using it
 				code_verifier: authState.data?.codeVerifier,
-				logContext: {
-					callbackParam: req.params.callbackParam,
-					authStateAgeMs,
-					authStateFlow: authState.data?.flow,
-					authStateSocialProvider: authState.data?.socialProvider,
-					hasStateToken: typeof authState.data?.stateToken === 'string',
-					hasConfirmationPage: authState.confirmationPage !== undefined,
-					callbackStateMatchesExpected:
-						callbackParams.state === authState.stateParam,
-					codeVerifierType: typeof authState.data?.codeVerifier,
-				},
 			},
 		);
 

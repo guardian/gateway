@@ -46,7 +46,6 @@ export type UserFlow =
  */
 export interface AuthorizationState {
 	stateParam: string;
-	createdAt?: number;
 	queryParams: PersistableQueryParams;
 	confirmationPage?: RoutePaths;
 	doNotSetLastAccessCookie?: boolean;
@@ -102,16 +101,6 @@ export interface OpenIdClient {
 		checks: {
 			state?: string;
 			code_verifier?: string;
-			logContext?: {
-				callbackParam?: string | string[];
-				authStateAgeMs?: number;
-				authStateFlow?: UserFlow;
-				authStateSocialProvider?: SocialProvider;
-				hasStateToken?: boolean;
-				hasConfirmationPage?: boolean;
-				callbackStateMatchesExpected?: boolean;
-				codeVerifierType?: string;
-			};
 		},
 	): Promise<OidcTokenSet>;
 	refresh(refreshToken: string): Promise<OidcTokenSet>;
@@ -285,54 +274,10 @@ const makeOpenIdClient = (config: Configuration): OpenIdClient => ({
 			callbackUrl.searchParams.set(k, v),
 		);
 
-		const response: TokenEndpointResponse = await (async () => {
-			try {
-				return await authorizationCodeGrant(config, callbackUrl, {
-					pkceCodeVerifier: checks.code_verifier,
-					expectedState: checks.state,
-				});
-			} catch (error) {
-				const errorRecord = error as {
-					name?: string;
-					message?: string;
-					code?: string;
-					cause?: {
-						name?: string;
-						message?: string;
-						code?: string;
-						error?: string;
-						error_description?: string;
-					};
-				};
-
-				logger.error('openid authorizationCodeGrant failed', {
-					errorName: errorRecord.name,
-					errorMessage: errorRecord.message,
-					errorCode: errorRecord.code,
-					causeName: errorRecord.cause?.name,
-					causeMessage: errorRecord.cause?.message,
-					causeCode: errorRecord.cause?.code,
-					causeError: errorRecord.cause?.error,
-					causeErrorDescription: errorRecord.cause?.error_description,
-					callbackParamKeys: Object.keys(params),
-					hasCodeParam: typeof params.code === 'string',
-					hasStateParam: typeof params.state === 'string',
-					hasPkceCodeVerifier: typeof checks.code_verifier === 'string',
-					codeVerifierType: typeof checks.code_verifier,
-					redirectPath: callbackUrl.pathname,
-					callbackParam: checks.logContext?.callbackParam,
-					authStateAgeMs: checks.logContext?.authStateAgeMs,
-					authStateFlow: checks.logContext?.authStateFlow,
-					authStateSocialProvider: checks.logContext?.authStateSocialProvider,
-					hasStateToken: checks.logContext?.hasStateToken,
-					hasConfirmationPage: checks.logContext?.hasConfirmationPage,
-					callbackStateMatchesExpected:
-						checks.logContext?.callbackStateMatchesExpected,
-				});
-
-				throw error;
-			}
-		})();
+		const response = await authorizationCodeGrant(config, callbackUrl, {
+			pkceCodeVerifier: checks.code_verifier,
+			expectedState: checks.state,
+		});
 
 		return toOidcTokenSet(response);
 	},
@@ -440,7 +385,6 @@ export const generateAuthorizationState = (
 	data?: AuthorizationState['data'],
 ): AuthorizationState => ({
 	stateParam: generateRandomString(),
-	createdAt: Date.now(),
 	queryParams,
 	confirmationPage,
 	doNotSetLastAccessCookie,
