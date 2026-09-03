@@ -41,18 +41,6 @@ const getErrorContext = (pageError?: string) => {
 	}
 };
 
-const renderGuardianTerms = (isMultipleAccountFlow: boolean) => {
-	if (!isMultipleAccountFlow) {
-		return null;
-	}
-
-	return (
-		<InformationBox>
-			<GuardianTerms />
-		</InformationBox>
-	);
-};
-
 export const IframedRegisterWithEmail = ({
 	email,
 	recaptchaSiteKey,
