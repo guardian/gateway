@@ -3,6 +3,7 @@ import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { RegistrationProps } from '@/client/pages/Registration';
+import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { GuardianTerms } from '@/client/components/Terms';
@@ -16,6 +17,7 @@ import { disableAutofillBackground } from '../styles/Shared';
 import { RegistrationConsents } from '../components/RegistrationConsents';
 
 type RegisterWithEmailProps = RegistrationProps & {
+	geolocation?: GeoLocation;
 	shortRequestId?: string;
 	pageError?: string;
 };
@@ -46,6 +48,7 @@ export const IframedRegisterWithEmail = ({
 	recaptchaSiteKey,
 	queryParams,
 	formError,
+	geolocation,
 	shortRequestId,
 	pageError,
 }: RegisterWithEmailProps) => {
@@ -106,7 +109,9 @@ export const IframedRegisterWithEmail = ({
 						autoComplete="off"
 					/>
 				)}
-				{isMultipleAccountFlow && <RegistrationConsents />}
+				{isMultipleAccountFlow && (
+					<RegistrationConsents geolocation={geolocation} />
+				)}
 			</MainForm>
 		</MinimalLayout>
 	);
