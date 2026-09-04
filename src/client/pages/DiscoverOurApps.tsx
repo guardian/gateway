@@ -4,7 +4,7 @@ import { OnboardingCard } from '@/client/components/OnboardingCard';
 export const DiscoverOurApps = () => {
 	return (
 		<OnboardingSection
-			header="Discover our Apps"
+			header="Discover our apps"
 			subHeader="Enjoy a richer experience on the go."
 		>
 			<OnboardingCard
@@ -13,8 +13,8 @@ export const DiscoverOurApps = () => {
 				backgroundColour="#E1EAF7"
 			/>
 			<OnboardingCard
-				title="The Guardian Feast app"
-				text="Level up your cooking with more than 6,000 recipes and smart, exclusive cooking features."
+				title="Guardian Feast app"
+				text="Your most useful kitchen utensil, with more than 7,000 recipes and smart, exclusive cooking features."
 				backgroundColour="#E1E5D5"
 			/>
 		</OnboardingSection>
