@@ -130,11 +130,12 @@ export const MinimalLayout = ({
 	};
 
 	const amIIframed = !!overrideTheme?.includes('iframe');
+	const isOnboarding = overrideTheme === 'onboarding-light';
 
 	return (
 		<>
 			{getTheme()}
-			{!amIIframed && <MinimalHeader />}
+			{!amIIframed && !isOnboarding && <MinimalHeader />}
 			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
