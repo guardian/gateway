@@ -382,10 +382,7 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
               "Action": "sts:AssumeRoleWithWebIdentity",
               "Condition": {
                 "StringLike": {
-                  "token.actions.githubusercontent.com:sub": [
-                    "repo:guardian/gateway:*",
-                    "repo:guardian@164318/gateway@226145935:*",
-                  ],
+                  "token.actions.githubusercontent.com:sub": "repo:guardian@164318/gateway@226145935:*",
                 },
               },
               "Effect": "Allow",
