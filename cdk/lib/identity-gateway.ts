@@ -557,7 +557,10 @@ systemctl start ${app}
 				assumedBy: new WebIdentityPrincipal(`arn:aws:iam::${this.account}:oidc-provider/token.actions.githubusercontent.com`,
 					{
 						StringLike: {
-							'token.actions.githubusercontent.com:sub': 'repo:guardian@164318/gateway@226145935:*',
+							'token.actions.githubusercontent.com:sub': [
+								'repo:guardian/gateway:*',
+								'repo:guardian@164318/gateway@226145935:*',
+							]
 						}
 					}
 				),
