@@ -18,8 +18,8 @@
     "@guardian/tsconfig": "1.0.1",
     "@types/jest": "30.0.0",
     "@types/node": "25.9.2",
-    "aws-cdk": "2.1135.1",
-    "aws-cdk-lib": "2.263.0",
+    "aws-cdk": "2.1140.0",
+    "aws-cdk-lib": "2.268.0",
     "constructs": "10.8.1",
     "eslint": "9.39.4",
     "jest": "30.4.2",
@@ -29,13 +29,12 @@
     "ts-node": "10.9.2",
     "typescript": "5.9.3"
   },
-	"pnpm" : {
-		"overrides":
-		{
-			"brace-expansion@5.0.8": "5.0.9",
-			"js-yaml@^4.0.0": "4.3.1"
-		}
-	},
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@5.0.8": "5.0.9",
+      "js-yaml@^4.0.0": "4.3.1"
+    }
+  },
   "prettier": "@guardian/prettier",
   "jest": {
     "testMatch": [
