@@ -56,3 +56,31 @@ test('keeps the iframe register flow email-only even for multiple account flow',
 	expect(screen.queryByText('Continue with Google')).not.toBeInTheDocument();
 	expect(screen.queryByText('Continue with Apple')).not.toBeInTheDocument();
 });
+
+test('opens terms and conditions link in new tab for multiple account flow', () => {
+	setup({
+		queryParams: {
+			returnUrl: 'https://www.theguardian.com/uk',
+			appClientId: 'maj',
+		},
+	});
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const termsLink = screen.getByText(
+		'terms and conditions',
+	) as HTMLAnchorElement;
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens privacy policy link in new tab for multiple account flow', () => {
+	setup({
+		queryParams: {
+			returnUrl: 'https://www.theguardian.com/uk',
+			appClientId: 'maj',
+		},
+	});
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const privacyLink = screen.getByText('privacy policy') as HTMLAnchorElement;
+	expect(privacyLink).toHaveAttribute('target', '_blank');
+});
