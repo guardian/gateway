@@ -47,7 +47,7 @@
 		"@storybook/preact-vite": "10.6.0",
 		"@swc/core": "1.16.2",
 		"@swc/jest": "0.2.39",
-		"@swc/plugin-emotion": "14.15.0",
+		"@swc/plugin-emotion": "15.0.0",
 		"@testing-library/jest-dom": "6.9.1",
 		"@testing-library/preact": "3.2.4",
 		"@testing-library/react": "npm:@testing-library/preact",
