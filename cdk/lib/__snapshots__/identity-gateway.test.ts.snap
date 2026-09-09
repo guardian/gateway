@@ -1067,6 +1067,28 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         "Port": 443,
         "Protocol": "HTTPS",
         "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-2021-06",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "identity-gateway",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
