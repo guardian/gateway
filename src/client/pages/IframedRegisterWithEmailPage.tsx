@@ -33,6 +33,7 @@ export const IframedRegisterWithEmailPage = () => {
 			email={email}
 			recaptchaSiteKey={recaptchaSiteKey}
 			queryParams={queryParams}
+			geolocation={pageData.geolocation}
 			shortRequestId={shortRequestId}
 			pageError={pageError}
 		/>
