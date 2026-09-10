@@ -23,13 +23,10 @@ const CSP_VALID_URI = {
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 
-// Dynamically build frame-ancestors based on stage.
-// This builds an array of urls that are appropriate for the current stage
-// Filter removes any falsey values
 const frameAncestors = [
 	stage === 'PROD' && 'https://support.theguardian.com',
 	stage === 'CODE' && 'https://support.code.dev-theguardian.com',
-	stage === 'DEV' && 'support.thegulocal.com',
+	stage === 'DEV' && (HELMET_OPTIONS.SELF || 'support.thegulocal.com'),
 ].filter((element) => !!element) as string[];
 
 const scriptSrc = [
@@ -68,7 +65,10 @@ const helmetConfig: HelmetOptions = {
 				CSP_VALID_URI.GOOGLE_RECAPTCHA,
 				CSP_VALID_URI.OPHAN,
 			],
-			frameSrc: [CSP_VALID_URI.GOOGLE_RECAPTCHA],
+			frameSrc:
+				stage === 'DEV'
+					? [HELMET_OPTIONS.SELF, CSP_VALID_URI.GOOGLE_RECAPTCHA]
+					: [CSP_VALID_URI.GOOGLE_RECAPTCHA],
 			formAction: null,
 		},
 	},
