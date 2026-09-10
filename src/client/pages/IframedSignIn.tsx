@@ -115,7 +115,7 @@ const showAuthProviderButtons = (
 		return (
 			<>
 				<InformationBox>
-					<GuardianTerms />
+					<GuardianTerms openLinksInNewTab={true} />
 				</InformationBox>
 				<AuthProviderButtons queryParams={queryParams} providers={['social']} />
 				<Divider
@@ -146,7 +146,7 @@ const renderPreFormSection = ({
 	if (isMultipleAccountFlow) {
 		return (
 			<InformationBox>
-				<GuardianTerms />
+				<GuardianTerms openLinksInNewTab={true} />
 			</InformationBox>
 		);
 	}
@@ -214,6 +214,7 @@ export const IframedSignIn = ({
 				hasGuardianTerms={socialSigninBlocked}
 				primaryTermsPosition={false}
 				termsStyle="secondary"
+				openLinksInNewTab={true}
 			>
 				<input
 					type="hidden"

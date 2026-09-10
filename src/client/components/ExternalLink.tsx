@@ -3,11 +3,21 @@ import {
 	LinkButtonProps,
 	LinkProps,
 } from '@guardian/source/react-components';
-import React from 'react';
 import ThemedLink from '@/client/components/ThemedLink';
 
-export const ExternalLink = (props: LinkProps) => (
-	<ThemedLink {...props} rel="noopener noreferrer" />
+interface ExternalLinkProps extends LinkProps {
+	openInNewTab?: boolean;
+}
+
+export const ExternalLink = ({
+	openInNewTab = false,
+	...props
+}: ExternalLinkProps) => (
+	<ThemedLink
+		{...props}
+		rel="noopener noreferrer"
+		target={openInNewTab ? '_blank' : undefined}
+	/>
 );
 
 export const ExternalLinkButton = (props: LinkButtonProps) => (

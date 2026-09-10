@@ -78,6 +78,7 @@ export interface MainFormProps {
 	disabled?: boolean;
 	formRef?: React.RefObject<HTMLFormElement | null>;
 	isGoogleOneTap?: boolean;
+	openLinksInNewTab?: boolean;
 }
 
 const formStyles = (displayInline: boolean, largeGap: boolean) => css`
@@ -102,19 +103,23 @@ const Terms = ({
 	hasJobsTerms,
 	isGoogleOneTap,
 	theme,
+	openLinksInNewTab = false,
 }: {
 	additionalTerms?: ReactNode[];
 	hasGuardianTerms?: boolean;
 	hasJobsTerms?: boolean;
 	isGoogleOneTap?: boolean;
 	theme: TermsStyle;
+	openLinksInNewTab?: boolean;
 }) => {
 	const BoxContainer = theme === 'primary' ? InformationBox : 'div';
 	return (
 		<>
 			{(additionalTerms || hasGuardianTerms || hasJobsTerms) && (
 				<BoxContainer>
-					{hasGuardianTerms && <GuardianTerms />}
+					{hasGuardianTerms && (
+						<GuardianTerms openLinksInNewTab={openLinksInNewTab} />
+					)}
 					{hasJobsTerms && <JobsTerms />}
 					{additionalTerms &&
 						additionalTerms.map((specificTermsItem, index) => {
@@ -158,6 +163,7 @@ export const MainForm = ({
 	// eslint-disable-next-line react-hooks/rules-of-hooks -- allow a formRef to be passed in or use a default value, either way a ref will be defined
 	formRef = useRef(null),
 	isGoogleOneTap,
+	openLinksInNewTab = false,
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
 
@@ -400,6 +406,7 @@ export const MainForm = ({
 					hasJobsTerms={hasJobsTerms}
 					isGoogleOneTap={isGoogleOneTap}
 					theme={termsStyle}
+					openLinksInNewTab={openLinksInNewTab}
 				/>
 			)}
 
@@ -438,6 +445,7 @@ export const MainForm = ({
 					hasJobsTerms={hasJobsTerms}
 					isGoogleOneTap={isGoogleOneTap}
 					theme={termsStyle}
+					openLinksInNewTab={openLinksInNewTab}
 				/>
 			)}
 		</form>

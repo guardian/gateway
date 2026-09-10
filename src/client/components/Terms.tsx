@@ -1,28 +1,37 @@
-import React from 'react';
 import { InformationBoxText } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { css } from '@emotion/react';
 
 type GuardianTermsProps = {
 	isGoogleOneTap?: boolean;
+	openLinksInNewTab?: boolean;
 };
 
-const moreInfoCopy = () => (
+const moreInfoCopy = (openInNewTab: boolean) => (
 	<>
 		For more information about how we use your data, including the generation of
 		random identifiers based on your email address for advertising and
 		marketing, visit our{' '}
-		<ExternalLink href="https://www.theguardian.com/help/privacy-policy">
+		<ExternalLink
+			href="https://www.theguardian.com/help/privacy-policy"
+			openInNewTab={openInNewTab}
+		>
 			privacy policy
 		</ExternalLink>
 		.
 	</>
 );
 
-export const GuardianTerms = ({ isGoogleOneTap }: GuardianTermsProps) => (
+export const GuardianTerms = ({
+	isGoogleOneTap,
+	openLinksInNewTab = false,
+}: GuardianTermsProps) => (
 	<InformationBoxText>
 		By proceeding, you agree to our{' '}
-		<ExternalLink href="https://www.theguardian.com/help/terms-of-service">
+		<ExternalLink
+			href="https://www.theguardian.com/help/terms-of-service"
+			openInNewTab={openLinksInNewTab}
+		>
 			terms and conditions
 		</ExternalLink>
 		.
@@ -32,10 +41,10 @@ export const GuardianTerms = ({ isGoogleOneTap }: GuardianTermsProps) => (
 					margin-bottom: 0;
 				`)}
 			>
-				{moreInfoCopy()}
+				{moreInfoCopy(openLinksInNewTab)}
 			</p>
 		) : (
-			<> {moreInfoCopy()}</>
+			<> {moreInfoCopy(openLinksInNewTab)}</>
 		)}
 	</InformationBoxText>
 );

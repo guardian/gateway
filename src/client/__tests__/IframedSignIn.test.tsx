@@ -72,3 +72,49 @@ test('does not show GuardianTerms when social buttons are hidden outside multipl
 		screen.queryByText(guardianTermsText, { exact: false }),
 	).not.toBeInTheDocument();
 });
+
+test('opens terms and conditions link in new tab when social buttons are visible', () => {
+	setup();
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const termsLink = screen.getByText(
+		'terms and conditions',
+	) as HTMLAnchorElement;
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens privacy policy link in new tab when social buttons are visible', () => {
+	setup();
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const privacyLink = screen.getByText('privacy policy') as HTMLAnchorElement;
+	expect(privacyLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens terms and conditions link in new tab for multiple account flow with hidden social buttons', () => {
+	setup({
+		hideSocialButtons: true,
+		queryParams: {
+			returnUrl: 'https://www.theguardian.com/uk',
+			appClientId: 'maj',
+		},
+	});
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const termsLink = screen.getByText(
+		'terms and conditions',
+	) as HTMLAnchorElement;
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens terms and conditions link in new tab when social signin is blocked', () => {
+	setup({
+		pageError: SignInErrors.SOCIAL_SIGNIN_ERROR,
+	});
+
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const termsLink = screen.getByText(
+		'terms and conditions',
+	) as HTMLAnchorElement;
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});
