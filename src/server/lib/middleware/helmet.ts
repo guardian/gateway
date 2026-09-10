@@ -73,6 +73,8 @@ const helmetConfig: HelmetOptions = {
 		},
 	},
 	crossOriginEmbedderPolicy: false,
+	crossOriginResourcePolicy: stage === 'DEV' ? false : undefined,
+	xFrameOptions: stage === 'DEV' ? false : undefined,
 };
 
 export const helmetMiddleware = helmet(helmetConfig);
