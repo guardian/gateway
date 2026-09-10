@@ -39,7 +39,7 @@ export const App = (props: Props) => {
 					html {
 						height: ${isPageIframed ? 'auto' : '100%'};
 						box-sizing: border-box;
-						${isPageIframed ? 'overflow: hidden;' : ''}
+						${isPageIframed ? 'overflow-x: hidden; overflow-y: auto;' : ''}
 					}
 					body {
 						height: ${isPageIframed ? 'auto' : '100%'};
