@@ -65,10 +65,7 @@ test('opens terms and conditions link in new tab for multiple account flow', () 
 		},
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const termsLink = screen.getByText(
-		'terms and conditions',
-	) as HTMLAnchorElement;
+	const termsLink = screen.getByText('terms and conditions');
 	expect(termsLink).toHaveAttribute('target', '_blank');
 });
 
@@ -80,8 +77,7 @@ test('opens privacy policy link in new tab for multiple account flow', () => {
 		},
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const privacyLink = screen.getByText('privacy policy') as HTMLAnchorElement;
+	const privacyLink = screen.getByText('privacy policy');
 	expect(privacyLink).toHaveAttribute('target', '_blank');
 });
 
