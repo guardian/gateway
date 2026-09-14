@@ -37,16 +37,16 @@ export const App = (props: Props) => {
 				styles={css`
 					${fontFaces}
 					html {
-						height: 100%;
+						height: ${isPageIframed ? 'auto' : '100%'};
 						box-sizing: border-box;
-						${isPageIframed ? 'overflow: hidden;' : ''}
+						${isPageIframed ? 'overflow-x: hidden; overflow-y: auto;' : ''}
 					}
 					body {
-						height: 100%;
+						height: ${isPageIframed ? 'auto' : '100%'};
 						color: ${neutral[7]};
 					}
 					#app {
-						min-height: 100%;
+						min-height: ${isPageIframed ? '0' : '100%'};
 						display: flex;
 						flex-direction: column;
 					}

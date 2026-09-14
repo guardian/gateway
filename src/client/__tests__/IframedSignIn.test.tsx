@@ -72,3 +72,39 @@ test('does not show GuardianTerms when social buttons are hidden outside multipl
 		screen.queryByText(guardianTermsText, { exact: false }),
 	).not.toBeInTheDocument();
 });
+
+test('opens terms and conditions link in new tab when social buttons are visible', () => {
+	setup();
+
+	const termsLink = screen.getByText('terms and conditions');
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens privacy policy link in new tab when social buttons are visible', () => {
+	setup();
+
+	const privacyLink = screen.getByText('privacy policy');
+	expect(privacyLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens terms and conditions link in new tab for multiple account flow with hidden social buttons', () => {
+	setup({
+		hideSocialButtons: true,
+		queryParams: {
+			returnUrl: 'https://www.theguardian.com/uk',
+			appClientId: 'maj',
+		},
+	});
+
+	const termsLink = screen.getByText('terms and conditions');
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});
+
+test('opens terms and conditions link in new tab when social signin is blocked', () => {
+	setup({
+		pageError: SignInErrors.SOCIAL_SIGNIN_ERROR,
+	});
+
+	const termsLink = screen.getByText('terms and conditions');
+	expect(termsLink).toHaveAttribute('target', '_blank');
+});

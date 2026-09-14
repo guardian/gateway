@@ -72,7 +72,7 @@ export const IframedRegisterWithEmail = ({
 		>
 			{isMultipleAccountFlow && (
 				<InformationBox>
-					<GuardianTerms />
+					<GuardianTerms openLinksInNewTab={true} />
 				</InformationBox>
 			)}
 			<MainForm
