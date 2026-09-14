@@ -13,8 +13,7 @@ test('ExternalLink renders with target="_blank" when openInNewTab is true', () =
 		</ExternalLink>,
 	);
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const link = screen.getByText('Click me') as HTMLAnchorElement;
+	const link = screen.getByText('Click me');
 	expect(link).toHaveAttribute('target', '_blank');
 	expect(link).toHaveAttribute('rel', 'noopener noreferrer');
 });
