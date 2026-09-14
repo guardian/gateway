@@ -14,7 +14,7 @@ importers:
     devDependencies:
       '@guardian/cdk':
         specifier: 63.6.1
-        version: 63.6.1(aws-cdk-lib@2.268.0(constructs@10.8.1))(aws-cdk@2.1140.0)(constructs@10.8.1)
+        version: 63.6.1(aws-cdk-lib@2.269.0(constructs@10.8.1))(aws-cdk@2.1141.0)(constructs@10.8.1)
       '@guardian/eslint-config':
         specifier: 15.0.0
         version: 15.0.0(@typescript-eslint/utils@8.59.3(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.59.3(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4))(eslint@9.39.4)(typescript@5.9.3)
@@ -31,11 +31,11 @@ importers:
         specifier: 25.9.2
         version: 25.9.2
       aws-cdk:
-        specifier: 2.1140.0
-        version: 2.1140.0
+        specifier: 2.1141.0
+        version: 2.1141.0
       aws-cdk-lib:
-        specifier: 2.268.0
-        version: 2.268.0(constructs@10.8.1)
+        specifier: 2.269.0
+        version: 2.269.0(constructs@10.8.1)
       constructs:
         specifier: 10.8.1
         version: 10.8.1
@@ -69,8 +69,8 @@ packages:
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.3':
     resolution: {integrity: sha512-98We1QWfin9vtuuQtNFhIIAEWb8CreyYTAP0Vn8HqSBoNiFJM9nZgifJeQawT9Wq0NX1HCNFlxCyTccIrK1PSA==}
 
-  '@aws-cdk/cloud-assembly-schema@54.22.0':
-    resolution: {integrity: sha512-vsOuFw4+UC5+m2YZLhCecxt6wibIOmXCszA4uXaBcde2tZWx06vp1z5ByHnJeLS83A11XpAkW/TiIBGCL6jxuQ==}
+  '@aws-cdk/cloud-assembly-schema@54.23.0':
+    resolution: {integrity: sha512-6ymdxl2MT34iES1Qot7cWAOzJCoRMrNr/E82/eYAx1inEJXG6iqJOsoa+nTa5Q+Mk+b7Z9xLP3pc2LgNnkFJJw==}
     engines: {node: '>= 18.0.0'}
     bundledDependencies:
       - jsonschema
@@ -1238,6 +1238,10 @@ packages:
     resolution: {integrity: sha512-FmeCCAenzH0KH381SPT5FZmiA/TmpndpcaShhfgEN9eCVjnFBqq3l1xrI42y8+PPLI6hypzou4GXw00WHmPBLQ==}
     engines: {node: '>= 0.4'}
 
+  array-includes@3.2.0:
+    resolution: {integrity: sha512-VXY5eFRarnXcYxwBjJzPmEhH55+rmP79/+ueDhi0F+TuqfHCItagIHqxeUZrmgrOPa31QTh9H85DjX3FfJ0FTg==}
+    engines: {node: '>= 0.4'}
+
   array.prototype.findlast@1.2.5:
     resolution: {integrity: sha512-CVvd6FHg1Z3POpBLxO6E6zr+rSKEQ9L6rZHAaY7lLfhKsWYUBBOuMs0e9o24oopj6H+geRCX0YJ+TJLBK2eHyQ==}
     engines: {node: '>= 0.4'}
@@ -1273,8 +1277,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-cdk-lib@2.268.0:
-    resolution: {integrity: sha512-bm0mWG0xxIJtV0vhkmnFy6TFgwqBowvXeRKudhAsjM0TMOEcyFPBbwjUNlAA6S1+AjUwEt5yaMrT0A/P97lUqg==}
+  aws-cdk-lib@2.269.0:
+    resolution: {integrity: sha512-Ob2EmB3faXGUMjXYhxsMvktZtaojr/aaeLqFjq9WbO+vOX1mx49OQPVB6NNNLfNKWF993Bb6nr4rsPblpUAJww==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
       constructs: ^10.5.0
@@ -1292,8 +1296,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1140.0:
-    resolution: {integrity: sha512-myrqWFEby3w+athNRM5EcnKXpby8shR7WwhxtAE853qDPmCggvIZe0wwkUzyuWJdFVD3zP5rzRuATxnnapeXig==}
+  aws-cdk@2.1141.0:
+    resolution: {integrity: sha512-RIKueAoFNYUot/VmlUzPUbecxNCtLzJFqpy/O+vTpjrvDn4k2Uiu9Y/QlVlQzaSJw0qqNNY6ldusJVdkX8aBNA==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
@@ -2651,8 +2655,8 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  react-is@19.2.8:
-    resolution: {integrity: sha512-s5un28nYxKJw5gvUHyW5PCC28CvBqLu9r3cWgzHT4Vo/5fqqkFcdRYsGcKf50WMPpjjFZS5d76fn3YCo2njKwQ==}
+  react-is@19.3.0:
+    resolution: {integrity: sha512-UpMYezM4v5/18F28aC66AEsjXIgE02kyEMH6yLdgLXu/UTfa1Ntwck/nNLrbqJsEXW7gPb0coNO9FQse9WTovA==}
 
   read-package-up@12.0.0:
     resolution: {integrity: sha512-Q5hMVBYur/eQNWDdbF4/Wqqr9Bjvtrw2kjGxxBbKLbx8bVCL8gcArjTy8zDUuLGQicftpMuU0riQNcAsbtOVsw==}
@@ -3158,7 +3162,7 @@ snapshots:
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.3': {}
 
-  '@aws-cdk/cloud-assembly-schema@54.22.0': {}
+  '@aws-cdk/cloud-assembly-schema@54.23.0': {}
 
   '@aws-crypto/crc32@5.2.0':
     dependencies:
@@ -3882,13 +3886,13 @@ snapshots:
       '@eslint/core': 0.17.0
       levn: 0.4.1
 
-  '@guardian/cdk@63.6.1(aws-cdk-lib@2.268.0(constructs@10.8.1))(aws-cdk@2.1140.0)(constructs@10.8.1)':
+  '@guardian/cdk@63.6.1(aws-cdk-lib@2.269.0(constructs@10.8.1))(aws-cdk@2.1141.0)(constructs@10.8.1)':
     dependencies:
       '@aws-sdk/client-ec2': 3.1075.0
       '@aws-sdk/client-ssm': 3.1075.0
       '@aws-sdk/credential-providers': 3.1075.0
-      aws-cdk: 2.1140.0
-      aws-cdk-lib: 2.268.0(constructs@10.8.1)
+      aws-cdk: 2.1141.0
+      aws-cdk-lib: 2.269.0(constructs@10.8.1)
       chalk: 4.1.2
       codemaker: 1.137.0
       constructs: 10.8.1
@@ -4694,6 +4698,18 @@ snapshots:
       is-string: 1.1.1
       math-intrinsics: 1.1.0
 
+  array-includes@3.2.0:
+    dependencies:
+      call-bind: 1.0.9
+      call-bound: 1.0.4
+      define-properties: 1.2.1
+      es-abstract: 1.24.2
+      es-object-atoms: 1.1.2
+      es-shim-unscopables: 1.1.0
+      is-string: 1.1.1
+      math-intrinsics: 1.1.0
+    optional: true
+
   array.prototype.findlast@1.2.5:
     dependencies:
       call-bind: 1.0.9
@@ -4754,14 +4770,14 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  aws-cdk-lib@2.268.0(constructs@10.8.1):
+  aws-cdk-lib@2.269.0(constructs@10.8.1):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.292
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.3
-      '@aws-cdk/cloud-assembly-schema': 54.22.0
+      '@aws-cdk/cloud-assembly-schema': 54.23.0
       constructs: 10.8.1
 
-  aws-cdk@2.1140.0: {}
+  aws-cdk@2.1141.0: {}
 
   axe-core@4.12.0: {}
 
@@ -5238,7 +5254,7 @@ snapshots:
 
   eslint-plugin-import@2.29.1(@typescript-eslint/parser@8.59.3(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4):
     dependencies:
-      array-includes: 3.1.9
+      array-includes: 3.2.0
       array.prototype.findlastindex: 1.2.6
       array.prototype.flat: 1.3.3
       array.prototype.flatmap: 1.3.3
@@ -6489,7 +6505,7 @@ snapshots:
       '@jest/schemas': 30.4.1
       ansi-styles: 5.2.0
       react-is-18: react-is@18.3.1
-      react-is-19: react-is@19.2.8
+      react-is-19: react-is@19.3.0
 
   prop-types@15.8.1:
     dependencies:
@@ -6507,7 +6523,7 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-is@19.2.8: {}
+  react-is@19.3.0: {}
 
   read-package-up@12.0.0:
     dependencies:
