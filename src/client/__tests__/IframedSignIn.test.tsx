@@ -76,18 +76,14 @@ test('does not show GuardianTerms when social buttons are hidden outside multipl
 test('opens terms and conditions link in new tab when social buttons are visible', () => {
 	setup();
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const termsLink = screen.getByText(
-		'terms and conditions',
-	) as HTMLAnchorElement;
+	const termsLink = screen.getByText('terms and conditions');
 	expect(termsLink).toHaveAttribute('target', '_blank');
 });
 
 test('opens privacy policy link in new tab when social buttons are visible', () => {
 	setup();
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const privacyLink = screen.getByText('privacy policy') as HTMLAnchorElement;
+	const privacyLink = screen.getByText('privacy policy');
 	expect(privacyLink).toHaveAttribute('target', '_blank');
 });
 
@@ -100,10 +96,7 @@ test('opens terms and conditions link in new tab for multiple account flow with 
 		},
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const termsLink = screen.getByText(
-		'terms and conditions',
-	) as HTMLAnchorElement;
+	const termsLink = screen.getByText('terms and conditions');
 	expect(termsLink).toHaveAttribute('target', '_blank');
 });
 
@@ -112,9 +105,6 @@ test('opens terms and conditions link in new tab when social signin is blocked',
 		pageError: SignInErrors.SOCIAL_SIGNIN_ERROR,
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const termsLink = screen.getByText(
-		'terms and conditions',
-	) as HTMLAnchorElement;
+	const termsLink = screen.getByText('terms and conditions');
 	expect(termsLink).toHaveAttribute('target', '_blank');
 });
