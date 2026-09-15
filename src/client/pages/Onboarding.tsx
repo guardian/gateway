@@ -1,4 +1,5 @@
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { DiscoverOurApps } from '@/client/pages/DiscoverOurApps';
 
 export interface OnboardingProps {
 	shortRequestId?: string;
@@ -7,6 +8,8 @@ export interface OnboardingProps {
 export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 	<MinimalLayout
 		shortRequestId={shortRequestId}
-		pageHeader="Welcome to the Guardian"
-	/>
+		overrideTheme="onboarding-light"
+	>
+		<DiscoverOurApps />
+	</MinimalLayout>
 );
