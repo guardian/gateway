@@ -1,7 +1,12 @@
 import { css } from '@emotion/react';
-import { palette, remSpace } from '@guardian/source/foundations';
+import {
+	from,
+	palette,
+	remSpace,
+	headlineBold24,
+	textSans17,
+} from '@guardian/source/foundations';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { headlineBold24 } from '@guardian/source/foundations';
 import React from 'react';
 
 interface OnboardingSectionProps {
@@ -30,14 +35,17 @@ export const OnboardingSection = ({
 				cssOverrides={css`
 					${headlineBold24};
 					font-weight: 500;
-					padding-bottom: ${remSpace[2]};
 				`}
 			>
 				{header}
 			</MainBodyText>
 			<MainBodyText
 				cssOverrides={css`
-					padding-bottom: ${remSpace[6]};
+					padding-bottom: ${remSpace[4]};
+
+					${from.tablet} {
+						${textSans17};
+					}
 				`}
 			>
 				{subHeader}
