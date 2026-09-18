@@ -1,7 +1,13 @@
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { headlineBold20, remSpace } from '@guardian/source/foundations';
+import {
+	headlineBold20,
+	remSpace,
+	from,
+	textSans17,
+} from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { OnboardingImage } from '@/client/components/OnboardingImage';
+import { Button, SvgDownload } from '@guardian/source/react-components';
 
 interface OnboardingCardProps {
 	title: string;
@@ -12,13 +18,24 @@ interface OnboardingCardProps {
 const styles = (backgroundColour: string | undefined) => css`
 	background-color: ${backgroundColour ? backgroundColour : '#FFFFFF'};
 	border-radius: ${remSpace[2]};
-	// padding: ${remSpace[2]} ${remSpace[2]} ${remSpace[2]} ${remSpace[2]};
 	display: grid;
 	grid-template-columns: 2fr 1fr;
 	grid-template-areas:
 		'title image'
 		'text  image'
 		'cta   image';
+	gap: ${remSpace[1]};
+
+	max-width: 348px;
+
+	${from.tablet} {
+		max-width: 456px;
+		gap: ${remSpace[2]};
+	}
+
+	${from.desktop} {
+		max-width: 596px;
+	}
 `;
 
 export const OnboardingCard = ({
@@ -34,7 +51,11 @@ export const OnboardingCard = ({
 					font-weight: 500;
 					padding-bottom: ${remSpace[2]};
 					grid-area: title;
-					padding: ${remSpace[2]} 0 0 ${remSpace[2]};
+					padding: ${remSpace[2]} 0 ${remSpace[2]} ${remSpace[2]};
+
+					${from.tablet} {
+						padding-bottom: 0;
+					}
 				`}
 			>
 				{title}
@@ -42,7 +63,12 @@ export const OnboardingCard = ({
 			<MainBodyText
 				cssOverrides={css`
 					grid-area: text;
-					padding-left: ${remSpace[2]};
+					padding: 0 ${remSpace[2]} ${remSpace[3]} ${remSpace[2]};
+
+					${from.tablet} {
+						padding-bottom: ${remSpace[2]};
+						${textSans17};
+					}
 				`}
 			>
 				{text}
@@ -54,7 +80,17 @@ export const OnboardingCard = ({
 					padding: 0 0 ${remSpace[2]} ${remSpace[2]};
 				`}
 			>
-				Button
+				<Button
+					priority="primary"
+					size="xsmall"
+					type="button"
+					isLoading={false}
+					icon={SvgDownload({
+						size: 'xsmall',
+					})}
+				>
+					Download
+				</Button>
 			</div>
 			<div
 				css={css`
