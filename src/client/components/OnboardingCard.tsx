@@ -7,7 +7,7 @@ import {
 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { OnboardingImage } from '@/client/components/OnboardingImage';
-import { Button, SvgDownload } from '@guardian/source/react-components';
+import { Button, Hide, SvgDownload } from '@guardian/source/react-components';
 
 interface OnboardingCardProps {
 	title: string;
@@ -80,17 +80,34 @@ export const OnboardingCard = ({
 					padding: 0 0 ${remSpace[2]} ${remSpace[2]};
 				`}
 			>
-				<Button
-					priority="primary"
-					size="xsmall"
-					type="button"
-					isLoading={false}
-					icon={SvgDownload({
-						size: 'xsmall',
-					})}
-				>
-					Download
-				</Button>
+				<>
+					<Hide from="tablet">
+						<Button
+							priority="primary"
+							size="xsmall"
+							type="button"
+							isLoading={false}
+							icon={SvgDownload({
+								size: 'xsmall',
+							})}
+						>
+							Download
+						</Button>
+					</Hide>
+					<Hide until="tablet">
+						<Button
+							priority="primary"
+							size="small"
+							type="button"
+							isLoading={false}
+							icon={SvgDownload({
+								size: 'small',
+							})}
+						>
+							Download
+						</Button>
+					</Hide>
+				</>
 			</div>
 			<div
 				css={css`

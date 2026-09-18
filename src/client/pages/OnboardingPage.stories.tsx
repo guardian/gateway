@@ -1,15 +1,19 @@
 import React from 'react';
 import { OnboardingPage } from './OnboardingPage';
+import { Meta } from '@storybook/preact';
 
 export default {
 	title: 'Pages/OnboardingPage',
 	component: OnboardingPage,
-	chromatic: {
-		modes: {
-			'dark desktop': { disable: true },
-			'dark mobile': { disable: true },
+	parameters: {
+		chromatic: {
+			modes: {
+				'dark desktop': { disable: true },
+				'dark mobile': { disable: true },
+			},
 		},
 	},
-};
+} as Meta;
 
-export const Defaults = () => <OnboardingPage />;
+export const Default = () => <OnboardingPage />;
+Default.storyName = 'Onboarding Page';
