@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import MinimalHeader from '@/client/components/MinimalHeader';
 import {
 	from,
-	headlineBold28,
 	headlineMedium24,
 	headlineMedium28,
 	remSpace,
@@ -12,7 +11,11 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { IframeLightTheme, Theme } from '@/client/styles/Theme';
+import {
+	IframeLightTheme,
+	OnboardingLightTheme,
+	Theme,
+} from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -26,6 +29,7 @@ import {
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
+import { Hero } from '../components/Hero';
 
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
@@ -38,7 +42,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light';
+	overrideTheme?: 'iframe-light' | 'onboarding-light';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -66,6 +70,12 @@ const iframeThemeWrapperStyles = css`
 	gap: ${remSpace[2]};
 `;
 
+const headerStyles = css`
+	margin-bottom: ${remSpace[4]};
+	background-color: var(--color-header-background);
+	width: 100%;
+`;
+
 const pageHeaderStyles = (amIIframed: boolean) => css`
 	color: var(--color-heading);
 	${
@@ -76,7 +86,7 @@ const pageHeaderStyles = (amIIframed: boolean) => css`
                 ${headlineMedium28};
             }
         `
-			: headlineBold28
+			: headlineMedium28
 	};
 	margin: 0;
 `;
@@ -117,6 +127,11 @@ export const MinimalLayout = ({
 		if (overrideTheme === 'iframe-light') {
 			return <IframeLightTheme />;
 		}
+
+		if (overrideTheme === 'onboarding-light') {
+			return <OnboardingLightTheme />;
+		}
+
 		return <Theme />;
 	};
 
@@ -125,21 +140,25 @@ export const MinimalLayout = ({
 	return (
 		<>
 			{getTheme()}
-			{!amIIframed && <MinimalHeader />}
-			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
-				{imageId && <MinimalLayoutImage id={imageId} />}
-				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
-					{pageHeader && (
-						<header>
+			<div css={headerStyles}>
+				{!amIIframed && <MinimalHeader />}
+
+				<Hero>
+					{imageId && <MinimalLayoutImage id={imageId} />}
+
+					<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
+						{pageHeader && (
 							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
-						</header>
-					)}
-					{leadText && typeof leadText === 'string' ? (
-						<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
-					) : (
-						leadText
-					)}
-				</ConditionalIframeThemeWrapper>
+						)}
+						{leadText && typeof leadText === 'string' ? (
+							<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
+						) : (
+							leadText
+						)}
+					</ConditionalIframeThemeWrapper>
+				</Hero>
+			</div>
+			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
 				<section css={mainSectionStyles}>
 					{errorMessage && (
 						<GatewayErrorSummary

@@ -5,6 +5,7 @@ import {
 	textSans17,
 	textSansBold15,
 	textSansBold17,
+	textEgyptian17,
 } from '@guardian/source/foundations';
 
 interface Props {
@@ -16,6 +17,7 @@ export const mainBodyTextStyles = css`
 	${textSans15};
 	color: var(--color-text);
 	margin: 0;
+	${textEgyptian17};
 
 	strong {
 		${textSansBold15};
