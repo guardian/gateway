@@ -79,6 +79,16 @@ const iframeLightTheme = css`
 	--color-input-label: ${palette.neutral[7]};
 `;
 
+const onboardingLightTheme = css`
+	${lightTheme}
+	--color-heading: white !important;
+	--color-text: white !important;
+	--color-logo: white !important;
+	--color-input-text: ${palette.neutral[7]};
+	--color-input-label: ${palette.neutral[7]};
+	--color-header-background: ${palette.brand[400]};
+`;
+
 export const Theme = () => {
 	return (
 		<Global
@@ -114,6 +124,22 @@ export const IframeLightTheme = () => {
 			styles={css`
 				:root {
 					${iframeLightTheme}
+				}
+
+				body {
+					background: var(--color-background);
+				}
+			`}
+		/>
+	);
+};
+
+export const OnboardingLightTheme = () => {
+	return (
+		<Global
+			styles={css`
+				:root {
+					${onboardingLightTheme}
 				}
 
 				body {

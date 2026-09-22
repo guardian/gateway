@@ -12,7 +12,11 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { IframeLightTheme, Theme } from '@/client/styles/Theme';
+import {
+	IframeLightTheme,
+	OnboardingLightTheme,
+	Theme,
+} from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -38,7 +42,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light';
+	overrideTheme?: 'iframe-light' | 'onboarding-light';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -64,6 +68,12 @@ const iframeThemeWrapperStyles = css`
 	display: flex;
 	flex-direction: column;
 	gap: ${remSpace[2]};
+`;
+
+const headerStyles = css`
+	margin-bottom: ${remSpace[4]};
+	background-color: var(--color-header-background);
+	width: 100%;
 `;
 
 const pageHeaderStyles = (amIIframed: boolean) => css`
@@ -117,6 +127,11 @@ export const MinimalLayout = ({
 		if (overrideTheme === 'iframe-light') {
 			return <IframeLightTheme />;
 		}
+
+		if (overrideTheme === 'onboarding-light') {
+			return <OnboardingLightTheme />;
+		}
+
 		return <Theme />;
 	};
 
@@ -125,21 +140,27 @@ export const MinimalLayout = ({
 	return (
 		<>
 			{getTheme()}
-			{!amIIframed && <MinimalHeader />}
+			<header css={headerStyles}>
+				{!amIIframed && <MinimalHeader />}
+
+				<div css={[amIIframed ? mainStylesStretch : mainStyles(wide)]}>
+					{imageId && <MinimalLayoutImage id={imageId} />}
+
+					<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
+						{pageHeader && (
+							<header>
+								<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
+							</header>
+						)}
+						{leadText && typeof leadText === 'string' ? (
+							<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
+						) : (
+							leadText
+						)}
+					</ConditionalIframeThemeWrapper>
+				</div>
+			</header>
 			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
-				{imageId && <MinimalLayoutImage id={imageId} />}
-				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
-					{pageHeader && (
-						<header>
-							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
-						</header>
-					)}
-					{leadText && typeof leadText === 'string' ? (
-						<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
-					) : (
-						leadText
-					)}
-				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
 					{errorMessage && (
 						<GatewayErrorSummary
