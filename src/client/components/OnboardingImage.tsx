@@ -32,7 +32,7 @@ const imageStyles = () => css`
 export const OnboardingImage = ({ id }: OnboardingImageProps) => {
 	return (
 		<img
-			alt=""
+			alt={id}
 			src={id === 'feast-app' ? FEAST_APP : GUARDIAN_APP}
 			css={imageStyles}
 		/>
