@@ -29,7 +29,9 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { UserResponse } from '@/server/models/okta/User';
+import { UserResponse, Status } from '@/server/models/okta/User';
+import { getUser } from '@/server/lib/okta/api/users';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import {
 	challengeResend,
@@ -163,7 +165,7 @@ router.get(
 router.get(
 	'/iframed/register/email',
 	redirectIfLoggedIn,
-	(req: Request, res: ResponseWithRequestState) => {
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const params = new URLSearchParams(
 			req.url.substring(req.url.indexOf('?'), req.url.length),
 		);
@@ -172,9 +174,30 @@ router.get(
 			? decodeURIComponent(prepopulatedEmailParamEncoded)
 			: null;
 
+		if (prepopulatedEmail) {
+			try {
+				const user = await getUser(prepopulatedEmail, req.ip);
+				if (
+					user &&
+					user.status !== Status.DEPROVISIONED &&
+					user.status !== Status.STAGED
+				) {
+					const redirectUrl = buildUrlWithQueryParams(
+						'/iframed/signin',
+						{},
+						res.locals.queryParams,
+					);
+					return res.redirect(303, redirectUrl);
+				}
+			} catch (error) {
+				// Continue to register as normal
+				logger.info(`User not found for email: ${prepopulatedEmail}`);
+			}
+		}
+
 		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
 		res.type('html').send(html);
-	},
+	}),
 );
 
 router.get(
