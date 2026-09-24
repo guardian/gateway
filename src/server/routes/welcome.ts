@@ -599,16 +599,9 @@ const updateNewslettersAndConsents = async (
 	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
 	const state = res.locals;
 
-	logger.log(
-		'info',
-		'Inside updateNewslettersAndConsents from multiples accounts flow',
-	);
-
 	if (!state.oauthState) {
 		return;
 	}
-
-	logger.log('info', 'oauthstate exists');
 
 	if (registrationConsents.consents?.length) {
 		try {

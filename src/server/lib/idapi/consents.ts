@@ -99,8 +99,6 @@ export const update = async ({
 		accessToken,
 	);
 
-	logger.log('info', `Updating consents ${JSON.stringify(payload)}`);
-
 	try {
 		await idapiFetch({
 			path: '/users/me/consents',
