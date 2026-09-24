@@ -722,12 +722,13 @@ export const oktaRegistrationOrSignin = async (
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
-	const optedInConsents = getOptedInConsents(consents);
+	if (appClientId === 'maj') {
+		const optedInConsents = getOptedInConsents(consents);
 
-	optedInConsents.forEach((consent) =>
-		res.cookie(consent.id, 'true', { maxAge: 600000, httpOnly: true }),
-	);
-
+		optedInConsents.forEach((consent) =>
+			res.cookie(consent.id, 'true', { maxAge: 600000, httpOnly: true }),
+		);
+	}
 	const [registrationLocation] = getRegistrationLocation(req);
 
 	// OKTA IDX API FLOW
