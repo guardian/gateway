@@ -48,7 +48,11 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
-import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
+import {
+	bodyFormFieldsToRegistrationConsents,
+	dropRegistrationConsentsCookies,
+	registrationConsentsExistInCookies,
+} from '@/server/lib/registrationConsents';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import {
@@ -64,6 +68,7 @@ import {
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -704,6 +709,11 @@ export const registerPasscodeHandler = async (
 	);
 };
 
+const getOptedInConsents = (consents: RegistrationConsents) => [
+	...(consents.consents ?? []).filter((c) => c.consented),
+	...(consents.newsletters ?? []).filter((n) => n.subscribed),
+];
+
 export const oktaRegistrationOrSignin = async (
 	req: Request,
 	res: ResponseWithRequestState,
@@ -716,6 +726,17 @@ export const oktaRegistrationOrSignin = async (
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
+	if (appClientId === 'maj') {
+		if (registrationConsentsExistInCookies(req)) {
+			dropRegistrationConsentsCookies(req, res);
+		}
+
+		const optedInConsents = getOptedInConsents(consents);
+
+		optedInConsents.forEach((consent) =>
+			res.cookie(consent.id, 'true', { maxAge: 600000, httpOnly: true }),
+		);
+	}
 	const [registrationLocation] = getRegistrationLocation(req);
 
 	// OKTA IDX API FLOW
