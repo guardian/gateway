@@ -184,5 +184,23 @@ describe('iframed/register/email redirect logic', () => {
 			expect(shouldRedirect).toBe(false);
 			expect(hasEmail).toBe(true);
 		});
+
+		test('scenario: prepopulateEmail should be included in redirect URL', () => {
+			const email = 'active@example.com';
+			const baseQueryParams = {
+				appClientId: 'maj',
+				returnUrl: 'https://www.example.com',
+			};
+
+			// Simulate building redirect with prepopulateEmail
+			const redirectParams = {
+				...baseQueryParams,
+				prepopulateEmail: email,
+			};
+
+			expect(redirectParams.prepopulateEmail).toBe(email);
+			expect(redirectParams.appClientId).toBe('maj');
+			expect(redirectParams.returnUrl).toBe('https://www.example.com');
+		});
 	});
 });

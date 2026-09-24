@@ -185,7 +185,10 @@ router.get(
 					const redirectUrl = buildUrlWithQueryParams(
 						'/iframed/signin',
 						{},
-						res.locals.queryParams,
+						{
+							...res.locals.queryParams,
+							prepopulateEmail: prepopulatedEmail,
+						},
 					);
 					return res.redirect(303, redirectUrl);
 				}
