@@ -459,6 +459,7 @@ router.post(
 // existing user using create account flow page
 router.get(
 	'/welcome/existing',
+	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const appClientId = state.queryParams.appClientId;
