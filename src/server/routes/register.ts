@@ -64,6 +64,7 @@ import {
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -704,6 +705,11 @@ export const registerPasscodeHandler = async (
 	);
 };
 
+const getOptedInConsents = (consents: RegistrationConsents) => [
+	...(consents.consents ?? []).filter((c) => c.consented),
+	...(consents.newsletters ?? []).filter((n) => n.subscribed),
+];
+
 export const oktaRegistrationOrSignin = async (
 	req: Request,
 	res: ResponseWithRequestState,
@@ -715,6 +721,12 @@ export const oktaRegistrationOrSignin = async (
 	} = res.locals;
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
+
+	const optedInConsents = getOptedInConsents(consents);
+
+	optedInConsents.forEach((consent) =>
+		res.cookie(consent.id, 'true', { maxAge: 600000, httpOnly: true }),
+	);
 
 	const [registrationLocation] = getRegistrationLocation(req);
 

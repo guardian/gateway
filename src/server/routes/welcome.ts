@@ -33,7 +33,12 @@ import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
-import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
+import {
+	bodyFormFieldsToRegistrationConsents,
+	dropRegistrationConsentsCookies,
+	getRegistrationConsentsFromCookies,
+	registrationConsentsExistInCookies,
+} from '@/server/lib/registrationConsents';
 import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 
 import {
@@ -142,7 +147,7 @@ router.post(
 			const registrationConsents = bodyFormFieldsToRegistrationConsents(
 				req.body,
 			);
-			await updateNewslettersAndConstents(registrationConsents, res, 'social');
+			await updateNewslettersAndConsents(registrationConsents, res, 'social');
 
 			// update the consents and go to the finally block
 		} catch (error) {
@@ -253,7 +258,7 @@ router.post(
 			);
 
 			// update the consents and go to the finally block
-			await updateNewslettersAndConstents(
+			await updateNewslettersAndConsents(
 				registrationConsents,
 				res,
 				'complete-account-post',
@@ -454,7 +459,19 @@ router.post(
 // existing user using create account flow page
 router.get(
 	'/welcome/existing',
-	(req: Request, res: ResponseWithRequestState) => {
+	async (req: Request, res: ResponseWithRequestState) => {
+		if (registrationConsentsExistInCookies(req)) {
+			const registrationConsents = getRegistrationConsentsFromCookies(req);
+
+			await updateNewslettersAndConsents(
+				registrationConsents,
+				res,
+				'multiple-accounts',
+			);
+
+			dropRegistrationConsentsCookies(req, res);
+		}
+
 		const html = renderer('/welcome/existing', {
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
@@ -570,7 +587,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	}
 };
 
-const updateNewslettersAndConstents = async (
+const updateNewslettersAndConsents = async (
 	registrationConsents: RegistrationConsents,
 	res: ResponseWithRequestState,
 	loggingContext: string,

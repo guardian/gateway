@@ -58,7 +58,7 @@ export const setUserFeatureCookies = async ({
  * 	daysTillExpiry,
  * }
  */
-const createCookie = ({
+export const createCookie = ({
 	name,
 	res,
 	daysTillExpiry,
