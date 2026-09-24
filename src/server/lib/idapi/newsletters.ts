@@ -70,6 +70,8 @@ export const update = async ({
 		accessToken,
 	);
 
+	logger.log('info', `Updating newsletters ${JSON.stringify(payload)}`);
+
 	try {
 		await idapiFetch({
 			path: '/users/me/newsletters',

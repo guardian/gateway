@@ -460,7 +460,10 @@ router.post(
 router.get(
 	'/welcome/existing',
 	async (req: Request, res: ResponseWithRequestState) => {
-		if (registrationConsentsExistInCookies(req)) {
+		const state = res.locals;
+		const appClientId = state.queryParams.appClientId;
+
+		if (appClientId === 'maj' && registrationConsentsExistInCookies(req)) {
 			const registrationConsents = getRegistrationConsentsFromCookies(req);
 
 			await updateNewslettersAndConsents(
@@ -595,9 +598,16 @@ const updateNewslettersAndConsents = async (
 	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
 	const state = res.locals;
 
+	logger.log(
+		'info',
+		'Inside updateNewslettersAndConsents from multiples accounts flow',
+	);
+
 	if (!state.oauthState) {
 		return;
 	}
+
+	logger.log('info', 'oauthstate exists');
 
 	if (registrationConsents.consents?.length) {
 		try {
