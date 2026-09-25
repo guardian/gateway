@@ -174,7 +174,7 @@ router.get(
 		const params = new URLSearchParams(
 			req.url.substring(req.url.indexOf('?'), req.url.length),
 		);
-		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulatedEmailParamEncoded = params.get('prepopulatedEmail');
 		const prepopulatedEmail = prepopulatedEmailParamEncoded
 			? decodeURIComponent(prepopulatedEmailParamEncoded)
 			: null;
@@ -188,7 +188,7 @@ router.get(
 						{},
 						{
 							...res.locals.queryParams,
-							prepopulateEmail: prepopulatedEmail,
+							prepopulatedEmail: prepopulatedEmail,
 						},
 					);
 					return res.redirect(303, redirectUrl);

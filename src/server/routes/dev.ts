@@ -61,9 +61,9 @@ if (stage === 'DEV') {
 				typeof req.query.page === 'string' ? req.query.page : 'signin';
 			const appClientId =
 				typeof req.query.appClientId === 'string' ? req.query.appClientId : '';
-			const prepopulateEmail =
-				typeof req.query.prepopulateEmail === 'string'
-					? req.query.prepopulateEmail
+			const prepopulatedEmail =
+				typeof req.query.prepopulatedEmail === 'string'
+					? req.query.prepopulatedEmail
 					: '';
 
 			const iframePath = getIframedPath(page);
@@ -71,8 +71,8 @@ if (stage === 'DEV') {
 			if (appClientId) {
 				iframeQuery.set('appClientId', appClientId);
 			}
-			if (prepopulateEmail) {
-				iframeQuery.set('prepopulateEmail', prepopulateEmail);
+			if (prepopulatedEmail) {
+				iframeQuery.set('prepopulatedEmail', prepopulatedEmail);
 			}
 
 			const iframeSrc = `${iframePath}${iframeQuery.toString() ? `?${iframeQuery.toString()}` : ''}`;

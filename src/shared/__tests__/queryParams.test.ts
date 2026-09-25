@@ -40,7 +40,7 @@ describe('getPersistableQueryParams', () => {
 			listName: undefined,
 			usePasswordSignIn: undefined,
 			useSetPassword: undefined,
-			prepopulateEmail: undefined,
+			prepopulatedEmail: undefined,
 			newOnboardingFlow: true,
 		};
 
