@@ -10,14 +10,15 @@ import { css } from '@emotion/react';
 
 interface Props {
 	id: DecorativeImageId;
+	useDarkImage?: boolean;
 }
 
-const imageStyles = (id: DecorativeImageId) => css`
+const imageStyles = (id: DecorativeImageId, useDarkImage?: boolean) => css`
 	@media (prefers-color-scheme: dark) {
 		content: url(${id === 'email' ? EMAIL_DARK : WELCOME_DARK});
 	}
 	@media (prefers-color-scheme: light) {
-		content: url(${id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
+		content: url(${useDarkImage ? WELCOME_DARK : id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
 	}
 	/* These class-based themes are only for Storybook/Chromatic modes 
 	 * (see preview.js).
@@ -26,12 +27,12 @@ const imageStyles = (id: DecorativeImageId) => css`
 		content: url(${id === 'email' ? EMAIL_DARK : WELCOME_DARK});
 	}
 	html.light-theme & {
-		content: url(${id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
+		content: url(${useDarkImage ? WELCOME_DARK : id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
 	}
 `;
 
-export const MinimalLayoutImage = ({ id }: Props) => {
+export const MinimalLayoutImage = ({ id, useDarkImage }: Props) => {
 	// WCAG H67: Use null alt text for decorative images
 	// ARIA: role="presentation" removes element from accessibility tree
-	return <img alt="" css={imageStyles(id)} role="presentation" />;
+	return <img alt="" css={imageStyles(id, useDarkImage)} role="presentation" />;
 };

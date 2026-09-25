@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { css } from '@emotion/react';
+import { textEgyptian17 } from '@guardian/source/foundations';
 import MinimalHeader from '@/client/components/MinimalHeader';
 import {
 	from,
@@ -37,6 +38,7 @@ interface MinimalLayoutProps {
 	pageHeader?: string;
 	leadText?: React.ReactNode;
 	imageId?: DecorativeImageId;
+	useDarkImage?: boolean;
 	successOverride?: string;
 	errorOverride?: string;
 	errorContext?: React.ReactNode;
@@ -45,17 +47,37 @@ interface MinimalLayoutProps {
 	overrideTheme?: 'iframe-light' | 'onboarding-light';
 }
 
-const mainStyles = (wide: boolean) => css`
+const sharedPadding = css`
 	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
+	${from.desktop} {
+		padding: ${remSpace[16]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
+	}
+	gap: ${CONTAINER_GAP};
+`;
+const mainStyles = (wide: boolean) => css`
+	${sharedPadding}
 	max-width: ${wide ? LAYOUT_WIDTH_WIDE : LAYOUT_WIDTH_NARROW}px;
 	width: 100%;
 	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
-	gap: ${CONTAINER_GAP};
-	${from.desktop} {
-		padding: ${remSpace[16]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
-	}
+	grid-area: text;
+`;
+
+const headerStyles = css`
+	background-color: var(--color-header-background);
+	width: 100%;
+	grid-area: header;
+`;
+
+const containerStyles = css`
+	${sharedPadding}
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: auto 1fr;
+	grid-template-areas:
+		'header header header header header'
+		'.   text   text   text   .';
 `;
 
 const mainStylesStretch = css`
@@ -70,10 +92,8 @@ const iframeThemeWrapperStyles = css`
 	gap: ${remSpace[2]};
 `;
 
-const headerStyles = css`
-	margin-bottom: ${remSpace[4]};
-	background-color: var(--color-header-background);
-	width: 100%;
+const mainBodyTextOverrides = css`
+	${textEgyptian17};
 `;
 
 const pageHeaderStyles = (amIIframed: boolean) => css`
@@ -138,20 +158,30 @@ export const MinimalLayout = ({
 	const amIIframed = !!overrideTheme?.includes('iframe');
 
 	return (
-		<>
+		<div css={containerStyles}>
 			{getTheme()}
 			<div css={headerStyles}>
 				{!amIIframed && <MinimalHeader />}
 
 				<Hero>
-					{imageId && <MinimalLayoutImage id={imageId} />}
+					{imageId && (
+						<MinimalLayoutImage
+							id={imageId}
+							useDarkImage={overrideTheme === 'onboarding-light'}
+						/>
+					)}
 
 					<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
 						{pageHeader && (
 							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
 						)}
 						{leadText && typeof leadText === 'string' ? (
-							<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
+							<MainBodyText
+								isIframed={amIIframed}
+								cssOverrides={mainBodyTextOverrides}
+							>
+								{leadText}
+							</MainBodyText>
 						) : (
 							leadText
 						)}
@@ -179,6 +209,6 @@ export const MinimalLayout = ({
 					{children}
 				</section>
 			</main>
-		</>
+		</div>
 	);
 };
