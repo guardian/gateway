@@ -351,3 +351,177 @@ userStatuses.forEach((status) => {
 		});
 	});
 });
+
+test.describe('GET /iframed/register/email with prepopulatedEmail redirect', () => {
+	test.beforeEach(async ({ mockApi }) => {
+		await mockApi.get('/mock/purge');
+	});
+
+	const allStatuses = ['ACTIVE', 'PROVISIONED', 'STAGED', 'DEPROVISIONED'];
+
+	allStatuses.forEach((status) => {
+		test(`should redirect to /iframed/signin when user has status ${status}`, async ({
+			mockApi,
+			page,
+		}) => {
+			const testEmail = 'existing@example.com';
+			const encodedEmail = encodeURIComponent(testEmail);
+
+			await mockApi.post('/mock/permanent-pattern', {
+				data: {
+					pattern: '/api/v1/users/.*',
+					status: 200,
+					body: {
+						id: 'user123',
+						status: status,
+						profile: {
+							email: testEmail,
+							login: testEmail,
+						},
+						credentials: {},
+					},
+				},
+			});
+
+			await page.goto(
+				`/iframed/register/email?prepopulatedEmail=${encodedEmail}`,
+			);
+
+			await expect(page).toHaveURL(
+				new RegExp(`/iframed/signin.*prepopulatedEmail=${encodedEmail}`),
+			);
+		});
+	});
+
+	test('should show register page when user does not exist', async ({
+		mockApi,
+		page,
+	}) => {
+		const testEmail = 'nonexistent@example.com';
+		const encodedEmail = encodeURIComponent(testEmail);
+
+		await mockApi.post('/mock/permanent-pattern', {
+			data: {
+				pattern: '/api/v1/users/.*',
+				status: 404,
+				body: {
+					errorCode: 'E0000007',
+					errorSummary: 'Not found',
+				},
+			},
+		});
+
+		await mockApi.post('/mock/permanent-pattern', {
+			data: {
+				pattern: '/oauth2/.*/v1/interact',
+				status: 200,
+				body: {
+					interaction_handle: 'test_handle',
+				},
+			},
+		});
+
+		await page.goto(
+			`/iframed/register/email?prepopulatedEmail=${encodedEmail}`,
+		);
+
+		await expect(page).toHaveURL(new RegExp(`/iframed/register/email`));
+
+		await expect(
+			page.getByRole('heading', {
+				name: /create account|register/i,
+			}),
+		).toBeVisible();
+	});
+
+	test('should show register page when no prepopulatedEmail parameter is provided', async ({
+		mockApi,
+		page,
+	}) => {
+		await mockApi.post('/mock/permanent-pattern', {
+			data: {
+				pattern: '/oauth2/.*/v1/interact',
+				status: 200,
+				body: {
+					interaction_handle: 'test_handle',
+				},
+			},
+		});
+
+		await page.goto('/iframed/register/email');
+
+		await expect(page).toHaveURL(new RegExp(`/iframed/register/email`));
+
+		await expect(
+			page.getByRole('heading', {
+				name: /create account|register/i,
+			}),
+		).toBeVisible();
+	});
+
+	test('should handle URL-encoded email addresses with special characters', async ({
+		mockApi,
+		page,
+	}) => {
+		const testEmail = 'user+test@example.com';
+		const encodedEmail = encodeURIComponent(testEmail);
+
+		await mockApi.post('/mock/permanent-pattern', {
+			data: {
+				pattern: '/api/v1/users/.*',
+				status: 200,
+				body: {
+					id: 'user123',
+					status: 'ACTIVE',
+					profile: {
+						email: testEmail,
+						login: testEmail,
+					},
+					credentials: {},
+				},
+			},
+		});
+
+		await page.goto(
+			`/iframed/register/email?prepopulatedEmail=${encodedEmail}`,
+		);
+
+		await expect(page).toHaveURL(
+			new RegExp(`/iframed/signin.*prepopulatedEmail=${encodedEmail}`),
+		);
+	});
+
+	test('should preserve returnUrl and other query params on redirect', async ({
+		mockApi,
+		page,
+	}) => {
+		const testEmail = 'existing@example.com';
+		const encodedEmail = encodeURIComponent(testEmail);
+		const returnUrl = encodeURIComponent('https://www.theguardian.com/account');
+
+		await mockApi.post('/mock/permanent-pattern', {
+			data: {
+				pattern: '/api/v1/users/.*',
+				status: 200,
+				body: {
+					id: 'user123',
+					status: 'ACTIVE',
+					profile: {
+						email: testEmail,
+						login: testEmail,
+					},
+					credentials: {},
+				},
+			},
+		});
+
+		await page.goto(
+			`/iframed/register/email?prepopulatedEmail=${encodedEmail}&returnUrl=${returnUrl}`,
+		);
+
+		await expect(page).toHaveURL(
+			new RegExp(`/iframed/signin.*prepopulatedEmail`),
+		);
+		await expect(page).toHaveURL(new RegExp(`returnUrl.*theguardian`));
+	});
+});
