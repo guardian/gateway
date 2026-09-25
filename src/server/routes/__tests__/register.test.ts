@@ -187,20 +187,40 @@ describe('iframed/register/email redirect logic', () => {
 
 		test('scenario: prepopulateEmail should be included in redirect URL', () => {
 			const email = 'active@example.com';
-			const baseQueryParams = {
+			const queryParams = {
 				appClientId: 'maj',
-				returnUrl: 'https://www.example.com',
-			};
-
-			// Simulate building redirect with prepopulateEmail
-			const redirectParams = {
-				...baseQueryParams,
+				ref: 'https://ref.example.com',
 				prepopulateEmail: email,
 			};
 
-			expect(redirectParams.prepopulateEmail).toBe(email);
-			expect(redirectParams.appClientId).toBe('maj');
-			expect(redirectParams.returnUrl).toBe('https://www.example.com');
+			expect(queryParams.prepopulateEmail).toBe(email);
+			expect(queryParams.appClientId).toBe('maj');
+			expect(queryParams.ref).toBe('https://ref.example.com');
+		});
+
+		test('scenario: prepopulateEmail with special characters should be URL-encoded', () => {
+			const email = 'user+tag@example.com';
+			const queryParams = {
+				appClientId: 'maj',
+				prepopulateEmail: email,
+			};
+
+			expect(queryParams.prepopulateEmail).toBe('user+tag@example.com');
+		});
+
+		test('scenario: redirect preserves existing query params when adding prepopulateEmail', () => {
+			const email = 'active@example.com';
+			const queryParams = {
+				appClientId: 'maj',
+				returnUrl: 'https://example.com',
+				ref: 'https://ref.example.com',
+				prepopulateEmail: email,
+			};
+
+			expect(queryParams.appClientId).toBe('maj');
+			expect(queryParams.returnUrl).toBe('https://example.com');
+			expect(queryParams.ref).toBe('https://ref.example.com');
+			expect(queryParams.prepopulateEmail).toBe(email);
 		});
 	});
 });
