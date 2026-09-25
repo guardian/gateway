@@ -182,11 +182,7 @@ router.get(
 		if (prepopulatedEmail) {
 			try {
 				const user = await getUser(prepopulatedEmail, req.ip);
-				if (
-					user &&
-					user.status !== Status.DEPROVISIONED &&
-					user.status !== Status.STAGED
-				) {
+				if (user && user.status !== Status.DEPROVISIONED) {
 					const redirectUrl = buildUrlWithQueryParams(
 						'/iframed/signin',
 						{},
