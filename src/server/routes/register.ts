@@ -29,7 +29,7 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { UserResponse, Status } from '@/server/models/okta/User';
+import { UserResponse } from '@/server/models/okta/User';
 import { getUser } from '@/server/lib/okta/api/users';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
@@ -174,7 +174,7 @@ router.get(
 		const params = new URLSearchParams(
 			req.url.substring(req.url.indexOf('?'), req.url.length),
 		);
-		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulatedEmailParamEncoded = params.get('prepopulatedEmail');
 		const prepopulatedEmail = prepopulatedEmailParamEncoded
 			? decodeURIComponent(prepopulatedEmailParamEncoded)
 			: null;
@@ -182,13 +182,13 @@ router.get(
 		if (prepopulatedEmail) {
 			try {
 				const user = await getUser(prepopulatedEmail, req.ip);
-				if (user && user.status !== Status.DEPROVISIONED) {
+				if (user) {
 					const redirectUrl = buildUrlWithQueryParams(
 						'/iframed/signin',
 						{},
 						{
 							...res.locals.queryParams,
-							prepopulateEmail: prepopulatedEmail,
+							prepopulatedEmail: prepopulatedEmail,
 						},
 					);
 					return res.redirect(303, redirectUrl);
