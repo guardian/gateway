@@ -12,7 +12,11 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
 import locations from '@/shared/lib/locations';
-import { IframeLightTheme, Theme } from '@/client/styles/Theme';
+import {
+	IframeLightTheme,
+	OnboardingFlowLightTheme,
+	Theme,
+} from '@/client/styles/Theme';
 import {
 	mainSectionStyles,
 	successMessageStyles,
@@ -38,7 +42,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light';
+	overrideTheme?: 'iframe-light' | 'onboarding-light';
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -64,6 +68,19 @@ const iframeThemeWrapperStyles = css`
 	display: flex;
 	flex-direction: column;
 	gap: ${remSpace[2]};
+`;
+
+const onboardingStyles = (wide: boolean) => css`
+	${mainStyles(wide)};
+	max-width: 372px;
+
+	${from.tablet} {
+		max-width: 480px;
+	}
+
+	${from.desktop} {
+		max-width: 620px;
+	}
 `;
 
 const pageHeaderStyles = (amIIframed: boolean) => css`
@@ -117,16 +134,33 @@ export const MinimalLayout = ({
 		if (overrideTheme === 'iframe-light') {
 			return <IframeLightTheme />;
 		}
+
+		if (overrideTheme === 'onboarding-light') {
+			return <OnboardingFlowLightTheme />;
+		}
+
 		return <Theme />;
 	};
 
+	const getStyles = (
+		amIIframed: boolean,
+		isOnboarding: boolean,
+		wide: boolean,
+	) => {
+		if (amIIframed) return mainStylesStretch;
+		else if (isOnboarding) return onboardingStyles(wide);
+
+		return mainStyles(wide);
+	};
+
 	const amIIframed = !!overrideTheme?.includes('iframe');
+	const isOnboarding = overrideTheme === 'onboarding-light';
 
 	return (
 		<>
 			{getTheme()}
-			{!amIIframed && <MinimalHeader />}
-			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
+			{!amIIframed && !isOnboarding && <MinimalHeader />}
+			<main css={getStyles(amIIframed, isOnboarding, wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
 					{pageHeader && (
