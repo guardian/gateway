@@ -45,6 +45,7 @@ export const getPersistableQueryParams = (
 	usePasswordSignIn: params.usePasswordSignIn,
 	useSetPassword: params.useSetPassword,
 	newOnboardingFlow: params.newOnboardingFlow,
+	prepopulateEmail: params.prepopulateEmail,
 });
 
 /**

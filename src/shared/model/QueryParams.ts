@@ -52,6 +52,8 @@ export interface PersistableQueryParams
 	useSetPassword?: boolean;
 	// Flag to opt users into the new onboarding flow
 	newOnboardingFlow?: boolean;
+	// Prepopulate the email field when redirecting to signin/register pages
+	prepopulateEmail?: string;
 }
 
 /**
