@@ -395,7 +395,12 @@ const oktaIdxCreateAccountOrSignIn = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	const { email = '', isCombinedSigninAndRegisterFlow = false } = req.body;
+	const {
+		email = '',
+		firstName,
+		secondName,
+		isCombinedSigninAndRegisterFlow = false,
+	} = req.body;
 
 	const {
 		queryParams: { appClientId, clientId },
@@ -433,6 +438,8 @@ const oktaIdxCreateAccountOrSignIn = async (
 				extraData: {
 					flow: 'create-account',
 					appLabel: res.locals.appLabel,
+					firstName,
+					lastName: secondName,
 				},
 			},
 			consents,
