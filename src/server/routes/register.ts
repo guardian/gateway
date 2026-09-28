@@ -167,41 +167,46 @@ router.get(
 	},
 );
 
+export const handleIframedRegisterEmail = async (
+	req: Request,
+	res: ResponseWithRequestState,
+) => {
+	const params = new URLSearchParams(
+		req.url.substring(req.url.indexOf('?'), req.url.length),
+	);
+	const prepopulatedEmailParamEncoded = params.get('prepopulatedEmail');
+	const prepopulatedEmail = prepopulatedEmailParamEncoded
+		? decodeURIComponent(prepopulatedEmailParamEncoded)
+		: null;
+
+	if (prepopulatedEmail) {
+		try {
+			const user = await getUser(prepopulatedEmail, req.ip);
+			if (user) {
+				const redirectUrl = buildUrlWithQueryParams(
+					'/iframed/signin',
+					{},
+					{
+						...res.locals.queryParams,
+						prepopulatedEmail: prepopulatedEmail,
+					},
+				);
+				return res.redirect(303, redirectUrl);
+			}
+		} catch (error) {
+			// Continue to register as normal
+			logger.info(`User not found for email: ${prepopulatedEmail}`);
+		}
+	}
+
+	const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
+	return res.type('html').send(html);
+};
+
 router.get(
 	'/iframed/register/email',
 	redirectIfLoggedIn,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const params = new URLSearchParams(
-			req.url.substring(req.url.indexOf('?'), req.url.length),
-		);
-		const prepopulatedEmailParamEncoded = params.get('prepopulatedEmail');
-		const prepopulatedEmail = prepopulatedEmailParamEncoded
-			? decodeURIComponent(prepopulatedEmailParamEncoded)
-			: null;
-
-		if (prepopulatedEmail) {
-			try {
-				const user = await getUser(prepopulatedEmail, req.ip);
-				if (user) {
-					const redirectUrl = buildUrlWithQueryParams(
-						'/iframed/signin',
-						{},
-						{
-							...res.locals.queryParams,
-							prepopulatedEmail: prepopulatedEmail,
-						},
-					);
-					return res.redirect(303, redirectUrl);
-				}
-			} catch (error) {
-				// Continue to register as normal
-				logger.info(`User not found for email: ${prepopulatedEmail}`);
-			}
-		}
-
-		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
-		res.type('html').send(html);
-	}),
+	handleAsyncErrors(handleIframedRegisterEmail),
 );
 
 router.get(
