@@ -75,7 +75,8 @@ if (stage === 'DEV') {
 				iframeQuery.set('prepopulatedEmail', prepopulatedEmail);
 			}
 
-			const iframeSrc = `${iframePath}${iframeQuery.toString() ? `?${iframeQuery.toString()}` : ''}`;
+			const queryString = iframeQuery.toString();
+			const iframeSrc = `${iframePath}${queryString ? `?${queryString}` : ''}`;
 
 			const html = `
 				<!DOCTYPE html>
@@ -166,7 +167,7 @@ router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 
 	const iframeHarnessLink =
 		stage === 'DEV'
-			? '<li><a href="/iframe-harness?page=signin&appClientId=maj">Iframe Harness (Sign-in MAJ)</a> | <a href="/iframe-harness?page=register&appClientId=maj">Iframe Harness (Register MAJ)</a></li>'
+			? '<li><a href="/iframe-harness?page=signin&appClientId=maj&prepopulatedEmail=test%40example.com">Iframe Harness (Sign-in)</a> | <a href="/iframe-harness?page=register&appClientId=maj&prepopulatedEmail=test%40example.com">Iframe Harness (Register)</a></li>'
 			: '';
 
 	const html = `
