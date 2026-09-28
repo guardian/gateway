@@ -29,7 +29,7 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { UserResponse } from '@/server/models/okta/User';
+import { Status, UserResponse } from '@/server/models/okta/User';
 import { getUser } from '@/server/lib/okta/api/users';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
@@ -182,7 +182,7 @@ export const handleIframedRegisterEmail = async (
 	if (prepopulatedEmail) {
 		try {
 			const user = await getUser(prepopulatedEmail, req.ip);
-			if (user) {
+			if (user && user.status === Status.ACTIVE) {
 				const redirectUrl = buildUrlWithQueryParams(
 					'/iframed/signin',
 					{},
