@@ -1,26 +1,16 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { textEgyptian17 } from '@guardian/source/foundations';
 import MinimalHeader from '@/client/components/MinimalHeader';
 import {
 	from,
+	headlineBold28,
 	headlineMedium24,
 	headlineMedium28,
 	remSpace,
 } from '@guardian/source/foundations';
-import useClientState from '@/client/lib/hooks/useClientState';
-import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
-import locations from '@/shared/lib/locations';
-import {
-	IframeLightTheme,
-	OnboardingLightTheme,
-	Theme,
-} from '@/client/styles/Theme';
-import {
-	mainSectionStyles,
-	successMessageStyles,
-} from '@/client/styles/Shared';
+import { getTheme, OverrideTheme } from '@/client/styles/Theme';
+import { mainSectionStyles } from '@/client/styles/Shared';
 import { DecorativeImageId } from '@/client/assets/decorative';
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
 import {
@@ -29,8 +19,8 @@ import {
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
-import { Hero } from '../components/Hero';
+import { SuccessLayout } from './SuccessLayout';
+import { ErrorLayout } from './ErrorLayout';
 
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
@@ -38,46 +28,25 @@ interface MinimalLayoutProps {
 	pageHeader?: string;
 	leadText?: React.ReactNode;
 	imageId?: DecorativeImageId;
-	useDarkImage?: boolean;
 	successOverride?: string;
 	errorOverride?: string;
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light' | 'onboarding-light';
+	overrideTheme?: OverrideTheme;
 }
 
-const sharedPadding = css`
-	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
-	${from.desktop} {
-		padding: ${remSpace[16]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
-	}
-	gap: ${CONTAINER_GAP};
-`;
 const mainStyles = (wide: boolean) => css`
-	${sharedPadding}
+	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
 	max-width: ${wide ? LAYOUT_WIDTH_WIDE : LAYOUT_WIDTH_NARROW}px;
 	width: 100%;
 	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
-	grid-area: text;
-`;
-
-const headerStyles = css`
-	background-color: var(--color-header-background);
-	width: 100%;
-	grid-area: header;
-`;
-
-const containerStyles = css`
-	${sharedPadding}
-	display: grid;
-	grid-template-columns: repeat(5, 1fr);
-	grid-template-rows: auto 1fr;
-	grid-template-areas:
-		'header header header header header'
-		'.   text   text   text   .';
+	gap: ${CONTAINER_GAP};
+	${from.desktop} {
+		padding: ${remSpace[16]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
+	}
 `;
 
 const mainStylesStretch = css`
@@ -92,10 +61,6 @@ const iframeThemeWrapperStyles = css`
 	gap: ${remSpace[2]};
 `;
 
-const mainBodyTextOverrides = css`
-	${textEgyptian17};
-`;
-
 const pageHeaderStyles = (amIIframed: boolean) => css`
 	color: var(--color-heading);
 	${
@@ -106,7 +71,7 @@ const pageHeaderStyles = (amIIframed: boolean) => css`
                 ${headlineMedium28};
             }
         `
-			: headlineMedium28
+			: headlineBold28
 	};
 	margin: 0;
 `;
@@ -137,78 +102,40 @@ export const MinimalLayout = ({
 	shortRequestId,
 	overrideTheme,
 }: MinimalLayoutProps) => {
-	const clientState = useClientState();
-	const { globalMessage: { error, success } = {} } = clientState;
-
-	const successMessage = successOverride || success;
-	const errorMessage = errorOverride || error;
-
-	const getTheme = () => {
-		if (overrideTheme === 'iframe-light') {
-			return <IframeLightTheme />;
-		}
-
-		if (overrideTheme === 'onboarding-light') {
-			return <OnboardingLightTheme />;
-		}
-
-		return <Theme />;
-	};
-
 	const amIIframed = !!overrideTheme?.includes('iframe');
 
 	return (
-		<div css={containerStyles}>
-			{getTheme()}
-			<div css={headerStyles}>
-				{!amIIframed && <MinimalHeader />}
-
-				<Hero>
-					{imageId && (
-						<MinimalLayoutImage
-							id={imageId}
-							useDarkImage={overrideTheme === 'onboarding-light'}
-						/>
-					)}
-
-					<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
-						{pageHeader && (
-							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
-						)}
-						{leadText && typeof leadText === 'string' ? (
-							<MainBodyText
-								isIframed={amIIframed}
-								cssOverrides={mainBodyTextOverrides}
-							>
-								{leadText}
-							</MainBodyText>
-						) : (
-							leadText
-						)}
-					</ConditionalIframeThemeWrapper>
-				</Hero>
-			</div>
+		<>
+			{getTheme(overrideTheme)}
+			{!amIIframed && <MinimalHeader />}
 			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
+				{imageId && <MinimalLayoutImage id={imageId} />}
+				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
+					{pageHeader && (
+						<header>
+							<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
+						</header>
+					)}
+					{leadText && typeof leadText === 'string' ? (
+						<MainBodyText isIframed={amIIframed}>{leadText}</MainBodyText>
+					) : (
+						leadText
+					)}
+				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
-					{errorMessage && (
-						<GatewayErrorSummary
-							gatewayError={errorMessage}
-							context={errorContext}
-							shortRequestId={shortRequestId}
-							errorReportUrl={
-								showErrorReportUrl ? locations.REPORT_ISSUE : undefined
-							}
-						/>
-					)}
-					{successMessage && !errorMessage && (
-						<SuccessSummary
-							message={successMessage}
-							cssOverrides={successMessageStyles}
-						/>
-					)}
+					<ErrorLayout
+						errorOverride={errorOverride}
+						errorContext={errorContext}
+						showErrorReportUrl={showErrorReportUrl}
+						shortRequestId={shortRequestId}
+					/>
+					<SuccessLayout
+						successOverride={successOverride}
+						errorOverride={errorOverride}
+					/>
 					{children}
 				</section>
 			</main>
-		</div>
+		</>
 	);
 };

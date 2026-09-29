@@ -13,23 +13,33 @@ interface Props {
 	useDarkImage?: boolean;
 }
 
-const imageStyles = (id: DecorativeImageId, useDarkImage?: boolean) => css`
-	@media (prefers-color-scheme: dark) {
-		content: url(${id === 'email' ? EMAIL_DARK : WELCOME_DARK});
-	}
-	@media (prefers-color-scheme: light) {
-		content: url(${useDarkImage ? WELCOME_DARK : id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
-	}
-	/* These class-based themes are only for Storybook/Chromatic modes 
-	 * (see preview.js).
-	 */
-	html.dark-theme & {
-		content: url(${id === 'email' ? EMAIL_DARK : WELCOME_DARK});
-	}
-	html.light-theme & {
-		content: url(${useDarkImage ? WELCOME_DARK : id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT});
-	}
-`;
+const imageStyles = (id: DecorativeImageId, useDarkImage?: boolean) => {
+	const darkImage = id === 'email' ? EMAIL_DARK : WELCOME_DARK;
+	// Required for dark blue background header.
+	const lightImage = useDarkImage
+		? darkImage
+		: id === 'email'
+			? EMAIL_LIGHT
+			: WELCOME_LIGHT;
+
+	return css`
+		@media (prefers-color-scheme: dark) {
+			content: url(${darkImage});
+		}
+		@media (prefers-color-scheme: light) {
+			content: url(${lightImage});
+		}
+
+		/* These class-based themes are only for Storybook/Chromatic modes
+     * (see preview.js). */
+		html.dark-theme & {
+			content: url(${darkImage});
+		}
+		html.light-theme & {
+			content: url(${lightImage});
+		}
+	`;
+};
 
 export const MinimalLayoutImage = ({ id, useDarkImage }: Props) => {
 	// WCAG H67: Use null alt text for decorative images
