@@ -180,21 +180,21 @@ describe('parseExpressQueryParams', () => {
 		});
 	});
 
-	describe('prepopulatedEmail', () => {
-		test('it should carry through the prepopulatedEmail query param', () => {
+	describe('prepopulateEmail', () => {
+		test('it should carry through the prepopulateEmail query param', () => {
 			const input = {
-				prepopulatedEmail: 'someone@theguardian.com',
+				prepopulateEmail: 'someone@theguardian.com',
 			};
 
 			const output = parseExpressQueryParams('GET', input);
-			expect(output.prepopulatedEmail).toEqual('someone@theguardian.com');
+			expect(output.prepopulateEmail).toEqual('someone@theguardian.com');
 		});
 
-		test('it should be undefined when prepopulatedEmail is not passed in', () => {
+		test('it should be undefined when prepopulateEmail is not passed in', () => {
 			const input = {};
 
 			const output = parseExpressQueryParams('GET', input);
-			expect(output.prepopulatedEmail).toBeUndefined();
+			expect(output.prepopulateEmail).toBeUndefined();
 		});
 	});
 });

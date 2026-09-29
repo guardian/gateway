@@ -59,20 +59,20 @@ if (stage === 'DEV') {
 		(req: Request, res: ResponseWithRequestState) => {
 			const page =
 				typeof req.query.page === 'string' ? req.query.page : 'signin';
-			const appClientId =
-				typeof req.query.appClientId === 'string' ? req.query.appClientId : '';
-			const prepopulatedEmail =
-				typeof req.query.prepopulatedEmail === 'string'
-					? req.query.prepopulatedEmail
-					: '';
 
 			const iframePath = getIframedPath(page);
 			const iframeQuery = new URLSearchParams();
-			if (appClientId) {
-				iframeQuery.set('appClientId', appClientId);
+			iframeQuery.set('returnUrl', 'https://www.theguardian.com');
+
+			// Pass through any query parameters from the harness URL to the iframe
+			if (typeof req.query.appClientId === 'string') {
+				iframeQuery.set('appClientId', req.query.appClientId);
 			}
-			if (prepopulatedEmail) {
-				iframeQuery.set('prepopulatedEmail', prepopulatedEmail);
+			if (typeof req.query.prepopulateEmail === 'string') {
+				iframeQuery.set('prepopulateEmail', req.query.prepopulateEmail);
+			}
+			if (typeof req.query.clientId === 'string') {
+				iframeQuery.set('clientId', req.query.clientId);
 			}
 
 			const queryString = iframeQuery.toString();
@@ -167,7 +167,7 @@ router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 
 	const iframeHarnessLink =
 		stage === 'DEV'
-			? '<li><a href="/iframe-harness?page=signin&appClientId=maj&prepopulatedEmail=test%40example.com">Iframe Harness (Sign-in)</a> | <a href="/iframe-harness?page=register&appClientId=maj&prepopulatedEmail=test%40example.com">Iframe Harness (Register)</a></li>'
+			? '<li><a href="/iframe-harness?page=signin&appClientId=maj&prepopulateEmail=test%40example.com">Iframe Harness (Sign-in)</a> | <a href="/iframe-harness?page=register&appClientId=maj&prepopulateEmail=test%40example.com">Iframe Harness (Register)</a></li>'
 			: '';
 
 	const html = `

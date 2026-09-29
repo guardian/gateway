@@ -125,7 +125,9 @@ const handleRegisterByPasscode = (
 	const state = res.locals;
 	const { error, error_description } = state.queryParams;
 
-	const getPath = req.originalUrl as RoutePaths;
+	// Extract just the path without query params for the renderer
+	const pathWithoutQuery = req.originalUrl.split('?')[0] || '/register/email';
+	const getPath = pathWithoutQuery as RoutePaths;
 	const html = renderer(getPath, {
 		pageTitle: 'Register With Email',
 		requestState: mergeRequestState(state, {
@@ -174,32 +176,47 @@ export const handleIframedRegisterEmail = async (
 	const params = new URLSearchParams(
 		req.url.substring(req.url.indexOf('?'), req.url.length),
 	);
-	const prepopulatedEmailParamEncoded = params.get('prepopulatedEmail');
-	const prepopulatedEmail = prepopulatedEmailParamEncoded
-		? decodeURIComponent(prepopulatedEmailParamEncoded)
+	const prepopulateEmailParamEncoded = params.get('prepopulateEmail');
+	const prepopulateEmail = prepopulateEmailParamEncoded
+		? decodeURIComponent(prepopulateEmailParamEncoded)
 		: null;
 
-	if (prepopulatedEmail) {
+	logger.info(
+		`[iframed/register/email] prepopulateEmail from URL: ${prepopulateEmail}, req.url: ${req.url}`,
+	);
+
+	if (prepopulateEmail) {
 		try {
-			const user = await getUser(prepopulatedEmail, req.ip);
+			const user = await getUser(prepopulateEmail, req.ip);
+			logger.info(
+				`[iframed/register/email] User lookup result: ${user?.status}`,
+			);
 			if (user && user.status === Status.ACTIVE) {
+				logger.info(
+					`[iframed/register/email] Redirecting ACTIVE user to signin`,
+				);
 				const redirectUrl = buildUrlWithQueryParams(
 					'/iframed/signin',
 					{},
 					{
 						...res.locals.queryParams,
-						prepopulatedEmail: prepopulatedEmail,
+						prepopulateEmail: prepopulateEmail,
 					},
 				);
 				return res.redirect(303, redirectUrl);
 			}
 		} catch (error) {
 			// Continue to register as normal
-			logger.info(`User not found for email: ${prepopulatedEmail}`);
+			logger.info(
+				`User not found for email: ${prepopulateEmail}, error: ${error instanceof Error ? error.message : String(error)}`,
+			);
 		}
 	}
 
-	const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
+	logger.info(
+		`[iframed/register/email] Rendering registration page with email: ${prepopulateEmail}`,
+	);
+	const html = handleRegisterByPasscode(req, res, prepopulateEmail);
 	return res.type('html').send(html);
 };
 

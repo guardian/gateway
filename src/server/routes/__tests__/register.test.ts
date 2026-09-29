@@ -97,7 +97,7 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		mockGetUser.mockRejectedValueOnce(new Error('Not found'));
 
 		const req = getMockRequest(
-			'/iframed/register/email?prepopulatedEmail=someone%40theguardian.com',
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
 		);
 		const res = getMockResponse();
 
@@ -111,7 +111,7 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		);
 	});
 
-	test('renders the registration page directly when there is no prepopulatedEmail query param', async () => {
+	test('renders the registration page directly when there is no prepopulateEmail query param', async () => {
 		const req = getMockRequest('/iframed/register/email');
 		const res = getMockResponse();
 
@@ -123,18 +123,18 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		expect(res.send).toHaveBeenCalledWith('<html lang="en"></html>');
 	});
 
-	test('passes the decoded prepopulatedEmail through as page data when rendering the registration page', async () => {
+	test('passes the decoded prepopulateEmail through as page data when rendering the registration page', async () => {
 		mockGetUser.mockResolvedValueOnce(undefined);
 
 		const req = getMockRequest(
-			'/iframed/register/email?prepopulatedEmail=someone%2Btest%40theguardian.com',
+			'/iframed/register/email?prepopulateEmail=someone%2Btest%40theguardian.com',
 		);
 		const res = getMockResponse();
 
 		await handleIframedRegisterEmail(req, asResponse(res));
 
 		expect(mockRenderer).toHaveBeenCalledWith(
-			'/iframed/register/email?prepopulatedEmail=someone%2Btest%40theguardian.com',
+			'/iframed/register/email',
 			expect.objectContaining({
 				requestState: expect.objectContaining({
 					pageData: expect.objectContaining({
@@ -145,14 +145,14 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		);
 	});
 
-	test('redirects to /iframed/signin when prepopulatedEmail belongs to an ACTIVE user', async () => {
+	test('redirects to /iframed/signin when prepopulateEmail belongs to an ACTIVE user', async () => {
 		mockGetUser.mockResolvedValueOnce({
 			id: 'user-id',
 			status: Status.ACTIVE,
 		});
 
 		const req = getMockRequest(
-			'/iframed/register/email?prepopulatedEmail=someone%40theguardian.com',
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
 		);
 		const res = getMockResponse();
 
@@ -169,7 +169,7 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 
 		const redirectUrlObject = new URL(redirectUrl, 'http://localhost');
 		expect(redirectUrlObject.pathname).toBe('/iframed/signin');
-		expect(redirectUrlObject.searchParams.get('prepopulatedEmail')).toBe(
+		expect(redirectUrlObject.searchParams.get('prepopulateEmail')).toBe(
 			'someone@theguardian.com',
 		);
 		expect(redirectUrlObject.searchParams.get('clientId')).toBe('any');
@@ -183,14 +183,14 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		expect(res.send).not.toHaveBeenCalled();
 	});
 
-	test('does NOT redirect when prepopulatedEmail belongs to a PROVISIONED user', async () => {
+	test('does NOT redirect when prepopulateEmail belongs to a PROVISIONED user', async () => {
 		mockGetUser.mockResolvedValueOnce({
 			id: 'user-id',
 			status: Status.PROVISIONED,
 		});
 
 		const req = getMockRequest(
-			'/iframed/register/email?prepopulatedEmail=someone%40theguardian.com',
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
 		);
 		const res = getMockResponse();
 
@@ -200,14 +200,14 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		expect(res.type).toHaveBeenCalledWith('html');
 	});
 
-	test('does NOT redirect when prepopulatedEmail belongs to a STAGED user', async () => {
+	test('does NOT redirect when prepopulateEmail belongs to a STAGED user', async () => {
 		mockGetUser.mockResolvedValueOnce({
 			id: 'user-id',
 			status: Status.STAGED,
 		});
 
 		const req = getMockRequest(
-			'/iframed/register/email?prepopulatedEmail=someone%40theguardian.com',
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
 		);
 		const res = getMockResponse();
 
@@ -217,14 +217,14 @@ describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
 		expect(res.type).toHaveBeenCalledWith('html');
 	});
 
-	test('does NOT redirect when prepopulatedEmail belongs to a DEPROVISIONED user', async () => {
+	test('does NOT redirect when prepopulateEmail belongs to a DEPROVISIONED user', async () => {
 		mockGetUser.mockResolvedValueOnce({
 			id: 'user-id',
 			status: Status.DEPROVISIONED,
 		});
 
 		const req = getMockRequest(
-			'/iframed/register/email?prepopulatedEmail=someone%40theguardian.com',
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
 		);
 		const res = getMockResponse();
 
