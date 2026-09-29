@@ -143,20 +143,43 @@ const getRegistrationConsentIds = () => [
 ];
 
 export const registrationConsentsExistInCookies = (req: Request) => {
-	return getRegistrationConsentIds().some((id) => id in req.cookies);
+	if ('registrationConsents' in req.cookies) {
+		const registrationConsentCookie = JSON.parse(
+			req.cookies.registrationConsents,
+		) as Array<string>;
+
+		const registrationConsentIds = getRegistrationConsentIds();
+
+		return registrationConsentIds.some((id) =>
+			registrationConsentCookie.includes(id),
+		);
+	}
+
+	return false;
 };
+
+export const getOptedInConsents = (consents: RegistrationConsents) => [
+	...(consents.consents ?? []).filter((c) => c.consented).map((c) => c.id),
+	...(consents.newsletters ?? []).filter((n) => n.subscribed).map((n) => n.id),
+];
 
 export const getRegistrationConsentsFromCookies = (
 	req: Request,
 ): RegistrationConsents => {
+	const registrationConsentsCookie = req.cookies
+		.registrationConsents as Array<string>;
+
 	const consents = Object.values(RegistrationConsentsFormFields)
 		.map(({ id }) => id)
-		.filter((id) => id in req.cookies)
+		.filter((id) => registrationConsentsCookie.includes(id))
 		.map((id) => ({ id, consented: true }));
 
-	const newsletters = Object.values(RegistrationNewslettersFormFieldsMap)
-		.map(({ id }) => id)
-		.filter((id) => id in req.cookies)
+	const newsletters = [
+		...new Set(
+			Object.values(RegistrationNewslettersFormFieldsMap).map(({ id }) => id),
+		),
+	]
+		.filter((id) => registrationConsentsCookie.includes(id))
 		.map((id) => ({ id, subscribed: true }));
 
 	return { consents: consents, newsletters: newsletters };
@@ -166,7 +189,6 @@ export const dropRegistrationConsentsCookies = (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	getRegistrationConsentIds()
-		.filter((id) => id in req.cookies)
-		.forEach((id) => res.clearCookie(id));
+	if ('registrationConsents' in req.cookies)
+		res.clearCookie('registrationConsents');
 };
