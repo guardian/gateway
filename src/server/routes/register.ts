@@ -180,20 +180,10 @@ export const handleIframedRegisterEmail = async (
 		? decodeURIComponent(prepopulateEmailParamEncoded)
 		: null;
 
-	logger.info(
-		`[iframed/register/email] prepopulateEmail from URL: ${prepopulateEmail}, req.url: ${req.url}`,
-	);
-
 	if (prepopulateEmail) {
 		try {
 			const user = await getUser(prepopulateEmail, req.ip);
-			logger.info(
-				`[iframed/register/email] User lookup result: ${user?.status}`,
-			);
 			if (user && user.status === Status.ACTIVE) {
-				logger.info(
-					`[iframed/register/email] Redirecting ACTIVE user to signin`,
-				);
 				const redirectUrl = buildUrlWithQueryParams(
 					'/iframed/signin',
 					{},
@@ -206,15 +196,10 @@ export const handleIframedRegisterEmail = async (
 			}
 		} catch (error) {
 			// Continue to register as normal
-			logger.info(
-				`User not found for email: ${prepopulateEmail}, error: ${error instanceof Error ? error.message : String(error)}`,
-			);
+			logger.info(`User not found for email: ${prepopulateEmail}`);
 		}
 	}
 
-	logger.info(
-		`[iframed/register/email] Rendering registration page with email: ${prepopulateEmail}`,
-	);
 	const html = handleRegisterByPasscode(req, res, prepopulateEmail);
 	return res.type('html').send(html);
 };
