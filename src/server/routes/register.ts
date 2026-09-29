@@ -125,7 +125,6 @@ const handleRegisterByPasscode = (
 	const state = res.locals;
 	const { error, error_description } = state.queryParams;
 
-	// Extract just the path without query params for the renderer
 	const pathWithoutQuery = req.originalUrl.split('?')[0] || '/register/email';
 	const getPath = pathWithoutQuery as RoutePaths;
 	const html = renderer(getPath, {
