@@ -179,24 +179,6 @@ describe('parseExpressQueryParams', () => {
 			expect(output.newOnboardingFlow).toEqual(false);
 		});
 	});
-
-	// describe('prepopulateEmail', () => {
-	// 	test('it should carry through the prepopulateEmail query param', () => {
-	// 		const input = {
-	// 			prepopulateEmail: 'someone@theguardian.com',
-	// 		};
-	//
-	// 		const output = parseExpressQueryParams('GET', input);
-	// 		expect(output.prepopulateEmail).toEqual('someone@theguardian.com');
-	// 	});
-	//
-	// 	test('it should be undefined when prepopulateEmail is not passed in', () => {
-	// 		const input = {};
-	//
-	// 		const output = parseExpressQueryParams('GET', input);
-	// 		expect(output.prepopulateEmail).toBeUndefined();
-	// 	});
-	// });
 });
 
 describe('addReturnUrlToPath', () => {
