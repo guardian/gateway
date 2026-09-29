@@ -189,5 +189,6 @@ export const dropRegistrationConsentsCookies = (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	res.clearCookie('registrationConsents');
+	if('registrationConsents' in req.cookies)
+		res.clearCookie('registrationConsents');
 };
