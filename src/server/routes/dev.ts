@@ -167,7 +167,7 @@ router.get('/', async (req: Request, res: ResponseWithRequestState) => {
 
 	const iframeHarnessLink =
 		stage === 'DEV'
-			? '<li><a href="/iframe-harness?page=signin&appClientId=maj&prepopulateEmail=test%40example.com">Iframe Harness (Sign-in)</a> | <a href="/iframe-harness?page=register&appClientId=maj&prepopulateEmail=test%40example.com">Iframe Harness (Register)</a></li>'
+			? '<li><a href="/iframe-harness?page=signin&appClientId=maj&prepopulateEmail=testing%40example.com">Iframe Harness (Sign-in)</a> | <a href="/iframe-harness?page=register&appClientId=maj&prepopulateEmail=testing%40example.com">Iframe Harness (Register)</a></li>'
 			: '';
 
 	const html = `
