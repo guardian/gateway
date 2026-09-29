@@ -144,12 +144,12 @@ router.get(
 		const params = new URLSearchParams(
 			req.url.substring(req.url.indexOf('?'), req.url.length),
 		);
-		const prepopulatedEmailParamEncoded = params.get('prepopulateEmail');
-		const prepopulatedEmail = prepopulatedEmailParamEncoded
-			? decodeURIComponent(prepopulatedEmailParamEncoded)
+		const prepopulateEmailParamEncoded = params.get('prepopulateEmail');
+		const prepopulateEmail = prepopulateEmailParamEncoded
+			? decodeURIComponent(prepopulateEmailParamEncoded)
 			: null;
 
-		const html = await handleSigninRender(req, res, prepopulatedEmail);
+		const html = await handleSigninRender(req, res, prepopulateEmail);
 		return res.type('html').send(html);
 	}),
 );
