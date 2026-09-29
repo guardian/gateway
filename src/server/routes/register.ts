@@ -750,10 +750,12 @@ export const oktaRegistrationOrSignin = async (
 
 		const optedInConsents = getOptedInConsents(consents);
 
-		res.cookie('registrationConsents', JSON.stringify(optedInConsents), {
-			maxAge: 600000,
-			httpOnly: true,
-		});
+		if (optedInConsents.length > 0) {
+			res.cookie('registrationConsents', JSON.stringify(optedInConsents), {
+				maxAge: 600000,
+				httpOnly: true,
+			});
+		}
 	}
 	const [registrationLocation] = getRegistrationLocation(req);
 
