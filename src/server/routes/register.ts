@@ -121,6 +121,7 @@ const handleRegisterByPasscode = (
 	req: Request,
 	res: ResponseWithRequestState,
 	overrideEmailAddress?: string | null,
+	useOktaClassic?: boolean,
 ): string => {
 	const state = res.locals;
 	const { error, error_description } = state.queryParams;
@@ -135,6 +136,12 @@ const handleRegisterByPasscode = (
 			globalMessage: {
 				error: getErrorMessageFromQueryParams(error, error_description),
 			},
+			...(useOktaClassic !== undefined && {
+				queryParams: {
+					...state.queryParams,
+					useOktaClassic,
+				},
+			}),
 		}),
 	});
 	return html;
@@ -162,6 +169,10 @@ router.get(
 	'/register/email',
 	redirectIfLoggedIn,
 	(req: Request, res: ResponseWithRequestState) => {
+		logger.info(
+			'[REGISTER_FLOW_DEBUG] /register/email - res.locals.queryParams:',
+			res.locals.queryParams,
+		);
 		const html = handleRegisterByPasscode(req, res);
 		res.type('html').send(html);
 	},
@@ -171,6 +182,10 @@ router.get(
 	'/iframed/register/email',
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		logger.info(
+			'[REGISTER_FLOW_DEBUG] /iframed/register/email - res.locals.queryParams:',
+			res.locals.queryParams,
+		);
 		const params = new URLSearchParams(
 			req.url.substring(req.url.indexOf('?'), req.url.length),
 		);
@@ -199,7 +214,7 @@ router.get(
 			}
 		}
 
-		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
+		const html = handleRegisterByPasscode(req, res, prepopulatedEmail, true);
 		res.type('html').send(html);
 	}),
 );
@@ -745,6 +760,15 @@ export const oktaRegistrationOrSignin = async (
 	const {
 		queryParams: { appClientId, clientId, ref, refViewId, useOktaClassic },
 	} = res.locals;
+
+	logger.info(
+		'[REGISTER_FLOW_DEBUG] oktaRegistrationOrSignin - useOktaClassic:',
+		useOktaClassic,
+	);
+	logger.info(
+		'[REGISTER_FLOW_DEBUG] oktaRegistrationOrSignin - will use IDX flow:',
+		passcodesEnabled && !useOktaClassic,
+	);
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
