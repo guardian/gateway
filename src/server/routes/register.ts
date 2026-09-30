@@ -121,7 +121,6 @@ const handleRegisterByPasscode = (
 	req: Request,
 	res: ResponseWithRequestState,
 	overrideEmailAddress?: string | null,
-	useOktaClassic?: boolean,
 ): string => {
 	const state = res.locals;
 	const { error, error_description } = state.queryParams;
@@ -136,12 +135,6 @@ const handleRegisterByPasscode = (
 			globalMessage: {
 				error: getErrorMessageFromQueryParams(error, error_description),
 			},
-			...(useOktaClassic !== undefined && {
-				queryParams: {
-					...state.queryParams,
-					useOktaClassic,
-				},
-			}),
 		}),
 	});
 	return html;
@@ -214,7 +207,7 @@ router.get(
 			}
 		}
 
-		const html = handleRegisterByPasscode(req, res, prepopulatedEmail, true);
+		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
 		res.type('html').send(html);
 	}),
 );
@@ -576,27 +569,41 @@ const oktaIdxCreateAccountOrSignIn = async (
 	} catch (error) {
 		if (error instanceof OAuthError) {
 			if (error.name === 'registration.error.notUniqueWithinOrg') {
-				// case for user already exists
-				// will implement when full passwordless is implemented
-				trackMetric('ExistingUserInCreateAccountFlow');
+				const existingUser = await getUser(email, req.ip);
 
-				const getConfirmationPagePathForExistingUser = (): RoutePaths => {
-					if (clientId === 'jobs') {
-						return JOBS_TOS_URI;
-					}
+				logger.info(
+					`[REGISTER_FLOW_DEBUG] oktaIdxCreateAccountOrSignIn - notUniqueWithinOrg for email, existing user status: ${existingUser.status}`,
+				);
 
-					if (clientId === 'printpromo') {
-						return '/welcome/print-promo';
-					}
+				if (existingUser.status === Status.ACTIVE) {
+					// case for user already exists and is ACTIVE
+					logger.info(
+						'[REGISTER_FLOW_DEBUG] oktaIdxCreateAccountOrSignIn - existing user is ACTIVE, routing to oktaIdxApiSignInPasscodeController',
+					);
+					trackMetric('ExistingUserInCreateAccountFlow');
 
-					return '/welcome/existing';
-				};
-				// instead we use the passcode sign in controller, and redirect to /welcome/existing at the end
-				return oktaIdxApiSignInPasscodeController({
-					req,
-					res,
-					confirmationPagePath: getConfirmationPagePathForExistingUser(),
-				});
+					const getConfirmationPagePathForExistingUser = (): RoutePaths => {
+						if (clientId === 'jobs') {
+							return JOBS_TOS_URI;
+						}
+
+						if (clientId === 'printpromo') {
+							return '/welcome/print-promo';
+						}
+
+						return '/welcome/existing';
+					};
+					// instead we use the passcode sign in controller, and redirect to /welcome/existing at the end
+					return oktaIdxApiSignInPasscodeController({
+						req,
+						res,
+						confirmationPagePath: getConfirmationPagePathForExistingUser(),
+					});
+				}
+				trackMetric('NonActiveExistingUserInCreateAccountFlow');
+				logger.info(
+					`[REGISTER_FLOW_DEBUG] oktaIdxCreateAccountOrSignIn - existing user status is ${existingUser.status} (non-ACTIVE), falling through to legacy Okta registration flow instead of forcing ACTIVE`,
+				);
 			}
 		}
 
