@@ -52,9 +52,7 @@ import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
 import {
 	bodyFormFieldsToRegistrationConsents,
-	dropRegistrationConsentsCookies,
 	getOptedInConsents,
-	registrationConsentsExistInCookies,
 } from '@/server/lib/registrationConsents';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
@@ -744,10 +742,6 @@ export const oktaRegistrationOrSignin = async (
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
 	if (appClientId === 'maj') {
-		if (registrationConsentsExistInCookies(req)) {
-			dropRegistrationConsentsCookies(req, res);
-		}
-
 		const optedInConsents = getOptedInConsents(consents);
 
 		if (optedInConsents.length > 0) {
