@@ -166,8 +166,9 @@ export const getOptedInConsents = (consents: RegistrationConsents) => [
 export const getRegistrationConsentsFromCookies = (
 	req: Request,
 ): RegistrationConsents => {
-	const registrationConsentsCookie = req.cookies
-		.registrationConsents as Array<string>;
+	const registrationConsentsCookie = JSON.parse(
+		req.cookies.registrationConsents,
+	) as Array<string>;
 
 	const consents = Object.values(RegistrationConsentsFormFields)
 		.map(({ id }) => id)

@@ -186,7 +186,7 @@ describe('registrationConsents#expandRegistrationConsents', () => {
 });
 
 describe('registrationConsents#getRegistrationConsentsFromCookies', () => {
-	it('returns RegistrationConsents object form cookies', () => {
+	it('returns RegistrationConsents object from cookies', () => {
 		const req = {
 			cookies: {
 				registrationConsents: JSON.stringify([
