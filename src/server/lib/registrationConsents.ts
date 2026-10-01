@@ -12,6 +12,7 @@ import {
 	RegistrationNewslettersFormFieldsMap,
 	newsletterBundleToIndividualNewsletters,
 } from '@/shared/model/Newsletter';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
 // consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
@@ -134,4 +135,38 @@ export const decryptRegistrationConsents = (
 	} catch (error) {
 		logger.warn('Could not decrypt registration consents', error);
 	}
+};
+
+const getRegistrationConsentIds = () => [
+	...Object.values(RegistrationConsentsFormFields).map(({ id }) => id),
+	...Object.values(RegistrationNewslettersFormFieldsMap).map(({ id }) => id),
+];
+
+export const registrationConsentsExistInCookies = (req: Request) => {
+	return getRegistrationConsentIds().some((id) => id in req.cookies);
+};
+
+export const getRegistrationConsentsFromCookies = (
+	req: Request,
+): RegistrationConsents => {
+	const consents = Object.values(RegistrationConsentsFormFields)
+		.map(({ id }) => id)
+		.filter((id) => id in req.cookies)
+		.map((id) => ({ id, consented: true }));
+
+	const newsletters = Object.values(RegistrationNewslettersFormFieldsMap)
+		.map(({ id }) => id)
+		.filter((id) => id in req.cookies)
+		.map((id) => ({ id, subscribed: true }));
+
+	return { consents: consents, newsletters: newsletters };
+};
+
+export const dropRegistrationConsentsCookies = (
+	req: Request,
+	res: ResponseWithRequestState,
+) => {
+	getRegistrationConsentIds()
+		.filter((id) => id in req.cookies)
+		.forEach((id) => res.clearCookie(id));
 };

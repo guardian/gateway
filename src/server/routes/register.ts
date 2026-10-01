@@ -29,7 +29,9 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { UserResponse } from '@/server/models/okta/User';
+import { UserResponse, Status } from '@/server/models/okta/User';
+import { getUser } from '@/server/lib/okta/api/users';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import {
 	challengeResend,
@@ -48,7 +50,11 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { credentialEnroll } from '@/server/lib/okta/idx/credential';
-import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
+import {
+	bodyFormFieldsToRegistrationConsents,
+	dropRegistrationConsentsCookies,
+	registrationConsentsExistInCookies,
+} from '@/server/lib/registrationConsents';
 import { startIdxFlow } from '@/server/lib/okta/idx/startIdxFlow';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared/convertExpiresAtToExpiryTimeInMs';
 import {
@@ -64,6 +70,7 @@ import {
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -163,7 +170,7 @@ router.get(
 router.get(
 	'/iframed/register/email',
 	redirectIfLoggedIn,
-	(req: Request, res: ResponseWithRequestState) => {
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const params = new URLSearchParams(
 			req.url.substring(req.url.indexOf('?'), req.url.length),
 		);
@@ -172,9 +179,29 @@ router.get(
 			? decodeURIComponent(prepopulatedEmailParamEncoded)
 			: null;
 
+		if (prepopulatedEmail) {
+			try {
+				const user = await getUser(prepopulatedEmail, req.ip);
+				if (user && user.status === Status.ACTIVE) {
+					const redirectUrl = buildUrlWithQueryParams(
+						'/iframed/signin',
+						{},
+						{
+							...res.locals.queryParams,
+							prepopulateEmail: prepopulatedEmail,
+						},
+					);
+					return res.redirect(303, redirectUrl);
+				}
+			} catch (error) {
+				// Continue to register as normal
+				logger.info(`User not found for email: ${prepopulatedEmail}`);
+			}
+		}
+
 		const html = handleRegisterByPasscode(req, res, prepopulatedEmail);
 		res.type('html').send(html);
-	},
+	}),
 );
 
 router.get(
@@ -704,6 +731,11 @@ export const registerPasscodeHandler = async (
 	);
 };
 
+const getOptedInConsents = (consents: RegistrationConsents) => [
+	...(consents.consents ?? []).filter((c) => c.consented),
+	...(consents.newsletters ?? []).filter((n) => n.subscribed),
+];
+
 export const oktaRegistrationOrSignin = async (
 	req: Request,
 	res: ResponseWithRequestState,
@@ -716,6 +748,17 @@ export const oktaRegistrationOrSignin = async (
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
+	if (appClientId === 'maj') {
+		if (registrationConsentsExistInCookies(req)) {
+			dropRegistrationConsentsCookies(req, res);
+		}
+
+		const optedInConsents = getOptedInConsents(consents);
+
+		optedInConsents.forEach((consent) =>
+			res.cookie(consent.id, 'true', { maxAge: 600000, httpOnly: true }),
+		);
+	}
 	const [registrationLocation] = getRegistrationLocation(req);
 
 	// OKTA IDX API FLOW
