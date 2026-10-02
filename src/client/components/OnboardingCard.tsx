@@ -38,6 +38,28 @@ const styles = (backgroundColour: string | undefined) => css`
 	}
 `;
 
+const titleStyles = css`
+	${headlineBold20};
+	font-weight: 500;
+	padding-bottom: ${remSpace[2]};
+	grid-area: title;
+	padding: ${remSpace[2]} 0 ${remSpace[2]} ${remSpace[2]};
+
+	${from.tablet} {
+		padding-bottom: 0;
+	}
+`;
+
+const textStyles = css`
+	grid-area: text;
+	padding: 0 ${remSpace[2]} ${remSpace[3]} ${remSpace[2]};
+
+	${from.tablet} {
+		padding-bottom: ${remSpace[2]};
+		${textSans17};
+	}
+`;
+
 export const OnboardingCard = ({
 	title,
 	text,
@@ -45,34 +67,8 @@ export const OnboardingCard = ({
 }: OnboardingCardProps) => {
 	return (
 		<div css={styles(backgroundColour)}>
-			<MainBodyText
-				cssOverrides={css`
-					${headlineBold20};
-					font-weight: 500;
-					padding-bottom: ${remSpace[2]};
-					grid-area: title;
-					padding: ${remSpace[2]} 0 ${remSpace[2]} ${remSpace[2]};
-
-					${from.tablet} {
-						padding-bottom: 0;
-					}
-				`}
-			>
-				{title}
-			</MainBodyText>
-			<MainBodyText
-				cssOverrides={css`
-					grid-area: text;
-					padding: 0 ${remSpace[2]} ${remSpace[3]} ${remSpace[2]};
-
-					${from.tablet} {
-						padding-bottom: ${remSpace[2]};
-						${textSans17};
-					}
-				`}
-			>
-				{text}
-			</MainBodyText>
+			<MainBodyText cssOverrides={titleStyles}>{title}</MainBodyText>
+			<MainBodyText cssOverrides={textStyles}>{text}</MainBodyText>
 
 			<div
 				css={css`
