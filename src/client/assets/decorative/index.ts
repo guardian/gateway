@@ -5,5 +5,6 @@ export { default as WELCOME_DARK } from '@/client/assets/decorative/welcome-dark
 export { default as GUARDIAN_APP } from '@/client/assets/decorative/the-guardian-app.png';
 export { default as FEAST_APP } from '@/client/assets/decorative/the-guardian-feast-app.png';
 
-export type DecorativeImageId =
-	'email' | 'welcome' | 'guardian-app' | 'feast-app';
+export type DecorativeImageId = 'email' | 'welcome';
+
+export type OnboardingImageId = 'guardian-app' | 'feast-app';

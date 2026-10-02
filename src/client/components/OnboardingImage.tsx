@@ -1,13 +1,13 @@
 import {
-	DecorativeImageId,
 	FEAST_APP,
 	GUARDIAN_APP,
+	OnboardingImageId,
 } from '@/client/assets/decorative';
 import { css } from '@emotion/react';
 import { from } from '@guardian/source/foundations';
 
 interface OnboardingImageProps {
-	id: DecorativeImageId;
+	id: OnboardingImageId;
 }
 
 const imageStyles = () => css`
