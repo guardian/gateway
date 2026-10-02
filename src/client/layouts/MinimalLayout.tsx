@@ -8,15 +8,9 @@ import {
 	headlineMedium28,
 	remSpace,
 } from '@guardian/source/foundations';
-import useClientState from '@/client/lib/hooks/useClientState';
-import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
-import locations from '@/shared/lib/locations';
-import { IframeLightTheme, Theme } from '@/client/styles/Theme';
-import {
-	mainSectionStyles,
-	successMessageStyles,
-} from '@/client/styles/Shared';
+import { getTheme, OverrideTheme } from '@/client/styles/Theme';
+import { mainSectionStyles } from '@/client/styles/Shared';
 import { DecorativeImageId } from '@/client/assets/decorative';
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
 import {
@@ -25,7 +19,8 @@ import {
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
+import { SuccessLayout } from './SuccessLayout';
+import { ErrorLayout } from './ErrorLayout';
 
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
@@ -38,7 +33,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light';
+	overrideTheme?: OverrideTheme;
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -107,24 +102,11 @@ export const MinimalLayout = ({
 	shortRequestId,
 	overrideTheme,
 }: MinimalLayoutProps) => {
-	const clientState = useClientState();
-	const { globalMessage: { error, success } = {} } = clientState;
-
-	const successMessage = successOverride || success;
-	const errorMessage = errorOverride || error;
-
-	const getTheme = () => {
-		if (overrideTheme === 'iframe-light') {
-			return <IframeLightTheme />;
-		}
-		return <Theme />;
-	};
-
 	const amIIframed = !!overrideTheme?.includes('iframe');
 
 	return (
 		<>
-			{getTheme()}
+			{getTheme(overrideTheme)}
 			{!amIIframed && <MinimalHeader />}
 			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
@@ -141,22 +123,16 @@ export const MinimalLayout = ({
 					)}
 				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
-					{errorMessage && (
-						<GatewayErrorSummary
-							gatewayError={errorMessage}
-							context={errorContext}
-							shortRequestId={shortRequestId}
-							errorReportUrl={
-								showErrorReportUrl ? locations.REPORT_ISSUE : undefined
-							}
-						/>
-					)}
-					{successMessage && !errorMessage && (
-						<SuccessSummary
-							message={successMessage}
-							cssOverrides={successMessageStyles}
-						/>
-					)}
+					<ErrorLayout
+						errorOverride={errorOverride}
+						errorContext={errorContext}
+						showErrorReportUrl={showErrorReportUrl}
+						shortRequestId={shortRequestId}
+					/>
+					<SuccessLayout
+						successOverride={successOverride}
+						errorOverride={errorOverride}
+					/>
 					{children}
 				</section>
 			</main>
