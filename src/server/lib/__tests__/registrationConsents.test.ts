@@ -2,9 +2,14 @@ import {
 	minifyRegistrationConsents,
 	expandRegistrationConsents,
 	bodyFormFieldsToRegistrationConsents,
+	getRegistrationConsentsFromCookies,
+	registrationConsentsExistInCookies,
+	getOptedInConsents,
 } from '@/server/lib/registrationConsents';
 import { Newsletters } from '@/shared/model/Newsletter';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { Request } from 'express';
+import { expect } from '@playwright/test';
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
 	logger: {
@@ -177,5 +182,71 @@ describe('registrationConsents#expandRegistrationConsents', () => {
 		};
 
 		expect(expandRegistrationConsents(input)).toEqual(expected);
+	});
+});
+
+describe('registrationConsents#getRegistrationConsentsFromCookies', () => {
+	it('returns RegistrationConsents object from cookies', () => {
+		const req = {
+			cookies: {
+				registrationConsents: JSON.stringify([
+					'similar_guardian_products',
+					'6031',
+				]),
+			},
+		} as unknown as Request;
+
+		const expected: RegistrationConsents = {
+			consents: [{ id: 'similar_guardian_products', consented: true }],
+			newsletters: [{ id: '6031', subscribed: true }],
+		};
+
+		expect(getRegistrationConsentsFromCookies(req)).toEqual(expected);
+	});
+});
+
+describe('registrationConsents#getOptedInConsents', () => {
+	it('returns a consents object of objects from RegistrationConsents', () => {
+		const registrationConsents = {
+			consents: [{ id: 'similar_guardian_products', consented: true }],
+			newsletters: [{ id: '6031', subscribed: true }],
+		};
+
+		const expected = ['similar_guardian_products', '6031'];
+
+		expect(getOptedInConsents(registrationConsents)).toEqual(expected);
+	});
+
+	it('filters out products for which the user has not consented', () => {
+		const registrationConsents = {
+			consents: [{ id: 'similar_guardian_products', consented: true }],
+			newsletters: [{ id: '6031', subscribed: false }],
+		};
+
+		const expected = ['similar_guardian_products'];
+
+		expect(getOptedInConsents(registrationConsents)).toEqual(expected);
+	});
+});
+
+describe('registrationConsents#registrationConsentsExistInCookies', () => {
+	it('returns true when at least one registration consent exists in cookies', () => {
+		const req = {
+			cookies: {
+				registrationConsents: JSON.stringify(['similar_guardian_products']),
+			},
+		} as unknown as Request;
+
+		expect(registrationConsentsExistInCookies(req)).toEqual(true);
+	});
+
+	it('returns false when no registration consent exist in cookies', () => {
+		const req = {
+			cookies: {
+				some_other_cookie: 'true',
+			},
+		} as unknown as Request;
+
+		expect(registrationConsentsExistInCookies(req)).toEqual(false);
 	});
 });
