@@ -23,12 +23,12 @@ export const validateReturnUrl = (returnUrl = ''): string => {
 
 		//This guards against invalid protocol, including app ones
 		if (url.protocol !== 'https:') {
-			throw 'Invalid protocol';
+			throw new Error('Invalid protocol');
 		}
 
 		// check the hostname is valid
 		if (!validHostnames.some((hostname) => url.hostname.endsWith(hostname))) {
-			throw 'Invalid hostname';
+			throw new Error('Invalid hostname');
 		}
 
 		// if valid subdomains are present, we can return the url with the query params
@@ -40,7 +40,7 @@ export const validateReturnUrl = (returnUrl = ''): string => {
 				url.hostname.startsWith('profile.') &&
 				invalidPaths.some((path) => url.pathname.startsWith(path))
 			) {
-				throw 'Invalid path';
+				throw new Error('Invalid path');
 			}
 
 			return url.href;
@@ -61,7 +61,7 @@ export const validateRefUrl = (ref = ''): string | undefined => {
 
 		// check the hostname is valid
 		if (!validHostnames.some((hostname) => url.hostname.endsWith(hostname))) {
-			throw 'Invalid hostname';
+			throw new Error('Invalid hostname');
 		}
 
 		return `https://${url.hostname}${url.pathname}`;
