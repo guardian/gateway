@@ -406,6 +406,8 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
+	const isUS = registrationLocation === 'United States';
+
 	const isPrintPromo = clientId === 'printpromo';
 
 	const getConfirmationPagePathForNewUser = (): RoutePaths => {
@@ -413,7 +415,7 @@ const oktaIdxCreateAccountOrSignIn = async (
 			return JOBS_TOS_URI;
 		}
 
-		if (isCombinedSigninAndRegisterFlow) {
+		if (isCombinedSigninAndRegisterFlow && !isUS) {
 			return '/welcome/complete-account';
 		}
 

@@ -6,13 +6,16 @@ import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+	RequestState,
+	ResponseWithRequestState,
+} from '@/server/models/Express';
 import {
 	addQueryParamsToPath,
 	addQueryParamsToUntypedPath,
 } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
-import { Request } from 'express';
+import { Locals, Request } from 'express';
 import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
@@ -29,7 +32,7 @@ import {
 	getUserConsentsForPage,
 	update as updateConsents,
 } from '@/server/lib/idapi/consents';
-import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
+import { update } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
@@ -39,7 +42,7 @@ import {
 	getRegistrationConsentsFromCookies,
 	registrationConsentsExistInCookies,
 } from '@/server/lib/registrationConsents';
-import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
+import { ALL_NEWSLETTER_IDS, Newsletters } from '@/shared/model/Newsletter';
 
 import {
 	NewsletterMap,
@@ -52,6 +55,8 @@ import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { RoutePaths } from '@/shared/model/Routes';
+import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
+import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -277,6 +282,22 @@ router.post(
 	}),
 );
 
+async function subscribeUSReadersToNewsletters(res: ResponseWithRequestState) {
+	const newsletters: NewsletterPatch[] = [
+		{ id: Newsletters.FIRST_THING, subscribed: true },
+		{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
+	];
+	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
+
+	await updateNewsletters(
+		res.locals,
+		newsletters,
+		runningInPlaywright,
+		res,
+		'us-create-account-flow',
+	);
+}
+
 router.get(
 	'/welcome/review',
 	loginMiddlewareOAuth,
@@ -319,6 +340,11 @@ router.get(
 
 			trackMetric('NewAccountReview::Failure');
 		}
+
+		const [registrationLocation] = getRegistrationLocation(req);
+
+		if (registrationLocation === 'United States')
+			await subscribeUSReadersToNewsletters(res);
 
 		const html = renderer('/welcome/review', {
 			pageTitle: 'Your data',
@@ -436,7 +462,7 @@ router.post(
 					},
 				);
 
-			await updateNewsletters({
+			await update({
 				accessToken: state.oauthState.accessToken.toString(),
 				payload: newsletterSubscriptionsToUpdate,
 			});
@@ -591,6 +617,40 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	}
 };
 
+async function updateNewsletters(
+	state: RequestState & Locals,
+	newsletters: NewsletterPatch[],
+	runningInPlaywright: boolean,
+	res: ResponseWithRequestState,
+	loggingContext: string,
+) {
+	if (!state.oauthState) {
+		return;
+	}
+
+	try {
+		await update({
+			accessToken: state.oauthState.accessToken.toString(),
+			payload: newsletters,
+		});
+
+		// since the CODE newsletters API isn't up to date with PROD newsletters API the
+		// review page will not show the correct newsletters on CODE.
+		// so when running in playwright we set a cookie to return the decrypted consents to playwright
+		// so we can check we at least got to the correct code path
+		if (runningInPlaywright) {
+			res.cookie('playwright-newsletter-response', JSON.stringify(newsletters));
+		}
+	} catch (error) {
+		logger.error(
+			`Error updating registration newsletters on welcome ${loggingContext}`,
+			{
+				error,
+			},
+		);
+	}
+}
+
 const updateNewslettersAndConsents = async (
 	registrationConsents: RegistrationConsents,
 	res: ResponseWithRequestState,
@@ -631,30 +691,13 @@ const updateNewslettersAndConsents = async (
 	}
 
 	if (registrationConsents.newsletters?.length) {
-		try {
-			await updateNewsletters({
-				accessToken: state.oauthState.accessToken.toString(),
-				payload: registrationConsents.newsletters,
-			});
-
-			// since the CODE newsletters API isn't up to date with PROD newsletters API the
-			// review page will not show the correct newsletters on CODE.
-			// so when running in playwright we set a cookie to return the decrypted consents to playwright
-			// so we can check we at least got to the correct code path
-			if (runningInPlaywright) {
-				res.cookie(
-					'playwright-newsletter-response',
-					JSON.stringify(registrationConsents.newsletters),
-				);
-			}
-		} catch (error) {
-			logger.error(
-				`Error updating registration newsletters on welcome ${loggingContext}`,
-				{
-					error,
-				},
-			);
-		}
+		await updateNewsletters(
+			state,
+			registrationConsents.newsletters,
+			runningInPlaywright,
+			res,
+			loggingContext,
+		);
 	}
 };
 
