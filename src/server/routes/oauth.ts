@@ -267,18 +267,21 @@ const authenticationHandler = async (
 					},
 				});
 
+				const isUS = registrationLocation === 'United States';
+
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
-				if (isGoogleOneTap) {
+				if (isGoogleOneTap && !isUS) {
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/google-one-tap`;
 				} else if (
-					authState.data?.socialProvider ||
-					// Playwright Test START
-					// this is a special case for the playwright tests, where we want to be able to mock the social provider
-					(runningInPlaywright &&
-						(playwrightMockStateCookie === 'google' ||
-							playwrightMockStateCookie === 'apple'))
+					(authState.data?.socialProvider ||
+						// Playwright Test START
+						// this is a special case for the playwright tests, where we want to be able to mock the social provider
+						(runningInPlaywright &&
+							(playwrightMockStateCookie === 'google' ||
+								playwrightMockStateCookie === 'apple'))) &&
+					!isUS
 				) {
 					const getSocialProviderPath = () => {
 						if (authState.queryParams.clientId === 'printpromo') {
