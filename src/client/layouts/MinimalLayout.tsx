@@ -61,6 +61,19 @@ const iframeThemeWrapperStyles = css`
 	gap: ${remSpace[2]};
 `;
 
+const onboardingStyles = (wide: boolean) => css`
+	${mainStyles(wide)};
+	max-width: 372px;
+
+	${from.tablet} {
+		max-width: 480px;
+	}
+
+	${from.desktop} {
+		max-width: 620px;
+	}
+`;
+
 const pageHeaderStyles = (amIIframed: boolean) => css`
 	color: var(--color-heading);
 	${
@@ -102,13 +115,27 @@ export const MinimalLayout = ({
 	shortRequestId,
 	overrideTheme,
 }: MinimalLayoutProps) => {
+	const getStyles = (
+		amIIframed: boolean,
+		isOnboarding: boolean,
+		wide: boolean,
+	) => {
+		if (amIIframed) return mainStylesStretch;
+		else if (isOnboarding) return onboardingStyles(wide);
+
+		return mainStyles(wide);
+	};
+
 	const amIIframed = !!overrideTheme?.includes('iframe');
+	const isOnboarding = overrideTheme === 'onboarding-light';
 
 	return (
 		<>
 			{getTheme(overrideTheme)}
 			{!amIIframed && <MinimalHeader />}
-			<main css={amIIframed ? mainStylesStretch : mainStyles(wide)}>
+
+			<main css={getStyles(amIIframed, isOnboarding, wide)}>
+				in
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
 					{pageHeader && (

@@ -1,4 +1,5 @@
 import { WideHeaderLayout } from '../layouts/WideHeaderLayout';
+import { DiscoverOurApps } from './DiscoverOurApps';
 
 export interface OnboardingProps {
 	shortRequestId?: string;
@@ -13,5 +14,6 @@ export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 		overrideTheme="onboarding-light"
 	>
 		<p> Newsletters</p>
+		<DiscoverOurApps />
 	</WideHeaderLayout>
 );
