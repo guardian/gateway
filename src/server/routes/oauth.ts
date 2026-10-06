@@ -45,6 +45,7 @@ import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { publishImovoSnsEvent } from '../lib/sns/snsEventPublisher';
+import { normaliseRegistrationLocation } from '@/server/lib/normaliseRegistrationLocation';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -267,7 +268,11 @@ const authenticationHandler = async (
 					},
 				});
 
-				const isUS = registrationLocation === 'United States';
+				const isUS = registrationLocation
+					? normaliseRegistrationLocation(registrationLocation) ===
+						'United States'
+					: false;
+
 				logger.log('info', 'Registration location: ', registrationLocation);
 
 				// since this is a new social user, we want to show the onboarding flow too
