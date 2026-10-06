@@ -52,7 +52,7 @@ import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { RoutePaths } from '@/shared/model/Routes';
-import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
+import { countryCodeToRegion } from '@/server/lib/getGeolocationRegion';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -321,9 +321,10 @@ router.get(
 			trackMetric('NewAccountReview::Failure');
 		}
 
-		const [registrationLocation] = getRegistrationLocation(req);
+		const header = req.headers['x-gu-geolocation'];
+		const isUS = countryCodeToRegion(header) === 'US';
 
-		if (registrationLocation === 'United States') {
+		if (isUS) {
 			const registrationConsents = {
 				consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
 				newsletters: [

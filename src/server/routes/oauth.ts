@@ -45,7 +45,7 @@ import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { publishImovoSnsEvent } from '../lib/sns/snsEventPublisher';
-import { normaliseRegistrationLocation } from '@/server/lib/normaliseRegistrationLocation';
+import { countryCodeToRegion } from '@/server/lib/getGeolocationRegion';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -268,12 +268,8 @@ const authenticationHandler = async (
 					},
 				});
 
-				const isUS = registrationLocation
-					? normaliseRegistrationLocation(registrationLocation) ===
-						'United States'
-					: false;
-
-				logger.log('info', 'Registration location: ', registrationLocation);
+				const header = req.headers['x-gu-geolocation'];
+				const isUS = countryCodeToRegion(header) === 'US';
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page

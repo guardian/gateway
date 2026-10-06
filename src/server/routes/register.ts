@@ -71,6 +71,7 @@ import {
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { getRoutePathFromUrl, RoutePaths } from '@/shared/model/Routes';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
+import { countryCodeToRegion } from '@/server/lib/getGeolocationRegion';
 
 const { passcodesEnabled: passcodesEnabled } = getConfiguration();
 
@@ -406,7 +407,8 @@ const oktaIdxCreateAccountOrSignIn = async (
 	const [registrationLocation, registrationLocationState] =
 		getRegistrationLocation(req);
 
-	const isUS = registrationLocation === 'United States';
+	const header = req.headers['x-gu-geolocation'];
+	const isUS = countryCodeToRegion(header) === 'US';
 
 	const isPrintPromo = clientId === 'printpromo';
 
