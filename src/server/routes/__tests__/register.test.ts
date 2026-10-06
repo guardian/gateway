@@ -1,31 +1,236 @@
+import { Request } from 'express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { Status } from '@/server/models/okta/User';
 
-describe('iframed/register/email redirect logic', () => {
-	test('ACTIVE user should redirect to signin', () => {
-		const status = Status.ACTIVE;
-		const shouldRedirect = (status as string) !== Status.DEPROVISIONED;
+const mockGetUser = jest.fn();
+const mockRenderer = jest.fn(
+	(..._args: unknown[]) => '<html lang="en"></html>',
+);
+const mockReadEmailCookie = jest.fn();
+const mockLoggerInfo = jest.fn();
 
-		expect(shouldRedirect).toBe(true);
+jest.mock('@/server/lib/middleware/redirectIfLoggedIn', () => ({
+	redirectIfLoggedIn: (_req: unknown, _res: unknown, next: () => void) =>
+		next(),
+}));
+
+jest.mock('@/server/lib/middleware/rateLimit', () => ({
+	rateLimiterMiddleware: (_req: unknown, _res: unknown, next: () => void) =>
+		next(),
+}));
+
+jest.mock('@/server/lib/getConfiguration', () => ({
+	getConfiguration: () => ({
+		passcodesEnabled: false,
+		googleRecaptcha: { secretKey: '' },
+		baseUri: 'http://localhost',
+		signInPageUrl: '/signin',
+		okta: {
+			orgUrl: 'https://okta.example.com',
+			authServerId: 'default',
+			clientId: 'client-id',
+			clientSecret: 'client-secret',
+		},
+	}),
+}));
+
+jest.mock('@/server/lib/okta/api/users', () => ({
+	getUser: (...args: unknown[]) => mockGetUser(...args),
+}));
+
+jest.mock('@/server/lib/renderer', () => ({
+	renderer: (...args: unknown[]) => mockRenderer(...args),
+}));
+
+jest.mock('@/server/lib/emailCookie', () => ({
+	readEmailCookie: (...args: unknown[]) => mockReadEmailCookie(...args),
+}));
+
+jest.mock('@/server/lib/serverSideLogger', () => ({
+	logger: {
+		info: (...args: unknown[]) => mockLoggerInfo(...args),
+		warn: jest.fn(),
+		error: jest.fn(),
+	},
+}));
+
+import { handleIframedRegisterEmail } from '@/server/routes/register';
+
+const getMockRequest = (url: string): Request =>
+	({
+		url,
+		originalUrl: url,
+		ip: '127.0.0.1',
+	}) as unknown as Request;
+
+type MockResponse = {
+	locals: {
+		queryParams: Record<string, unknown>;
+	};
+	redirect: jest.Mock;
+	type: jest.Mock;
+	send: jest.Mock;
+};
+
+const getMockResponse = (): MockResponse => ({
+	locals: {
+		queryParams: {
+			clientId: 'any',
+			returnUrl: 'https://www.theguardian.com',
+		},
+	},
+	redirect: jest.fn(),
+	type: jest.fn().mockReturnThis(),
+	send: jest.fn(),
+});
+
+const asResponse = (res: MockResponse): ResponseWithRequestState =>
+	res as unknown as ResponseWithRequestState;
+
+describe('GET /iframed/register/email - handleIframedRegisterEmail', () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockReadEmailCookie.mockReturnValue(undefined);
 	});
 
-	test('PROVISIONED user should redirect to signin', () => {
-		const status = Status.PROVISIONED;
-		const shouldRedirect = (status as string) !== Status.DEPROVISIONED;
+	test('renders the registration page when the user lookup throws (e.g. user not found)', async () => {
+		mockGetUser.mockRejectedValueOnce(new Error('Not found'));
 
-		expect(shouldRedirect).toBe(true);
+		const req = getMockRequest(
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
+		);
+		const res = getMockResponse();
+
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(res.redirect).not.toHaveBeenCalled();
+		expect(res.type).toHaveBeenCalledWith('html');
+		expect(res.send).toHaveBeenCalledWith('<html lang="en"></html>');
+		expect(mockLoggerInfo).toHaveBeenCalledWith(
+			expect.stringContaining('someone@theguardian.com'),
+		);
 	});
 
-	test('STAGED user should redirect to signin', () => {
-		const status = Status.STAGED;
-		const shouldRedirect = (status as string) !== Status.DEPROVISIONED;
+	test('renders the registration page directly when there is no prepopulateEmail query param', async () => {
+		const req = getMockRequest('/iframed/register/email');
+		const res = getMockResponse();
 
-		expect(shouldRedirect).toBe(true);
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(mockGetUser).not.toHaveBeenCalled();
+		expect(res.redirect).not.toHaveBeenCalled();
+		expect(res.type).toHaveBeenCalledWith('html');
+		expect(res.send).toHaveBeenCalledWith('<html lang="en"></html>');
 	});
 
-	test('DEPROVISIONED user should NOT redirect', () => {
-		const status = Status.DEPROVISIONED;
-		const shouldRedirect = (status as string) !== Status.DEPROVISIONED;
+	test('passes the decoded prepopulateEmail through as page data when rendering the registration page', async () => {
+		mockGetUser.mockResolvedValueOnce(undefined);
 
-		expect(shouldRedirect).toBe(false);
+		const req = getMockRequest(
+			'/iframed/register/email?prepopulateEmail=someone%2Btest%40theguardian.com',
+		);
+		const res = getMockResponse();
+
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(mockRenderer).toHaveBeenCalledWith(
+			'/iframed/register/email',
+			expect.objectContaining({
+				requestState: expect.objectContaining({
+					pageData: expect.objectContaining({
+						email: 'someone+test@theguardian.com',
+					}),
+				}),
+			}),
+		);
+	});
+
+	test('redirects to /iframed/signin when prepopulateEmail belongs to an ACTIVE user', async () => {
+		mockGetUser.mockResolvedValueOnce({
+			id: 'user-id',
+			status: Status.ACTIVE,
+		});
+
+		const req = getMockRequest(
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
+		);
+		const res = getMockResponse();
+
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(mockGetUser).toHaveBeenCalledWith(
+			'someone@theguardian.com',
+			'127.0.0.1',
+		);
+		expect(res.redirect).toHaveBeenCalledTimes(1);
+
+		const [status, redirectUrl] = res.redirect.mock.calls[0];
+		expect(status).toBe(303);
+
+		const redirectUrlObject = new URL(redirectUrl, 'http://localhost');
+		expect(redirectUrlObject.pathname).toBe('/iframed/signin');
+		expect(redirectUrlObject.searchParams.get('prepopulateEmail')).toBe(
+			'someone@theguardian.com',
+		);
+		expect(redirectUrlObject.searchParams.get('clientId')).toBe('any');
+		expect(redirectUrlObject.searchParams.get('returnUrl')).toBe(
+			'https://www.theguardian.com',
+		);
+
+		// registration page is not rendered when we redirect to sign in
+		expect(mockRenderer).not.toHaveBeenCalled();
+		expect(res.type).not.toHaveBeenCalled();
+		expect(res.send).not.toHaveBeenCalled();
+	});
+
+	test('does NOT redirect when prepopulateEmail belongs to a PROVISIONED user', async () => {
+		mockGetUser.mockResolvedValueOnce({
+			id: 'user-id',
+			status: Status.PROVISIONED,
+		});
+
+		const req = getMockRequest(
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
+		);
+		const res = getMockResponse();
+
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(res.redirect).not.toHaveBeenCalled();
+		expect(res.type).toHaveBeenCalledWith('html');
+	});
+
+	test('does NOT redirect when prepopulateEmail belongs to a STAGED user', async () => {
+		mockGetUser.mockResolvedValueOnce({
+			id: 'user-id',
+			status: Status.STAGED,
+		});
+
+		const req = getMockRequest(
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
+		);
+		const res = getMockResponse();
+
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(res.redirect).not.toHaveBeenCalled();
+		expect(res.type).toHaveBeenCalledWith('html');
+	});
+
+	test('does NOT redirect when prepopulateEmail belongs to a DEPROVISIONED user', async () => {
+		mockGetUser.mockResolvedValueOnce({
+			id: 'user-id',
+			status: Status.DEPROVISIONED,
+		});
+
+		const req = getMockRequest(
+			'/iframed/register/email?prepopulateEmail=someone%40theguardian.com',
+		);
+		const res = getMockResponse();
+
+		await handleIframedRegisterEmail(req, asResponse(res));
+
+		expect(res.redirect).not.toHaveBeenCalled();
+		expect(res.type).toHaveBeenCalledWith('html');
 	});
 });
