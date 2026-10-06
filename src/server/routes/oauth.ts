@@ -268,6 +268,7 @@ const authenticationHandler = async (
 				});
 
 				const isUS = registrationLocation === 'United States';
+				logger.log('info', 'Registration location: ', registrationLocation);
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
