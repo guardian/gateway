@@ -271,17 +271,9 @@ const authenticationHandler = async (
 					},
 				});
 
-				if (header)
-					logger.log('info', 'Geolocation header received', {
-						geolocation: Array.isArray(header) ? header : [header],
-					});
-
-				logger.log('info', `Is US: ${isUS}`);
-
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
 				if (isGoogleOneTap && !isUS) {
-					logger.log('info', 'Inside if');
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/google-one-tap`;
 				} else if (
@@ -304,14 +296,10 @@ const authenticationHandler = async (
 						);
 					};
 
-					logger.log('info', 'Inside if else');
-
 					// if there is a social provider in the response (which there should be), then show the social consents page
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/${getSocialProviderPath()}`;
 				} else {
-					logger.log('info', 'Inside else');
-
 					// otherwise fall back to the default consents review page
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = '/welcome/review';
