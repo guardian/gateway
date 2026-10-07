@@ -2,7 +2,7 @@ import { GatewayErrorSummary } from '../components/GatewayErrorSummary';
 import locations from '@/shared/lib/locations';
 import useClientState from '../lib/hooks/useClientState';
 
-export const ErrorLayout = ({
+export const LayoutErrorBoundary = ({
 	errorOverride,
 	errorContext,
 	showErrorReportUrl,

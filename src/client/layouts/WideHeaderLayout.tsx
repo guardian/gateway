@@ -13,8 +13,8 @@ import { DecorativeImageId } from '../assets/decorative';
 import MinimalHeader from '../components/MinimalHeader';
 import { MainBodyText } from '../components/MainBodyText';
 import { MinimalLayoutImage } from '../components/MinimalLayoutImage';
-import { ErrorLayout } from './ErrorLayout';
-import { SuccessLayout } from './SuccessLayout';
+import { LayoutErrorBoundary } from './LayoutErrorBoundary';
+import { LayoutSuccessBoundary } from './LayoutSuccessBoundary';
 interface WideHeaderLayoutProps {
 	children?: React.ReactNode;
 	pageHeader?: string;
@@ -52,7 +52,7 @@ const headerStyles = css`
 `;
 
 const pageHeaderStyles = (amIIframed: boolean) => css`
-	color: var(--color-heading);
+	color: var(--color-header-text);
 	${
 		amIIframed
 			? `
@@ -78,11 +78,13 @@ const mainStyles = css`
 
 const leadTextStyles = css`
 	${textEgyptian17};
+	color: var(--color-header-text);
 `;
 
 const heroStyles = css`
 	width: 100%;
 	margin: 0 auto;
+	color: var(--color-header-text);
 	display: flex;
 	flex-direction: column;
 	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
@@ -122,13 +124,13 @@ export const WideHeaderLayout = ({
 					</div>
 				</div>
 				<main css={mainStyles}>
-					<ErrorLayout
+					<LayoutErrorBoundary
 						errorOverride={errorOverride}
 						errorContext={errorContext}
 						showErrorReportUrl={showErrorReportUrl}
 						shortRequestId={shortRequestId}
 					/>
-					<SuccessLayout
+					<LayoutSuccessBoundary
 						successOverride={successOverride}
 						errorOverride={errorOverride}
 					/>

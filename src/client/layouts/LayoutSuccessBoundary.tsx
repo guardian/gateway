@@ -2,7 +2,7 @@ import { SuccessSummary } from '@guardian/source-development-kitchen/react-compo
 import { successMessageStyles } from '../styles/Shared';
 import useClientState from '../lib/hooks/useClientState';
 
-export const SuccessLayout = ({
+export const LayoutSuccessBoundary = ({
 	successOverride,
 	errorOverride,
 }: {

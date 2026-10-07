@@ -19,8 +19,8 @@ import {
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { SuccessLayout } from './SuccessLayout';
-import { ErrorLayout } from './ErrorLayout';
+import { LayoutSuccessBoundary } from './LayoutSuccessBoundary';
+import { LayoutErrorBoundary } from './LayoutErrorBoundary';
 
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
@@ -149,13 +149,13 @@ export const MinimalLayout = ({
 					)}
 				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
-					<ErrorLayout
+					<LayoutErrorBoundary
 						errorOverride={errorOverride}
 						errorContext={errorContext}
 						showErrorReportUrl={showErrorReportUrl}
 						shortRequestId={shortRequestId}
 					/>
-					<SuccessLayout
+					<LayoutSuccessBoundary
 						successOverride={successOverride}
 						errorOverride={errorOverride}
 					/>

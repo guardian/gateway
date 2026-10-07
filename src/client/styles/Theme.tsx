@@ -80,11 +80,10 @@ const iframeLightTheme = css`
 	--color-input-label: ${palette.neutral[7]};
 `;
 
-const onboardingFlowTheme = css`
+const onboardingFlowLightTheme = css`
 	${lightTheme}
 	--color-background: ${palette.neutral[97]};
-	--color-heading: white;
-	--color-text: white;
+	--color-header-text: white;
 	--color-logo: white;
 	--color-input-text: ${palette.neutral[7]};
 	--color-input-label: ${palette.neutral[7]};
@@ -141,7 +140,7 @@ export const OnboardingFlowLightTheme = () => {
 		<Global
 			styles={css`
 				:root {
-					${onboardingFlowTheme}
+					${onboardingFlowLightTheme}
 				}
 
 				body {
@@ -152,7 +151,7 @@ export const OnboardingFlowLightTheme = () => {
 				 * (see preview.js).
 				 */
 				html.light-theme {
-					${onboardingFlowTheme}
+					${onboardingFlowLightTheme}
 				}
 			`}
 		/>
