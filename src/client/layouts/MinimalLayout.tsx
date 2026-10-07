@@ -135,7 +135,6 @@ export const MinimalLayout = ({
 			{!amIIframed && <MinimalHeader />}
 
 			<main css={getStyles(amIIframed, isOnboarding, wide)}>
-				in
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
 					{pageHeader && (
