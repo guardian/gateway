@@ -34,7 +34,7 @@ export const NewAccountReview = ({
 				<>
 					<MainBodyText>
 						With your Guardian account you’ll receive First Thing and Saturday
-						Edition as well as the Best Of the Guardian.
+						Edition as well as the Best of the Guardian.
 					</MainBodyText>
 					<MainBodyText>
 						Start your day with the most important news from the US and around
@@ -44,11 +44,8 @@ export const NewAccountReview = ({
 					</MainBodyText>
 					<InformationBox>
 						<InformationBoxText>
-							Our newsletters may contain information about Guardian products,
-							services and chosen charities or online advertisements. You&#39;ll
-							You&#39;ll also receive information on our products and ways to
-							support and enjoy our journalism. Visit &#34;Emails &
-							marketing&#34; in your account to opt out.
+							We’ll send you emails about our journalism and ways to support and
+							enjoy our work. You can unsubscribe at any time.
 						</InformationBoxText>
 					</InformationBox>
 					<ExternalLinkButton
