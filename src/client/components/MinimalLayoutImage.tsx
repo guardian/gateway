@@ -10,24 +10,19 @@ import { css } from '@emotion/react';
 
 interface Props {
 	id: DecorativeImageId;
-	useDarkImage?: boolean;
+	isOnboardingFlow?: boolean;
 }
 
-const imageStyles = (id: DecorativeImageId, useDarkImage?: boolean) => {
+const imageStyles = (id: DecorativeImageId, isOnboardingFlow?: boolean) => {
 	const darkImage = id === 'email' ? EMAIL_DARK : WELCOME_DARK;
-	// Required for dark blue background header.
-	const lightImage = useDarkImage
-		? darkImage
-		: id === 'email'
-			? EMAIL_LIGHT
-			: WELCOME_LIGHT;
+	const lightImage = id === 'email' ? EMAIL_LIGHT : WELCOME_LIGHT;
 
 	return css`
 		@media (prefers-color-scheme: dark) {
 			content: url(${darkImage});
 		}
 		@media (prefers-color-scheme: light) {
-			content: url(${lightImage});
+			content: url(${isOnboardingFlow ? darkImage : lightImage});
 		}
 
 		/* These class-based themes are only for Storybook/Chromatic modes
@@ -36,13 +31,15 @@ const imageStyles = (id: DecorativeImageId, useDarkImage?: boolean) => {
 			content: url(${darkImage});
 		}
 		html.light-theme & {
-			content: url(${lightImage});
+			content: url(${isOnboardingFlow ? darkImage : lightImage});
 		}
 	`;
 };
 
-export const MinimalLayoutImage = ({ id, useDarkImage }: Props) => {
+export const MinimalLayoutImage = ({ id, isOnboardingFlow }: Props) => {
 	// WCAG H67: Use null alt text for decorative images
 	// ARIA: role="presentation" removes element from accessibility tree
-	return <img alt="" css={imageStyles(id, useDarkImage)} role="presentation" />;
+	return (
+		<img alt="" css={imageStyles(id, isOnboardingFlow)} role="presentation" />
+	);
 };

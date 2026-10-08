@@ -111,7 +111,12 @@ export const WideHeaderLayout = ({
 				<div css={headerStyles}>
 					{!amIIframed && <MinimalHeader />}
 					<div css={heroStyles}>
-						{imageId && <MinimalLayoutImage id={imageId} useDarkImage />}
+						{imageId && (
+							<MinimalLayoutImage
+								id={imageId}
+								isOnboardingFlow={!!overrideTheme?.includes('onboarding')}
+							/>
+						)}
 						<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
 						{leadText && (
 							<MainBodyText
