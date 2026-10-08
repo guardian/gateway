@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { palette, remSpace, textSans12 } from '@guardian/source/foundations';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -6,6 +6,7 @@ import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { OnboardingCard } from './OnboardingCard';
 import { Button } from '@guardian/source/react-components';
 import { OnboardingSection } from './OnboardingSection';
+import { logger } from '../lib/clientSideLogger';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -55,13 +56,49 @@ const onboardingCardContainerStyles = css`
 	gap: ${remSpace[2]};
 `;
 
+const dividerStylesOverrides = css`
+	margin-top: 0px;
+`;
+
+interface OnboardingNewsletterSignUpButtonProps {
+	newsletter: NewsLetter;
+}
+
+const OnboardingNewsletterSignUpButton = ({
+	newsletter,
+}: OnboardingNewsletterSignUpButtonProps) => {
+	const [hasSignedUp, setHasSignedUp] = useState(false);
+
+	const handleSignUp = () => {
+		// Make request here.
+		logger.info(`User signed up to ${newsletter.name}`);
+		setHasSignedUp(true);
+	};
+
+	return (
+		<Button
+			priority="primary"
+			size="small"
+			type="button"
+			isLoading={false}
+			onClick={handleSignUp}
+		>
+			{hasSignedUp ? 'Signed Up' : 'Sign Up'}
+		</Button>
+	);
+};
+
 export const OnboardingNewsletters = () => {
 	return (
 		<OnboardingSection
 			header="Explore more newsletters"
 			subHeader="Sign up to our newsletters and get exclusive Guardian journalism straight to your inbox."
 		>
-			<Divider size="full" spaceAbove="tight" />
+			<Divider
+				cssOverrides={dividerStylesOverrides}
+				size="full"
+				spaceAbove="tight"
+			/>
 			<span css={labelStyles}>
 				{' '}
 				Newsletters may contain info about charities, online ads, and content
@@ -75,16 +112,7 @@ export const OnboardingNewsletters = () => {
 						title={newsletter.name}
 						description={newsletter.description}
 						backgroundColour={palette.brand[800]}
-						cta={
-							<Button
-								priority="primary"
-								size="small"
-								type="button"
-								isLoading={false}
-							>
-								Sign Up
-							</Button>
-						}
+						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
 					/>
 				))}
 			</div>
