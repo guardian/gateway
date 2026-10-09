@@ -7,6 +7,7 @@ import { OnboardingCard } from './OnboardingCard';
 import { Button } from '@guardian/source/react-components';
 import { OnboardingSection } from './OnboardingSection';
 import { logger } from '../lib/clientSideLogger';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -113,6 +114,8 @@ export const OnboardingNewsletters = () => {
 						description={newsletter.description}
 						backgroundColour={palette.brand[800]}
 						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
+						imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+						imageType="small-circle"
 					/>
 				))}
 			</div>

@@ -13,6 +13,8 @@ interface OnboardingCardProps {
 	description: string;
 	backgroundColour?: string;
 	cta?: React.ReactNode;
+	imagePath: string;
+	imageType: 'rectangle' | 'small-circle';
 }
 
 const styles = (backgroundColour: string | undefined) => css`
@@ -60,11 +62,20 @@ const textStyles = css`
 	}
 `;
 
+const imageStyles = css`
+	grid-area: image;
+	padding: ${remSpace[2]} 0 ${remSpace[2]} 0;
+	display: flex;
+	justify-content: center;
+`;
+
 export const OnboardingCard = ({
 	title,
 	description,
 	backgroundColour,
 	cta,
+	imagePath,
+	imageType,
 }: OnboardingCardProps) => {
 	return (
 		<div css={styles(backgroundColour)}>
@@ -79,15 +90,8 @@ export const OnboardingCard = ({
 			>
 				{cta ?? null}
 			</div>
-			<div
-				css={css`
-					grid-area: image;
-					padding: ${remSpace[2]} 0 ${remSpace[2]} 0;
-				`}
-			>
-				<OnboardingImage
-					id={title === 'The Guardian app' ? 'guardian-app' : 'feast-app'}
-				/>
+			<div css={imageStyles}>
+				<OnboardingImage path={imagePath} type={imageType} />
 			</div>
 		</div>
 	);

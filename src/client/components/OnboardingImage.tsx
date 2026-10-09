@@ -1,40 +1,33 @@
-import {
-	FEAST_APP,
-	GUARDIAN_APP,
-	OnboardingImageId,
-} from '@/client/assets/decorative';
 import { css } from '@emotion/react';
 import { from } from '@guardian/source/foundations';
 
 interface OnboardingImageProps {
-	id: OnboardingImageId;
+	path: string;
+	type: OnboardingImageType;
 }
 
-const imageStyles = () => css`
-	width: 110px;
-	height: 132px;
+export type OnboardingImageType = 'rectangle' | 'small-circle';
+
+const imageStyles = (type: OnboardingImageType) => css`
+	width: ${type === 'small-circle' ? '64px' : '110px'};
+	height: ${type === 'small-circle' ? '64px' : '132px'};
 
 	${from.tablet} {
 		float: right;
 	}
 
 	${from.tablet} {
-		width: 123px;
-		height: 149px;
+		width: ${type === 'small-circle' ? '80px' : '123px'};
+		height: ${type === 'small-circle' ? '80px' : '149px'};
 	}
 
 	${from.desktop} {
-		width: 164px;
-		height: 198px;
+		width: ${type === 'small-circle' ? '80px' : '164px'};
+		height: ${type === 'small-circle' ? '80px' : '198px'};
 	}
+	border-radius: ${type === 'small-circle' ? '50%' : '0%'};
 `;
 
-export const OnboardingImage = ({ id }: OnboardingImageProps) => {
-	return (
-		<img
-			alt=""
-			src={id === 'feast-app' ? FEAST_APP : GUARDIAN_APP}
-			css={imageStyles}
-		/>
-	);
+export const OnboardingImage = ({ path, type }: OnboardingImageProps) => {
+	return <img alt="" src={path} css={imageStyles(type)} />;
 };
