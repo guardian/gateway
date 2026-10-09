@@ -1,3 +1,4 @@
+import { OnboardingNewsletters } from '../components/OnboardingNewsletters';
 import { WideHeaderLayout } from '../layouts/WideHeaderLayout';
 import { DiscoverOurApps } from './DiscoverOurApps';
 
@@ -13,7 +14,7 @@ export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 		imageId="welcome"
 		overrideTheme="onboarding-light"
 	>
-		<p> Newsletters</p>
+		<OnboardingNewsletters />
 		<DiscoverOurApps />
 	</WideHeaderLayout>
 );

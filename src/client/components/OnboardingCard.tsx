@@ -7,12 +7,14 @@ import {
 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { OnboardingImage } from '@/client/components/OnboardingImage';
-import { Button, Hide, SvgDownload } from '@guardian/source/react-components';
 
 interface OnboardingCardProps {
 	title: string;
-	text: string;
+	description: string;
 	backgroundColour?: string;
+	cta?: React.ReactNode;
+	imagePath: string;
+	imageType: 'rectangle' | 'small-circle';
 }
 
 const styles = (backgroundColour: string | undefined) => css`
@@ -60,15 +62,25 @@ const textStyles = css`
 	}
 `;
 
+const imageStyles = css`
+	grid-area: image;
+	padding: ${remSpace[2]} 0 ${remSpace[2]} 0;
+	display: flex;
+	justify-content: center;
+`;
+
 export const OnboardingCard = ({
 	title,
-	text,
+	description,
 	backgroundColour,
+	cta,
+	imagePath,
+	imageType,
 }: OnboardingCardProps) => {
 	return (
 		<div css={styles(backgroundColour)}>
 			<MainBodyText cssOverrides={titleStyles}>{title}</MainBodyText>
-			<MainBodyText cssOverrides={textStyles}>{text}</MainBodyText>
+			<MainBodyText cssOverrides={textStyles}>{description}</MainBodyText>
 
 			<div
 				css={css`
@@ -76,44 +88,10 @@ export const OnboardingCard = ({
 					padding: 0 0 ${remSpace[2]} ${remSpace[2]};
 				`}
 			>
-				<>
-					<Hide from="tablet">
-						<Button
-							priority="primary"
-							size="xsmall"
-							type="button"
-							isLoading={false}
-							icon={SvgDownload({
-								size: 'xsmall',
-							})}
-						>
-							Download
-						</Button>
-					</Hide>
-					<Hide until="tablet">
-						<Button
-							priority="primary"
-							size="small"
-							type="button"
-							isLoading={false}
-							icon={SvgDownload({
-								size: 'small',
-							})}
-						>
-							Download
-						</Button>
-					</Hide>
-				</>
+				{cta ?? null}
 			</div>
-			<div
-				css={css`
-					grid-area: image;
-					padding: ${remSpace[2]} 0 ${remSpace[2]} 0;
-				`}
-			>
-				<OnboardingImage
-					id={title === 'The Guardian app' ? 'guardian-app' : 'feast-app'}
-				/>
+			<div css={imageStyles}>
+				<OnboardingImage path={imagePath} type={imageType} />
 			</div>
 		</div>
 	);
