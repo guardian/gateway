@@ -45,6 +45,7 @@ import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { publishImovoSnsEvent } from '../lib/sns/snsEventPublisher';
+import { countryCodeToRegion } from '@/server/lib/getGeolocationRegion';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -227,6 +228,9 @@ const authenticationHandler = async (
 			user_groups?.some((group) => group === 'GuardianUser-EmailValidated');
 		const isGoogleOneTap = authState.data?.flow === 'google-one-tap';
 
+		const header = req.headers['x-gu-geolocation'];
+		const isUS = countryCodeToRegion(header) === 'US';
+
 		// We're unable to set the user.emailValidated field in the Okta user profile
 		// for social users when they are created, but we are able to put them in the
 		// GuardianUser-EmailValidated group.
@@ -269,16 +273,17 @@ const authenticationHandler = async (
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
-				if (isGoogleOneTap) {
+				if (isGoogleOneTap && !isUS) {
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/google-one-tap`;
 				} else if (
-					authState.data?.socialProvider ||
-					// Playwright Test START
-					// this is a special case for the playwright tests, where we want to be able to mock the social provider
-					(runningInPlaywright &&
-						(playwrightMockStateCookie === 'google' ||
-							playwrightMockStateCookie === 'apple'))
+					(authState.data?.socialProvider ||
+						// Playwright Test START
+						// this is a special case for the playwright tests, where we want to be able to mock the social provider
+						(runningInPlaywright &&
+							(playwrightMockStateCookie === 'google' ||
+								playwrightMockStateCookie === 'apple'))) &&
+					!isUS
 				) {
 					const getSocialProviderPath = () => {
 						if (authState.queryParams.clientId === 'printpromo') {
@@ -537,7 +542,8 @@ const authenticationHandler = async (
 				// this is a special case for the playwright tests, where we want to be able to mock the social provider
 				(runningInPlaywright &&
 					(playwrightMockStateCookie === 'google' ||
-						playwrightMockStateCookie === 'apple')))
+						playwrightMockStateCookie === 'apple'))) &&
+			!isUS
 		) {
 			// get the social provider from the authState.data.socialProvider
 			// or from the playwright mock state cookie if we're running in playwright
@@ -569,7 +575,8 @@ const authenticationHandler = async (
 		// This will be fixed when we either use the passcode registration flow.
 		if (
 			authState.data?.appPrefix &&
-			authState.confirmationPage === '/welcome/review'
+			authState.confirmationPage === '/welcome/review' &&
+			!isUS
 		) {
 			// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 			authState.confirmationPage =

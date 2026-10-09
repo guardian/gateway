@@ -24,7 +24,7 @@ import {
 } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
+import { Consents, CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
 import {
 	getUserConsentsForPage,
 	update as updateConsents,
@@ -39,7 +39,7 @@ import {
 	getRegistrationConsentsFromCookies,
 	registrationConsentsExistInCookies,
 } from '@/server/lib/registrationConsents';
-import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
+import { ALL_NEWSLETTER_IDS, Newsletters } from '@/shared/model/Newsletter';
 
 import {
 	NewsletterMap,
@@ -52,6 +52,7 @@ import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { RoutePaths } from '@/shared/model/Routes';
+import { countryCodeToRegion } from '@/server/lib/getGeolocationRegion';
 
 const { passcodesEnabled: passcodesEnabled, signInPageUrl } =
 	getConfiguration();
@@ -318,6 +319,24 @@ router.get(
 			});
 
 			trackMetric('NewAccountReview::Failure');
+		}
+
+		const header = req.headers['x-gu-geolocation'];
+		const isUS = countryCodeToRegion(header) === 'US';
+
+		if (isUS) {
+			const registrationConsents = {
+				consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
+				newsletters: [
+					{ id: Newsletters.FIRST_THING, subscribed: true },
+					{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
+				],
+			};
+			await updateNewslettersAndConsents(
+				registrationConsents,
+				res,
+				'us-create-account-flow',
+			);
 		}
 
 		const html = renderer('/welcome/review', {

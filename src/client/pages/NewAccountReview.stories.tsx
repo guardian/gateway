@@ -16,3 +16,7 @@ export default {
 export const Default = (args: NewAccountReviewProps) => (
 	<NewAccountReview {...args} />
 );
+
+export const USAccountReviewPage = (args: NewAccountReviewProps) => (
+	<NewAccountReview {...args} geolocation={'US'} />
+);
