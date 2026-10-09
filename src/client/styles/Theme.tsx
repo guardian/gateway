@@ -2,6 +2,7 @@ import React from 'react';
 import { Global, css } from '@emotion/react';
 import { palette } from '@guardian/source/foundations';
 
+export type OverrideTheme = 'iframe-light' | 'onboarding-light';
 const lightTheme = css`
 	--color-background: ${palette.neutral[100]};
 	--color-logo: ${palette.brand[400]};
@@ -79,9 +80,14 @@ const iframeLightTheme = css`
 	--color-input-label: ${palette.neutral[7]};
 `;
 
-const onboardingFlowTheme = css`
+const onboardingFlowLightTheme = css`
 	${lightTheme}
 	--color-background: ${palette.neutral[97]};
+	--color-header-text: white;
+	--color-logo: white;
+	--color-input-text: ${palette.neutral[7]};
+	--color-input-label: ${palette.neutral[7]};
+	--color-header-background: ${palette.brand[400]};
 `;
 
 export const Theme = () => {
@@ -134,13 +140,31 @@ export const OnboardingFlowLightTheme = () => {
 		<Global
 			styles={css`
 				:root {
-					${onboardingFlowTheme}
+					${onboardingFlowLightTheme}
 				}
 
 				body {
 					background: var(--color-background);
 				}
+
+				/* These class-based themes are only for Storybook/Chromatic modes 
+				 * (see preview.js).
+				 */
+				html.light-theme {
+					${onboardingFlowLightTheme}
+				}
 			`}
 		/>
 	);
+};
+
+export const getTheme = (overrideTheme?: OverrideTheme) => {
+	switch (overrideTheme) {
+		case 'iframe-light':
+			return <IframeLightTheme />;
+		case 'onboarding-light':
+			return <OnboardingFlowLightTheme />;
+		default:
+			return <Theme />;
+	}
 };

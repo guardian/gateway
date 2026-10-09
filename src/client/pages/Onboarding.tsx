@@ -1,15 +1,19 @@
-import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import { DiscoverOurApps } from '@/client/pages/DiscoverOurApps';
+import { WideHeaderLayout } from '../layouts/WideHeaderLayout';
+import { DiscoverOurApps } from './DiscoverOurApps';
 
 export interface OnboardingProps {
 	shortRequestId?: string;
 }
 
 export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
-	<MinimalLayout
+	<WideHeaderLayout
 		shortRequestId={shortRequestId}
+		pageHeader="Welcome to the Guardian"
+		leadText="Thank you for signing up."
+		imageId="welcome"
 		overrideTheme="onboarding-light"
 	>
+		<p> Newsletters</p>
 		<DiscoverOurApps />
-	</MinimalLayout>
+	</WideHeaderLayout>
 );
