@@ -13,6 +13,7 @@ import {
 	mainSectionStyles,
 	secondaryButtonStyles,
 } from '@/client/styles/Shared';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 export type AuthButtonProvider = 'social' | 'email';
 
@@ -106,6 +107,11 @@ export const AuthProviderButtons = ({
 	providers,
 }: AuthProviderButtonsProps) => {
 	const buttonOrder = getButtonOrder(isNativeApp);
+
+	const clientState = useClientState();
+	const { pageData = {} } = clientState;
+	const geolocation = pageData.geolocation;
+
 	return (
 		<div css={mainSectionStyles}>
 			{providers.includes('social') &&
@@ -123,7 +129,11 @@ export const AuthProviderButtons = ({
 					icon={<SvgEnvelope />}
 					cssOverrides={secondaryButtonStyles()}
 					priority="tertiary"
-					href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
+					href={buildUrlWithQueryParams(
+						geolocation === 'US' ? '/signin' : '/register/email',
+						{},
+						queryParams,
+					)}
 				>
 					{authProviderButtonLabel('email')}
 				</LinkButton>

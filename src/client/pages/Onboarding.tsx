@@ -12,7 +12,6 @@ export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 		pageHeader="Welcome to the Guardian"
 		leadText="Thank you for signing up."
 		imageId="welcome"
-		overrideTheme="onboarding-light"
 	>
 		<OnboardingNewsletters />
 		<DiscoverOurApps />

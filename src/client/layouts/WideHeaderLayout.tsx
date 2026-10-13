@@ -1,10 +1,9 @@
 import React from 'react';
-import { getTheme, OverrideTheme } from '../styles/Theme';
+import { OnboardingFlowLightTheme } from '../styles/Theme';
 import { css } from '@emotion/react';
 import { CONTAINER_GAP, LAYOUT_WIDTH_NARROW } from '../models/Style';
 import {
 	from,
-	headlineMedium24,
 	headlineMedium28,
 	remSpace,
 	textEgyptian17,
@@ -25,7 +24,6 @@ interface WideHeaderLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: OverrideTheme;
 }
 
 const sharedPadding = css`
@@ -37,6 +35,7 @@ const sharedPadding = css`
 `;
 const containerStyles = css`
 	display: grid;
+	// grid-template-columns: repeat(5, 1fr);
 	grid-template-columns: 1fr;
 	grid-template-rows: auto 1fr;
 	grid-template-areas:
@@ -50,18 +49,9 @@ const headerStyles = css`
 	grid-area: header;
 `;
 
-const pageHeaderStyles = (amIIframed: boolean) => css`
+const pageHeaderStyles = css`
 	color: var(--color-header-text);
-	${
-		amIIframed
-			? `
-            ${headlineMedium24};
-            ${from.mobileLandscape} {
-                ${headlineMedium28};
-            }
-        `
-			: headlineMedium28
-	};
+	${headlineMedium28};
 	margin: 0;
 `;
 
@@ -100,23 +90,19 @@ export const WideHeaderLayout = ({
 	errorContext,
 	showErrorReportUrl,
 	shortRequestId,
-	overrideTheme,
 }: WideHeaderLayoutProps) => {
-	const amIIframed = !!overrideTheme?.includes('iframe');
 	return (
 		<>
-			{getTheme(overrideTheme)}
+			{/* This will be changed back to getTheme('onboarding') once we have an onboarding dark theme */}
+			<OnboardingFlowLightTheme />
 			<div css={containerStyles}>
 				<div css={headerStyles}>
-					{!amIIframed && <MinimalHeader />}
+					<MinimalHeader />
 					<div css={heroStyles}>
-						{imageId && <MinimalLayoutImage id={imageId} useDarkImage />}
-						<h1 css={pageHeaderStyles(amIIframed)}>{pageHeader}</h1>
+						{imageId && <MinimalLayoutImage id={imageId} isOnboardingFlow />}
+						<h1 css={pageHeaderStyles}>{pageHeader}</h1>
 						{leadText && (
-							<MainBodyText
-								isIframed={amIIframed}
-								cssOverrides={leadTextStyles}
-							>
+							<MainBodyText cssOverrides={leadTextStyles}>
 								{leadText}
 							</MainBodyText>
 						)}
