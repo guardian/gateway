@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
-import { palette, remSpace, textSans12 } from '@guardian/source/foundations';
+import {
+	palette,
+	remSpace,
+	textSans12,
+	textSans17,
+} from '@guardian/source/foundations';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { OnboardingCard } from './OnboardingCard';
-import { Button } from '@guardian/source/react-components';
+import {
+	Button,
+	SvgPlusOnRound,
+	SvgTickRound,
+} from '@guardian/source/react-components';
 import { OnboardingSection } from './OnboardingSection';
 import { logger } from '../lib/clientSideLogger';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
@@ -61,6 +70,12 @@ const dividerStylesOverrides = css`
 	margin-top: 0px;
 `;
 
+const guardianSansText = css`
+	${textSans17};
+	display: flex;
+	align-items: center;
+`;
+
 interface OnboardingNewsletterSignUpButtonProps {
 	newsletter: NewsLetter;
 }
@@ -76,16 +91,24 @@ const OnboardingNewsletterSignUpButton = ({
 		setHasSignedUp(true);
 	};
 
-	return (
+	return !hasSignedUp ? (
 		<Button
 			priority="primary"
 			size="small"
 			type="button"
 			isLoading={false}
 			onClick={handleSignUp}
+			icon={SvgPlusOnRound({
+				size: 'small',
+			})}
 		>
-			{hasSignedUp ? 'Signed Up' : 'Sign Up'}
+			Sign Up
 		</Button>
+	) : (
+		<span css={guardianSansText}>
+			<SvgTickRound size="small" theme={{ fill: palette.success[400] }} />
+			You&apos;re signed up!
+		</span>
 	);
 };
 
@@ -112,13 +135,17 @@ export const OnboardingNewsletters = () => {
 						key={newsletter.id}
 						title={newsletter.name}
 						description={newsletter.description}
-						backgroundColour={palette.brand[800]}
+						backgroundColour="#F3F7FF"
 						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
 						imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
 						imageType="small-circle"
 					/>
 				))}
 			</div>
+
+			<Button priority="tertiary" type="button">
+				Browse more newsletters
+			</Button>
 		</OnboardingSection>
 	);
 };
