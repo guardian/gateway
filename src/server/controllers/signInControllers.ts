@@ -348,6 +348,10 @@ export const oktaIdxApiSignInPasscodeController = async ({
 				}
 
 				try {
+					logger.info(
+						`[REGISTER_FLOW_DEBUG] oktaIdxApiSignInPasscodeController - user ${user.id} (email: ${user.profile.email}) is in non-ACTIVE status ${user.status}, calling forceUserIntoActiveState`,
+					);
+
 					// force the user into the ACTIVE state
 					// either
 					// 1. ACTIVE users - has email + password authenticator (okta idx email verified)

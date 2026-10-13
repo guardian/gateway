@@ -188,6 +188,10 @@ export const forceUserIntoActiveState = async ({
 	req: Request;
 	user: UserResponse;
 }) => {
+	logger.info(
+		`[REGISTER_FLOW_DEBUG] forceUserIntoActiveState - forcing user ${user.id} (email: ${user.profile.email}, current status: ${user.status}) into ACTIVE state`,
+	);
+
 	// 1. deactivate the user
 	try {
 		await deactivateUser({
@@ -195,6 +199,9 @@ export const forceUserIntoActiveState = async ({
 			ip: req.ip,
 		});
 		trackMetric('OktaDeactivateUser::Success');
+		logger.info(
+			`[REGISTER_FLOW_DEBUG] forceUserIntoActiveState - deactivated user ${user.id}`,
+		);
 	} catch (error) {
 		trackMetric('OktaDeactivateUser::Failure');
 		logger.error(
@@ -222,6 +229,10 @@ export const forceUserIntoActiveState = async ({
 			ip: req.ip,
 			recoveryToken: tokenResponse.token,
 		});
+
+		logger.info(
+			`[REGISTER_FLOW_DEBUG] forceUserIntoActiveState - user ${user.id} set to ACTIVE with placeholder password`,
+		);
 	} catch (error) {
 		logger.error(
 			'Okta force activation failed',
