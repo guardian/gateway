@@ -6,7 +6,7 @@ import {
 	textSans12,
 	textSans17,
 } from '@guardian/source/foundations';
-import { NewsLetter } from '@/shared/model/Newsletter';
+import { NewsLetter, NewslettersWithImages } from '@/shared/model/Newsletter';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { OnboardingCard } from './OnboardingCard';
 import {
@@ -17,6 +17,7 @@ import {
 import { OnboardingSection } from './OnboardingSection';
 import { logger } from '../lib/clientSideLogger';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
+import { NEWSLETTER_IMAGES } from '../models/Newsletter';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -112,6 +113,10 @@ const OnboardingNewsletterSignUpButton = ({
 	);
 };
 
+const getNewsletterImage = (newsletterId: NewslettersWithImages) => {
+	return NEWSLETTER_IMAGES[newsletterId] ?? SATURDAY_EDITION_SMALL_SQUARE_IMAGE;
+};
+
 export const OnboardingNewsletters = () => {
 	return (
 		<OnboardingSection
@@ -137,7 +142,9 @@ export const OnboardingNewsletters = () => {
 						description={newsletter.description}
 						backgroundColour="#F3F7FF"
 						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
-						imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+						imagePath={getNewsletterImage(
+							newsletter.id as NewslettersWithImages,
+						)}
 						imageType="small-circle"
 					/>
 				))}
