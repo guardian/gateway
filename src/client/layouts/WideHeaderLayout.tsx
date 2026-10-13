@@ -78,6 +78,12 @@ const heroStyles = css`
 	flex-direction: column;
 	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
 	max-width: ${LAYOUT_WIDTH_NARROW}px;
+	${from.mobile} {
+		max-width: ${300}px;
+	}
+	${from.mobileMedium} {
+		max-width: 355px;
+	}
 `;
 
 export const WideHeaderLayout = ({
