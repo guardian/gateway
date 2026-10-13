@@ -8,19 +8,9 @@ import {
 	headlineMedium28,
 	remSpace,
 } from '@guardian/source/foundations';
-import useClientState from '@/client/lib/hooks/useClientState';
-import { SuccessSummary } from '@guardian/source-development-kitchen/react-components';
 
-import locations from '@/shared/lib/locations';
-import {
-	IframeLightTheme,
-	OnboardingFlowLightTheme,
-	Theme,
-} from '@/client/styles/Theme';
-import {
-	mainSectionStyles,
-	successMessageStyles,
-} from '@/client/styles/Shared';
+import { getTheme, OverrideTheme } from '@/client/styles/Theme';
+import { mainSectionStyles } from '@/client/styles/Shared';
 import { DecorativeImageId } from '@/client/assets/decorative';
 import { MinimalLayoutImage } from '@/client/components/MinimalLayoutImage';
 import {
@@ -29,7 +19,8 @@ import {
 	LAYOUT_WIDTH_WIDE,
 } from '@/client/models/Style';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { GatewayErrorSummary } from '@/client/components/GatewayErrorSummary';
+import { LayoutSuccessBoundary } from './LayoutSuccessBoundary';
+import { LayoutErrorBoundary } from './LayoutErrorBoundary';
 
 interface MinimalLayoutProps {
 	children?: React.ReactNode;
@@ -42,7 +33,7 @@ interface MinimalLayoutProps {
 	errorContext?: React.ReactNode;
 	showErrorReportUrl?: boolean;
 	shortRequestId?: string;
-	overrideTheme?: 'iframe-light' | 'onboarding-light';
+	overrideTheme?: OverrideTheme;
 }
 
 const mainStyles = (wide: boolean) => css`
@@ -124,24 +115,6 @@ export const MinimalLayout = ({
 	shortRequestId,
 	overrideTheme,
 }: MinimalLayoutProps) => {
-	const clientState = useClientState();
-	const { globalMessage: { error, success } = {} } = clientState;
-
-	const successMessage = successOverride || success;
-	const errorMessage = errorOverride || error;
-
-	const getTheme = () => {
-		if (overrideTheme === 'iframe-light') {
-			return <IframeLightTheme />;
-		}
-
-		if (overrideTheme === 'onboarding-light') {
-			return <OnboardingFlowLightTheme />;
-		}
-
-		return <Theme />;
-	};
-
 	const getStyles = (
 		amIIframed: boolean,
 		isOnboarding: boolean,
@@ -158,8 +131,9 @@ export const MinimalLayout = ({
 
 	return (
 		<>
-			{getTheme()}
-			{!amIIframed && !isOnboarding && <MinimalHeader />}
+			{getTheme(overrideTheme)}
+			{!amIIframed && <MinimalHeader />}
+
 			<main css={getStyles(amIIframed, isOnboarding, wide)}>
 				{imageId && <MinimalLayoutImage id={imageId} />}
 				<ConditionalIframeThemeWrapper overrideTheme={overrideTheme}>
@@ -175,22 +149,16 @@ export const MinimalLayout = ({
 					)}
 				</ConditionalIframeThemeWrapper>
 				<section css={mainSectionStyles}>
-					{errorMessage && (
-						<GatewayErrorSummary
-							gatewayError={errorMessage}
-							context={errorContext}
-							shortRequestId={shortRequestId}
-							errorReportUrl={
-								showErrorReportUrl ? locations.REPORT_ISSUE : undefined
-							}
-						/>
-					)}
-					{successMessage && !errorMessage && (
-						<SuccessSummary
-							message={successMessage}
-							cssOverrides={successMessageStyles}
-						/>
-					)}
+					<LayoutErrorBoundary
+						errorOverride={errorOverride}
+						errorContext={errorContext}
+						showErrorReportUrl={showErrorReportUrl}
+						shortRequestId={shortRequestId}
+					/>
+					<LayoutSuccessBoundary
+						successOverride={successOverride}
+						errorOverride={errorOverride}
+					/>
 					{children}
 				</section>
 			</main>
