@@ -6,7 +6,10 @@ import {
 	textSans17,
 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
-import { OnboardingImage } from '@/client/components/OnboardingImage';
+import {
+	OnboardingImage,
+	OnboardingImageType,
+} from '@/client/components/OnboardingImage';
 
 interface OnboardingCardProps {
 	title: string;
@@ -14,18 +17,22 @@ interface OnboardingCardProps {
 	backgroundColour?: string;
 	cta?: React.ReactNode;
 	imagePath: string;
-	imageType: 'rectangle' | 'small-circle';
+	imageType: OnboardingImageType;
 }
 
-const styles = (backgroundColour: string | undefined) => css`
+const styles = (
+	backgroundColour: string | undefined,
+	imageType: OnboardingImageType,
+) => css`
 	background-color: ${backgroundColour ? backgroundColour : '#FFFFFF'};
 	border-radius: ${remSpace[2]};
 	display: grid;
 	grid-template-columns: 2fr 1fr;
-	grid-template-areas:
-		'title image'
-		'text  image'
-		'cta   image';
+	grid-template-areas: ${
+		imageType === 'rectangle'
+			? `'title image' 'text image' 'cta image'`
+			: `'title image' 'text image' 'cta .'`
+	};
 	gap: ${remSpace[1]};
 
 	max-width: 348px;
@@ -78,7 +85,7 @@ export const OnboardingCard = ({
 	imageType,
 }: OnboardingCardProps) => {
 	return (
-		<div css={styles(backgroundColour)}>
+		<div css={styles(backgroundColour, imageType)}>
 			<MainBodyText cssOverrides={titleStyles}>{title}</MainBodyText>
 			<MainBodyText cssOverrides={textStyles}>{description}</MainBodyText>
 
