@@ -201,7 +201,7 @@ export const oktaIdxApiSignInPasscodeController = async ({
 	loopDetectionFlag?: boolean;
 	confirmationPagePath?: StartIdxFlowParams['authorizationCodeFlowOptions']['confirmationPagePath'];
 }): Promise<void> => {
-	const { email = '' } = req.body;
+	const { email = '', firstName, secondName } = req.body;
 	const referrerUrl = new URL(req.body.ref);
 	const referrerPath = referrerUrl.pathname;
 	const emailSentPage = referrerPath.includes('/iframed')
@@ -249,6 +249,8 @@ export const oktaIdxApiSignInPasscodeController = async ({
 						extraData: {
 							flow: 'sign-in-passcode',
 							appLabel: res.locals.appLabel,
+							firstName,
+							lastName: secondName,
 						},
 					},
 				});
