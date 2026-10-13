@@ -43,7 +43,7 @@ export const DiscoverOurApps = () => {
 				description="Get the stuff you want, when you want it — news, sport, podcasts, puzzles and more."
 				backgroundColour="#E1EAF7"
 				cta={cta}
-				imagePath={FEAST_APP}
+				imagePath={GUARDIAN_APP}
 				imageType="rectangle"
 			/>
 			<OnboardingCard
@@ -51,7 +51,7 @@ export const DiscoverOurApps = () => {
 				description="Your most useful kitchen utensil, with more than 7,000 recipes and smart, exclusive cooking features."
 				backgroundColour="#E1E5D5"
 				cta={cta}
-				imagePath={GUARDIAN_APP}
+				imagePath={FEAST_APP}
 				imageType="rectangle"
 			/>
 		</OnboardingSection>
