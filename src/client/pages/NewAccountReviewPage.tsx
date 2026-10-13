@@ -17,6 +17,10 @@ export const NewAccountReviewPage = () => {
 	});
 
 	return (
-		<NewAccountReview shortRequestId={shortRequestId} nextPage={nextPage} />
+		<NewAccountReview
+			shortRequestId={shortRequestId}
+			nextPage={nextPage}
+			geolocation={pageData.geolocation}
+		/>
 	);
 };
