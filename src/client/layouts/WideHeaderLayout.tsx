@@ -84,6 +84,10 @@ const heroStyles = css`
 	${from.mobileMedium} {
 		max-width: 355px;
 	}
+
+	${from.desktop} {
+		max-width: ${LAYOUT_WIDTH_NARROW}px;
+	}
 `;
 
 export const WideHeaderLayout = ({
