@@ -42,8 +42,11 @@ const styles = css`
 `;
 
 const qrCodeImageStyles = css`
+	margin: 0;
 	display: flex;
 	flex-direction: column;
+	align-items: flex-start;
+	width: max-content;
 
 	${textSansBold12};
 	gap: ${remSpace[1]};
@@ -52,6 +55,8 @@ const qrCodeImageStyles = css`
 const qrCodeStyles = css`
 	grid-area: qr_code;
 	position: relative;
+
+	padding-left: ${remSpace[6]};
 
 	&::before {
 		content: '';
@@ -148,6 +153,7 @@ const QrCode = ({ title }: QrCodeProps) => {
 					css={css`
 						width: 74px;
 						height: 74px;
+						align-self: center;
 					`}
 					alt={`Scan to get the Guardian ${title === 'Guardian Feast app' ? 'Feast' : ''} app`}
 					src={title === 'The Guardian app' ? GUARDIAN_QR_CODE : FEAST_QR_CODE}
