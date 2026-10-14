@@ -89,7 +89,7 @@ const heroStyles = css`
 export const WideHeaderLayout = ({
 	pageHeader,
 	leadText,
-	imageId,
+	imageId = 'welcome',
 	children,
 	successOverride,
 	errorOverride,
