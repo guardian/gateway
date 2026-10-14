@@ -83,11 +83,32 @@ const iframeLightTheme = css`
 const onboardingFlowLightTheme = css`
 	${lightTheme}
 	--color-background: ${palette.neutral[97]};
-	--color-header-text: white;
-	--color-logo: white;
+	--color-header-text: ${palette.neutral[100]};
+	--color-logo: ${palette.neutral[100]};
 	--color-input-text: ${palette.neutral[7]};
 	--color-input-label: ${palette.neutral[7]};
 	--color-header-background: ${palette.brand[400]};
+	--color-onboarding-section-background: ${palette.neutral[100]};
+`;
+
+const onboardingFlowDarkTheme = css`
+	${darkTheme}
+	--color-background: ${palette.neutral[7]};
+	--color-header-text: ${palette.neutral[100]};
+	--color-logo: ${palette.neutral[100]};
+	--color-input-text: ${palette.neutral[86]};
+	--color-input-label: ${palette.neutral[86]};
+	--color-header-background: ${palette.neutral[0]};
+	--color-onboarding-section-background: ${palette.neutral[10]};
+
+	--color-onboarding-card-background: ${palette.neutral[20]};
+	--color-onboarding-card-cta-background: ${palette.neutral[100]};
+	--color-onboarding-card-cta-text: ${palette.brand[400]};
+
+	--color-onboarding-newsletter-modal-button-text: ${palette.neutral[100]};
+	--color-onboarding-newsletter-modal-button-background: ${palette.neutral[10]};
+	--color-onboarding-newsletter-modal-button-border: 1px solid
+		${palette.neutral[100]};
 `;
 
 export const Theme = () => {
@@ -141,6 +162,10 @@ export const OnboardingFlowLightTheme = () => {
 			styles={css`
 				:root {
 					${onboardingFlowLightTheme}
+
+					@media (prefers-color-scheme: dark) {
+						${onboardingFlowDarkTheme}
+					}
 				}
 
 				body {
@@ -152,6 +177,9 @@ export const OnboardingFlowLightTheme = () => {
 				 */
 				html.light-theme {
 					${onboardingFlowLightTheme}
+				}
+				html.dark-theme {
+					${onboardingFlowDarkTheme}
 				}
 			`}
 		/>
