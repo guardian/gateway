@@ -59,7 +59,7 @@ const labelStyles = css`
 	display: flex;
 	flex-direction: column;
 	margin-bottom: ${remSpace[2]};
-	color: var(--base-colors-blue-500);
+	color: var(--color-text);
 `;
 
 const onboardingCardContainerStyles = css`
@@ -75,6 +75,17 @@ const guardianSansText = css`
 	${textSans17};
 	display: flex;
 	align-items: center;
+	color: var(--color-text);
+`;
+
+const ctaButtonStyles = css`
+	color: var(--color-onboarding-card-cta-text);
+	background-color: var(--color-onboarding-card-cta-background);
+`;
+const modalButtonStyles = css`
+	color: var(--color-onboarding-newsletter-modal-button-text);
+	background-color: var(--color-onboarding-newsletter-modal-button-background);
+	border: var(--color-onboarding-newsletter-modal-button-border);
 `;
 
 interface OnboardingNewsletterSignUpButtonProps {
@@ -102,12 +113,13 @@ const OnboardingNewsletterSignUpButton = ({
 			icon={SvgPlusOnRound({
 				size: 'small',
 			})}
+			cssOverrides={ctaButtonStyles}
 		>
 			Sign Up
 		</Button>
 	) : (
 		<span css={guardianSansText}>
-			<SvgTickRound size="small" theme={{ fill: palette.success[400] }} />
+			<SvgTickRound size="small" theme={{ fill: palette.success[500] }} />
 			You&apos;re signed up!
 		</span>
 	);
@@ -150,7 +162,11 @@ export const OnboardingNewsletters = () => {
 				))}
 			</div>
 
-			<Button priority="tertiary" type="button">
+			<Button
+				cssOverrides={modalButtonStyles}
+				priority="tertiary"
+				type="button"
+			>
 				Browse more newsletters
 			</Button>
 		</OnboardingSection>

@@ -1,7 +1,14 @@
 import { OnboardingSection } from '@/client/components/OnboardingSection';
 import { OnboardingCard } from '@/client/components/OnboardingCard';
+import { css } from '@emotion/react';
 import { Hide, Button, SvgDownload } from '@guardian/source/react-components';
 import { FEAST_APP, GUARDIAN_APP } from '../assets/decorative';
+
+const buttonStyles = css`
+	color: var(--color-onboarding-card-cta-text);
+	background-color: var(--color-onboarding-card-cta-background);
+`;
+
 const cta = (
 	<>
 		<Hide from="tablet">
@@ -13,6 +20,7 @@ const cta = (
 				icon={SvgDownload({
 					size: 'xsmall',
 				})}
+				cssOverrides={buttonStyles}
 			>
 				Download
 			</Button>
@@ -26,6 +34,7 @@ const cta = (
 				icon={SvgDownload({
 					size: 'small',
 				})}
+				cssOverrides={buttonStyles}
 			>
 				Download
 			</Button>
