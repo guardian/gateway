@@ -129,7 +129,6 @@ export const OnboardingNewsletters = () => {
 				spaceAbove="tight"
 			/>
 			<span css={labelStyles}>
-				{' '}
 				Newsletters may contain info about charities, online ads, and content
 				eslint-disable-next-line no-irregular-whitespace funded by outside
 				parties. For more information click here for our privacy policy.
