@@ -16,6 +16,7 @@ import {
 	remSpace,
 	textSansBold12,
 } from '@guardian/source/foundations';
+import { Link } from '@/email/components/Link';
 
 interface DownloadAppCtaProps {
 	title: string;
@@ -29,8 +30,8 @@ interface DownloadButtonProps {
 	title: string;
 }
 
-const GUARDIAN_APP = 'https://guardian.go.link/home?adj_t=23c4pq34';
-const FEAST_APP = 'https://guardian-feast.go.link/home?adj_t=23zc21c3';
+const GUARDIAN_APP_LINK = 'https://guardian.go.link/home?adj_t=23c4pq34';
+const FEAST_APP_LINK = 'https://guardian-feast.go.link/home?adj_t=23zc21c3';
 
 const styles = css`
 	display: grid;
@@ -81,7 +82,9 @@ const DownloadButton = ({ title }: DownloadButtonProps) => {
 		<>
 			<Hide from="tablet">
 				<LinkButton
-					href={title === 'The Guardian app' ? GUARDIAN_APP : FEAST_APP}
+					href={
+						title === 'The Guardian app' ? GUARDIAN_APP_LINK : FEAST_APP_LINK
+					}
 					priority="primary"
 					size="xsmall"
 					type="button"
@@ -95,7 +98,9 @@ const DownloadButton = ({ title }: DownloadButtonProps) => {
 			</Hide>
 			<Hide until="tablet">
 				<LinkButton
-					href={title === 'The Guardian app' ? GUARDIAN_APP : FEAST_APP}
+					href={
+						title === 'The Guardian app' ? GUARDIAN_APP_LINK : FEAST_APP_LINK
+					}
 					priority="primary"
 					size="small"
 					type="button"
@@ -111,36 +116,44 @@ const DownloadButton = ({ title }: DownloadButtonProps) => {
 	);
 };
 
-const AppleStoreButton = () => {
+const AppleStoreButton = ({ title }: DownloadButtonProps) => {
 	return (
 		<div css={appleStoreButtonStyles}>
-			<img
-				css={css`
-					width: 120px;
-					height: 40px;
-				`}
-				alt="Apple store button"
-				src={APPLE_STORE}
-			/>
+			<Link
+				href={title === 'The Guardian app' ? GUARDIAN_APP_LINK : FEAST_APP_LINK}
+			>
+				<img
+					css={css`
+						width: 120px;
+						height: 40px;
+					`}
+					alt="Apple store button"
+					src={APPLE_STORE}
+				/>
+			</Link>
 		</div>
 	);
 };
 
-const GoogleStoreButton = () => {
+const GoogleStoreButton = ({ title }: DownloadButtonProps) => {
 	return (
 		<div
 			css={css`
 				grid-area: google_play_button;
 			`}
 		>
-			<img
-				css={css`
-					width: 120px;
-					height: 40px;
-				`}
-				alt="Google Play button"
-				src={GOOGLE_PLAY}
-			/>
+			<Link
+				href={title === 'The Guardian app' ? GUARDIAN_APP_LINK : FEAST_APP_LINK}
+			>
+				<img
+					css={css`
+						width: 120px;
+						height: 40px;
+					`}
+					alt="Google Play button"
+					src={GOOGLE_PLAY}
+				/>
+			</Link>
 		</div>
 	);
 };
@@ -179,8 +192,8 @@ export const DownloadAppCta = ({ title }: DownloadAppCtaProps) => {
 
 			<Hide until="desktop">
 				<div css={styles}>
-					<AppleStoreButton />
-					<GoogleStoreButton />
+					<AppleStoreButton title={title} />
+					<GoogleStoreButton title={title} />
 					<QrCode title={title} />
 				</div>
 			</Hide>
