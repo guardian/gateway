@@ -101,7 +101,13 @@ router.get(
 router.get(
 	'/welcome/google-one-tap',
 	loginMiddlewareOAuth,
-	(_: Request, res: ResponseWithRequestState) => {
+	async (req: Request, res: ResponseWithRequestState) => {
+		const header = req.headers['x-gu-geolocation'];
+		const isUS = countryCodeToRegion(header) === 'US';
+
+		if (isUS) {
+			await automaticallyOptinUSNewslettersAndConsents(res);
+		}
 		const html = renderer('/welcome/google-one-tap', {
 			pageTitle: 'Welcome',
 			requestState: res.locals,
@@ -325,18 +331,7 @@ router.get(
 		const isUS = countryCodeToRegion(header) === 'US';
 
 		if (isUS) {
-			const registrationConsents = {
-				consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
-				newsletters: [
-					{ id: Newsletters.FIRST_THING, subscribed: true },
-					{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
-				],
-			};
-			await updateNewslettersAndConsents(
-				registrationConsents,
-				res,
-				'us-create-account-flow',
-			);
+			await automaticallyOptinUSNewslettersAndConsents(res);
 		}
 
 		const html = renderer('/welcome/review', {
@@ -677,4 +672,20 @@ const updateNewslettersAndConsents = async (
 	}
 };
 
+const automaticallyOptinUSNewslettersAndConsents = async (
+	res: ResponseWithRequestState,
+) => {
+	const registrationConsents = {
+		consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
+		newsletters: [
+			{ id: Newsletters.FIRST_THING, subscribed: true },
+			{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
+		],
+	};
+	await updateNewslettersAndConsents(
+		registrationConsents,
+		res,
+		'us-create-account-flow',
+	);
+};
 export default router.router;
