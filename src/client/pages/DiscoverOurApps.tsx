@@ -2,7 +2,7 @@ import { OnboardingSection } from '@/client/components/OnboardingSection';
 import { OnboardingCard } from '@/client/components/OnboardingCard';
 import { Hide, Button, SvgDownload } from '@guardian/source/react-components';
 import { FEAST_APP, GUARDIAN_APP } from '../assets/decorative';
-const cta = (
+const DownloadAppCta = (
 	<>
 		<Hide from="tablet">
 			<Button
@@ -42,7 +42,7 @@ export const DiscoverOurApps = () => {
 				title="The Guardian app"
 				description="Get the stuff you want, when you want it — news, sport, podcasts, puzzles and more."
 				backgroundColour="#E1EAF7"
-				cta={cta}
+				cta={DownloadAppCta}
 				imagePath={GUARDIAN_APP}
 				imageType="rectangle"
 			/>
@@ -50,7 +50,7 @@ export const DiscoverOurApps = () => {
 				title="Guardian Feast app"
 				description="Your most useful kitchen utensil, with more than 7,000 recipes and smart, exclusive cooking features."
 				backgroundColour="#E1E5D5"
-				cta={cta}
+				cta={DownloadAppCta}
 				imagePath={FEAST_APP}
 				imageType="rectangle"
 			/>

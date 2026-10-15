@@ -15,7 +15,7 @@ interface OnboardingCardProps {
 	title: string;
 	description: string;
 	backgroundColour?: string;
-	cta?: React.ReactNode;
+	cta: React.ReactNode;
 	imagePath: string;
 	imageType: OnboardingImageType;
 }
@@ -95,7 +95,7 @@ export const OnboardingCard = ({
 					padding: 0 0 ${remSpace[2]} ${remSpace[2]};
 				`}
 			>
-				{cta ?? null}
+				{cta}
 			</div>
 			<div css={imageStyles}>
 				<OnboardingImage path={imagePath} type={imageType} />
