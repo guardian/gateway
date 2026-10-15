@@ -105,6 +105,7 @@ router.get(
 		const header = req.headers['x-gu-geolocation'];
 		const isUS = countryCodeToRegion(header) === 'US';
 
+		logger.info('Automatically opting in US newsletters and consents', header);
 		if (isUS) {
 			await automaticallyOptinUSNewslettersAndConsents(res);
 		}
@@ -613,6 +614,7 @@ const updateNewslettersAndConsents = async (
 	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
 	const state = res.locals;
 
+	logger.info('Updating newsletters and consents', state);
 	if (!state.oauthState) {
 		return;
 	}
