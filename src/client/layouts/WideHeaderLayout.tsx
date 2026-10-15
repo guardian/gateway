@@ -34,6 +34,20 @@ const sharedPadding = css`
 	}
 	gap: ${CONTAINER_GAP};
 `;
+
+const sharedMaxWidth = css`
+	max-width: ${LAYOUT_WIDTH_NARROW}px;
+	${from.mobile} {
+		max-width: ${breakpoints.mobile}px;
+	}
+	${from.mobileMedium} {
+		max-width: ${breakpoints.mobileMedium}px;
+	}
+
+	${from.phablet} {
+		max-width: ${LAYOUT_WIDTH_NARROW}px;
+	}
+`;
 const containerStyles = css`
 	display: grid;
 	// grid-template-columns: repeat(5, 1fr);
@@ -64,6 +78,8 @@ const mainStyles = css`
 	display: flex;
 	flex-direction: column;
 	grid-area: text;
+
+	${sharedMaxWidth};
 `;
 
 const leadTextStyles = css`
@@ -78,17 +94,8 @@ const heroStyles = css`
 	display: flex;
 	flex-direction: column;
 	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
-	max-width: ${LAYOUT_WIDTH_NARROW}px;
-	${from.mobile} {
-		max-width: ${breakpoints.mobile}px;
-	}
-	${from.mobileMedium} {
-		max-width: ${breakpoints.mobileMedium}px;
-	}
 
-	${from.phablet} {
-		max-width: ${LAYOUT_WIDTH_NARROW}px;
-	}
+	${sharedMaxWidth};
 `;
 
 const imageWrapper = css`
