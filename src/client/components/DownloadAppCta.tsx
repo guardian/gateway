@@ -172,10 +172,18 @@ export const DownloadAppCta = ({ title }: DownloadAppCtaProps) => {
 	}
 
 	return (
-		<div css={styles}>
-			<AppleStoreButton />
-			<GoogleStoreButton />
-			<QrCode title={title} />
-		</div>
+		<>
+			<Hide from="desktop">
+				<DownloadButton title={title} />
+			</Hide>
+
+			<Hide until="desktop">
+				<div css={styles}>
+					<AppleStoreButton />
+					<GoogleStoreButton />
+					<QrCode title={title} />
+				</div>
+			</Hide>
+		</>
 	);
 };
