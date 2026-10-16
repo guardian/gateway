@@ -275,6 +275,9 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
+			logger.info(
+				`${req.method} ${req.originalUrl}  Redirecting after complete account`,
+			);
 			const redirectPath = getPostRegistrationRedirectPath(state.queryParams);
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
@@ -538,12 +541,15 @@ const getPostRegistrationRedirectPath = ({
 	clientId,
 	newOnboardingFlow,
 }: Pick<QueryParams, 'clientId' | 'newOnboardingFlow'>): RoutePaths => {
+	logger.info('Redirecting to Google One Tap onboarding flow');
+
 	if (clientId === 'jobs') {
 		return JOBS_TOS_URI;
 	}
 
 	if (newOnboardingFlow) {
-		return '/welcome/onboarding';
+		logger.info('Redirecting to Google One Tap onboarding flow');
+		return '/welcome/google-one-tap';
 	}
 
 	return '/welcome/review';
