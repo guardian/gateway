@@ -101,7 +101,14 @@ router.get(
 router.get(
 	'/welcome/google-one-tap',
 	loginMiddlewareOAuth,
-	(_: Request, res: ResponseWithRequestState) => {
+	async (req: Request, res: ResponseWithRequestState) => {
+		const header = req.headers['x-gu-geolocation'];
+		const isUS = countryCodeToRegion(header) === 'US';
+
+		logger.info('Automatically opting in US newsletters and consents', header);
+		if (isUS) {
+			await automaticallyOptinUSNewslettersAndConsents(res);
+		}
 		const html = renderer('/welcome/google-one-tap', {
 			pageTitle: 'Welcome',
 			requestState: res.locals,
@@ -268,6 +275,9 @@ router.post(
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 		} finally {
+			logger.info(
+				`${req.method} ${req.originalUrl}  Redirecting after complete account`,
+			);
 			const redirectPath = getPostRegistrationRedirectPath(state.queryParams);
 			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
@@ -325,18 +335,7 @@ router.get(
 		const isUS = countryCodeToRegion(header) === 'US';
 
 		if (isUS) {
-			const registrationConsents = {
-				consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
-				newsletters: [
-					{ id: Newsletters.FIRST_THING, subscribed: true },
-					{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
-				],
-			};
-			await updateNewslettersAndConsents(
-				registrationConsents,
-				res,
-				'us-create-account-flow',
-			);
+			await automaticallyOptinUSNewslettersAndConsents(res);
 		}
 
 		const html = renderer('/welcome/review', {
@@ -542,12 +541,15 @@ const getPostRegistrationRedirectPath = ({
 	clientId,
 	newOnboardingFlow,
 }: Pick<QueryParams, 'clientId' | 'newOnboardingFlow'>): RoutePaths => {
+	logger.info('Redirecting to Google One Tap onboarding flow');
+
 	if (clientId === 'jobs') {
 		return JOBS_TOS_URI;
 	}
 
 	if (newOnboardingFlow) {
-		return '/welcome/onboarding';
+		logger.info('Redirecting to Google One Tap onboarding flow');
+		return '/welcome/google-one-tap';
 	}
 
 	return '/welcome/review';
@@ -618,6 +620,7 @@ const updateNewslettersAndConsents = async (
 	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
 	const state = res.locals;
 
+	logger.info('Updating newsletters and consents', state);
 	if (!state.oauthState) {
 		return;
 	}
@@ -677,4 +680,20 @@ const updateNewslettersAndConsents = async (
 	}
 };
 
+const automaticallyOptinUSNewslettersAndConsents = async (
+	res: ResponseWithRequestState,
+) => {
+	const registrationConsents = {
+		consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
+		newsletters: [
+			{ id: Newsletters.FIRST_THING, subscribed: true },
+			{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
+		],
+	};
+	await updateNewslettersAndConsents(
+		registrationConsents,
+		res,
+		'us-create-account-flow',
+	);
+};
 export default router.router;
