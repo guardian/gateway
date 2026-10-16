@@ -11,6 +11,7 @@ import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { OnboardingCard } from './OnboardingCard';
 import {
 	Button,
+	Hide,
 	SvgPlusOnRound,
 	SvgTickRound,
 } from '@guardian/source/react-components';
@@ -94,18 +95,36 @@ const OnboardingNewsletterSignUpButton = ({
 	};
 
 	return !hasSignedUp ? (
-		<Button
-			priority="primary"
-			size="small"
-			type="button"
-			isLoading={false}
-			onClick={handleSignUp}
-			icon={SvgPlusOnRound({
-				size: 'small',
-			})}
-		>
-			Sign Up
-		</Button>
+		<>
+			<Hide from="tablet">
+				<Button
+					priority="primary"
+					size="xsmall"
+					type="button"
+					isLoading={false}
+					onClick={handleSignUp}
+					icon={SvgPlusOnRound({
+						size: 'small',
+					})}
+				>
+					Sign Up
+				</Button>
+			</Hide>
+			<Hide until="tablet">
+				<Button
+					priority="primary"
+					size="small"
+					type="button"
+					isLoading={false}
+					onClick={handleSignUp}
+					icon={SvgPlusOnRound({
+						size: 'small',
+					})}
+				>
+					Sign Up
+				</Button>
+			</Hide>
+		</>
 	) : (
 		<span css={guardianSansText}>
 			<SvgTickRound size="small" theme={{ fill: palette.success[400] }} />
