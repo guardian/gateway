@@ -18,6 +18,7 @@ import { OnboardingSection } from './OnboardingSection';
 import { logger } from '../lib/clientSideLogger';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 import { NEWSLETTER_IMAGES } from '../models/Newsletter';
+import { RoundOnboardingImage } from './OnboardingImage';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -130,8 +131,8 @@ export const OnboardingNewsletters = () => {
 			/>
 			<span css={labelStyles}>
 				Newsletters may contain info about charities, online ads, and content
-				eslint-disable-next-line no-irregular-whitespace funded by outside
-				parties. For more information click here for our privacy policy.
+				funded by outside parties. For more information click here for our
+				privacy policy.
 			</span>
 			<div css={onboardingCardContainerStyles}>
 				{NEWSLETTERS.map((newsletter) => (
@@ -141,10 +142,13 @@ export const OnboardingNewsletters = () => {
 						description={newsletter.description}
 						backgroundColour="#F3F7FF"
 						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
-						imagePath={getNewsletterImage(
-							newsletter.id as NewslettersWithImages,
-						)}
-						imageType="small-circle"
+						image={
+							<RoundOnboardingImage
+								path={getNewsletterImage(
+									newsletter.id as NewslettersWithImages,
+								)}
+							/>
+						}
 					/>
 				))}
 			</div>

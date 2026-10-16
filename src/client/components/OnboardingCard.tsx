@@ -6,35 +6,22 @@ import {
 	textSans17,
 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
-import {
-	OnboardingImage,
-	OnboardingImageType,
-} from '@/client/components/OnboardingImage';
 
 interface OnboardingCardProps {
 	title: string;
 	description: string;
 	backgroundColour?: string;
 	cta: React.ReactNode;
-	imagePath: string;
-	imageType: OnboardingImageType;
+	image: React.ReactNode;
 }
 
-const styles = (
-	backgroundColour: string | undefined,
-	imageType: OnboardingImageType,
-) => css`
+const styles = (backgroundColour: string | undefined) => css`
 	background-color: ${backgroundColour ? backgroundColour : '#FFFFFF'};
 	border-radius: ${remSpace[2]};
 	display: grid;
 	grid-template-columns: 2fr 1fr;
-	grid-template-areas: ${
-		imageType === 'rectangle'
-			? `'title image' 'text image' 'cta image'`
-			: `'title image' 'text image' 'cta .'`
-	};
+	grid-template-areas: 'title image' 'text image' 'cta image';
 	gap: ${remSpace[1]};
-
 	max-width: 348px;
 
 	${from.tablet} {
@@ -81,11 +68,10 @@ export const OnboardingCard = ({
 	description,
 	backgroundColour,
 	cta,
-	imagePath,
-	imageType,
+	image,
 }: OnboardingCardProps) => {
 	return (
-		<div css={styles(backgroundColour, imageType)}>
+		<div css={styles(backgroundColour)}>
 			<MainBodyText cssOverrides={titleStyles}>{title}</MainBodyText>
 			<MainBodyText cssOverrides={textStyles}>{description}</MainBodyText>
 
@@ -97,9 +83,7 @@ export const OnboardingCard = ({
 			>
 				{cta}
 			</div>
-			<div css={imageStyles}>
-				<OnboardingImage path={imagePath} type={imageType} />
-			</div>
+			<div css={imageStyles}>{image}</div>
 		</div>
 	);
 };

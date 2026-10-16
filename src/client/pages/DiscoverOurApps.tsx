@@ -2,6 +2,7 @@ import { OnboardingSection } from '@/client/components/OnboardingSection';
 import { OnboardingCard } from '@/client/components/OnboardingCard';
 import { Hide, Button, SvgDownload } from '@guardian/source/react-components';
 import { FEAST_APP, GUARDIAN_APP } from '../assets/decorative';
+import { RectangleOnboardingImage } from '../components/OnboardingImage';
 const DownloadAppCta = (
 	<>
 		<Hide from="tablet">
@@ -43,16 +44,14 @@ export const DiscoverOurApps = () => {
 				description="Get the stuff you want, when you want it — news, sport, podcasts, puzzles and more."
 				backgroundColour="#E1EAF7"
 				cta={DownloadAppCta}
-				imagePath={GUARDIAN_APP}
-				imageType="rectangle"
+				image={<RectangleOnboardingImage path={GUARDIAN_APP} />}
 			/>
 			<OnboardingCard
 				title="Guardian Feast app"
 				description="Your most useful kitchen utensil, with more than 7,000 recipes and smart, exclusive cooking features."
 				backgroundColour="#E1E5D5"
 				cta={DownloadAppCta}
-				imagePath={FEAST_APP}
-				imageType="rectangle"
+				image={<RectangleOnboardingImage path={FEAST_APP} />}
 			/>
 		</OnboardingSection>
 	);

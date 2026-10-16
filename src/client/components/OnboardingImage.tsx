@@ -1,12 +1,7 @@
 import { css } from '@emotion/react';
 import { from } from '@guardian/source/foundations';
 
-interface OnboardingImageProps {
-	path: string;
-	type: OnboardingImageType;
-}
-
-export type OnboardingImageType = 'rectangle' | 'small-circle';
+type OnboardingImageType = 'rectangle' | 'small-circle';
 
 const imageStyles = (type: OnboardingImageType) => css`
 	width: ${type === 'small-circle' ? '64px' : '110px'};
@@ -28,6 +23,10 @@ const imageStyles = (type: OnboardingImageType) => css`
 	border-radius: ${type === 'small-circle' ? '50%' : '0%'};
 `;
 
-export const OnboardingImage = ({ path, type }: OnboardingImageProps) => {
-	return <img alt="" src={path} css={imageStyles(type)} />;
+export const RoundOnboardingImage = ({ path }: { path: string }) => {
+	return <img alt="" src={path} css={imageStyles('small-circle')} />;
+};
+
+export const RectangleOnboardingImage = ({ path }: { path: string }) => {
+	return <img alt="" src={path} css={imageStyles('rectangle')} />;
 };
