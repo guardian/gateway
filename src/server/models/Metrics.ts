@@ -67,6 +67,7 @@ type ConditionalMetrics =
 	| 'SignOutGlobal'
 	| 'Subscribe'
 	| 'Unsubscribe'
+	| 'ListUnsubscribe'
 	| 'UnsubscribeAll';
 
 // Unconditional metrics that we want to track directly

@@ -21,8 +21,12 @@ import {
 } from '@/shared/lib/subscriptions';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { isHttpErrorWithStatus } from '@/server/lib/httpErrors';
+import { IdapiError } from '@/server/models/Error';
 
 const { accountManagementUrl } = getConfiguration();
+
+// pattern to validate the subscription data format: emailType:emailId:timestamp
+const subscriptionDataPattern = /^[^:]+:[^:]+:\d+$/;
 
 const buildPageData = (
 	emailType: EmailType,
@@ -155,6 +159,47 @@ const confirmHandler = (action: SubscriptionAction) =>
 			}
 		},
 	);
+
+router.post(
+	'/list-unsubscribe/newsletter/:data/:token',
+	async (
+		req: Request<{ data: string; token: string }>,
+		res: ResponseWithRequestState,
+	) => {
+		try {
+			const { data, token } = req.params;
+			if (!subscriptionDataPattern.test(data)) {
+				throw new IdapiError({ status: 400 });
+			}
+			const subscriptionData = parseSubscriptionData(data);
+			if (!Number.isSafeInteger(subscriptionData.timestamp)) {
+				throw new IdapiError({ status: 400 });
+			}
+
+			await makeSubscriptionRequest(
+				'unsubscribe',
+				'newsletter',
+				subscriptionData,
+				token,
+				req.ip,
+			);
+			trackMetric('ListUnsubscribe::Success');
+			return res.status(204).send();
+		} catch (error) {
+			const status =
+				error instanceof IdapiError && error.status >= 400 && error.status < 500
+					? error.status
+					: 500;
+			logger.log(
+				status < 500 ? 'warn' : 'error',
+				'POST /list-unsubscribe/newsletter failed',
+				{ status },
+			);
+			trackMetric('ListUnsubscribe::Failure');
+			return res.status(status).send();
+		}
+	},
+);
 
 router.get(
 	'/unsubscribe/:emailType/:data/:token',
