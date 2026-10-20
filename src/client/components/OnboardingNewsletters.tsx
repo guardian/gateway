@@ -148,11 +148,11 @@ export const OnboardingNewsletters = () => {
 				size="full"
 				spaceAbove="tight"
 			/>
-			<span css={labelStyles}>
+			<p css={labelStyles}>
 				Newsletters may contain info about charities, online ads, and content
 				funded by outside parties. For more information click here for our
 				privacy policy.
-			</span>
+			</p>
 			<div css={onboardingCardContainerStyles}>
 				{NEWSLETTERS.map((newsletter) => (
 					<OnboardingCard
@@ -166,6 +166,7 @@ export const OnboardingNewsletters = () => {
 								path={getNewsletterImage(
 									newsletter.id as NewslettersWithImages,
 								)}
+								alt={`${newsletter.name} newsletter`}
 							/>
 						}
 					/>
