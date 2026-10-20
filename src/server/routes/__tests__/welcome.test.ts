@@ -130,7 +130,7 @@ describe('POST /welcome/complete-account', () => {
 
 		expect(response.status).toBe(303);
 		expect(getRedirectPathname(response.headers.location)).toBe(
-			'/welcome/google-one-tap',
+			'/welcome/onboarding',
 		);
 
 		const queryParams = getRedirectSearchParams(response.headers.location);
@@ -167,7 +167,7 @@ describe('POST /welcome/complete-account', () => {
 
 		expect(response.status).toBe(303);
 		expect(getRedirectPathname(response.headers.location)).toBe(
-			'/welcome/google-one-tap',
+			'/welcome/onboarding',
 		);
 	});
 });
