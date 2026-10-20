@@ -78,6 +78,7 @@ jest.mock('@/server/lib/registrationConsents', () => ({
 		mockBodyFormFieldsToRegistrationConsents(...args),
 	automaticallyOptinUSNewslettersAndConsents: (...args: unknown[]) =>
 		automaticallyOptinUSNewslettersAndConsents(...args),
+	updateNewslettersAndConsents: jest.fn(),
 }));
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
