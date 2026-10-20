@@ -24,22 +24,21 @@ import {
 } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { Consents, CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
-import {
-	getUserConsentsForPage,
-	update as updateConsents,
-} from '@/server/lib/idapi/consents';
+import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
+import { getUserConsentsForPage } from '@/server/lib/idapi/consents';
 import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
 import {
+	automaticallyOptinUSNewslettersAndConsents,
 	bodyFormFieldsToRegistrationConsents,
 	dropRegistrationConsentsCookies,
 	getRegistrationConsentsFromCookies,
 	registrationConsentsExistInCookies,
+	updateNewslettersAndConsents,
 } from '@/server/lib/registrationConsents';
-import { ALL_NEWSLETTER_IDS, Newsletters } from '@/shared/model/Newsletter';
+import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 
 import {
 	NewsletterMap,
@@ -48,7 +47,6 @@ import {
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
-import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { JOBS_TOS_URI } from '@/shared/model/Configuration';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { RoutePaths } from '@/shared/model/Routes';
@@ -605,87 +603,4 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	}
 };
 
-const updateNewslettersAndConsents = async (
-	registrationConsents: RegistrationConsents,
-	res: ResponseWithRequestState,
-	loggingContext: string,
-) => {
-	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
-	const state = res.locals;
-
-	if (!state.oauthState) {
-		return;
-	}
-
-	if (registrationConsents.consents?.length) {
-		try {
-			await updateConsents({
-				accessToken: state.oauthState.accessToken.toString(),
-				payload: registrationConsents.consents,
-			});
-
-			// since the CODE newsletters API isn't up to date with PROD newsletters API the
-			// review page will not show the correct newsletters on CODE.
-			// so when running in Playwright we set a cookie to return the decrypted consents to playwright
-			// so we can check we at least got to the correct code path
-			if (runningInPlaywright) {
-				res.cookie(
-					'playwright-consent-response',
-					JSON.stringify(registrationConsents.consents),
-				);
-			}
-		} catch (error) {
-			logger.error(
-				`Error updating registration consents on welcome ${loggingContext}`,
-				{
-					error,
-				},
-			);
-		}
-	}
-
-	if (registrationConsents.newsletters?.length) {
-		try {
-			await updateNewsletters({
-				accessToken: state.oauthState.accessToken.toString(),
-				payload: registrationConsents.newsletters,
-			});
-
-			// since the CODE newsletters API isn't up to date with PROD newsletters API the
-			// review page will not show the correct newsletters on CODE.
-			// so when running in playwright we set a cookie to return the decrypted consents to playwright
-			// so we can check we at least got to the correct code path
-			if (runningInPlaywright) {
-				res.cookie(
-					'playwright-newsletter-response',
-					JSON.stringify(registrationConsents.newsletters),
-				);
-			}
-		} catch (error) {
-			logger.error(
-				`Error updating registration newsletters on welcome ${loggingContext}`,
-				{
-					error,
-				},
-			);
-		}
-	}
-};
-
-const automaticallyOptinUSNewslettersAndConsents = async (
-	res: ResponseWithRequestState,
-) => {
-	const registrationConsents = {
-		consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
-		newsletters: [
-			{ id: Newsletters.FIRST_THING, subscribed: true },
-			{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
-		],
-	};
-	await updateNewslettersAndConsents(
-		registrationConsents,
-		res,
-		'us-create-account-flow',
-	);
-};
 export default router.router;
