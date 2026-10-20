@@ -36,16 +36,15 @@ export const WelcomeSocial = ({
 
 	if (isGoogleOneTap && geolocation === 'US') {
 		return (
-			<MinimalLayout
-				pageHeader="TEST - You're signed in! Welcome to the Guardian."
-				shortRequestId={shortRequestId}
-				imageId="welcome"
-			>
+			<>
+				<InformationBox>
+					<GuardianTerms isGoogleOneTap={isGoogleOneTap} />
+				</InformationBox>
 				<AutomaticSubscriptionNewsletterNotification
 					shortRequestId={shortRequestId}
 					nextPage={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 				/>
-			</MinimalLayout>
+			</>
 		);
 	}
 
