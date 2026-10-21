@@ -121,6 +121,8 @@ test.describe('New account newsletters page', () => {
 		await page.locator('[data-cy="main-form-submit-button"]').click();
 
 		// jobs.theguardian.com
-		await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
+		await expect(page).toHaveURL(
+			'https://www.theguardian.com/help/insideguardian/2026/sep/02/an-update-on-guardian-jobs',
+		);
 	});
 });
