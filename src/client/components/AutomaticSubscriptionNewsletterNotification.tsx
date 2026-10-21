@@ -8,9 +8,11 @@ import { primaryButtonStyles } from '../styles/Shared';
 export const AutomaticSubscriptionNewsletterNotification = ({
 	shortRequestId,
 	nextPage,
+	children,
 }: {
 	shortRequestId?: string;
 	nextPage: string;
+	children?: React.ReactNode;
 }) => {
 	return (
 		<MinimalLayout
@@ -19,6 +21,7 @@ export const AutomaticSubscriptionNewsletterNotification = ({
 			imageId="welcome"
 		>
 			<>
+				{children}
 				<MainBodyText>
 					With your Guardian account you’ll receive First Thing and Saturday
 					Edition as well as the Best of the Guardian.

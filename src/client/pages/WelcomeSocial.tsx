@@ -36,15 +36,14 @@ export const WelcomeSocial = ({
 
 	if (isGoogleOneTap && geolocation === 'US') {
 		return (
-			<>
+			<AutomaticSubscriptionNewsletterNotification
+				shortRequestId={shortRequestId}
+				nextPage={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
+			>
 				<InformationBox>
 					<GuardianTerms isGoogleOneTap={isGoogleOneTap} />
 				</InformationBox>
-				<AutomaticSubscriptionNewsletterNotification
-					shortRequestId={shortRequestId}
-					nextPage={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
-				/>
-			</>
+			</AutomaticSubscriptionNewsletterNotification>
 		);
 	}
 
