@@ -2,7 +2,25 @@ import express, { NextFunction, Request, Response } from 'express';
 import request from 'supertest';
 
 const mockBodyFormFieldsToRegistrationConsents = jest.fn();
+const automaticallyOptinUSNewslettersAndConsents = jest.fn();
+const mockRequestStateHasOAuthTokens = jest.fn();
+const mockGetUserConsentsForPage = jest.fn(
+	(pageConsents: unknown, accessToken: unknown) => {},
+);
 
+jest.mock('@/server/lib/middleware/requestState', () => ({
+	requestStateHasOAuthTokens: (requestState: unknown) =>
+		mockRequestStateHasOAuthTokens(requestState),
+}));
+
+jest.mock('@/server/lib/idapi/consents', () => ({
+	getUserConsentsForPage: (pageConsents: unknown, accessToken: unknown) =>
+		mockGetUserConsentsForPage(pageConsents, accessToken),
+}));
+
+jest.mock('@/server/lib/trackMetric', () => ({
+	trackMetric: (metricName: string, metricValue: unknown) => Promise.resolve(),
+}));
 jest.mock('@/server/lib/getConfiguration', () => ({
 	getConfiguration: () => ({
 		baseUri: 'http://localhost',
@@ -28,7 +46,6 @@ jest.mock('@/server/lib/middleware/rateLimit', () => ({
 	rateLimiterMiddleware: (_req: unknown, _res: unknown, next: () => void) =>
 		next(),
 }));
-
 jest.mock('@/server/lib/middleware/login', () => ({
 	loginMiddlewareOAuth: (req: Request, res: Response, next: NextFunction) => {
 		const parseBooleanQuery = (value: unknown): boolean | undefined => {
@@ -59,6 +76,9 @@ jest.mock('@/server/lib/middleware/login', () => ({
 jest.mock('@/server/lib/registrationConsents', () => ({
 	bodyFormFieldsToRegistrationConsents: (...args: unknown[]) =>
 		mockBodyFormFieldsToRegistrationConsents(...args),
+	automaticallyOptinUSNewslettersAndConsents: (...args: unknown[]) =>
+		automaticallyOptinUSNewslettersAndConsents(...args),
+	updateNewslettersAndConsents: jest.fn(),
 }));
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
@@ -169,5 +189,70 @@ describe('POST /welcome/complete-account', () => {
 		expect(getRedirectPathname(response.headers.location)).toBe(
 			'/welcome/onboarding',
 		);
+	});
+});
+
+describe('GET /welcome/google-one-tap', () => {
+	// Add your test cases here
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockBodyFormFieldsToRegistrationConsents.mockReturnValue({});
+	});
+
+	test('renders the Google One Tap page for non US', async () => {
+		const response = await request(getApp())
+			.get('/welcome/google-one-tap')
+			.set('x-gu-geolocation', 'GB');
+		expect(response.status).toBe(200);
+	});
+
+	test('renders the Google One Tap page for US', async () => {
+		const response = await request(getApp())
+			.get('/welcome/google-one-tap')
+			.set('x-gu-geolocation', 'US');
+		expect(response.status).toBe(200);
+	});
+
+	test('automaticallyOptinUSNewslettersAndConsents is called before rendering the Google One Tap page for US', async () => {
+		const response = await request(getApp())
+			.get('/welcome/google-one-tap')
+			.set('x-gu-geolocation', 'US');
+
+		expect(automaticallyOptinUSNewslettersAndConsents).toHaveBeenCalled();
+		expect(response.status).toBe(200);
+	});
+
+	test('automaticallyOptinUSNewslettersAndConsents is not called before rendering the Google One Tap page for non US', async () => {
+		const response = await request(getApp())
+			.get('/welcome/google-one-tap')
+			.set('x-gu-geolocation', 'GB');
+
+		expect(automaticallyOptinUSNewslettersAndConsents).not.toHaveBeenCalled();
+		expect(response.status).toBe(200);
+	});
+});
+
+describe('GET /welcome/review', () => {
+	// Add any additional test cases for the Google One Tap page here
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+	});
+
+	test('should return a 303 redirect when requestStateHasOAuthTokens is false', async () => {
+		mockRequestStateHasOAuthTokens.mockReturnValue(false);
+
+		const response = await request(getApp()).get('/welcome/review');
+
+		expect(response.status).toBe(303);
+		expect(mockRequestStateHasOAuthTokens).toHaveBeenCalled();
+	});
+
+	test('should return a 200 redirect when requestStateHasOAuthTokens is true', async () => {
+		mockRequestStateHasOAuthTokens.mockReturnValue(true);
+		const response = await request(getApp()).get('/welcome/review');
+
+		expect(mockRequestStateHasOAuthTokens).toHaveBeenCalled();
+		expect(response.status).toBe(200);
 	});
 });
