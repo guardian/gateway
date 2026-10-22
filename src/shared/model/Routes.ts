@@ -77,6 +77,7 @@ export const ValidRoutePathsArray = [
 	'/signout',
 	'/signout/all',
 	'/unsubscribe/:emailType/:data/:token',
+	'/list-unsubscribe/newsletter/:data/:token',
 	'/unsubscribe/review',
 	'/unsubscribe/success',
 	'/unsubscribe/error',
