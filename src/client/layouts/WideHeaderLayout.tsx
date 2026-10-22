@@ -65,6 +65,18 @@ const mainStyles = css`
 	grid-area: text;
 `;
 
+const onboardingStyles = css`
+	max-width: 372px;
+
+	${from.tablet} {
+		max-width: 480px;
+	}
+
+	${from.desktop} {
+		max-width: 620px;
+	}
+`;
+
 const leadTextStyles = css`
 	${textEgyptian17};
 	color: var(--color-header-text);
@@ -108,7 +120,7 @@ export const WideHeaderLayout = ({
 						)}
 					</div>
 				</div>
-				<main css={mainStyles}>
+				<main css={[mainStyles, onboardingStyles]}>
 					<LayoutErrorBoundary
 						errorOverride={errorOverride}
 						errorContext={errorContext}
