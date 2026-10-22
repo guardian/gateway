@@ -273,7 +273,7 @@ const authenticationHandler = async (
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
-				if (isGoogleOneTap) {
+				if (isGoogleOneTap && !isUS) {
 					// eslint-disable-next-line functional/immutable-data -- we need to modify the confirmationPage
 					authState.confirmationPage = `/welcome/google-one-tap`;
 				} else if (

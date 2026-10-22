@@ -5,31 +5,17 @@ import {
 	getRegistrationConsentsFromCookies,
 	registrationConsentsExistInCookies,
 	getOptedInConsents,
-	updateNewslettersAndConsents,
-	automaticallyOptinUSNewslettersAndConsents,
 } from '@/server/lib/registrationConsents';
 import { Newsletters } from '@/shared/model/Newsletter';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { expect } from '@playwright/test';
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
 	logger: {
 		error: jest.fn(),
 	},
 }));
-
-jest.mock('@/server/lib/idapi/consents', () => ({
-	update: jest.fn(),
-}));
-
-jest.mock('@/server/lib/idapi/newsletters', () => ({
-	update: jest.fn(),
-}));
-
-import { update as updateConsents } from '@/server/lib/idapi/consents';
-import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
-import { Consents } from '@/shared/model/Consent';
 
 describe('registrationConsents#bodyFormFieldsToRegistrationConsents', () => {
 	it('returns expected consents and newsletters for specific IDs', () => {
@@ -262,72 +248,5 @@ describe('registrationConsents#registrationConsentsExistInCookies', () => {
 		} as unknown as Request;
 
 		expect(registrationConsentsExistInCookies(req)).toEqual(false);
-	});
-});
-
-describe('registrationConsents#updateNewslettersAndConsents', () => {
-	it('should call updateConsents and updateNewsletters with the correct payload', async () => {
-		const registrationConsents = {
-			consents: [{ id: 'similar_guardian_products', consented: true }],
-			newsletters: [{ id: '6031', subscribed: true }],
-		};
-
-		const res = {
-			locals: {
-				oauthState: {
-					accessToken: 'mockAccessToken',
-				},
-			},
-			cookie: jest.fn(),
-		} as unknown as ResponseWithRequestState;
-
-		const loggingContext = 'test-context';
-
-		await updateNewslettersAndConsents(
-			registrationConsents,
-			res,
-			loggingContext,
-		);
-
-		expect(updateConsents).toHaveBeenCalledWith({
-			accessToken: 'mockAccessToken',
-			payload: registrationConsents.consents,
-		});
-		expect(updateNewsletters).toHaveBeenCalledWith({
-			accessToken: 'mockAccessToken',
-			payload: registrationConsents.newsletters,
-		});
-	});
-});
-
-describe('registrationConsents#automaticallyOptinUSNewslettersAndConsents', () => {
-	it('should automatically opt-in US newsletters and consents', async () => {
-		const res = {
-			locals: {
-				oauthState: {
-					accessToken: 'mockAccessToken',
-				},
-			},
-			cookie: jest.fn(),
-		} as unknown as ResponseWithRequestState;
-
-		const registrationConsents = {
-			consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
-			newsletters: [
-				{ id: Newsletters.FIRST_THING, subscribed: true },
-				{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
-			],
-		};
-
-		await automaticallyOptinUSNewslettersAndConsents(res);
-
-		expect(updateConsents).toHaveBeenCalledWith({
-			accessToken: 'mockAccessToken',
-			payload: registrationConsents.consents,
-		});
-		expect(updateNewsletters).toHaveBeenCalledWith({
-			accessToken: 'mockAccessToken',
-			payload: registrationConsents.newsletters,
-		});
 	});
 });

@@ -11,7 +11,6 @@ import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { GuardianTerms } from '@/client/components/Terms';
 import { InformationBox } from '@/client/components/InformationBox';
-import { AutomaticSubscriptionNewsletterNotification } from '../components/AutomaticSubscriptionNewsletterNotification';
 
 export type WelcomeSocialProps = RegistrationProps & {
 	geolocation?: GeoLocation;
@@ -33,19 +32,6 @@ export const WelcomeSocial = ({
 	usePageLoadOphanInteraction(formTrackingName);
 
 	const isJobs = queryParams.clientId === 'jobs';
-
-	if (isGoogleOneTap && geolocation === 'US') {
-		return (
-			<AutomaticSubscriptionNewsletterNotification
-				shortRequestId={shortRequestId}
-				nextPage={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
-			>
-				<InformationBox>
-					<GuardianTerms isGoogleOneTap={isGoogleOneTap} />
-				</InformationBox>
-			</AutomaticSubscriptionNewsletterNotification>
-		);
-	}
 
 	return (
 		<MinimalLayout

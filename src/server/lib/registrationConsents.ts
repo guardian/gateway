@@ -7,18 +7,12 @@ import {
 	RegistrationConsents,
 	registrationConsentsSchema,
 } from '@/shared/model/RegistrationConsents';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import {
-	Consents,
-	RegistrationConsentsFormFields,
-} from '@/shared/model/Consent';
-import {
-	Newsletters,
 	RegistrationNewslettersFormFieldsMap,
 	newsletterBundleToIndividualNewsletters,
 } from '@/shared/model/Newsletter';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { update as updateConsents } from '@/server/lib/idapi/consents';
-import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 
 // consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
@@ -198,88 +192,4 @@ export const dropRegistrationConsentsCookies = (
 ) => {
 	if ('registrationConsents' in req.cookies)
 		res.clearCookie('registrationConsents');
-};
-
-export const automaticallyOptinUSNewslettersAndConsents = async (
-	res: ResponseWithRequestState,
-) => {
-	const registrationConsents = {
-		consents: [{ id: Consents.SIMILAR_GUARDIAN_PRODUCTS, consented: true }],
-		newsletters: [
-			{ id: Newsletters.FIRST_THING, subscribed: true },
-			{ id: Newsletters.SATURDAY_EDITION, subscribed: true },
-		],
-	};
-	await updateNewslettersAndConsents(
-		registrationConsents,
-		res,
-		'us-create-account-flow',
-	);
-};
-
-export const updateNewslettersAndConsents = async (
-	registrationConsents: RegistrationConsents,
-	res: ResponseWithRequestState,
-	loggingContext: string,
-) => {
-	const runningInPlaywright = process.env.RUNNING_IN_PLAYWRIGHT === 'true';
-	const state = res.locals;
-
-	if (!state.oauthState) {
-		return;
-	}
-
-	if (registrationConsents.consents?.length) {
-		try {
-			await updateConsents({
-				accessToken: state.oauthState.accessToken.toString(),
-				payload: registrationConsents.consents,
-			});
-
-			// since the CODE newsletters API isn't up to date with PROD newsletters API the
-			// review page will not show the correct newsletters on CODE.
-			// so when running in Playwright we set a cookie to return the decrypted consents to playwright
-			// so we can check we at least got to the correct code path
-			if (runningInPlaywright) {
-				res.cookie(
-					'playwright-consent-response',
-					JSON.stringify(registrationConsents.consents),
-				);
-			}
-		} catch (error) {
-			logger.error(
-				`Error updating registration consents on welcome ${loggingContext}`,
-				{
-					error,
-				},
-			);
-		}
-	}
-
-	if (registrationConsents.newsletters?.length) {
-		try {
-			await updateNewsletters({
-				accessToken: state.oauthState.accessToken.toString(),
-				payload: registrationConsents.newsletters,
-			});
-
-			// since the CODE newsletters API isn't up to date with PROD newsletters API the
-			// review page will not show the correct newsletters on CODE.
-			// so when running in playwright we set a cookie to return the decrypted consents to playwright
-			// so we can check we at least got to the correct code path
-			if (runningInPlaywright) {
-				res.cookie(
-					'playwright-newsletter-response',
-					JSON.stringify(registrationConsents.newsletters),
-				);
-			}
-		} catch (error) {
-			logger.error(
-				`Error updating registration newsletters on welcome ${loggingContext}`,
-				{
-					error,
-				},
-			);
-		}
-	}
 };
