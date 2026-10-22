@@ -38,7 +38,11 @@ export const WelcomeSocial = ({
 		return (
 			<AutomaticSubscriptionNewsletterNotification
 				shortRequestId={shortRequestId}
-				nextPage={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
+				nextPage={buildUrlWithQueryParams(
+					'/welcome/newsletters',
+					{},
+					queryParams,
+				)}
 			>
 				<InformationBox>
 					<GuardianTerms isGoogleOneTap={isGoogleOneTap} />
