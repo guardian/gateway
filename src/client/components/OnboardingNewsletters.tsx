@@ -11,6 +11,7 @@ import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { OnboardingCard } from './OnboardingCard';
 import {
 	Button,
+	Hide,
 	SvgPlusOnRound,
 	SvgTickRound,
 } from '@guardian/source/react-components';
@@ -18,6 +19,7 @@ import { OnboardingSection } from './OnboardingSection';
 import { logger } from '../lib/clientSideLogger';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 import { NEWSLETTER_IMAGES } from '../models/Newsletter';
+import { RoundOnboardingImage } from './OnboardingImage';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -58,8 +60,8 @@ const labelStyles = css`
 	${textSans12};
 	display: flex;
 	flex-direction: column;
-	margin-bottom: ${remSpace[2]};
-	color: var(--base-colors-blue-500);
+	margin: 0;
+	color: var(--color-alert-info);
 `;
 
 const onboardingCardContainerStyles = css`
@@ -93,18 +95,36 @@ const OnboardingNewsletterSignUpButton = ({
 	};
 
 	return !hasSignedUp ? (
-		<Button
-			priority="primary"
-			size="small"
-			type="button"
-			isLoading={false}
-			onClick={handleSignUp}
-			icon={SvgPlusOnRound({
-				size: 'small',
-			})}
-		>
-			Sign Up
-		</Button>
+		<>
+			<Hide from="tablet">
+				<Button
+					priority="primary"
+					size="xsmall"
+					type="button"
+					isLoading={false}
+					onClick={handleSignUp}
+					icon={SvgPlusOnRound({
+						size: 'small',
+					})}
+				>
+					Sign Up
+				</Button>
+			</Hide>
+			<Hide until="tablet">
+				<Button
+					priority="primary"
+					size="small"
+					type="button"
+					isLoading={false}
+					onClick={handleSignUp}
+					icon={SvgPlusOnRound({
+						size: 'small',
+					})}
+				>
+					Sign Up
+				</Button>
+			</Hide>
+		</>
 	) : (
 		<span css={guardianSansText}>
 			<SvgTickRound size="small" theme={{ fill: palette.success[400] }} />
@@ -128,12 +148,11 @@ export const OnboardingNewsletters = () => {
 				size="full"
 				spaceAbove="tight"
 			/>
-			<span css={labelStyles}>
-				{' '}
+			<p css={labelStyles}>
 				Newsletters may contain info about charities, online ads, and content
-				eslint-disable-next-line no-irregular-whitespace funded by outside
-				parties. For more information click here for our privacy policy.
-			</span>
+				funded by outside parties. For more information click here for our
+				privacy policy.
+			</p>
 			<div css={onboardingCardContainerStyles}>
 				{NEWSLETTERS.map((newsletter) => (
 					<OnboardingCard
@@ -142,10 +161,14 @@ export const OnboardingNewsletters = () => {
 						description={newsletter.description}
 						backgroundColour="#F3F7FF"
 						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
-						imagePath={getNewsletterImage(
-							newsletter.id as NewslettersWithImages,
-						)}
-						imageType="small-circle"
+						image={
+							<RoundOnboardingImage
+								path={getNewsletterImage(
+									newsletter.id as NewslettersWithImages,
+								)}
+								alt={`${newsletter.name} newsletter`}
+							/>
+						}
 					/>
 				))}
 			</div>

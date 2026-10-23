@@ -6,11 +6,13 @@ import {
 	WELCOME_DARK,
 	DecorativeImageId,
 } from '@/client/assets/decorative';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 
 interface Props {
 	id: DecorativeImageId;
 	isOnboardingFlow?: boolean;
+	alt?: string;
+	cssOverrides?: SerializedStyles;
 }
 
 const imageStyles = (id: DecorativeImageId, isOnboardingFlow?: boolean) => {
@@ -36,10 +38,19 @@ const imageStyles = (id: DecorativeImageId, isOnboardingFlow?: boolean) => {
 	`;
 };
 
-export const MinimalLayoutImage = ({ id, isOnboardingFlow }: Props) => {
+export const MinimalLayoutImage = ({
+	id,
+	isOnboardingFlow,
+	cssOverrides,
+	alt,
+}: Props) => {
 	// WCAG H67: Use null alt text for decorative images
 	// ARIA: role="presentation" removes element from accessibility tree
 	return (
-		<img alt="" css={imageStyles(id, isOnboardingFlow)} role="presentation" />
+		<img
+			alt={alt ?? ''}
+			css={[imageStyles(id, isOnboardingFlow), cssOverrides]}
+			role="presentation"
+		/>
 	);
 };
