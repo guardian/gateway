@@ -11,6 +11,7 @@ import { css, SerializedStyles } from '@emotion/react';
 interface Props {
 	id: DecorativeImageId;
 	isOnboardingFlow?: boolean;
+	alt?: string;
 	cssOverrides?: SerializedStyles;
 }
 
@@ -41,12 +42,13 @@ export const MinimalLayoutImage = ({
 	id,
 	isOnboardingFlow,
 	cssOverrides,
+	alt,
 }: Props) => {
 	// WCAG H67: Use null alt text for decorative images
 	// ARIA: role="presentation" removes element from accessibility tree
 	return (
 		<img
-			alt=""
+			alt={alt ?? ''}
 			css={[imageStyles(id, isOnboardingFlow), cssOverrides]}
 			role="presentation"
 		/>
