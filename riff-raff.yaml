@@ -12,7 +12,7 @@ deployments:
         AMIIdentitygateway:
           BuiltBy: amigo
           AmigoStage: PROD
-          Recipe: gateway-arm64
+          Recipe: gateway-arm64_test
           Encrypted: 'true'
       templateStagePaths:
         CODE: IdentityGateway-euwest-1-CODE.template.json
