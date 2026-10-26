@@ -98,7 +98,9 @@ const DownloadButton = ({ title }: DownloadButtonProps) => {
 			</Hide>
 			<Hide until="tablet">
 				<LinkButton
-					href={GUARDIAN_APP_LINK}
+					href={
+						title === 'The Guardian app' ? GUARDIAN_APP_LINK : FEAST_APP_LINK
+					}
 					priority="primary"
 					size="small"
 					type="button"
