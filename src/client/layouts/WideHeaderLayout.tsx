@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { CONTAINER_GAP, LAYOUT_WIDTH_NARROW } from '../models/Style';
 import {
 	from,
+	breakpoints,
 	headlineMedium28,
 	remSpace,
 	textEgyptian17,
@@ -32,6 +33,20 @@ const sharedPadding = css`
 		padding: ${remSpace[16]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
 	}
 	gap: ${CONTAINER_GAP};
+`;
+
+const sharedMaxWidth = css`
+	max-width: ${LAYOUT_WIDTH_NARROW}px;
+	${from.mobile} {
+		max-width: ${breakpoints.mobile}px;
+	}
+	${from.mobileMedium} {
+		max-width: ${breakpoints.mobileMedium}px;
+	}
+
+	${from.phablet} {
+		max-width: ${LAYOUT_WIDTH_NARROW}px;
+	}
 `;
 const containerStyles = css`
 	display: grid;
@@ -63,6 +78,8 @@ const mainStyles = css`
 	display: flex;
 	flex-direction: column;
 	grid-area: text;
+
+	${sharedMaxWidth};
 `;
 
 const leadTextStyles = css`
@@ -77,7 +94,21 @@ const heroStyles = css`
 	display: flex;
 	flex-direction: column;
 	padding: ${remSpace[3]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
-	max-width: ${LAYOUT_WIDTH_NARROW}px;
+
+	${sharedMaxWidth};
+`;
+
+const imageWrapper = css`
+	padding: 0;
+	${from.mobile} {
+		padding: 0 ${remSpace[16]};
+	}
+	${from.mobileMedium} {
+		padding: 0 ${remSpace[16]};
+	}
+	${from.phablet} {
+		padding: 0;
+	}
 `;
 
 export const WideHeaderLayout = ({
@@ -99,7 +130,13 @@ export const WideHeaderLayout = ({
 				<div css={headerStyles}>
 					<MinimalHeader />
 					<div css={heroStyles}>
-						{imageId && <MinimalLayoutImage id={imageId} isOnboardingFlow />}
+						{imageId && (
+							<MinimalLayoutImage
+								cssOverrides={imageWrapper}
+								id={imageId}
+								isOnboardingFlow
+							/>
+						)}
 						<h1 css={pageHeaderStyles}>{pageHeader}</h1>
 						{leadText && (
 							<MainBodyText cssOverrides={leadTextStyles}>

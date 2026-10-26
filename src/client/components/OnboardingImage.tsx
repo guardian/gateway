@@ -1,23 +1,39 @@
-import {
-	FEAST_APP,
-	GUARDIAN_APP,
-	OnboardingImageId,
-} from '@/client/assets/decorative';
 import { css } from '@emotion/react';
 import { from } from '@guardian/source/foundations';
 
-interface OnboardingImageProps {
-	id: OnboardingImageId;
-}
+type OnboardingImage = {
+	path: string;
+	alt?: string;
+};
 
-const imageStyles = () => css`
-	width: 110px;
-	height: 132px;
-
+const sharedImageStyles = css`
 	${from.tablet} {
 		float: right;
 	}
+`;
 
+const roundImageStyles = css`
+	border-radius: 50%;
+	width: 64px;
+	height: 64px;
+
+	${sharedImageStyles};
+	${from.tablet} {
+		width: 80px;
+		height: 80px;
+	}
+
+	${from.desktop} {
+		width: 80px;
+		height: 80px;
+	}
+`;
+
+const rectangleImageStyles = css`
+	width: 110px;
+	height: 132px;
+
+	${sharedImageStyles};
 	${from.tablet} {
 		width: 123px;
 		height: 149px;
@@ -29,12 +45,10 @@ const imageStyles = () => css`
 	}
 `;
 
-export const OnboardingImage = ({ id }: OnboardingImageProps) => {
-	return (
-		<img
-			alt=""
-			src={id === 'feast-app' ? FEAST_APP : GUARDIAN_APP}
-			css={imageStyles}
-		/>
-	);
+export const RoundOnboardingImage = ({ path, alt }: OnboardingImage) => {
+	return <img alt={alt ?? ''} src={path} css={roundImageStyles} />;
+};
+
+export const RectangleOnboardingImage = ({ path, alt }: OnboardingImage) => {
+	return <img alt={alt ?? ''} src={path} css={rectangleImageStyles} />;
 };
