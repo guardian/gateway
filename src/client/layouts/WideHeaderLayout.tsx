@@ -37,10 +37,6 @@ const sharedPadding = css`
 const sharedMaxWidth = css`
 	max-width: ${LAYOUT_WIDTH_NARROW}px;
 
-	${from.mobile} {
-		max-width: 372px;
-	}
-
 	${from.tablet} {
 		max-width: 480px;
 	}
