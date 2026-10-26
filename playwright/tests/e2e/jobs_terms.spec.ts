@@ -33,7 +33,9 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await expect(page.getByText('Guardian Jobs newsletter')).toBeVisible();
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 
-			await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
+			await expect(page).toHaveURL(
+				'https://www.theguardian.com/help/insideguardian/2026/sep/02/an-update-on-guardian-jobs',
+			);
 		});
 	});
 
@@ -239,7 +241,9 @@ test.describe('Jobs terms and conditions flow in Okta', () => {
 			await page.locator('[data-cy="main-form-submit-button"]').click();
 
 			// Make sure the returnURL is respected.
-			await expect(page).toHaveURL(/https:\/\/jobs\.theguardian\.com\//);
+			await expect(page).toHaveURL(
+				'https://www.theguardian.com/help/insideguardian/2026/sep/02/an-update-on-guardian-jobs',
+			);
 
 			// User should have `isJobsUser` set to true and their First/Last name set.
 			const updatedUser = await getTestOktaUser(request, emailAddress);

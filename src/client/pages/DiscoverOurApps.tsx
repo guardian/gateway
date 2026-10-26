@@ -1,15 +1,9 @@
 import { OnboardingSection } from '@/client/components/OnboardingSection';
 import { OnboardingCard } from '@/client/components/OnboardingCard';
-import { css } from '@emotion/react';
 import { Hide, Button, SvgDownload } from '@guardian/source/react-components';
 import { FEAST_APP, GUARDIAN_APP } from '../assets/decorative';
-
-const buttonStyles = css`
-	color: var(--color-onboarding-card-cta-text);
-	background-color: var(--color-onboarding-card-cta-background);
-`;
-
-const cta = (
+import { RectangleOnboardingImage } from '../components/OnboardingImage';
+const DownloadAppCta = (
 	<>
 		<Hide from="tablet">
 			<Button
@@ -20,7 +14,6 @@ const cta = (
 				icon={SvgDownload({
 					size: 'xsmall',
 				})}
-				cssOverrides={buttonStyles}
 			>
 				Download
 			</Button>
@@ -34,7 +27,6 @@ const cta = (
 				icon={SvgDownload({
 					size: 'small',
 				})}
-				cssOverrides={buttonStyles}
 			>
 				Download
 			</Button>
@@ -51,17 +43,15 @@ export const DiscoverOurApps = () => {
 				title="The Guardian app"
 				description="Get the stuff you want, when you want it — news, sport, podcasts, puzzles and more."
 				backgroundColour="#E1EAF7"
-				cta={cta}
-				imagePath={GUARDIAN_APP}
-				imageType="rectangle"
+				cta={DownloadAppCta}
+				image={<RectangleOnboardingImage path={GUARDIAN_APP} />}
 			/>
 			<OnboardingCard
 				title="Guardian Feast app"
 				description="Your most useful kitchen utensil, with more than 7,000 recipes and smart, exclusive cooking features."
 				backgroundColour="#E1E5D5"
-				cta={cta}
-				imagePath={FEAST_APP}
-				imageType="rectangle"
+				cta={DownloadAppCta}
+				image={<RectangleOnboardingImage path={FEAST_APP} />}
 			/>
 		</OnboardingSection>
 	);

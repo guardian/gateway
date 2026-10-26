@@ -1,33 +1,55 @@
 import { css } from '@emotion/react';
 import { from } from '@guardian/source/foundations';
 
-interface OnboardingImageProps {
+type OnboardingImage = {
 	path: string;
-	type: OnboardingImageType;
-}
+	alt?: string;
+};
 
-export type OnboardingImageType = 'rectangle' | 'small-circle';
-
-const imageStyles = (type: OnboardingImageType) => css`
-	width: ${type === 'small-circle' ? '64px' : '110px'};
-	height: ${type === 'small-circle' ? '64px' : '132px'};
-
+const sharedImageStyles = css`
 	${from.tablet} {
 		float: right;
 	}
+`;
 
+const roundImageStyles = css`
+	border-radius: 50%;
+	width: 64px;
+	height: 64px;
+
+	${sharedImageStyles};
 	${from.tablet} {
-		width: ${type === 'small-circle' ? '80px' : '123px'};
-		height: ${type === 'small-circle' ? '80px' : '149px'};
+		width: 80px;
+		height: 80px;
 	}
 
 	${from.desktop} {
-		width: ${type === 'small-circle' ? '80px' : '164px'};
-		height: ${type === 'small-circle' ? '80px' : '198px'};
+		width: 80px;
+		height: 80px;
 	}
-	border-radius: ${type === 'small-circle' ? '50%' : '0%'};
 `;
 
-export const OnboardingImage = ({ path, type }: OnboardingImageProps) => {
-	return <img alt="" src={path} css={imageStyles(type)} />;
+const rectangleImageStyles = css`
+	width: 110px;
+	height: 132px;
+
+	${sharedImageStyles};
+	${from.tablet} {
+		width: 123px;
+		height: 149px;
+	}
+
+	${from.desktop} {
+		width: 164px;
+		height: 198px;
+	}
+	border-radius: 0%;
+`;
+
+export const RoundOnboardingImage = ({ path, alt }: OnboardingImage) => {
+	return <img alt={alt ?? ''} src={path} css={roundImageStyles} />;
+};
+
+export const RectangleOnboardingImage = ({ path, alt }: OnboardingImage) => {
+	return <img alt={alt ?? ''} src={path} css={rectangleImageStyles} />;
 };
