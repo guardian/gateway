@@ -4,7 +4,6 @@ import { css } from '@emotion/react';
 import { CONTAINER_GAP, LAYOUT_WIDTH_NARROW } from '../models/Style';
 import {
 	from,
-	breakpoints,
 	headlineMedium28,
 	remSpace,
 	textEgyptian17,
@@ -37,15 +36,17 @@ const sharedPadding = css`
 
 const sharedMaxWidth = css`
 	max-width: ${LAYOUT_WIDTH_NARROW}px;
+
 	${from.mobile} {
-		max-width: ${breakpoints.mobile}px;
-	}
-	${from.mobileMedium} {
-		max-width: ${breakpoints.mobileMedium}px;
+		max-width: 372px;
 	}
 
-	${from.phablet} {
-		max-width: ${LAYOUT_WIDTH_NARROW}px;
+	${from.tablet} {
+		max-width: 480px;
+	}
+
+	${from.desktop} {
+		max-width: 620px;
 	}
 `;
 const containerStyles = css`
@@ -72,7 +73,6 @@ const pageHeaderStyles = css`
 
 const mainStyles = css`
 	${sharedPadding}
-	max-width: ${LAYOUT_WIDTH_NARROW}px;
 	width: 100%;
 	margin: 0 auto;
 	display: flex;
