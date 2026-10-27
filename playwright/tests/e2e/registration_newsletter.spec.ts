@@ -219,7 +219,8 @@ test.describe('Feast newsletter for Feast app', () => {
 		const app = apps[0];
 
 		await page.goto(`/register/email?appClientId=${app.id}`);
-		await expect(page.getByText('Feast newsletter')).toBeVisible();
+		await expect(page.getByText('Feast cooks newsletter')).toBeVisible();
+		await expect(page.getByText('Feast app newsletter')).toBeVisible();
 		await expect(page.getByText('Saturday Edition')).not.toBeVisible();
 		await expect(page.getByText('Weekend newsletters')).not.toBeVisible();
 		await expect(page.getByText('Saturday newsletters')).not.toBeVisible();
@@ -237,7 +238,8 @@ test.describe('Feast newsletter for Feast app', () => {
 		await page.locator('input[name=password]').fill(finalPassword);
 		await page.locator('[data-cy="main-form-submit-button"]').click();
 		await expect(page).toHaveURL(/\/welcome\/google/);
-		await expect(page.getByText('Feast newsletter')).toBeVisible();
+		await expect(page.getByText('Feast cooks newsletter')).toBeVisible();
+		await expect(page.getByText('Feast app newsletter')).toBeVisible();
 		await expect(page.getByText('Saturday Edition')).not.toBeVisible();
 		await expect(page.getByText('Weekend newsletters')).not.toBeVisible();
 		await expect(page.getByText('Saturday newsletters')).not.toBeVisible();
@@ -251,7 +253,8 @@ test.describe('Feast newsletter for Feast app', () => {
 		const app = apps[0];
 
 		await page.goto(`/register/email?appClientId=${app.id}`);
-		await expect(page.getByText('Feast newsletter')).toBeVisible();
+		await expect(page.getByText('Feast cooks newsletter')).toBeVisible();
+		await expect(page.getByText('Feast app newsletter')).toBeVisible();
 		await expect(page.getByText('Saturday Edition')).not.toBeVisible();
 		await expect(page.getByText('Weekend newsletters')).not.toBeVisible();
 		await expect(page.getByText('Saturday newsletters')).not.toBeVisible();
@@ -269,7 +272,8 @@ test.describe('Feast newsletter for Feast app', () => {
 		await page.locator('input[name=password]').fill(finalPassword);
 		await page.locator('[data-cy="main-form-submit-button"]').click();
 		await expect(page).toHaveURL(/\/welcome\/google/);
-		await expect(page.getByText('Feast newsletter')).toBeVisible();
+		await expect(page.getByText('Feast cooks newsletter')).toBeVisible();
+		await expect(page.getByText('Feast app newsletter')).toBeVisible();
 		await expect(page.getByText('Saturday Edition')).not.toBeVisible();
 		await expect(page.getByText('Weekend newsletters')).not.toBeVisible();
 		await expect(page.getByText('Saturday newsletters')).not.toBeVisible();
