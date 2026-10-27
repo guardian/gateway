@@ -1,4 +1,4 @@
-import { chooseNewsletter } from './Newsletter';
+import { chooseNewsletters } from './Newsletter';
 import { GeoLocation } from './Geolocation';
 import { AppName } from '../lib/appNameUtils';
 
@@ -55,7 +55,7 @@ export const getRegistrationConsentsList = ({
 	appName?: AppName;
 	signInOrRegister?: 'REGISTER' | 'SIGNIN';
 }): Array<RegistrationConsentsList> => {
-	const registrationNewsletter = chooseNewsletter({
+	const registrationNewsletters = chooseNewsletters({
 		geolocation,
 		appName,
 		isJobs,
@@ -77,13 +77,15 @@ export const getRegistrationConsentsList = ({
 				description: RegistrationConsentsFormFields.jobs.label,
 				consentOrNewsletter: 'CONSENT',
 			} as const),
-		typeof registrationNewsletter === 'object' &&
-			({
-				id: registrationNewsletter.id,
-				title: registrationNewsletter.label,
-				description: registrationNewsletter.context,
-				consentOrNewsletter: 'NEWSLETTER',
-			} as const),
+		...(registrationNewsletters ?? []).map(
+			(newsletter) =>
+				({
+					id: newsletter.id,
+					title: newsletter.label,
+					description: newsletter.context,
+					consentOrNewsletter: 'NEWSLETTER',
+				}) as const,
+		),
 		showMarketingConsent &&
 			({
 				id: RegistrationConsentsFormFields.similarGuardianProducts.id,
