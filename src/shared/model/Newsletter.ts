@@ -90,15 +90,15 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 	},
 	feast: {
 		id: Newsletters.FEAST,
-		label: 'Feast app newsletter',
+		label: 'Feast newsletter',
 		context:
-			'Three delicious drops in your inbox each week, featuring the latest and exclusive recipes on the Feast app, and the best of the archives, with inspiration for #meatfreemonday, fast midweek dinners, and weekend feasts.',
+			'A weekly email guest edited by our family of Feast cooks – from Felicity Cloake and Rachel Roddy, to Itamar Srulovich and Georgina Hayden. Discover their week in food, favourite recipes and our latest food news and reviews.',
 	},
 	feastCooks: {
 		id: Newsletters.FEAST_COOKS,
-		label: 'Feast cooks newsletter',
+		label: 'Cook with Feast newsletter',
 		context:
-			'A weekly email guest edited by your favourite Feast cooks – from Felicity Cloake and Sami Tamimi to Georgina Hayden. Discover their week in food, favourite recipes and our latest food news and reviews.',
+			'Three delicious drops in your inbox each week, featuring the latest and exclusive recipes on the Feast app, and the best of the archives, with inspiration for #meatfreemonday, fast midweek dinners, and weekend feasts.',
 	},
 	jobs: {
 		id: Newsletters.SATURDAY_EDITION,
@@ -158,8 +158,8 @@ export const chooseNewsletters = ({
 
 	if (isFeast) {
 		return [
-			RegistrationNewslettersFormFieldsMap.feastCooks,
 			RegistrationNewslettersFormFieldsMap.feast,
+			RegistrationNewslettersFormFieldsMap.feastCooks,
 		];
 	}
 
