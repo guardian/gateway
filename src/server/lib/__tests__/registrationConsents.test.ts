@@ -348,8 +348,8 @@ describe('chooseNewsletters', () => {
 		});
 
 		expect(newsletters).toEqual([
-			RegistrationNewslettersFormFieldsMap.feastCooks,
 			RegistrationNewslettersFormFieldsMap.feast,
+			RegistrationNewslettersFormFieldsMap.feastCooks,
 		]);
 	});
 
@@ -360,8 +360,8 @@ describe('chooseNewsletters', () => {
 		});
 
 		expect(newsletters).toEqual([
-			RegistrationNewslettersFormFieldsMap.feastCooks,
 			RegistrationNewslettersFormFieldsMap.feast,
+			RegistrationNewslettersFormFieldsMap.feastCooks,
 		]);
 	});
 
@@ -428,8 +428,8 @@ describe('getRegistrationConsentsList', () => {
 		});
 
 		expect(registrationConsents).toEqual([
-			FEAST_COOKS,
 			FEAST,
+			FEAST_COOKS,
 			MARKETING_CONSENTS,
 		]);
 	});
@@ -442,8 +442,8 @@ describe('getRegistrationConsentsList', () => {
 		});
 
 		expect(registrationConsents).toEqual([
-			FEAST_COOKS,
 			FEAST,
+			FEAST_COOKS,
 			MARKETING_CONSENTS,
 		]);
 	});
