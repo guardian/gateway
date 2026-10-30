@@ -1,39 +1,22 @@
 import { OnboardingSection } from '@/client/components/OnboardingSection';
 import { OnboardingCard } from '@/client/components/OnboardingCard';
-import { Hide, Button, SvgDownload } from '@guardian/source/react-components';
+import { SvgDownload } from '@guardian/source/react-components';
+import { OnboardingButton } from '../components/OnboardingButton';
 import { FEAST_APP, GUARDIAN_APP } from '../assets/decorative';
 import { RectangleOnboardingImage } from '../components/OnboardingImage';
-const DownloadAppCta = (
-	<>
-		<Hide from="tablet">
-			<Button
-				priority="primary"
-				size="xsmall"
-				type="button"
-				isLoading={false}
-				icon={SvgDownload({
-					size: 'xsmall',
-				})}
-			>
-				Download
-			</Button>
-		</Hide>
-		<Hide until="tablet">
-			<Button
-				priority="primary"
-				size="small"
-				type="button"
-				isLoading={false}
-				icon={SvgDownload({
-					size: 'small',
-				})}
-			>
-				Download
-			</Button>
-		</Hide>
-	</>
-);
+
 export const DiscoverOurApps = () => {
+	const DownloadAppCta = (
+		<OnboardingButton
+			mobileIcon={SvgDownload({
+				size: 'xsmall',
+			})}
+			webIcon={SvgDownload({
+				size: 'small',
+			})}
+			text="Download"
+		/>
+	);
 	return (
 		<OnboardingSection
 			header="Discover our apps"
