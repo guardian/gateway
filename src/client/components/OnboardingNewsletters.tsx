@@ -104,7 +104,7 @@ const OnboardingNewsletterSignUpButton = ({
 					isLoading={false}
 					onClick={handleSignUp}
 					icon={SvgPlusOnRound({
-						size: 'small',
+						size: 'xsmall',
 					})}
 				>
 					Sign Up
