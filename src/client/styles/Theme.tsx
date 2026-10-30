@@ -89,6 +89,15 @@ const onboardingFlowLightTheme = css`
 	--color-input-label: ${palette.neutral[7]};
 	--color-header-background: ${palette.brand[400]};
 	--color-onboarding-section-background: ${palette.neutral[100]};
+
+	--color-onboarding-card-cta-text: ${palette.neutral[100]};
+	--color-onboarding-card-cta-background: ${palette.brand[400]};
+	--color-onboarding-card-cta-border: ${palette.brand[400]};
+
+	--color-onboarding-newsletter-modal-button-text: ${palette.brand[400]};
+	--color-onboarding-newsletter-modal-button-background: ${palette.neutral[100]};
+	--color-onboarding-newsletter-modal-button-border: 1px solid
+		${palette.brand[400]};
 `;
 
 const onboardingFlowDarkTheme = css`
@@ -98,7 +107,7 @@ const onboardingFlowDarkTheme = css`
 	--color-logo: ${palette.neutral[100]};
 	--color-input-text: ${palette.neutral[86]};
 	--color-input-label: ${palette.neutral[86]};
-	--color-header-background: ${palette.neutral[0]};
+	--color-header-background: ${palette.neutral[10]};
 	--color-onboarding-section-background: ${palette.neutral[10]};
 
 	--color-onboarding-card-background: ${palette.neutral[20]};
