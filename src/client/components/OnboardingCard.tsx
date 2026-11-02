@@ -16,7 +16,10 @@ interface OnboardingCardProps {
 }
 
 const styles = (backgroundColour: string | undefined) => css`
-	background-color: ${backgroundColour ? backgroundColour : '#FFFFFF'};
+	background-color: var(
+		--color-onboarding-card-background,
+		${backgroundColour ?? '#FFFFFF'}
+	);
 	border-radius: ${remSpace[2]};
 	display: grid;
 	grid-template-columns: 2fr 1fr;
@@ -74,7 +77,6 @@ export const OnboardingCard = ({
 		<div css={styles(backgroundColour)}>
 			<MainBodyText cssOverrides={titleStyles}>{title}</MainBodyText>
 			<MainBodyText cssOverrides={textStyles}>{description}</MainBodyText>
-
 			<div
 				css={css`
 					grid-area: cta;
