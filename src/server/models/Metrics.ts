@@ -29,6 +29,7 @@ type ConditionalMetrics =
 	| `${EmailMetrics}EmailSend`
 	| 'JobsGRSGroupAgree'
 	| 'NewAccountReview'
+	| 'NewAccountOnboardingNewsletterSubmit'
 	| 'NewAccountReviewSubmit'
 	| 'NewAccountNewslettersSubmit'
 	| 'OAuthAuthorization'
