@@ -7,6 +7,7 @@ import {
 	UsStates,
 } from '@/shared/model/RegistrationLocation';
 import { maybeGetCountryCodeFromPlaywrightMockStateCookie } from '@/server/lib/playwright';
+import { logger } from '@/server/lib/serverSideLogger';
 
 const headerValueIsCountryCode = (
 	header: string | string[] | undefined,
@@ -77,6 +78,8 @@ export const getRegistrationLocation = (
 	if (!registrationLocation) {
 		return [undefined, undefined];
 	}
+
+	logger.info(`Registration location is: ${registrationLocation}`);
 
 	// get the state code from the header
 	const stateHeader = req.headers['x-gu-geolocation-state'];
