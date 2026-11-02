@@ -1,3 +1,4 @@
+import { OnboardingNewsletters } from '../components/OnboardingNewsletters';
 import { WideHeaderLayout } from '../layouts/WideHeaderLayout';
 import { DiscoverOurApps } from './DiscoverOurApps';
 
@@ -12,6 +13,7 @@ export const Onboarding = ({ shortRequestId }: OnboardingProps) => (
 		leadText="Thank you for signing up."
 		imageId="welcome"
 	>
+		<OnboardingNewsletters />
 		<DiscoverOurApps />
 	</WideHeaderLayout>
 );

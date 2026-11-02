@@ -47,6 +47,13 @@ USGeolocation.story = {
 	name: 'with US geolocation',
 };
 
+export const GoogleOneTapUSGeolocation = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} geolocation="US" isGoogleOneTap={true} />
+);
+GoogleOneTapUSGeolocation.story = {
+	name: 'with Google One Tap and US geolocation',
+};
+
 export const FeastApp = (args: WelcomeSocialProps) => (
 	<WelcomeSocial {...args} appName="Feast" />
 );
