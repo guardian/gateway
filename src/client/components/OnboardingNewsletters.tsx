@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import {
 	palette,
@@ -23,7 +23,7 @@ import { RoundOnboardingImage } from './OnboardingImage';
 import { MainForm } from './MainForm';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-// import { singleNewsletterOphanTracking } from '../lib/consentsTracking';
+import { singleNewsletterOphanTracking } from '../lib/consentsTracking';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -91,7 +91,6 @@ const OnboardingNewsletterSignUpButton = ({
 	newsletter,
 	queryParams,
 }: OnboardingNewsletterSignUpButtonProps) => {
-	const formRef = useRef<HTMLFormElement>(null);
 	const formTrackingName = `onboarding-newsletter`;
 	const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
@@ -102,9 +101,6 @@ const OnboardingNewsletterSignUpButton = ({
 				method: 'POST',
 				credentials: 'same-origin',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				// URLSearchParams rather than raw FormData: raw FormData is sent as
-				// multipart, which the urlencoded body parser won't read (so the
-				// _csrf field would be lost)
 				body: new URLSearchParams(
 					new FormData(form) as unknown as Record<string, string>,
 				),
@@ -118,7 +114,7 @@ const OnboardingNewsletterSignUpButton = ({
 			setStatus('success');
 		} catch (error) {
 			logger.error(`Newsletter signup error for ${newsletter.name}`, error);
-			setStatus('idle'); // allow retry; surface an error message here if you want
+			setStatus('idle');
 		}
 	};
 
@@ -130,16 +126,12 @@ const OnboardingNewsletterSignUpButton = ({
 				queryParams,
 			)}
 			formTrackingName={formTrackingName}
-			formRef={formRef}
 			onSubmit={(event) => {
 				logger.info(`User signed up to ${newsletter.name}`);
 				event.preventDefault();
 				void signUp(event.currentTarget);
 
-				// singleNewsletterOphanTracking(
-				// 	formRef.current as HTMLFormElement,
-				// 	newsletter,
-				// );
+				singleNewsletterOphanTracking(event.currentTarget, newsletter);
 				return undefined;
 			}}
 			submitButtonText="Sign Up"

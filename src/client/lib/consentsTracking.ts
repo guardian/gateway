@@ -1,6 +1,7 @@
 import { sendOphanInteractionEvent } from '@/client/lib/ophan';
 import { Consent, Consents } from '@/shared/model/Consent';
 import { NewsLetter, Newsletters } from '@/shared/model/Newsletter';
+import { logger } from './clientSideLogger';
 
 const trackInputElementInteraction = (
 	inputElem: HTMLInputElement,
@@ -64,6 +65,23 @@ export const newslettersFormSubmitOphanTracking = (
 			) {
 				trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
 			}
+		}
+	});
+};
+
+export const singleNewsletterOphanTracking = (
+	target: HTMLFormElement,
+	newsletter: NewsLetter,
+): void => {
+	logger.info(`Tracking single newsletter: ${newsletter.name}`);
+	if (!newsletter) {
+		return;
+	}
+
+	const inputElems = target.querySelectorAll('input');
+	inputElems.forEach((elem) => {
+		if (elem.name === newsletter.id) {
+			trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
 		}
 	});
 };
