@@ -38,6 +38,7 @@ export const Newsletters = {
 	// Registration newsletters
 	SATURDAY_EDITION: '6031',
 	FEAST: '6002',
+	FEAST_COOKS: '6067',
 	WEEKEND_MAIL_AU: '6043',
 	WEEKEND_US: '6044',
 	FIRST_THING: '4300',
@@ -69,7 +70,7 @@ export type NewslettersWithImages =
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
 type RegistrationNewsletterFormIds =
-	'saturdayEdition' | 'feast' | 'jobs' | 'auBundle' | 'usBundle';
+	'saturdayEdition' | 'feastCooks' | 'feast' | 'jobs' | 'auBundle' | 'usBundle';
 
 export interface RegistrationNewsletterFormFields {
 	id: Literal<typeof Newsletters>;
@@ -91,7 +92,13 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 		id: Newsletters.FEAST,
 		label: 'Feast newsletter',
 		context:
-			'A weekly email from Yotam Ottolenghi, Meera Sodha, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas.',
+			'A weekly email guest edited by our family of Feast cooks – from Felicity Cloake and Rachel Roddy, to Itamar Srulovich and Georgina Hayden. Discover their week in food, favourite recipes and our latest food news and reviews.',
+	},
+	feastCooks: {
+		id: Newsletters.FEAST_COOKS,
+		label: 'Cook with Feast newsletter',
+		context:
+			'Three delicious drops in your inbox each week, featuring the latest and exclusive recipes on the Feast app, and the best of the archives, with inspiration for #meatfreemonday, fast midweek dinners, and weekend feasts.',
 	},
 	jobs: {
 		id: Newsletters.SATURDAY_EDITION,
@@ -129,7 +136,7 @@ export const newsletterBundleToIndividualNewsletters = (
 export const newsletterAdditionalTerms =
 	'Newsletters may contain information about Guardian products, services and chosen charities or online advertisements.';
 
-export const chooseNewsletter = ({
+export const chooseNewsletters = ({
 	geolocation,
 	appName,
 	isJobs,
@@ -139,7 +146,7 @@ export const chooseNewsletter = ({
 	appName: AppName | undefined;
 	isJobs?: boolean;
 	signInOrRegister?: 'REGISTER' | 'SIGNIN';
-}): RegistrationNewsletterFormFields | undefined => {
+}): Array<RegistrationNewsletterFormFields> | undefined => {
 	const isFeast = appName === 'Feast';
 
 	// For existing users accessing Guardian Jobs for the first time we don't want to show
@@ -150,23 +157,26 @@ export const chooseNewsletter = ({
 	}
 
 	if (isFeast) {
-		return RegistrationNewslettersFormFieldsMap.feast;
+		return [
+			RegistrationNewslettersFormFieldsMap.feast,
+			RegistrationNewslettersFormFieldsMap.feastCooks,
+		];
 	}
 
 	if (isJobs) {
-		return RegistrationNewslettersFormFieldsMap.jobs;
+		return [RegistrationNewslettersFormFieldsMap.jobs];
 	}
 
 	switch (geolocation) {
 		case 'US':
-			return RegistrationNewslettersFormFieldsMap.usBundle;
+			return [RegistrationNewslettersFormFieldsMap.usBundle];
 		case 'AU':
-			return RegistrationNewslettersFormFieldsMap.auBundle;
+			return [RegistrationNewslettersFormFieldsMap.auBundle];
 		case 'GB':
 		case 'EU':
 		case 'ROW':
 		default:
 			// We want to show Saturday Edition even for an undefined location
-			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
+			return [RegistrationNewslettersFormFieldsMap.saturdayEdition];
 	}
 };
