@@ -23,6 +23,7 @@ import { ArnPrincipal, Effect, PolicyDocument, PolicyStatement, WebIdentityPrinc
 import { Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription, SqsSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Queue } from 'aws-cdk-lib/aws-sqs';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 type IdentityGatewayProps = GuStackProps & {
 	scaling: GuAsgCapacity;
@@ -133,6 +134,7 @@ export class IdentityGateway extends GuStack {
 				fromSSM: true,
 			},
 		);
+
 
 		const alarmTopic = new Topic(this, 'IdentityGatewayAlarmTopic', {});
 		alarmTopic.addSubscription(new EmailSubscription(alarmEmail.valueAsString));
@@ -350,6 +352,13 @@ systemctl start ${app}
 		nodeApp.autoScalingGroup.connections.addSecurityGroup(redisSecurityGroup);
 		nodeApp.autoScalingGroup.scaleOnCpuUtilization('CpuScalingPolicy', {
 			targetUtilizationPercent: 10
+		});
+
+
+
+		new StringParameter(this, 'IdentityGatewayAlbArn', {
+			parameterName: `/infosec/waf/services/${stage}/identity-gateway-alb-arn`,
+			stringValue: nodeApp.loadBalancer.loadBalancerArn,
 		});
 
 		///
