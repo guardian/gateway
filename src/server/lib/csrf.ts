@@ -24,7 +24,7 @@ type Methods =
 // Options for the CSRF middleware
 type CsrfOptions = {
 	ignoredMethods?: Methods[];
-	ignoredRoutes?: string[];
+	ignoredRoutes?: (string | { method: Methods; path: RegExp })[];
 };
 
 // use the __Host-prefix to make sure the cookie is only accessible by the same domain it is set on.
@@ -193,7 +193,7 @@ const validateRequest = (req: Request) => {
  * as any changes to the token would invalidate the signature, and the server wouldn't make the cookie available.
  *
  * @param ignoredMethods - Array of HTTP methods to ignore for CSRF checks
- * @param ignoredRoutes - Array of routes to ignore for CSRF checks
+ * @param ignoredRoutes - Path prefixes or method-specific path patterns to ignore for CSRF checks
  * @returns Express middleware function
  */
 export const csrf = ({
@@ -224,7 +224,11 @@ export const csrf = ({
 			// If the method is in the ignoredMethods or ignoredRoutes array, skip the CSRF check
 			ignoredMethods.some((method) => method === req.method) ||
 			// If the route is in the ignoredRoutes array, skip the CSRF check
-			ignoredRoutes.some((route) => req.path.startsWith(route))
+			ignoredRoutes.some((route) =>
+				typeof route === 'string'
+					? req.path.startsWith(route)
+					: req.method === route.method && route.path.test(req.path),
+			)
 		) {
 			next();
 		} else if (
