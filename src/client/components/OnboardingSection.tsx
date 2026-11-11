@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import {
 	from,
-	palette,
 	remSpace,
 	headlineBold24,
 	textSans17,
@@ -21,7 +20,7 @@ export const OnboardingSection = ({
 	subHeader,
 }: OnboardingSectionProps) => {
 	const sectionMainStyles = css`
-		background-color: ${palette.neutral[100]};
+		background-color: var(--color-onboarding-section-background);
 		border-radius: ${remSpace[2]};
 		padding: ${remSpace[2]} ${remSpace[3]} ${remSpace[6]} ${remSpace[3]};
 		display: flex;
