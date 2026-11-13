@@ -1688,6 +1688,20 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
             "ToPort": 443,
           },
           {
+            "CidrIp": "90.98.0.0/17",
+            "Description": "Allow access on port 443 from 90.98.0.0/17",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIp": "90.98.128.0/18",
+            "Description": "Allow access on port 443 from 90.98.128.0/18",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
             "CidrIp": "103.244.50.0/24",
             "Description": "Allow access on port 443 from 103.244.50.0/24",
             "FromPort": 443,
@@ -1814,8 +1828,15 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
             "ToPort": 443,
           },
           {
-            "CidrIpv6": "2a04:4e42::/32",
-            "Description": "Allow access on port 443 from 2a04:4e42::/32",
+            "CidrIpv6": "2a04:4e42::/31",
+            "Description": "Allow access on port 443 from 2a04:4e42::/31",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+          {
+            "CidrIpv6": "2a04:4e44::/32",
+            "Description": "Allow access on port 443 from 2a04:4e44::/32",
             "FromPort": 443,
             "IpProtocol": "tcp",
             "ToPort": 443,

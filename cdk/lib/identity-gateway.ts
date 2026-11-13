@@ -51,6 +51,8 @@ const alarmPriorities = {
 const fastlyCIDR = [
 	Peer.ipv4('23.235.32.0/20'),
 	Peer.ipv4('43.249.72.0/22'),
+	Peer.ipv4('90.98.0.0/17'),
+	Peer.ipv4('90.98.128.0/18'),
 	Peer.ipv4('103.244.50.0/24'),
 	Peer.ipv4('103.245.222.0/23'),
 	Peer.ipv4('103.245.224.0/24'),
@@ -69,7 +71,8 @@ const fastlyCIDR = [
 	Peer.ipv4('199.27.72.0/21'),
 	Peer.ipv4('199.232.0.0/16'),
 	Peer.ipv6('2a04:4e40::/32'),
-	Peer.ipv6('2a04:4e42::/32'),
+	Peer.ipv6('2a04:4e42::/31'),
+	Peer.ipv6('2a04:4e44::/32'),
 ];
 
 export class IdentityGateway extends GuStack {
