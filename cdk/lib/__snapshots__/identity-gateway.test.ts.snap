@@ -849,6 +849,22 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::SNS::Subscription",
     },
+    "IdentityGatewayAlbArn705AD173": {
+      "Properties": {
+        "Name": "/infosec/waf/services/TEST/identity-gateway-alb-arn",
+        "Tags": {
+          "Stack": "identity",
+          "Stage": "TEST",
+          "gu:cdk:version": "TEST",
+          "gu:repo": "guardian/gateway",
+        },
+        "Type": "String",
+        "Value": {
+          "Ref": "LoadBalancerIdentitygateway7DAC8BBC",
+        },
+      },
+      "Type": "AWS::SSM::Parameter",
+    },
     "IdentityGatewayCloudWatchPolicyEFFEAF3C": {
       "Properties": {
         "PolicyDocument": {
