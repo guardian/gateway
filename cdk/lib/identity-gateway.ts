@@ -15,7 +15,6 @@ import {
 	InstanceClass,
 	InstanceSize,
 	InstanceType,
-	Peer,
 	SecurityGroup,
 	UserData,
 } from 'aws-cdk-lib/aws-ec2';
@@ -44,33 +43,6 @@ const alarmPriorities = {
 	P2: 'URGENT 9-5',
 	P3: 'MODERATE'
 } as const;
-
-// Fetched from https://api.fastly.com/public-ip-list
-// These are the IP ranges that Fastly uses to connect to the origin
-// TODO: Is there a way we can automate the updating of these CIDR ranges when Fastly updates their IP list?
-const fastlyCIDR = [
-	Peer.ipv4('23.235.32.0/20'),
-	Peer.ipv4('43.249.72.0/22'),
-	Peer.ipv4('103.244.50.0/24'),
-	Peer.ipv4('103.245.222.0/23'),
-	Peer.ipv4('103.245.224.0/24'),
-	Peer.ipv4('104.156.80.0/20'),
-	Peer.ipv4('140.248.64.0/18'),
-	Peer.ipv4('140.248.128.0/17'),
-	Peer.ipv4('146.75.0.0/17'),
-	Peer.ipv4('151.101.0.0/16'),
-	Peer.ipv4('157.52.64.0/18'),
-	Peer.ipv4('167.82.0.0/17'),
-	Peer.ipv4('167.82.128.0/20'),
-	Peer.ipv4('167.82.160.0/20'),
-	Peer.ipv4('167.82.224.0/20'),
-	Peer.ipv4('172.111.64.0/18'),
-	Peer.ipv4('185.31.16.0/22'),
-	Peer.ipv4('199.27.72.0/21'),
-	Peer.ipv4('199.232.0.0/16'),
-	Peer.ipv6('2a04:4e40::/32'),
-	Peer.ipv6('2a04:4e42::/32'),
-];
 
 export class IdentityGateway extends GuStack {
 	constructor(scope: App, id: string, props: IdentityGatewayProps) {
@@ -125,6 +97,14 @@ export class IdentityGateway extends GuStack {
 			redisSecurityGroupParam.valueAsString,
 			{ mutable: false },
 		);
+
+		const allowFastlyOnlySecurityGroupParameterPath = `/${stage}/identity/security-group/allow-fastly-only-security-group-id`;
+		const allowFastlyOnlySecurityGroupId: string =
+			StringParameter.valueForStringParameter(
+				this,
+				allowFastlyOnlySecurityGroupParameterPath,
+			);
+
 
 		const alarmEmail = new GuStringParameter(
 			this,
@@ -315,7 +295,7 @@ systemctl start ${app}
 			userData,
 			access: {
 				scope: AccessScope.RESTRICTED,
-				cidrRanges: [...fastlyCIDR],
+				cidrRanges: [],
 			},
 			monitoringConfiguration:
 				['PROD', 'TEST'].includes(stage)
@@ -349,12 +329,18 @@ systemctl start ${app}
 			},
 		});
 
+		nodeApp.loadBalancer.addSecurityGroup(
+			SecurityGroup.fromSecurityGroupId(
+				this,
+				'AllowFastlyOnly',
+				allowFastlyOnlySecurityGroupId,
+			),
+		);
+
 		nodeApp.autoScalingGroup.connections.addSecurityGroup(redisSecurityGroup);
 		nodeApp.autoScalingGroup.scaleOnCpuUtilization('CpuScalingPolicy', {
 			targetUtilizationPercent: 10
 		});
-
-
 
 		new StringParameter(this, 'IdentityGatewayAlbArn', {
 			parameterName: `/infosec/waf/services/${stage}/identity-gateway-alb-arn`,

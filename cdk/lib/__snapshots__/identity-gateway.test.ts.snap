@@ -108,6 +108,10 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       "Default": "/TEST/identity/redis-security-group",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
+    "SsmParameterValueTESTidentitysecuritygroupallowfastlyonlysecuritygroupidC96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/TEST/identity/security-group/allow-fastly-only-security-group-id",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
     "VpcId": {
       "Default": "/account/vpc/primary/id",
       "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
@@ -479,6 +483,24 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
+    },
+    "GuHttpsEgressSecurityGroupIdentitygatewayfromIdentityGatewayAllowFastlyOnly0EA88022923317E54E19": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "FromPort": 9233,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "GuHttpsEgressSecurityGroupIdentitygatewayA7C3F011",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Ref": "SsmParameterValueTESTidentitysecuritygroupallowfastlyonlysecuritygroupidC96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "ToPort": 9233,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
     },
     "GuHttpsEgressSecurityGroupIdentitygatewayfromIdentityGatewayLoadBalancerIdentitygatewaySecurityGroupA3602EBF92338F6DA735": {
       "Properties": {
@@ -1152,6 +1174,9 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
               "GroupId",
             ],
           },
+          {
+            "Ref": "SsmParameterValueTESTidentitysecuritygroupallowfastlyonlysecuritygroupidC96584B6F00A464EAD1953AFF4B05118Parameter",
+          },
         ],
         "Subnets": {
           "Ref": "identitygatewayPublicSubnets",
@@ -1672,155 +1697,6 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
     "RestrictedIngressSecurityGroupIdentitygateway35716087": {
       "Properties": {
         "GroupDescription": "Allow restricted ingress from CIDR ranges",
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": "23.235.32.0/20",
-            "Description": "Allow access on port 443 from 23.235.32.0/20",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "43.249.72.0/22",
-            "Description": "Allow access on port 443 from 43.249.72.0/22",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "103.244.50.0/24",
-            "Description": "Allow access on port 443 from 103.244.50.0/24",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "103.245.222.0/23",
-            "Description": "Allow access on port 443 from 103.245.222.0/23",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "103.245.224.0/24",
-            "Description": "Allow access on port 443 from 103.245.224.0/24",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "104.156.80.0/20",
-            "Description": "Allow access on port 443 from 104.156.80.0/20",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "140.248.64.0/18",
-            "Description": "Allow access on port 443 from 140.248.64.0/18",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "140.248.128.0/17",
-            "Description": "Allow access on port 443 from 140.248.128.0/17",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "146.75.0.0/17",
-            "Description": "Allow access on port 443 from 146.75.0.0/17",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "151.101.0.0/16",
-            "Description": "Allow access on port 443 from 151.101.0.0/16",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "157.52.64.0/18",
-            "Description": "Allow access on port 443 from 157.52.64.0/18",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "167.82.0.0/17",
-            "Description": "Allow access on port 443 from 167.82.0.0/17",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "167.82.128.0/20",
-            "Description": "Allow access on port 443 from 167.82.128.0/20",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "167.82.160.0/20",
-            "Description": "Allow access on port 443 from 167.82.160.0/20",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "167.82.224.0/20",
-            "Description": "Allow access on port 443 from 167.82.224.0/20",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "172.111.64.0/18",
-            "Description": "Allow access on port 443 from 172.111.64.0/18",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "185.31.16.0/22",
-            "Description": "Allow access on port 443 from 185.31.16.0/22",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "199.27.72.0/21",
-            "Description": "Allow access on port 443 from 199.27.72.0/21",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIp": "199.232.0.0/16",
-            "Description": "Allow access on port 443 from 199.232.0.0/16",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIpv6": "2a04:4e40::/32",
-            "Description": "Allow access on port 443 from 2a04:4e40::/32",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-          {
-            "CidrIpv6": "2a04:4e42::/32",
-            "Description": "Allow access on port 443 from 2a04:4e42::/32",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-        ],
         "Tags": [
           {
             "Key": "App",
