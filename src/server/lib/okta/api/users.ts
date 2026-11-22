@@ -59,6 +59,8 @@ export const createUser = async (
 		{},
 		{ activate: false },
 	);
+
+	logger.log('info', `Logging cal to Okta /api/v1/users ${path}`);
 	return await fetch(joinUrl(okta.orgUrl, path), {
 		method: 'POST',
 		body: JSON.stringify(body),
