@@ -1,6 +1,7 @@
 import Redis from 'ioredis';
 import { logger } from '@/server/lib/serverSideLogger';
 import { LogLevel } from '@/shared/model/Logger';
+import { trackMetric } from '../trackMetric';
 
 /**
  * Starts a timer to keep track of global bucket capacity
@@ -39,7 +40,8 @@ const logValues = (keys: string[], values: Array<string | null>) => {
 	keys.forEach((key, index) => {
 		const value = values[index];
 		if (value) {
-			const tokensLeft = JSON.parse(value)?.tokens;
+			const tokensLeft: number = JSON.parse(value)?.tokens;
+			trackMetric('RateLimitBucketCapacity', { bucket: key }, tokensLeft);
 			logger.log(LogLevel.INFO, `Bucket(${key})`, undefined, {
 				bucket_capacity: tokensLeft,
 			});

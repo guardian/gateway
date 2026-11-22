@@ -24,6 +24,7 @@ const defaultDimensions = {
 export const trackMetric = (
 	metricName: Metrics,
 	dimensions?: MetricDimensions,
+	value: number = 1,
 ): void => {
 	if (process.env.RUNNING_IN_PLAYWRIGHT === 'true') {
 		// return void in playwright
@@ -49,7 +50,7 @@ export const trackMetric = (
 								Value,
 							}),
 						),
-						Value: 1,
+						Value: value,
 						Unit: 'Count',
 					},
 				],
