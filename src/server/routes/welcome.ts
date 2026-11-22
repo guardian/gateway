@@ -363,6 +363,43 @@ router.get(
 	},
 );
 
+router.post(
+	'/welcome/onboarding/newsletter',
+	loginMiddlewareOAuth,
+	async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
+		try {
+			logger.info(
+				`Updating newsletter subscription for newsletterId: ${JSON.stringify(req.body)}`,
+			);
+
+			await updateNewsletters({
+				accessToken: state.oauthState.accessToken.toString(),
+				payload: [
+					{
+						id: req.body.newsletterId,
+						subscribed: true,
+					},
+				],
+			});
+			trackMetric('NewAccountOnboardingNewsletterSubmit::Success');
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+			trackMetric('NewAccountOnboardingNewsletterSubmit::Failure');
+			return res.sendStatus(503);
+		}
+
+		return res.sendStatus(200);
+	},
+);
+
 router.get(
 	'/welcome/newsletters',
 	loginMiddlewareOAuth,

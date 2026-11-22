@@ -7,5 +7,7 @@ export default {
 	component: OnboardingNewsletters,
 } as Meta;
 
-export const Default = () => <OnboardingNewsletters />;
+export const Default = () => (
+	<OnboardingNewsletters queryParams={{ returnUrl: '/' }} />
+);
 Default.storyName = 'Default';

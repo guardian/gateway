@@ -20,6 +20,10 @@ import { logger } from '../lib/clientSideLogger';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 import { NEWSLETTER_IMAGES } from '../models/Newsletter';
 import { RoundOnboardingImage } from './OnboardingImage';
+import { MainForm } from './MainForm';
+import { QueryParams } from '@/shared/model/QueryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { singleNewsletterOphanTracking } from '../lib/consentsTracking';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -81,28 +85,65 @@ const guardianSansText = css`
 
 interface OnboardingNewsletterSignUpButtonProps {
 	newsletter: NewsLetter;
+	queryParams: QueryParams;
 }
-
 const OnboardingNewsletterSignUpButton = ({
 	newsletter,
+	queryParams,
 }: OnboardingNewsletterSignUpButtonProps) => {
-	const [hasSignedUp, setHasSignedUp] = useState(false);
+	const formTrackingName = `onboarding-newsletter`;
+	const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
-	const handleSignUp = () => {
-		// Make request here.
-		logger.info(`User signed up to ${newsletter.name}`);
-		setHasSignedUp(true);
+	const signUp = async (form: HTMLFormElement) => {
+		setStatus('loading');
+		try {
+			const res = await fetch(form.action, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: new URLSearchParams(
+					new FormData(form) as unknown as Record<string, string>,
+				),
+			});
+
+			if (!res.ok) {
+				throw new Error(`Newsletter signup failed: ${res.status}`);
+			}
+
+			logger.info(`User signed up to ${newsletter.name}`);
+			setStatus('success');
+		} catch (error) {
+			logger.error(`Newsletter signup error for ${newsletter.name}`, error);
+			setStatus('idle');
+		}
 	};
 
-	return !hasSignedUp ? (
-		<>
+	return status !== 'success' ? (
+		<MainForm
+			formAction={buildUrlWithQueryParams(
+				'/welcome/onboarding/newsletter',
+				{},
+				queryParams,
+			)}
+			formTrackingName={formTrackingName}
+			onSubmit={(event) => {
+				logger.info(`User signed up to ${newsletter.name}`);
+				event.preventDefault();
+				void signUp(event.currentTarget);
+
+				singleNewsletterOphanTracking(event.currentTarget, newsletter);
+				return undefined;
+			}}
+			submitButtonText="Sign Up"
+			renderSubmitButton={false}
+		>
+			<input type="hidden" name="newsletterId" value={newsletter.id} />
 			<Hide from="tablet">
 				<Button
 					priority="primary"
 					size="xsmall"
-					type="button"
-					isLoading={false}
-					onClick={handleSignUp}
+					type="submit"
+					isLoading={status === 'loading'}
 					icon={SvgPlusOnRound({
 						size: 'small',
 					})}
@@ -114,9 +155,8 @@ const OnboardingNewsletterSignUpButton = ({
 				<Button
 					priority="primary"
 					size="small"
-					type="button"
-					isLoading={false}
-					onClick={handleSignUp}
+					type="submit"
+					isLoading={status === 'loading'}
 					icon={SvgPlusOnRound({
 						size: 'small',
 					})}
@@ -124,7 +164,7 @@ const OnboardingNewsletterSignUpButton = ({
 					Sign Up
 				</Button>
 			</Hide>
-		</>
+		</MainForm>
 	) : (
 		<span css={guardianSansText}>
 			<SvgTickRound size="small" theme={{ fill: palette.success[400] }} />
@@ -137,7 +177,13 @@ const getNewsletterImage = (newsletterId: NewslettersWithImages) => {
 	return NEWSLETTER_IMAGES[newsletterId] ?? SATURDAY_EDITION_SMALL_SQUARE_IMAGE;
 };
 
-export const OnboardingNewsletters = () => {
+export interface OnboardingNewslettersProps {
+	queryParams: QueryParams;
+}
+
+export const OnboardingNewsletters = ({
+	queryParams,
+}: OnboardingNewslettersProps) => {
 	return (
 		<OnboardingSection
 			header="Explore more newsletters"
@@ -160,7 +206,12 @@ export const OnboardingNewsletters = () => {
 						title={newsletter.name}
 						description={newsletter.description}
 						backgroundColour="#F3F7FF"
-						cta={<OnboardingNewsletterSignUpButton newsletter={newsletter} />}
+						cta={
+							<OnboardingNewsletterSignUpButton
+								newsletter={newsletter}
+								queryParams={queryParams}
+							/>
+						}
 						image={
 							<RoundOnboardingImage
 								path={getNewsletterImage(

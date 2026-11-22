@@ -71,6 +71,7 @@ export interface MainFormProps {
 	largeFormMarginTop?: boolean;
 	displayInline?: boolean;
 	submitButtonLink?: boolean;
+	renderSubmitButton?: boolean;
 	additionalTerms?: ReactNode[];
 	primaryTermsPosition?: boolean;
 	termsStyle?: TermsStyle;
@@ -154,6 +155,7 @@ export const MainForm = ({
 	formErrorMessageFromParent,
 	formErrorContextFromParent,
 	displayInline = false,
+	renderSubmitButton = true,
 	submitButtonLink,
 	additionalTerms,
 	primaryTermsPosition = true,
@@ -410,34 +412,35 @@ export const MainForm = ({
 				/>
 			)}
 
-			{submitButtonLink ? (
-				<ButtonLink
-					type="submit"
-					data-cy="main-form-submit-button"
-					disabled={isFormDisabled}
-					aria-disabled={isFormDisabled}
-					cssOverrides={buttonLinkStyles}
-				>
-					{submitButtonText}
-				</ButtonLink>
-			) : (
-				<Button
-					cssOverrides={
-						submitButtonPriority === 'primary'
-							? primaryButtonStyles(wideLayout ? 'half' : 'full')
-							: secondaryButtonStyles(wideLayout ? 'half' : 'full')
-					}
-					type="submit"
-					priority={submitButtonPriority}
-					data-cy="main-form-submit-button"
-					isLoading={isFormDisabled}
-					disabled={isFormDisabled}
-					aria-disabled={isFormDisabled}
-					iconSide="right"
-				>
-					{submitButtonText}
-				</Button>
-			)}
+			{renderSubmitButton &&
+				(submitButtonLink ? (
+					<ButtonLink
+						type="submit"
+						data-cy="main-form-submit-button"
+						disabled={isFormDisabled}
+						aria-disabled={isFormDisabled}
+						cssOverrides={buttonLinkStyles}
+					>
+						{submitButtonText}
+					</ButtonLink>
+				) : (
+					<Button
+						cssOverrides={
+							submitButtonPriority === 'primary'
+								? primaryButtonStyles(wideLayout ? 'half' : 'full')
+								: secondaryButtonStyles(wideLayout ? 'half' : 'full')
+						}
+						type="submit"
+						priority={submitButtonPriority}
+						data-cy="main-form-submit-button"
+						isLoading={isFormDisabled}
+						disabled={isFormDisabled}
+						aria-disabled={isFormDisabled}
+						iconSide="right"
+					>
+						{submitButtonText}
+					</Button>
+				))}
 			{!primaryTermsPosition && (
 				<Terms
 					additionalTerms={additionalTerms}
