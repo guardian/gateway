@@ -10,7 +10,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@43af1fc0d363b0ea5ddc687a0428aba85c627933
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7.0.0
         with:
