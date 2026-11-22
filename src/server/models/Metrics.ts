@@ -94,6 +94,7 @@ type UnconditionalMetrics =
 			'WeakPassword' | 'StrongPassword'}`
 	| `PasscodePasswordNotCompleteRemediation-${'ResetPassword' | 'Register'}-${'STAGED' | 'PROVISIONED'}-${'Start' | 'Complete'}`
 	| `ExistingUserInCreateAccountFlow`
+	| `NonActiveExistingUserInCreateAccountFlow`
 	| `UserFlow-${UserFlow}-${string}`;
 
 // Combine all the metrics above together into a type
