@@ -43,6 +43,7 @@ const rectangleImageStyles = css`
 		width: 164px;
 		height: 198px;
 	}
+	border-radius: 0%;
 `;
 
 export const RoundOnboardingImage = ({ path, alt }: OnboardingImage) => {

@@ -11,7 +11,6 @@ import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { OnboardingCard } from './OnboardingCard';
 import {
 	Button,
-	Hide,
 	SvgPlusOnRound,
 	SvgTickRound,
 } from '@guardian/source/react-components';
@@ -20,6 +19,7 @@ import { logger } from '../lib/clientSideLogger';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 import { NEWSLETTER_IMAGES } from '../models/Newsletter';
 import { RoundOnboardingImage } from './OnboardingImage';
+import { OnboardingButton } from './OnboardingButton';
 
 const NEWSLETTERS: NewsLetter[] = [
 	{
@@ -77,8 +77,14 @@ const guardianSansText = css`
 	${textSans17};
 	display: flex;
 	align-items: center;
+	color: var(--color-text);
 `;
 
+const exploreMoreButtonStyles = css`
+	color: var(--color-onboarding-newsletter-modal-button-text);
+	border: var(--color-onboarding-newsletter-modal-button-border);
+	background: var(--color-onboarding-newsletter-modal-button-background);
+`;
 interface OnboardingNewsletterSignUpButtonProps {
 	newsletter: NewsLetter;
 }
@@ -96,34 +102,12 @@ const OnboardingNewsletterSignUpButton = ({
 
 	return !hasSignedUp ? (
 		<>
-			<Hide from="tablet">
-				<Button
-					priority="primary"
-					size="xsmall"
-					type="button"
-					isLoading={false}
-					onClick={handleSignUp}
-					icon={SvgPlusOnRound({
-						size: 'small',
-					})}
-				>
-					Sign Up
-				</Button>
-			</Hide>
-			<Hide until="tablet">
-				<Button
-					priority="primary"
-					size="small"
-					type="button"
-					isLoading={false}
-					onClick={handleSignUp}
-					icon={SvgPlusOnRound({
-						size: 'small',
-					})}
-				>
-					Sign Up
-				</Button>
-			</Hide>
+			<OnboardingButton
+				onClick={handleSignUp}
+				webIcon={SvgPlusOnRound({ size: 'small' })}
+				mobileIcon={SvgPlusOnRound({ size: 'xsmall' })}
+				text="Sign Up"
+			/>
 		</>
 	) : (
 		<span css={guardianSansText}>
@@ -173,7 +157,11 @@ export const OnboardingNewsletters = () => {
 				))}
 			</div>
 
-			<Button priority="tertiary" type="button">
+			<Button
+				priority="tertiary"
+				type="button"
+				cssOverrides={exploreMoreButtonStyles}
+			>
 				Browse more newsletters
 			</Button>
 		</OnboardingSection>
