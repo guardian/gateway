@@ -6,6 +6,7 @@ import {
 	textSans17,
 } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
+import { LAYOUT_WIDTH_NARROW } from '@/client/models/Style';
 
 interface OnboardingCardProps {
 	title: string;
@@ -22,7 +23,7 @@ const styles = (backgroundColour: string | undefined) => css`
 	grid-template-columns: 2fr 1fr;
 	grid-template-areas: 'title image' 'text image' 'cta image';
 	gap: ${remSpace[1]};
-	max-width: 348px;
+	max-width: ${LAYOUT_WIDTH_NARROW}px;
 
 	${from.tablet} {
 		max-width: 456px;
