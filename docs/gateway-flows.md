@@ -58,3 +58,20 @@ flowchart TD
   userFound -- No --> getEmailSent
   post --> catch --> get
 ```
+
+## Newsletter unsubscribe
+
+`GET /unsubscribe/newsletter/:data/:token` displays a review page.
+`POST` to the same path forwards the unsubscribe request to IDAPI and renders
+a success or error page.
+The browser POST requires CSRF credentials.
+
+`POST /list-unsubscribe/newsletter/:data/:token` is the dedicated email-client
+endpoint. It returns an empty 204 on success, 400 for client errors, or 500 for server
+failures. It doesn't render HTML or redirect and GET requests do not unsubscribe.
+The `data` parameter contains `newsletterId:userId:timestamp` (timestamp is an integar)
+
+The list-unsubscribe POST is excluded from CSRF validation so email providers
+can call it without browser cookies or a CSRF form field. Authorization depends
+on IDAPI validating the subscription token against the user ID, newsletter ID,
+and timestamp in `data`.
